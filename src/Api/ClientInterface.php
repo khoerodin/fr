@@ -15,6 +15,18 @@ interface ClientInterface
     public function bearer($token);
 
     /**
+     * @param mixed $key
+     * @return mixed
+     */
+    public function fetch($key);
+
+    /**
+     * @param mixed $key
+     * @param mixed $value
+     */
+    public function save($key, $value);
+
+    /**
      * @param $url
      * @param array $options
      * @return ResponseInterface

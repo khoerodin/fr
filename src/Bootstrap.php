@@ -7,6 +7,7 @@ use Bisnis\Http\Kernel;
 use Bisnis\Http\KernelEvents;
 use Bisnis\Middleware\ApiClientMiddleware;
 use Bisnis\Middleware\ConfigurationMiddleware;
+use Bisnis\Middleware\EventDispatcherMiddleware;
 use Bisnis\Middleware\MiddlewareFactory;
 use Bisnis\Middleware\RouterMiddleware;
 use Bisnis\Middleware\TemplatingMiddleware;
@@ -84,7 +85,8 @@ class Bootstrap
         $kernel = new Kernel($eventDipatcher, $configs);
 
         $this->addMiddleware(ConfigurationMiddleware::class, array($configs), 2049);
-        $this->addMiddleware(RouterMiddleware::class, array($eventDipatcher), 2047);
+        $this->addMiddleware(RouterMiddleware::class, array(), 2047);
+        $this->addMiddleware(EventDispatcherMiddleware::class, array($eventDipatcher), 2047);
         $this->addMiddleware(TemplatingMiddleware::class, array(), 2045);
         $this->addMiddleware(ApiClientMiddleware::class, array(), 2043);
 

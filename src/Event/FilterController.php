@@ -2,8 +2,8 @@
 
 namespace Bisnis\Event;
 
+use Bisnis\Controller\ControllerInterface;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
@@ -11,23 +11,23 @@ use Symfony\Component\HttpFoundation\Request;
 class FilterController extends Event
 {
     /**
-     * @var Request
+     * @var ControllerInterface
      */
-    private $request;
+    private $controller;
 
     /**
-     * @param Request $request
+     * @param ControllerInterface $controller
      */
-    public function __construct(Request $request)
+    public function __construct(ControllerInterface $controller)
     {
-        $this->request = $request;
+        $this->controller = $controller;
     }
 
     /**
-     * @return Request
+     * @return ControllerInterface
      */
-    public function getRequest()
+    public function getController()
     {
-        return $this->request;
+        return $this->controller;
     }
 }

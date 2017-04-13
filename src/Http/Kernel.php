@@ -59,10 +59,18 @@ class Kernel implements HttpKernelInterface
                 throw new \InvalidArgumentException('Action method is not valid.');
             }
 
-            $filterController = new FilterController($request);
+            $request->attributes->remove('_controller');
+            $request->attributes->remove('_action');
+            $request->attributes->remove('_config');
+            $parameters = $request->attributes->get('_parameters', array());
+            if (!empty($parameters)) {
+                $request->attributes->remove('_parameters');
+            }
+
+            $filterController = new FilterController($controller);
             $this->eventDispatcher->dispatch(KernelEvents::FILTER_CONTROLLER, $filterController);
 
-            $response = call_user_func_array(array($controller, $action), array($request));
+            $response = call_user_func_array(array($controller, $action), array_merge($parameters, array($request)));
         } catch (ResourceNotFoundException $e) {
             $response = new Response('Not found!', Response::HTTP_NOT_FOUND);
         }

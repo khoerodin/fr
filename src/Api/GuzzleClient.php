@@ -3,6 +3,8 @@
 namespace Bisnis\Api;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
@@ -15,12 +17,19 @@ class GuzzleClient implements ClientInterface
     private $guzzle;
 
     /**
+     * @var Session
+     */
+    private $session;
+
+    /**
      * @var array
      */
     private $options = array();
 
     public function __construct()
     {
+        $this->session = new Session();
+        $this->session->start();
         $this->guzzle = new Client();
     }
 
@@ -37,13 +46,36 @@ class GuzzleClient implements ClientInterface
     }
 
     /**
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    public function fetch($key)
+    {
+        return $this->session->get($key);
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $value
+     */
+    public function save($key, $value)
+    {
+        $this->session->set($key, $value);
+    }
+
+    /**
      * @param $url
      * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function get($url, array $options = array())
     {
-        return $this->guzzle->get($url, $this->mergeOptions($options));
+        try {
+            return $this->guzzle->get($url, $this->mergeOptions($options));
+        } catch (RequestException $exception) {
+            return $exception->getResponse();
+        }
     }
 
     /**
@@ -53,7 +85,11 @@ class GuzzleClient implements ClientInterface
      */
     public function post($url, array $options = array())
     {
-        return $this->guzzle->post($url, $this->mergeOptions($options));
+        try {
+            return $this->guzzle->post($url, $this->mergeOptions($options));
+        } catch (RequestException $exception) {
+            return $exception->getResponse();
+        }
     }
 
     /**
@@ -63,7 +99,11 @@ class GuzzleClient implements ClientInterface
      */
     public function put($url, array $options = array())
     {
-        return $this->guzzle->put($url, $this->mergeOptions($options));
+        try {
+            return $this->guzzle->put($url, $this->mergeOptions($options));
+        } catch (RequestException $exception) {
+            return $exception->getResponse();
+        }
     }
 
     /**
@@ -73,7 +113,11 @@ class GuzzleClient implements ClientInterface
      */
     public function delete($url, array $options = array())
     {
-        return $this->guzzle->delete($url, $this->mergeOptions($options));
+        try {
+            return $this->guzzle->delete($url, $this->mergeOptions($options));
+        } catch (RequestException $exception) {
+            return $exception->getResponse();
+        }
     }
 
     /**

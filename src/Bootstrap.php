@@ -5,6 +5,7 @@ namespace Bisnis;
 use Bisnis\Event\FilterController;
 use Bisnis\Http\Kernel;
 use Bisnis\Http\KernelEvents;
+use Bisnis\Middleware\ApiClientMiddleware;
 use Bisnis\Middleware\ConfigurationMiddleware;
 use Bisnis\Middleware\MiddlewareFactory;
 use Bisnis\Middleware\RouterMiddleware;
@@ -85,6 +86,7 @@ class Bootstrap
         $this->addMiddleware(ConfigurationMiddleware::class, array($configs), 2049);
         $this->addMiddleware(RouterMiddleware::class, array($eventDipatcher), 2047);
         $this->addMiddleware(TemplatingMiddleware::class, array(), 2045);
+        $this->addMiddleware(ApiClientMiddleware::class, array(), 2043);
 
         foreach ($this->middlewares as $middleware) {
             call_user_func_array(array($this->stackPhp, 'push'), $middleware);

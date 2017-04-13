@@ -14,19 +14,26 @@ class GuzzleClient implements ClientInterface
      */
     private $guzzle;
 
+    /**
+     * @var array
+     */
+    private $options = array();
+
     public function __construct()
     {
         $this->guzzle = new Client();
     }
 
     /**
-     * @param $url
-     * @param array $options
-     * @return \Psr\Http\Message\ResponseInterface
+     * @param string $token
      */
-    public function get($url, array $options)
+    public function bearer($token)
     {
-        return $this->guzzle->get($url, $options);
+        $this->options = array(
+            'headers' => array(
+                'Authorization' => sprintf('Bearer %s', $token),
+            )
+        );
     }
 
     /**
@@ -34,9 +41,9 @@ class GuzzleClient implements ClientInterface
      * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function post($url, array $options)
+    public function get($url, array $options = array())
     {
-        return $this->guzzle->post($url, $options);
+        return $this->guzzle->get($url, $this->mergeOptions($options));
     }
 
     /**
@@ -44,9 +51,9 @@ class GuzzleClient implements ClientInterface
      * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function put($url, array $options)
+    public function post($url, array $options = array())
     {
-        return $this->guzzle->put($url, $options);
+        return $this->guzzle->post($url, $this->mergeOptions($options));
     }
 
     /**
@@ -54,8 +61,33 @@ class GuzzleClient implements ClientInterface
      * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function delete($url, array $options)
+    public function put($url, array $options = array())
     {
-        return $this->guzzle->delete($url, $options);
+        return $this->guzzle->put($url, $this->mergeOptions($options));
+    }
+
+    /**
+     * @param $url
+     * @param array $options
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function delete($url, array $options = array())
+    {
+        return $this->guzzle->delete($url, $this->mergeOptions($options));
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    private function mergeOptions(array $options)
+    {
+        if (array_key_exists('headers', $options) && array_key_exists('headers', $this->options)) {
+            $options['headers'] = array_merge($this->options['headers'], $options['headers']);
+        } else {
+            $options = array_merge($options, $this->options);
+        }
+
+        return $options;
     }
 }

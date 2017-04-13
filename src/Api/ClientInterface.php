@@ -10,30 +10,35 @@ use Psr\Http\Message\ResponseInterface;
 interface ClientInterface
 {
     /**
-     * @param $url
-     * @param array $options
-     * @return ResponseInterface
+     * @param string $token
      */
-    public function get($url, array $options);
+    public function bearer($token);
 
     /**
      * @param $url
      * @param array $options
      * @return ResponseInterface
      */
-    public function post($url, array $options);
+    public function get($url, array $options = array());
 
     /**
      * @param $url
      * @param array $options
      * @return ResponseInterface
      */
-    public function put($url, array $options);
+    public function post($url, array $options = array());
 
     /**
      * @param $url
      * @param array $options
      * @return ResponseInterface
      */
-    public function delete($url, array $options);
+    public function put($url, array $options = array());
+
+    /**
+     * @param $url
+     * @param array $options
+     * @return ResponseInterface
+     */
+    public function delete($url, array $options = array());
 }

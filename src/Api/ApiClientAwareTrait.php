@@ -5,7 +5,7 @@ namespace Bisnis\Api;
 /**
  * @author Muhamad Surya Iksanudin <surya.iksanudin@bisnis.com>
  */
-trait ApiCallerAwareTrait
+trait ApiClientAwareTrait
 {
     /**
      * @var ClientInterface

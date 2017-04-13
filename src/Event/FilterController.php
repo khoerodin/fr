@@ -16,18 +16,11 @@ class FilterController extends Event
     private $request;
 
     /**
-     * @var array
-     */
-    private $attributes;
-
-    /**
      * @param Request $request
-     * @param array   $attributes
      */
-    public function __construct(Request $request, array $attributes)
+    public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->attributes = $attributes;
     }
 
     /**
@@ -36,13 +29,5 @@ class FilterController extends Event
     public function getRequest()
     {
         return $this->request;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
     }
 }

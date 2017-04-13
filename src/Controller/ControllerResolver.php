@@ -42,8 +42,8 @@ class ControllerResolver
     public function resolve($path)
     {
         $attributes = $this->urlMatcher->match($path);
-        $controllerNotation = explode('@', $attributes['_c']);
-        unset($attributes['_c']);
+        $controllerNotation = explode('@', $attributes['_controller']);
+        unset($attributes['_controller']);
 
         $controller = explode(':', $controllerNotation[0]);
 
@@ -62,10 +62,11 @@ class ControllerResolver
             throw new \InvalidArgumentException(sprintf('"%s" must implement "%s"', $class, ControllerInterface::class));
         }
 
+        $this->request->attributes->add($attributes);
+
         return array(
-            '_c' => new $class(),
-            '_a' => $action,
-            '_p' => array_merge($attributes, array('_request' => $this->request)),
+            '_controller' => new $class(), //controller must an object
+            '_action' => $action,
         );
     }
 }

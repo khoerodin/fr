@@ -20,37 +20,23 @@ use Symfony\Component\Routing\RouteCollection;
 class Kernel implements HttpKernelInterface
 {
     /**
-     * @var RouteCollection
-     */
-    private $router;
-
-    /**
      * @var EventDispatcher
      */
     private $eventDispatcher;
 
     /**
-     * @param RouteCollection $routeCollection
      * @param EventDispatcher $eventDispatcher
      */
-    public function __construct(RouteCollection $routeCollection, EventDispatcher $eventDispatcher)
+    public function __construct(EventDispatcher $eventDispatcher)
     {
-        $this->router = $routeCollection;
         $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
-     * When $catch is true, the implementation must catch all exceptions
-     * and do its best to convert them to a Response instance.
-     *
-     * @param Request $request A Request instance
-     * @param int     $type    The type of the request
-     *                         (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
-     * @param bool    $catch   Whether to catch exceptions or not
-     *
-     * @return Response A Response instance
-     *
-     * @throws \Exception When an Exception occurs during processing
+     * @param Request $request
+     * @param int $type
+     * @param bool $catch
+     * @return Response
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
@@ -63,13 +49,20 @@ class Kernel implements HttpKernelInterface
         }
 
         try {
-            $controllerResolver = new ControllerResolver($this->router, $request);
-            $attributes = $controllerResolver->resolve($request->getPathInfo());
+            $controller = $request->attributes->get('_controller');
+            if (!$controller) {
+                throw new \InvalidArgumentException('Controller is not valid.');
+            }
 
-            $filterController = new FilterController($request, $attributes);
+            $action = $request->attributes->get('_action');
+            if (!$action) {
+                throw new \InvalidArgumentException('Action method is not valid.');
+            }
+
+            $filterController = new FilterController($request);
             $this->eventDispatcher->dispatch(KernelEvents::FILTER_CONTROLLER, $filterController);
 
-            $response = call_user_func_array(array($attributes['_c'], $attributes['_a']), $attributes['_p']);
+            $response = call_user_func_array(array($controller, $action), array($request));
         } catch (ResourceNotFoundException $e) {
             $response = new Response('Not found!', Response::HTTP_NOT_FOUND);
         }
@@ -82,23 +75,5 @@ class Kernel implements HttpKernelInterface
         }
 
         throw new InvalidParameterException(sprintf('The controller must return a "\Symfony\Component\HttpFoundation\Response" object'));
-    }
-
-    /**
-     * @param string $name
-     * @param Route  $route
-     */
-    protected function route($name, Route $route)
-    {
-        $this->router->add($name, $route);
-    }
-
-    protected function on($event, $callback)
-    {
-        if (!is_callable($callback)) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not callable.'));
-        }
-
-        $this->eventDispatcher->addListener($event, $callback);
     }
 }

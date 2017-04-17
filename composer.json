@@ -1,17 +1,10 @@
 {
     "require": {
-        "symfony/http-foundation": "~3.0",
-        "symfony/http-kernel": "~3.0",
-        "symfony/routing": "~3.0",
-        "symfony/event-dispatcher": "~3.0",
-        "twig/twig": "~1.0",
-        "guzzlehttp/guzzle": "~6.2",
-        "stack/builder": "^1.0"
+        "ad3n/client-platform": "~0.1"
     },
     "autoload": {
         "psr-4": {
-            "Bisnis\\": "src/",
-            "Bisnis\\Application\\": "app/"
+            "Bisnis\\": "src/"
         }
     }
 }

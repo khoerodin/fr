@@ -1,8 +1,8 @@
 <?php
 
-namespace Bisnis\Application\Controller;
+namespace Bisnis\Controller;
 
-use Bisnis\Controller\AbstractController;
+use Ihsan\Client\Platform\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends AbstractController

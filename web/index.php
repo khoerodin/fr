@@ -2,11 +2,15 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Ihsan\Client\Platform\Bootstrap;
-use Pimple\Container;
+use Bisnis\Application;
+use Ihsan\Client\Platform\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
+
+$configDir = __DIR__.'/../app/config';
+$configFiles = ['loader.yml'];
 
 $request = Request::createFromGlobals();
 
-$app = new Bootstrap(new Container());
-$app->handle($request, require __DIR__.'/../app/config/config.php');
+$container = ContainerBuilder::build($configDir, $configFiles);
+$app = new Application();
+$app->handle($request, $container);

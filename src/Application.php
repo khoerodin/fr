@@ -13,4 +13,12 @@ class Application extends Bootstrap
     {
         return __DIR__.'/..';
     }
+
+    /**
+     * @return string
+     */
+    protected function cacheDir()
+    {
+        return sprintf('/%s/var/cache', $this->projectDir());
+    }
 }

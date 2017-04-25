@@ -1,0 +1,22 @@
+{%- spaceless -%}
+    <!DOCTYPE html>
+    <html lang="en-us">
+    <head>
+        {%- include 'layout/header.html.twig' with { 'title': title } -%}
+        {%- if css is defined -%}
+            {{- css | raw -}}
+        {%- endif -%}
+    </head>
+        <body class="skin-red sidebar-mini">
+            <div class="wrapper">
+                {%- include 'layout/body_header.html.twig' -%}
+                {%- include 'layout/menu.html.twig' -%}
+                {%- include 'layout/content.html.twig' with { 'title': title, 'content': content } -%}
+                {%- include 'layout/footer.html.twig' -%}
+                {%- if js is defined -%}
+                    {{- js | raw -}}
+                {%- endif -%}
+            </div>
+        </body>
+    </html>
+{%- endspaceless -%}

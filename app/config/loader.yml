@@ -1,7 +1,7 @@
 app:
     base_url: 'abc'
     routes:
-        - { path: '/{a}/{b}', controller: 'Bisnis:HomeController@index', methods: ['GET'] }
+        - { path: '/{a}/{b}', controller: 'Bisnis:Home@index', methods: ['GET'] }
     template:
         path: '/var/views'
         cache_dir: '/var/cache'

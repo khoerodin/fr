@@ -1,0 +1,40 @@
+{% extends 'layout.twig' %}
+
+{%- block content -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Details {{ clients.name }} data</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td width="20%;">Name</td>
+                            <td>{{ clients.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>{{ clients.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Address</td>
+                            <td>{{ clients.apiKey }}</td>
+                        </tr>
+                        <tr>
+                            <td>Contact Person</td>
+                            <td>{{ clients.user.fullname }}</td>
+                        </tr>
+
+                    </table>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <a href="/clients" class="btn btn-default btn-xs btn-flat pull-right">BACK</a>
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{%- endblock -%}

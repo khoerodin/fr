@@ -1,0 +1,18 @@
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>{{- meta.title | raw -}}</h1>
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">{{- meta.title | raw -}}</li>
+        </ol>
+    </section>
+    <section class="content">
+        {%- autoescape false -%}
+            {%- if content is empty -%}
+                no data
+            {%- else -%}
+                {{ content }}
+            {%- endif -%}
+        {%- endautoescape %}
+    </section>
+</div>

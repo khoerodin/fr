@@ -3,8 +3,7 @@
         "ad3n/client-platform": "~1.0"
     },
     "autoload": {
-        "psr-4": {
-            "Bisnis\\": "src/"
-        }
+        "psr-4": {"Bisnis\\": "src/"},
+        "classmap": ["Bootstrap.php"]
     }
 }

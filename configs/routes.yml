@@ -1,0 +1,30 @@
+app:
+    routes:
+        - { path: '/', controller: 'Bisnis:Home@index', methods: ['GET'] }
+        - { path: '/coba', controller: 'Bisnis:Home@coba', methods: ['GET'] }
+        - { path: '/me', controller: 'Bisnis:Home@me', methods: ['GET'] }
+        - { path: '/404', controller: 'Bisnis:Home@error404', methods: ['GET'] }
+        - { path: '/500', controller: 'Bisnis:Home@error500', methods: ['GET'] }
+
+        - { path: '/login', controller: 'Bisnis:Login@index', methods: ['GET'] }
+        - { path: '/login_check', controller: 'Bisnis:Login@processLogin', methods: ['POST'] }
+        - { path: '/logout', controller: 'Bisnis:Login@logout', methods: ['GET'] }
+
+        - { path: '/profile', controller: 'Bisnis:Profile@index', methods: ['GET'] }
+        - { path: '/save-profile', controller: 'Bisnis:Profile@save', methods: ['POST'] }
+
+        - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
+        - { path: '/users/add', controller: 'Bisnis:Users@add', methods: ['POST'] }
+        - { path: '/users/details/{id}', controller: 'Bisnis:Users@details', methods: ['GET'] }
+        - { path: '/users/delete/{id}', controller: 'Bisnis:Users@delete', methods: ['GET'] }
+
+        - { path: '/companies', controller: 'Bisnis:Companies@index', methods: ['GET'] }
+        - { path: '/companies/add', controller: 'Bisnis:Companies@add', methods: ['GET'] }
+        - { path: '/companies/process-add', controller: 'Bisnis:Companies@processAdd', methods: ['POST'] }
+        - { path: '/companies/delete/{id}', controller: 'Bisnis:Companies@delete', methods: ['GET'] }
+
+        - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }
+        - { path: '/clients/add', controller: 'Bisnis:Clients@add', methods: ['GET'] }
+        - { path: '/clients/process-add', controller: 'Bisnis:Clients@processAdd', methods: ['POST'] }
+        - { path: '/clients/details/{id}', controller: 'Bisnis:Clients@details', methods: ['GET'] }
+        - { path: '/clients/delete/{id}', controller: 'Bisnis:Clients@delete', methods: ['GET'] }

@@ -56,8 +56,6 @@ class ClientsController extends AdminController
             'user' => '/api/users/' . $user,
         ]);
 
-        //var_dump($response);die();
-
         return new RedirectResponse('/clients');
     }
 

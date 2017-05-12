@@ -67,6 +67,8 @@ class UsersController extends AdminController
             'enabled' => (bool) $enabled,
         ]);
 
+        //var_dump($response->getContent());die();
+
         return new Response($response->getContent());
     }
 

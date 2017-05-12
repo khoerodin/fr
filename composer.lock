@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "ad3n/client-platform",
-            "version": "1.6.8",
+            "version": "1.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ad3n/ClientPlatform.git",
-                "reference": "5b76cfc6fa1b4b698a9bc2645725aaeff7a4b13c"
+                "reference": "df5b2d42840f7782baf9681558c0afdfbe630ee6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ad3n/ClientPlatform/zipball/5b76cfc6fa1b4b698a9bc2645725aaeff7a4b13c",
-                "reference": "5b76cfc6fa1b4b698a9bc2645725aaeff7a4b13c",
+                "url": "https://api.github.com/repos/ad3n/ClientPlatform/zipball/df5b2d42840f7782baf9681558c0afdfbe630ee6",
+                "reference": "df5b2d42840f7782baf9681558c0afdfbe630ee6",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
             ],
             "description": "The Web Api Client Framework",
             "homepage": "https://github.com/ad3n/ClientPlatform",
-            "time": "2017-05-09T04:16:06+00:00"
+            "time": "2017-05-10T01:23:16+00:00"
         },
         {
             "name": "pimple/pimple",

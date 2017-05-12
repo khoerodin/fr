@@ -1,5 +1,6 @@
 app:
     routes:
+        - { path: '/api', controller: 'Bisnis:Api@call', methods: ['POST'] }
         - { path: '/', controller: 'Bisnis:Home@index', methods: ['GET'] }
         - { path: '/coba', controller: 'Bisnis:Home@coba', methods: ['GET'] }
         - { path: '/me', controller: 'Bisnis:Home@me', methods: ['GET'] }

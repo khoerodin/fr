@@ -44,22 +44,24 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
             $session = $this->container['internal.session_storage'];
             $token = $session->get('token');
             if (!$token) {
-                return new RedirectResponse('/login');
+               return new RedirectResponse('/login');
             } else {
                 /** @var ClientInterface $client */
                 $client = $this->container['internal.http_client'];
 
                 $me = $client->get('users/me');
-                $session->set('me', $me->getContent());
 
-                $menus = $client->get('roles/me');
-                //var_dump($menus->getContent());exit();
-                $session->set('menus', $menus->getContent());
+                if(401 == $me->getStatusCode()){
+                    return new RedirectResponse('/login');
+                } else {
+                    $session->set('me', $me->getContent());
+
+                    $menus = $client->get('roles/me');
+                    $session->set('menus', $menus->getContent());
+                }
             }
         }
 
         return $this->app->handle($request, $type, $catch);
     }
 }
-
-//PR: session ada tp udah logout

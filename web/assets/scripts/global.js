@@ -33,7 +33,7 @@ function requestResponse(data, method, module, columns) {
                     });
 
                     tr += '<td>';
-                    tr += '<a href="/'+module+'/details/'+val.id+'" class="btn btn-success btn-xs btn-flat">Details</a>';
+                    tr += '<a href="#" class="users detail btn btn-success btn-xs btn-flat">Details</a>';
                     tr += '<a href="#" id="#" class="btn btn-warning btn-xs btn-flat">Edit</a>';
                     tr += '<a href="/'+module+'/delete/'+val.id+'" class="btn btn-danger btn-xs btn-flat">Delete</a>';
                     tr += '</td>';
@@ -71,8 +71,11 @@ function getData(module,columns = []) {
 jQuery(function($) {
 
     $(document).on('click', '.'+window.module+'.add', function () {
-        $('.'+window.module+'.modal').modal({backdrop: 'static'})
-        $('.'+window.module+'.modal').modal('show');
+        $('.'+window.module+'.add.modal').modal('show');
+    });
+
+    $(document).on('click', '.'+window.module+'.detail', function () {
+        $('.'+window.module+'.detail.modal').modal('show');
     });
 
     $('.'+window.module+'.modal').on('hidden.bs.modal', function () {

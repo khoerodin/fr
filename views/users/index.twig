@@ -39,7 +39,7 @@
                     </table>
 
                     {#ADD MODAL#}
-                    <div class="users modal" tabindex="-1" role="dialog">
+                    <div class="users add modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -90,6 +90,50 @@
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
                     {#END ADD MODAL#}
+
+                    {#DETAIL MODAL#}
+                    <div class="users detail modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Detail of a User</h4>
+                                </div>
+                                <div class="modal-body users detail">
+                                    <form role="form" class="users form" action="/users/process-add" method="post">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label for="fullname">Fullname</label>
+                                                <input type="text" readonly name="fullname" class="form-control" id="fullname" placeholder="Fullname">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="username">Username</label>
+                                                <input type="text" readonly name="username" class="form-control" id="username" placeholder="Username">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="username">Email address</label>
+                                                <input type="email" readonly name="email" class="form-control" id="email" placeholder="Email">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="plainPassword">Password</label>
+                                                <input type="password" readonly name="plainPassword" class="form-control" id="plainPassword" placeholder="Password">
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" readonly name="enabled" value="true"> <strong>Enabled</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- /.box-body -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    {#END DETAIL MODAL#}
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">

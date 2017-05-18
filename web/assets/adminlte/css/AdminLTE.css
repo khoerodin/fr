@@ -4946,3 +4946,13 @@ table.text-center th {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.pagination > li > span {
+  background: #fafafa;
+  color: #666;
+  cursor: pointer;
+}
+
+.box-header.row {
+  margin-bottom: -20px;
+}

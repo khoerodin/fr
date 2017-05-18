@@ -8,22 +8,79 @@
             'username',
             'email'
         ];
+
+
+        jQuery(".js-data-example-ajax").select2({
+            theme: "bootstrap",
+            placeholder: "Seach a username",
+            allowClear: true,
+            ajax: {
+                url: "/search",
+                dataType: 'json',
+                type: 'POST',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page,
+                        module: 'users',
+                        method: 'get',
+                        field: 'username'
+                    };
+                },
+                processResults: function (data) {
+                    if(data.length > 0) {
+                        return {
+                            results: $.map(data, function(obj) {
+                                return { id: obj.id, text: obj.username };
+                            })
+                        }
+                    } else {
+                        btn = jQuery('.users.add-btn.btn').css('visibility', 'visible');
+                        return {
+                            results: btn
+                        }
+                    }
+
+                },
+                cache: true,
+            },
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 4,
+        }).on("select2:select", function () {
+            var text = jQuery(".js-data-example-ajax option:selected").text();
+            changeUrlParam('username', text);
+            get(module,columns);
+        }).on("select2:unselect", function () {
+            history.pushState(false,false,document.location.origin+'/users');
+            get(module,columns);
+        }).on("select2:open", function () {
+            jQuery('.users.add-btn.btn').css('visibility', 'hidden');
+        });
     </script>
 {% endblock %}
 
 {%- block content -%}
+
     <div class="row">
         <div class="col-md-12">
             <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Users List</h3>
+                <div class="box-header row" style="">
 
-                    <div class="box-tools">
-                        <a href="#" class="users add btn btn-xs btn-flat btn-danger">Add</a>
+                    <div class="col-md-3">
+                        <select class="js-data-example-ajax form-control select2">
+                            <option></option>
+                        </select>
                     </div>
+
+                    <div class="col-md-9">
+                        <a href="#" style="visibility: hidden;" class="users add-btn btn btn-flat btn-danger">Add</a>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
                 </div>
                 <!-- /.box-header -->
-                <div class="box-body">
+                <div class="box-body users">
+
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
@@ -39,7 +96,7 @@
                     </table>
 
                     {#ADD MODAL#}
-                    <div class="users add modal" tabindex="-1" role="dialog">
+                    <div class="users add-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -47,7 +104,7 @@
                                     <h4 class="modal-title">Add a User</h4>
                                 </div>
                                 <div class="modal-body users add">
-                                    <form role="form" class="users form" action="/users/process-add" method="post">
+                                    <form role="form" class="users add form" action="/users/process-add" method="post">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="fullname">Fullname</label>
@@ -75,7 +132,8 @@
                                             </div>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" name="enabled" value="true"> <strong>Enabled</strong>
+                                                    <input type="hidden" name="enabled" value="0">
+                                                    <input type="checkbox" name="enabled" value="1" id="enabled"> <strong>Enabled</strong>
                                                 </label>
                                             </div>
                                         </div>
@@ -92,7 +150,7 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div class="users detail modal" tabindex="-1" role="dialog">
+                    <div class="users detail-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -104,23 +162,19 @@
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="fullname">Fullname</label>
-                                                <input type="text" readonly name="fullname" class="form-control" id="fullname" placeholder="Fullname">
+                                                <input type="text" readonly name="fullname" class="form-control" id="fullname"">
                                             </div>
                                             <div class="form-group">
                                                 <label for="username">Username</label>
-                                                <input type="text" readonly name="username" class="form-control" id="username" placeholder="Username">
+                                                <input type="text" readonly name="username" class="form-control" id="username">
                                             </div>
                                             <div class="form-group">
                                                 <label for="username">Email address</label>
-                                                <input type="email" readonly name="email" class="form-control" id="email" placeholder="Email">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="plainPassword">Password</label>
-                                                <input type="password" readonly name="plainPassword" class="form-control" id="plainPassword" placeholder="Password">
+                                                <input type="email" readonly name="email" class="form-control" id="email">
                                             </div>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" readonly name="enabled" value="true"> <strong>Enabled</strong>
+                                                    <input type="checkbox" disabled name="enabled" id="enabled"> <strong>Enabled</strong>
                                                 </label>
                                             </div>
                                         </div>
@@ -134,25 +188,56 @@
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
                     {#END DETAIL MODAL#}
+
+                    {#EDIT MODAL#}
+                    <div class="users edit-modal modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Edit a User</h4>
+                                </div>
+                                <div class="modal-body users edit">
+                                    <form role="form" class="users edit form" action="/users/process-add" method="post">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label for="fullname">Fullname</label>
+                                                <input type="text" name="fullname" class="form-control" id="fullname"">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="username">Username</label>
+                                                <input type="text" readonly class="form-control" id="username">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email">Email address</label>
+                                                <input type="email" name="email" class="form-control" id="email">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="plainPassword">Password</label>
+                                                <input type="password" name="plainPassword" class="form-control" id="plainPassword">
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="enabled" id="enabled"> <strong>Enabled</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="id" id="id">
+                                        <!-- /.box-body -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="users edit btn btn-flat btn-danger">Update</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    {#END EDIT MODAL#}
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul class="pagination pagination-sm no-margin pull-right">
-                        {% for page in users['hydra:view'] %}
-                            {% if page['hydra:first'] %}
-                                <li><a href="{{ page }}" title="First page">FIRST</a></li>
-                            {% endif %}
-                            {% if page['hydra:next'] %}
-                                <li><a href="{{ page }}" title="Next page">NEXT</a></li>
-                            {% endif %}
-                            {% if page['hydra:previous'] %}
-                                <li><a href="{{ page }}" title="Previous page">PREVIOUS</a></li>
-                            {% endif %}
-                            {% if page['hydra:next'] %}
-                                <li><a href="{{ page }}" title="Last page">LAST</a></li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
+                    <ul class="users pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

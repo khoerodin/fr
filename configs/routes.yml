@@ -1,6 +1,8 @@
 app:
     routes:
         - { path: '/api', controller: 'Bisnis:Api@call', methods: ['POST'] }
+        - { path: '/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
+
         - { path: '/', controller: 'Bisnis:Home@index', methods: ['GET'] }
         - { path: '/coba', controller: 'Bisnis:Home@coba', methods: ['GET'] }
         - { path: '/me', controller: 'Bisnis:Home@me', methods: ['GET'] }
@@ -18,6 +20,7 @@ app:
         - { path: '/users/add', controller: 'Bisnis:Users@add', methods: ['POST'] }
         - { path: '/users/details/{id}', controller: 'Bisnis:Users@details', methods: ['GET'] }
         - { path: '/users/delete/{id}', controller: 'Bisnis:Users@delete', methods: ['GET'] }
+        - { path: '/users/username', controller: 'Bisnis:Users@username', methods: ['GET'] }
 
         - { path: '/companies', controller: 'Bisnis:Companies@index', methods: ['GET'] }
         - { path: '/companies/add', controller: 'Bisnis:Companies@add', methods: ['GET'] }

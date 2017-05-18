@@ -30,7 +30,38 @@ class UsersController extends AdminController
         return $this->view('users/index.twig', $data);
     }
 
-    public function iaddAction()
+    public function usernameAction()
+    {
+        $users = $this->get('users');
+        $users = json_decode($users->getContent(),true)['hydra:member'];
+        //var_dump($users);die();
+        $filtered = [];
+        foreach ($users as $values) {
+
+            $my_array = $values;
+            $allowed  = ['id', 'username'];
+            $filtered[] .= array_filter(
+                $my_array,
+                function ($key) use ($allowed) {
+                    return in_array($key, $allowed);
+                },
+                ARRAY_FILTER_USE_KEY
+            );
+
+            /*foreach ($values as $index => $username) {
+                if($index == 'username' ) {
+                    $uname['id'] .= $username;
+                    $uname['username'] .= $username;
+                }
+            }*/
+        }
+
+        echo "<pre>";
+        print_r($filtered);
+        echo "</pre>";die();
+    }
+
+    public function addAction()
     {
         $meta = [
             'title' => 'Add a User'
@@ -47,14 +78,13 @@ class UsersController extends AdminController
         return $this->view('users/add.twig', $data);
     }
 
-    public function addAction(Request $request)
+    public function aaddAction(Request $request)
     {
         $fullname = $request->get('fullname');
         $username = $request->get('username');
         $email = $request->get('email');
         $company = $request->get('company');
         $plainPassword = $request->get('plainPassword');
-        //$roles = $roles;
         $enabled = $request->get('enabled');
 
         $response = $this->post('users', [
@@ -63,11 +93,8 @@ class UsersController extends AdminController
             'email' => $email,
             'company' => '/api/companies/' . $company,
             'plainPassword' => $plainPassword,
-            //'roles' => $roles,
             'enabled' => (bool) $enabled,
         ]);
-
-        //var_dump($response->getContent());die();
 
         return new Response($response->getContent());
     }

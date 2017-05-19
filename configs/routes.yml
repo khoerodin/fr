@@ -1,7 +1,15 @@
 app:
     routes:
+        #API
         - { path: '/api', controller: 'Bisnis:Api@call', methods: ['POST'] }
         - { path: '/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
+
+        #Module
+        - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
+        - { path: '/companies', controller: 'Bisnis:Companies@index', methods: ['GET'] }
+        - { path: '/modules', controller: 'Bisnis:Modules@index', methods: ['GET'] }
+        - { path: '/roles', controller: 'Bisnis:Roles@index', methods: ['GET'] }
+
 
         - { path: '/', controller: 'Bisnis:Home@index', methods: ['GET'] }
         - { path: '/coba', controller: 'Bisnis:Home@coba', methods: ['GET'] }
@@ -15,20 +23,3 @@ app:
 
         - { path: '/profile', controller: 'Bisnis:Profile@index', methods: ['GET'] }
         - { path: '/save-profile', controller: 'Bisnis:Profile@save', methods: ['POST'] }
-
-        - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
-        - { path: '/users/add', controller: 'Bisnis:Users@add', methods: ['POST'] }
-        - { path: '/users/details/{id}', controller: 'Bisnis:Users@details', methods: ['GET'] }
-        - { path: '/users/delete/{id}', controller: 'Bisnis:Users@delete', methods: ['GET'] }
-        - { path: '/users/username', controller: 'Bisnis:Users@username', methods: ['GET'] }
-
-        - { path: '/companies', controller: 'Bisnis:Companies@index', methods: ['GET'] }
-        - { path: '/companies/add', controller: 'Bisnis:Companies@add', methods: ['GET'] }
-        - { path: '/companies/process-add', controller: 'Bisnis:Companies@processAdd', methods: ['POST'] }
-        - { path: '/companies/delete/{id}', controller: 'Bisnis:Companies@delete', methods: ['GET'] }
-
-        - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }
-        - { path: '/clients/add', controller: 'Bisnis:Clients@add', methods: ['GET'] }
-        - { path: '/clients/process-add', controller: 'Bisnis:Clients@processAdd', methods: ['POST'] }
-        - { path: '/clients/details/{id}', controller: 'Bisnis:Clients@details', methods: ['GET'] }
-        - { path: '/clients/delete/{id}', controller: 'Bisnis:Clients@delete', methods: ['GET'] }

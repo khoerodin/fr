@@ -1,0 +1,209 @@
+{% extends 'layout.twig' %}
+
+{% block js %}
+    <script>
+        window.module = 'roles';
+        var columns = [
+            'module.name',
+            'addable',
+            'editable',
+            'viewable',
+            'deletable',
+        ];
+    </script>
+{% endblock %}
+
+{%- block content -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header row">
+
+                    <div class="col-md-3">
+                        <a href="#" class="roles add-btn btn btn-flat btn-danger">Add</a>
+                    </div>
+
+                    <div class="col-md-9">
+                        <a href="#" style="visibility: hidden;" class="btn"></a>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Module</th>
+                            <th>Addable</th>
+                            <th>Editable</th>
+                            <th>Viewable</th>
+                            <th>Deletable</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+
+                        <tbody class="roles tbody">
+                            <tr><td colspan="7">Loading data....</td></tr>
+                        </tbody>
+
+                    </table>
+
+                    {#ADD MODAL#}
+                    <div class="roles add-modal modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Add a Role</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" class="roles add form">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label>Module</label>
+                                                <select disabled name="module" id="modules-name" class="form-control select-add-modal loading">
+                                                    <option selected>Loading...</option>
+                                                </select>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="addable" id="addable"> <strong>Addable</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="editable" id="editable"> <strong>Editable</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="viewable" id="viewable"> <strong>Viewable</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="deletable" id="deletable"> <strong>Deletable</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- /.box-body -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="roles save btn btn-flat btn-danger">Save</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    {#END ADD MODAL#}
+
+                    {#DETAIL MODAL#}
+                    <div class="roles detail-modal modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Detail of a Role</h4>
+                                </div>
+                                <div class="modal-body roles detail">
+                                    <form role="form">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label for="module">Module</label>
+                                                <input type="text" readonly name="module" class="form-control object" id="module-name">
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" disabled name="addable" id="addable"> <strong>Addable</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" disabled name="editable" id="editable"> <strong>Editable</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" disabled name="viewable" id="viewable"> <strong>Viewable</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" disabled name="deletable" id="deletable"> <strong>Deletable</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- /.box-body -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    {#END DETAIL MODAL#}
+
+                    {#EDIT MODAL#}
+                    <div class="roles edit-modal modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Edit a Role</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" class="roles edit form">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label>Module</label>
+                                                <select disabled name="module" data-object="modules-name" data-selected="module-name" class="form-control select-edit-modal">
+                                                    <option selected>Loading...</option>
+                                                </select>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="addable" id="addable"> <strong>Addable</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="editable" id="editable"> <strong>Editable</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="viewable" id="viewable"> <strong>Viewable</strong>
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="deletable" id="deletable"> <strong>Deletable</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="id" id="id">
+                                        <!-- /.box-body -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="roles edit btn btn-flat btn-danger">Update</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    {#END EDIT MODAL#}
+
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <ul class="modules pagination pagination-sm no-margin pull-right"></ul>
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{%- endblock -%}

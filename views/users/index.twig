@@ -3,16 +3,16 @@
 {% block js %}
     <script>
         window.module = 'users';
+        window.field = 'username';
         var columns = [
             'fullname',
             'username',
             'email'
         ];
 
-
-        jQuery(".js-data-example-ajax").select2({
+        jQuery(".search-"+field).select2({
             theme: "bootstrap",
-            placeholder: "Seach a username",
+            placeholder: "Seach a "+field,
             allowClear: true,
             ajax: {
                 url: "/search",
@@ -21,11 +21,11 @@
                 delay: 250,
                 data: function (params) {
                     return {
-                        q: params.term, // search term
+                        q: params.term,
                         page: params.page,
-                        module: 'users',
+                        module: module,
                         method: 'get',
-                        field: 'username'
+                        field: field
                     };
                 },
                 processResults: function (data) {
@@ -36,7 +36,7 @@
                             })
                         }
                     } else {
-                        btn = jQuery('.users.add-btn.btn').css('visibility', 'visible');
+                        btn = jQuery('.'+module+'.add-btn.btn').css('visibility', 'visible');
                         return {
                             results: btn
                         }
@@ -48,14 +48,14 @@
             escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
             minimumInputLength: 4,
         }).on("select2:select", function () {
-            var text = jQuery(".js-data-example-ajax option:selected").text();
-            changeUrlParam('username', text);
+            var text = jQuery(".search-"+field+" option:selected").text();
+            changeUrlParam(field, text);
             get(module,columns);
         }).on("select2:unselect", function () {
-            history.pushState(false,false,document.location.origin+'/users');
+            history.pushState(false,false,document.location.origin+'/'+module);
             get(module,columns);
         }).on("select2:open", function () {
-            jQuery('.users.add-btn.btn').css('visibility', 'hidden');
+            jQuery('.'+module+'.add-btn.btn').css('visibility', 'hidden');
         });
     </script>
 {% endblock %}
@@ -65,16 +65,16 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box">
-                <div class="box-header row" style="">
+                <div class="box-header row">
 
                     <div class="col-md-3">
-                        <select class="js-data-example-ajax form-control select2">
+                        <select class="search-username form-control select2">
                             <option></option>
                         </select>
                     </div>
 
                     <div class="col-md-9">
-                        <a href="#" style="visibility: hidden;" class="users add-btn btn btn-flat btn-danger">Add</a>
+                        <a href="#" style="visibility: hidden;" class="users add-btn h btn btn-flat btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
@@ -92,7 +92,9 @@
                             </tr>
                         </thead>
 
-                        <tbody class="users tbody"></tbody>
+                        <tbody class="users tbody">
+                            <tr><td colspan="5">Loading data....</td></tr>
+                        </tbody>
                     </table>
 
                     {#ADD MODAL#}
@@ -104,7 +106,7 @@
                                     <h4 class="modal-title">Add a User</h4>
                                 </div>
                                 <div class="modal-body users add">
-                                    <form role="form" class="users add form" action="/users/process-add" method="post">
+                                    <form role="form" class="users add form">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="fullname">Fullname</label>
@@ -132,8 +134,7 @@
                                             </div>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="hidden" name="enabled" value="0">
-                                                    <input type="checkbox" name="enabled" value="1" id="enabled"> <strong>Enabled</strong>
+                                                    <input type="checkbox" name="enabled" id="enabled"> <strong>Enabled</strong>
                                                 </label>
                                             </div>
                                         </div>

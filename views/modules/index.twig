@@ -2,13 +2,11 @@
 
 {% block js %}
     <script>
-        window.module = 'companies';
+        window.module = 'modules';
         var columns = [
             'name',
-            'email',
-            'address',
-            'contactPerson',
-            'phoneNumber',
+            'iconCls',
+            'path',
         ];
     </script>
 {% endblock %}
@@ -20,7 +18,7 @@
                 <div class="box-header row">
 
                     <div class="col-md-3">
-                        <a href="#" class="companies add-btn btn btn-flat btn-danger">Add</a>
+                        <a href="#" class="modules add-btn btn btn-flat btn-danger">Add</a>
                     </div>
 
                     <div class="col-md-9">
@@ -32,53 +30,43 @@
                 <div class="box-body">
                     <table class="table table-striped table-bordered">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Address</th>
-                                <th>Contact Person</th>
-                                <th>Phone Number</th>
-                                <th>Action</th>
-                            </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Icon Class</th>
+                            <th>Path</th>
+                            <th>Action</th>
+                        </tr>
                         </thead>
 
-                        <tbody class="companies tbody">
-                            <tr><td colspan="7">Loading data....</td></tr>
+                        <tbody class="modules tbody">
+                            <tr><td colspan="4">Loading data....</td></tr>
                         </tbody>
 
                     </table>
 
                     {#ADD MODAL#}
-                    <div class="companies add-modal modal" tabindex="-1" role="dialog">
+                    <div class="modules add-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Add a Company</h4>
+                                    <h4 class="modal-title">Add a Module</h4>
                                 </div>
-                                <div class="modal-body companies add">
-                                    <form role="form" class="companies add form">
+                                <div class="modal-body modules add">
+                                    <form role="form" class="modules add form">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <input type="text" name="name" class="form-control" id="name" placeholder="Name">
                                             </div>
                                             <div class="form-group">
-                                                <label for="username">Email address</label>
-                                                <input type="email" name="email" class="form-control" id="email" placeholder="Email">
+                                                <label for="iconCls">Icon Class</label>
+                                                <input type="text" name="iconCls" class="form-control" id="iconCls" placeholder="Icon Class">
                                             </div>
                                             <div class="form-group">
-                                                <label for="address">Address</label>
-                                                <input type="text" name="address" class="form-control" id="address" placeholder="Address">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="contactPerson">Contact Person</label>
-                                                <input type="text" name="contactPerson" class="form-control" id="contactPerson" placeholder="Contact Person">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="phoneNumber">Phone Number</label>
-                                                <input type="text" name="phoneNumber" class="form-control" id="phoneNumber" placeholder="Phone Number">
+                                                <label for="path">path</label>
+                                                <input type="text" name="path" class="form-control" id="path" placeholder="Path">
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -86,7 +74,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="companies save btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="modules save btn btn-flat btn-danger">Save</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -94,35 +82,27 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div class="companies detail-modal modal" tabindex="-1" role="dialog">
+                    <div class="modules detail-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail of a Company</h4>
+                                    <h4 class="modal-title">Detail of a Module</h4>
                                 </div>
-                                <div class="modal-body company detail">
-                                    <form role="form" class="users form">
+                                <div class="modal-body modules detail">
+                                    <form role="form">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <input type="text" readonly name="name" class="form-control" id="name">
                                             </div>
                                             <div class="form-group">
-                                                <label for="username">Email</label>
-                                                <input type="email" readonly name="email" class="form-control" id="email">
+                                                <label for="iconCls">Icon Class</label>
+                                                <input type="text" readonly name="iconCls" class="form-control" id="iconCls">
                                             </div>
                                             <div class="form-group">
-                                                <label for="address">Address</label>
-                                                <input type="text" readonly name="address" class="form-control" id="address">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="contactPerson">Contact Person</label>
-                                                <input type="text" readonly name="contactPerson" class="form-control" id="contactPerson">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="phoneNumber">Phone Number</label>
-                                                <input type="text" readonly name="phoneNumber" class="form-control" id="phoneNumber">
+                                                <label for="path">Path</label>
+                                                <input type="text" readonly name="path" class="form-control" id="path">
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -137,35 +117,27 @@
                     {#END DETAIL MODAL#}
 
                     {#EDIT MODAL#}
-                    <div class="companies edit-modal modal" tabindex="-1" role="dialog">
+                    <div class="modules edit-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Edit a Company</h4>
+                                    <h4 class="modal-title">Edit a Module</h4>
                                 </div>
-                                <div class="modal-body companies edit">
-                                    <form role="form" class="companies edit form">
+                                <div class="modal-body">
+                                    <form role="form" class="modules edit form">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
-                                                <input type="text" name="name" class="form-control" id="name"">
+                                                <input type="text" name="name" class="form-control" id="name">
                                             </div>
                                             <div class="form-group">
-                                                <label for="email">Email</label>
-                                                <input type="email" name="email" class="form-control" id="email">
+                                                <label for="iconCls">Icon Class</label>
+                                                <input type="text" name="iconCls" class="form-control" id="iconCls">
                                             </div>
                                             <div class="form-group">
-                                                <label for="address">Address</label>
-                                                <input type="text" name="address" class="form-control" id="address">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="contactPerson">Contact Person</label>
-                                                <input type="text" name="contactPerson" class="form-control" id="contactPerson">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="phoneNumber">Phone Number</label>
-                                                <input type="text" name="phoneNumber" class="form-control" id="phoneNumber">
+                                                <label for="path">Name</label>
+                                                <input type="text" name="path" class="form-control" id="path">
                                             </div>
                                         </div>
                                         <input type="hidden" name="id" id="id">
@@ -174,7 +146,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="companies edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="modules edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -184,7 +156,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul class="companies pagination pagination-sm no-margin pull-right"></ul>
+                    <ul class="modules pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

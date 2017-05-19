@@ -35,7 +35,7 @@ function requestResponse(data, method, module, columns, action, trid) {
             });
 
         } else {
-            history.pushState(false,false,document.location.origin+'/users');
+            history.pushState(false,false,document.location.origin+'/'+module);
             get(module,columns);
             jQuery('.'+module+'.add-modal.modal').modal('hide');
         }
@@ -79,7 +79,27 @@ function requestResponse(data, method, module, columns, action, trid) {
                     tr += '<tr id="'+val.id+'">';
                     tr += '<td>'+no+'</td>'
                     $.each(columns, function (i,v) {
-                        tr += '<td>'+val[v]+'</td>';
+                        var v1 = v.split(".")[0];
+                        var v2 = v.split(".")[1];
+
+                        if (val[v1] instanceof Object) {
+                            $.each(val[v1], function(ind, vl) {
+                                if(ind == v2){
+                                    tr += '<td>'+vl+'</td>';
+                                }
+                            })
+                        } else {
+                            tr += '<td>';
+                            if (val[v1] == true) {
+                                tr += '<span class="glyphicon glyphicon-ok"></span>';
+                            } else if(val[v1] == false) {
+                                tr += '<span class="glyphicon glyphicon-remove"></span>';
+                            } else {
+                                tr += val[v1];
+                            }
+                            tr += '</td>';
+                        }
+
                     });
 
                     tr += '<td>';
@@ -126,31 +146,34 @@ function requestResponse(data, method, module, columns, action, trid) {
         });
 
     } else if (method === 'get' && columns.length < 1) {
+        // edit dan detail
 
         var mod = module.replace(/[^\/]*$/, '');
             mod = mod.replace(/\/+$/, '');
 
         arr = JSON.parse(data);
         $.each(arr, function (index, value) {
-            if(typeof value === 'object') {
-                //
+            if (typeof value === 'object') {
+
+                $.each(value, function(idx, val) {
+                    console.log(idx+' : '+val);
+                })
+
             } else if (index.indexOf('@') <= -1) {
-                if(action === 'edit') {
-                    jQuery('.'+mod+'.'+action+'-modal.modal input[type="checkbox"]').prop('disabled', false);
-                    jQuery('.'+mod+'.'+action+'-modal.modal input[type="email"]').prop('readonly', false);
-                    jQuery('.'+mod+'.'+action+'-modal.modal input').prop('readonly', false);
+                if (action === 'edit') {
+                    jQuery('.' + mod + '.' + action + '-modal.modal input[type="checkbox"]').prop('disabled', false);
+                    jQuery('.' + mod + '.' + action + '-modal.modal input[type="email"]').prop('readonly', false);
+                    jQuery('.' + mod + '.' + action + '-modal.modal input').prop('readonly', false);
                 }
 
-                if( value === true ){
-                    jQuery('.'+mod+'.'+action+'-modal.modal input[type="checkbox"]#'+index).prop('checked', true);
-                } else if(value === false ) {
-                    jQuery('.'+mod+'.'+action+'-modal.modal input[type="checkbox"]#'+index).prop('checked', false);
+                if (value === true) {
+                    jQuery('.' + mod + '.' + action + '-modal.modal input[type="checkbox"]#' + index).prop('checked', true);
+                } else if (value === false) {
+                    jQuery('.' + mod + '.' + action + '-modal.modal input[type="checkbox"]#' + index).prop('checked', false);
                 } else {
                     jQuery('.' + mod + '.' + action + '-modal.modal input#' + index).val(value).removeClass('loading').attr('placeholder', index);
                 }
-
                 jQuery('.' + mod + '.' + action + '-modal.modal input#plainPassword').val('').removeClass('loading').attr('placeholder', 'Leave blank if dont want to change');
-
             }
         });
 
@@ -228,9 +251,7 @@ function request(module, params, method, columns = [], action, trid) {
         type: "POST",
         data: data,
         beforeSend: function () {
-            if(columns.length > 0) {
-                jQuery('.'+module+'.tbody').html('<tr><td colspan="'+columns.length + 2+'">Loading data....</td></tr>');
-            }
+
         },
         success: function (data, textStatus, jqXHR) {
             requestResponse(data, method, module, columns, action, trid);
@@ -252,12 +273,184 @@ function del(module, id) {
     request(module, {}, 'delete', [], 'delete', id);
 }
 
+function detail(module,id,classElm) {
+
+    var data = {
+        module : module+'/'+id,
+        method: 'get',
+        params: {}
+    };
+
+    $.ajax({
+        url: "/api",
+        type: "POST",
+        data: data,
+        beforeSend: function () {},
+        success: function (data, textStatus, jqXHR) {
+            arr = JSON.parse(data);
+            $.each(arr, function (index, value) {
+                if (typeof value === 'object') {
+
+                    jQuery(classElm).each( function(i, v) {
+                        var id = v.id;
+                        var object = id.split("-")[0];
+                        var field = id.split("-")[1];
+
+                        if( object === index) {
+                            jQuery('.' + module + '.detail-modal.modal input#' + id).val(value[field]).removeClass('loading').attr('placeholder', index);
+                        }
+                    });
+
+                } else if (index.indexOf('@') <= -1) {
+
+                    if (value === true) {
+                        jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', true);
+                    } else if (value === false) {
+                        jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false);
+                    } else {
+                        jQuery('.' + module + '.detail-modal.modal input#' + index).val(value).removeClass('loading').attr('placeholder', index);
+                        jQuery('.' + module + '.detail-modal.modal input[type="password"]').val('').removeClass('loading').attr('placeholder', 'Leave blank if dont want to change');
+                    }
+                }
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {}
+    });
+}
+
+function edit(module,id,classElm) {
+
+    var data = {
+        module : module+'/'+id,
+        method: 'get',
+        params: {}
+    };
+
+    $.ajax({
+        url: "/api",
+        type: "POST",
+        data: data,
+        beforeSend: function () {
+            jQuery('.' + module + '.edit-modal.modal input').addClass('loading').attr('placeholder', 'Loading...');
+            jQuery('.' + module + '.edit-modal.modal select').addClass('loading').attr('placeholder', 'Loading...');
+            jQuery('.' + module + '.edit-modal.modal textarea').addClass('loading').attr('placeholder', 'Loading...');
+            jQuery('.' + module + '.edit-modal.modal input[type="checkbox"]').attr('disabled');;
+        },
+        success: function (data, textStatus, jqXHR) {
+            arr = JSON.parse(data);
+            $.each(arr, function (index, value) {
+                if (typeof value === 'object') {
+
+                    var select = jQuery(classElm);
+
+                    $.each(select, function (indSlct, valSlct) {
+
+                        var dataSelected = $(valSlct).attr('data-selected');
+                        var objectSelected = dataSelected.split("-")[0];
+                        var fieldSelected = dataSelected.split("-")[1];
+
+                        var dataObject = $(valSlct).attr('data-object');
+                        var object = dataObject.split("-")[0];
+                        var field = dataObject.split("-")[1];
+                        var data = {
+                            module : object,
+                            method : 'get',
+                        };
+
+                        $.ajax({
+                            url: "/api",
+                            type: "POST",
+                            data: data,
+                            beforeSend: function () {},
+                            success: function (data, textStatus, jqXHR) {
+                                var select = '';
+                                var arr = JSON.parse(data);
+                                $.each(arr, function (indeks, velyu) {
+                                    if(indeks === 'hydra:member'){
+
+                                        $.each(velyu, function (ind, valu) {
+                                            if (value['id'] === valu.id && objectSelected === index) {
+                                                select += '<option selected value="/api/'+object+'/'+valu.id+'">'+valu[field]+'</option>';
+                                            } else {
+                                                select += '<option value="/api/'+object+'/'+valu.id+'">'+valu[field]+'</option>';
+                                            }
+                                        });
+
+                                    }
+                                });
+                                jQuery('select[data-object="'+dataObject+'"]').html(select).removeClass('loading').removeAttr('disabled');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {}
+                        });
+
+                    });
+
+                } else if (index.indexOf('@') <= -1) {
+
+                    if (value === true) {
+                        jQuery('.' + module + '.edit-modal.modal input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');;
+                    } else if (value === false) {
+                        jQuery('.' + module + '.edit-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');;
+                    } else {
+                        jQuery('.' + module + '.edit-modal.modal input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
+                        jQuery('.' + module + '.edit-modal.modal input[type="password"]').val('').removeClass('loading').attr('placeholder', 'Leave blank if dont want to change').removeAttr('disabled readonly');
+                    }
+                }
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {}
+    });
+}
+
+function getSelect(classElm) {
+    var select = jQuery(classElm);
+    jQuery(select).each( function(index, value) {
+
+        var id = value.id;
+        var module = id.split("-")[0];
+        var field = id.split("-")[1];
+        var data = {
+            module : module,
+            method : 'get',
+        };
+
+        $.ajax({
+            url: "/api",
+            type: "POST",
+            data: data,
+            beforeSend: function () {},
+            success: function (data, textStatus, jqXHR) {
+                var select = '';
+                var arr = JSON.parse(data);
+                $.each(arr, function (index, value) {
+                    if(index === 'hydra:member'){
+
+                        $.each(value, function (idx, val) {
+                            select += '<option value="/api/'+module+'/'+val.id+'">'+val[field]+'</option>';
+                        });
+
+                    }
+                });
+                jQuery('#'+id).html(select).removeClass('loading').removeAttr('disabled');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {}
+        });
+
+    });
+}
+
 jQuery(function($) {
 
     // Add form
     $(document).on('click', '.box-header .'+window.module+'.add-btn', function () {
-        $('.'+window.module+'.add-modal.modal').modal({show: true, backdrop: 'static'});
-        jQuery(this).css('visibility', 'hidden');
+        var $this = $('.'+window.module+'.add-modal.modal');
+        $this.modal({show: true, backdrop: 'static'});
+
+        getSelect('.select-add-modal');
+
+        if($(this).hasClass('h')){
+            jQuery(this).css('visibility', 'hidden');
+        }
     });
 
     // Detail modal
@@ -267,21 +460,20 @@ jQuery(function($) {
         jQuery('.'+window.module+'.detail-modal.modal').modal({show: true, backdrop: 'static'});
 
         var id = $(this).attr('data-id');
-        first(module+'/'+id, 'detail');
+        detail(module,id,'input.object');
     });
 
     // Edit form
     $(document).on('click', '.'+window.module+'.tbody .'+window.module+'.edit-btn', function () {
         var id = $(this).attr('data-id');
-        var target = jQuery('.'+window.module+'.tbody tr#'+id);
-        target.addClass('bg-red');
 
         jQuery('.'+window.module+'.edit-modal.modal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
         jQuery('.'+window.module+'.edit-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
         jQuery('.'+window.module+'.edit-modal.modal').modal({show: true, backdrop: 'static'});
 
 
-        first(module+'/'+id, 'edit');
+        //first(module+'/'+id, 'edit');
+        edit(module, id, 'select.select-edit-modal');
     });
 
     // Delete action

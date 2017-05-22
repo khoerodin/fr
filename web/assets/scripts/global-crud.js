@@ -68,7 +68,7 @@ function getAll(module, columns = []) {
     var data = {
         module : module,
         method: 'get',
-        params: {}
+        params: getQueryVariable()
     };
 
     var columnCount = columns.length+2;
@@ -181,7 +181,7 @@ function post(module, params, columns = []) {
 
     var data = {
         'module' : module,
-        'params' : params,
+        'params' : jQuery(params).serializeArray(),
         'method' : 'post'
     };
 
@@ -439,7 +439,7 @@ function del(module, id) {
         params: {}
     };
 
-    var elm = jQuery('.'+module+'.tbody tr#'+id);
+    var elm = jQuery('.'+module+' tr#'+id);
 
     $.ajax({
         url: "/api",

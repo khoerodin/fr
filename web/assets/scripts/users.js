@@ -46,10 +46,10 @@ jQuery(".search-"+field).select2({
 }).on("select2:select", function () {
     var text = jQuery(".search-"+field+" option:selected").text();
     changeUrlParam(field, text);
-    get(module,columns);
+    getAll(module,columns);
 }).on("select2:unselect", function () {
     history.pushState(false,false,document.location.origin+'/'+module);
-    get(module,columns);
+    getAll(module,columns);
 }).on("select2:open", function () {
     jQuery('.'+module+'.add-btn.btn').css('visibility', 'hidden');
 });

@@ -1,16 +1,18 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/global-crud.js"></script>
     <script>
-        window.module = 'clients';
+        window.module = 'activity_loggers';
         var columns = [
-            'name',
-            'email',
-            'apiKey',
+            'clientName',
+            'username',
+            'path',
+            'requestMethod',
+            'path',
             'user.fullname'
         ];
     </script>
+    <script src="/assets/scripts/global-crud.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -19,11 +21,11 @@
             <div class="box">
                 <div class="box-header row">
 
-                    <div class="col-md-2">
-                        <button class="clients add-btn btn btn-flat btn-block btn-danger">Add</button>
+                    <div class="col-md-3">
+                        <a href="#" class="clients add-btn btn btn-flat btn-danger">Add</a>
                     </div>
 
-                    <div class="col-md-10">
+                    <div class="col-md-9">
                         <a href="#" style="visibility: hidden;" class="btn"></a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
@@ -32,14 +34,14 @@
                 <div class="box-body">
                     <table class="table table-striped table-bordered">
                         <thead>
-                            <tr>
-                                <th width="5%">#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Api Key</th>
-                                <th>User</th>
-                                <th width="15%">Action</th>
-                            </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Api Key</th>
+                            <th>User</th>
+                            <th>Action</th>
+                        </tr>
                         </thead>
 
                         <tbody class="clients">
@@ -145,7 +147,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="clients edit btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="clients edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->

@@ -3,12 +3,17 @@ app:
         #API
         - { path: '/api', controller: 'Bisnis:Api@call', methods: ['POST'] }
         - { path: '/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
+        - { path: '/api/roles', controller: 'Bisnis:Api@getRole', methods: ['POST'] }
 
-        #Module
-        - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
-        - { path: '/companies', controller: 'Bisnis:Companies@index', methods: ['GET'] }
+        #Administration
+        - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }
         - { path: '/modules', controller: 'Bisnis:Modules@index', methods: ['GET'] }
         - { path: '/roles', controller: 'Bisnis:Roles@index', methods: ['GET'] }
+        - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
+        - { path: '/activity_loggers', controller: 'Bisnis:ActivityLoggers@index', methods: ['GET'] }
+
+        #Organization
+        - { path: '/companies', controller: 'Bisnis:Companies@index', methods: ['GET'] }
 
 
         - { path: '/', controller: 'Bisnis:Home@index', methods: ['GET'] }

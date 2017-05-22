@@ -4956,3 +4956,11 @@ table.text-center th {
 .box-header.row {
   margin-bottom: -20px;
 }
+
+table th, .modal-title, .form-group label, .modal label, button, .btn, input {
+  text-transform: uppercase;
+}
+
+input#username, input#email, input#plainPassword, input#password {
+  text-transform: inherit !important;
+}

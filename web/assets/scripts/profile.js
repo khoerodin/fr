@@ -41,11 +41,13 @@ $(document).on('click', '#update-profile', function () {
                 toastr.success('Profile successfully updated');
 
             }
-
+            $('#plainPassword').val('');
             $('#update-profile').text('UPDATE').prop('disabled', false);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             $('#update-profile').text('UPDATE').prop('disabled', false);
+            $('#plainPassword').val('');
+
         }
     });
 

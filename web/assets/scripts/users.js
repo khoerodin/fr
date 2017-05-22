@@ -6,55 +6,6 @@ var columns = [
     'email'
 ];
 
-jQuery(".search-"+field).select2({
-    theme: "bootstrap",
-    placeholder: "SEARCH A "+field.toUpperCase(),
-    allowClear: true,
-    ajax: {
-        url: "/search",
-        dataType: 'json',
-        type: 'POST',
-        delay: 250,
-        data: function (params) {
-            return {
-                q: params.term,
-                page: params.page,
-                module: module,
-                method: 'get',
-                field: field
-            };
-        },
-        processResults: function (data) {
-            if(data.length > 0) {
-                return {
-                    results: $.map(data, function(obj) {
-                        return { id: obj.id, text: obj.username };
-                    })
-                }
-            } else {
-                btn = jQuery('.'+module+'.add-btn.btn').css('visibility', 'visible');
-                return {
-                    results: btn
-                }
-            }
-
-        },
-        cache: true,
-    },
-    escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-    minimumInputLength: 4,
-}).on("select2:select", function () {
-    var text = jQuery(".search-"+field+" option:selected").text();
-    changeUrlParam(field, text);
-    getAll(module,columns);
-}).on("select2:unselect", function () {
-    history.pushState(false,false,document.location.origin+'/'+module);
-    getAll(module,columns);
-}).on("select2:open", function () {
-    jQuery('.'+module+'.add-btn.btn').css('visibility', 'hidden');
-});
-
-
 jQuery('.'+window.module+'.roles-modal.modal').on('hidden.bs.modal', function (e) {
     jQuery('tbody#roles-check').html('<tr><td colspan="6">Loading...</td></tr>');
 })

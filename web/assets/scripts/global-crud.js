@@ -192,6 +192,7 @@ function post(module, params, columns = []) {
         beforeSend: function () {
             jQuery('div .has-error').removeClass('has-error');
             jQuery('p.help-block').remove();
+            jQuery('.'+module+'.save.btn').text('SAVING...').prop('disabled', true);
         },
         success: function (data, textStatus, jqXHR) {
 
@@ -213,8 +214,10 @@ function post(module, params, columns = []) {
                 jQuery('.'+module+'.add-modal.modal').modal('hide');
             }
 
+            jQuery('.'+module+'.save.btn').text('SAVE').prop('disabled', false);
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            jQuery('.'+module+'.save.btn').text('SAVE').prop('disabled', false);
         }
     });
 }
@@ -490,17 +493,69 @@ function getSelect(classElm) {
 
                     }
                 });
-                jQuery('#'+id).html(select).removeClass('loading').removeAttr('disabled');
+                jQuery('select#'+id).html(select).removeClass('loading').removeAttr('disabled');
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                jQuery('#'+id).html('<option selected>ERROR</option>');
+                jQuery('select#'+id).html('<option selected>ERROR</option>');
             }
         });
 
     });
 }
 
+
+
+
 jQuery(function($) {
+
+
+    jQuery(".search-"+field).select2({
+        theme: "bootstrap",
+        placeholder: "SEARCH A "+field.toUpperCase(),
+        allowClear: true,
+        ajax: {
+            url: "/search",
+            dataType: 'json',
+            type: 'POST',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    page: params.page,
+                    module: module,
+                    method: 'get',
+                    field: field
+                };
+            },
+            processResults: function (data) {
+                if(data.length > 0) {
+                    return {
+                        results: $.map(data, function(obj) {
+                            return { id: obj.id, text: obj[field] };
+                        })
+                    }
+                } else {
+                    btn = jQuery('.'+module+'.add-btn.btn').css('visibility', 'visible');
+                    return {
+                        results: btn
+                    }
+                }
+
+            },
+            cache: true,
+        },
+        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+        minimumInputLength: 4,
+    }).on("select2:select", function () {
+        var text = jQuery(".search-"+field+" option:selected").text();
+        changeUrlParam(field, text);
+        getAll(module,columns);
+    }).on("select2:unselect", function () {
+        history.pushState(false,false,document.location.origin+'/'+module);
+        getAll(module,columns);
+    }).on("select2:open", function () {
+        jQuery('.'+module+'.add-btn.btn').css('visibility', 'hidden');
+    });
 
     // Add form
     $(document).on('click', '.box-header .'+window.module+'.add-btn', function () {

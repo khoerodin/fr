@@ -3,6 +3,7 @@
 {% block js %}
     <script>
         window.module = 'modules';
+        window.field = 'name';
         var columns = [
             'name',
             'iconCls',
@@ -17,13 +18,14 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header row">
-
-                    <div class="col-md-2">
-                        <button class="modules add-btn btn btn-flat btn-block btn-danger">Add</button>
+                    <div class="col-md-10">
+                        <select class="search-name form-control select2">
+                            <option></option>
+                        </select>
                     </div>
 
-                    <div class="col-md-10">
-                        <a href="#" style="visibility: hidden;" class="btn"></a>
+                    <div class="col-md-2">
+                        <a href="#" style="visibility: hidden;" class="modules add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>

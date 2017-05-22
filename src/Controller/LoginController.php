@@ -23,6 +23,7 @@ class LoginController extends AbstractController
             'password' => $password
         ]);
 
+        //var_dump($response->getContent());die();
         $token = json_decode($response->getContent(), true)['token'];
         $this->store('token', $token);
 

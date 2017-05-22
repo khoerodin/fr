@@ -124,8 +124,7 @@ function getAll(module, columns = []) {
                         });
 
                         tr += '<td>';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' detail-btn btn btn-success btn-xs btn-flat">DETAILS</button>';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' edit-btn btn btn-warning btn-xs btn-flat">EDIT</button>';
+                        tr += '<button data-id="'+val.id+'" class="'+module+' detail-btn btn btn-warning btn-xs btn-flat">DETAILS</button>';
                         tr += '<button data-id="'+val.id+'" class="'+module+' delete-btn btn btn-danger btn-xs btn-flat">DELETE</button>';
 
                         if(module === 'users') {
@@ -222,54 +221,8 @@ function post(module, params, columns = []) {
     });
 }
 
-// get details of data
-function detail(module,id,classElm) {
-
-    var data = {
-        module : module+'/'+id,
-        method: 'get',
-        params: {}
-    };
-
-    $.ajax({
-        url: "/api",
-        type: "POST",
-        data: data,
-        beforeSend: function () {},
-        success: function (data, textStatus, jqXHR) {
-            arr = JSON.parse(data);
-            $.each(arr, function (index, value) {
-                if (typeof value === 'object') {
-
-                    jQuery(classElm).each( function(i, v) {
-                        var id = v.id;
-                        var object = id.split("-")[0];
-                        var field = id.split("-")[1];
-
-                        if( object === index) {
-                            jQuery('.' + module + '.detail-modal.modal input#' + id).val(value[field]).removeClass('loading').attr('placeholder', index);
-                        }
-                    });
-
-                } else if (index.indexOf('@') <= -1) {
-
-                    if (value === true) {
-                        jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', true);
-                    } else if (value === false) {
-                        jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false);
-                    } else {
-                        jQuery('.' + module + '.detail-modal.modal input#' + index).val(value).removeClass('loading').attr('placeholder', index);
-                        jQuery('.' + module + '.detail-modal.modal input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE');
-                    }
-                }
-            });
-        },
-        error: function (jqXHR, textStatus, errorThrown) {}
-    });
-}
-
-// get data before edit
-function edit(module,id) {
+// get detail of data before edit
+function detail(module,id) {
 
     var data = {
         module : module+'/'+id,
@@ -569,25 +522,15 @@ jQuery(function($) {
         }
     });
 
-    // Detail modal
-    $(document).on('click', 'tbody.'+window.module+' .'+window.module+'.detail-btn', function () {
-        jQuery('.'+window.module+'.detail-modal.modal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
-        jQuery('.'+window.module+'.detail-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
-        jQuery('.'+window.module+'.detail-modal.modal').modal({show: true, backdrop: 'static'});
-
-        var id = $(this).attr('data-id');
-        detail(module,id,'input.object');
-    });
-
     // Edit form
-    $(document).on('click', 'tbody.'+window.module+' .'+window.module+'.edit-btn', function () {
+    $(document).on('click', 'tbody.'+window.module+' .'+window.module+'.detail-btn', function () {
         var id = $(this).attr('data-id');
 
         jQuery('.'+window.module+'.edit-modal.modal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
         jQuery('.'+window.module+'.edit-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
         jQuery('.'+window.module+'.edit-modal.modal').modal({show: true, backdrop: 'static'});
 
-        edit(module, id);
+        detail(module, id);
     });
 
     // Delete action

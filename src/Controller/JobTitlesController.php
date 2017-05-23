@@ -10,12 +10,8 @@ class JobTitlesController extends AdminController
             'title' => 'Job Titles',
         ];
 
-        $jobTitles = $this->get('job_titles');
-        $jobTitles = json_decode($jobTitles->getContent(),true);
-
         $data = [
-            'meta' => $meta,
-            'job_titles' => $jobTitles
+            'meta' => $meta
         ];
 
         return $this->view('job_titles/index.twig', $data);

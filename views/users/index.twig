@@ -69,11 +69,9 @@
                                                 <input type="password" name="plainPassword" class="form-control" id="plainPassword" placeholder="Password">
                                             </div>
                                             <div class="form-group">
-                                                <label>Select</label>
-                                                <select name="company" class="form-control">
-                                                    {% for company in companies %}
-                                                        <option value="/api/companies/{{ company.id }}">{{ company.name }}</option>
-                                                    {% endfor %}
+                                                <label>Company</label>
+                                                <select disabled name="company" id="companies-name" class="form-control select-add-modal loading">
+                                                    <option selected>Loading...</option>
                                                 </select>
                                             </div>
                                             <div class="checkbox">
@@ -120,6 +118,12 @@
                                             <div class="form-group">
                                                 <label for="plainPassword">Password</label>
                                                 <input type="password" name="plainPassword" class="form-control" id="plainPassword">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Company</label>
+                                                <select name="company" data-object="companies-name" data-selected="company-name" class="form-control select-edit-modal">
+                                                    <option selected>Loading...</option>
+                                                </select>
                                             </div>
                                             <div class="checkbox">
                                                 <label>

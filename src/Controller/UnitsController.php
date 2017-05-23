@@ -11,12 +11,8 @@ class UnitsController extends AdminController
             'title' => 'Units',
         ];
 
-        $units = $this->get('units');
-        $units = json_decode($units->getContent(),true);
-
         $data = [
-            'meta' => $meta,
-            'units' => $units
+            'meta' => $meta
         ];
 
         return $this->view('units/index.twig', $data);

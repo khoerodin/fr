@@ -10,12 +10,8 @@ class ClientsController extends AdminController
             'title' => 'Clients',
         ];
 
-        $clients = $this->get('clients');
-        $clients = json_decode($clients->getContent(),true);
-
         $data = [
-            'meta' => $meta,
-            'clients' => $clients
+            'meta' => $meta
         ];
 
         return $this->view('clients/index.twig', $data);

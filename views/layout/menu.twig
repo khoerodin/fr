@@ -1,0 +1,139 @@
+{%- spaceless -%}
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>{{- me.username | raw -}}</p>
+                    {{- me.fullname|striptags|length > 18 ? me.fullname|striptags|slice(0, 18) ~ '...' : me.fullname|striptags -}}
+                </div>
+            </div>
+            {#<!-- search form -->
+            <form action="#" method="get" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="SEARCH...">
+                    <span class="input-group-btn">
+                    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                    </button>
+                  </span>
+                </div>
+            </form>
+            <!-- /.search form -->#}
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
+                <li class="header">MAIN NAVIGATION</li>
+                <li class="treeview active hidden">
+                    <a href="#">
+                        <i class="fa fa-files-o"></i>
+                        <span>ADMINISTRATION</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        {%- for menu in menus['hydra:member'] -%}
+                            {%- if
+                                menu.module.path|split('/')[2] == 'users' or
+                                menu.module.path|split('/')[2] == 'clients' or
+                                menu.module.path|split('/')[2] == 'activity_loggers' or
+                                menu.module.path|split('/')[2] == 'modules'
+                            -%}
+                        <li>
+                            <a href="/{{- menu.module.path|split('/')[2] -}}">
+                                <i class="fa fa-circle-o"></i>
+                                {{- menu.module.name -}}
+                            </a>
+                        </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="treeview active hidden">
+                    <a href="#">
+                        <i class="fa fa-user-circle-o"></i>
+                        <span>ACCOUNT MANAGEMENT</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        {%- for menu in menus['hydra:member'] -%}
+                            {%- if
+                                menu.module.path|split('/')[2] == 'accounts' or
+                                menu.module.path|split('/')[2] == 'transaction_mappings'
+                            -%}
+                        <li>
+                            <a href="/{{- menu.module.path|split('/')[2] -}}">
+                                <i class="fa fa-circle-o"></i>
+                                {{- menu.module.name -}}
+                            </a>
+                        </li>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </ul>
+                </li>
+                <li class="treeview active hidden">
+                    <a href="#">
+                        <i class="fa fa-users"></i>
+                        <span>CUSTOMER/CLIENT</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        {%- for menu in menus['hydra:member'] -%}
+                            {%- if
+                                menu.module.path|split('/')[2] == 'customers'
+                            -%}
+                        <li>
+                            <a href="/{{- menu.module.path|split('/')[2] -}}">
+                                <i class="fa fa-circle-o"></i>
+                                {{- menu.module.name -}}
+                            </a>
+                        </li>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </ul>
+                </li>
+                <li class="treeview active hidden">
+                    <a href="#">
+                        <i class="fa fa-building-o"></i>
+                        <span>ORGANIZATION</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        {%- for menu in menus['hydra:member'] -%}
+                            {%- if
+                            menu.module.path|split('/')[2] == 'companies' or
+                            menu.module.path|split('/')[2] == 'departments' or
+                            menu.module.path|split('/')[2] == 'job_titles'
+                            -%}
+                        <li>
+                            <a href="/{{- menu.module.path|split('/')[2] -}}">
+                                <i class="fa fa-circle-o"></i>
+                                {{- menu.module.name -}}
+                            </a>
+                        </li>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </ul>
+                </li>
+                <li class="treeview active hidden">
+                    <a href="#">
+                        <i class="fa fa-wrench"></i>
+                        <span>UTILITY</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        {%- for menu in menus['hydra:member'] -%}
+                            {%- if
+                                menu.module.path|split('/')[2] == 'units'
+                            -%}
+                                <li>
+                                    <a href="/{{- menu.module.path|split('/')[2] -}}">
+                                        <i class="fa fa-circle-o"></i>
+                                        {{- menu.module.name -}}
+                                    </a>
+                                </li>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+{%- endspaceless -%}

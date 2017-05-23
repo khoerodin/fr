@@ -1,13 +1,15 @@
 <?php
 
+//for development only
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+//end for development only
+
 require __DIR__.'/../vendor/autoload.php';
 
-use Bisnis\Application;
 use Symfony\Component\HttpFoundation\Request;
-
-$configDir = __DIR__.'/../app/config';
 
 $request = Request::createFromGlobals();
 
-$app = new Application($configDir);
+$app = new Bootstrap();
 $app->handle($request);

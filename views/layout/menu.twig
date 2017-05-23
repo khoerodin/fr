@@ -26,12 +26,12 @@
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
-                <li class="treeview active">
+                <li class="treeview active hidden">
                     <a href="#">
                         <i class="fa fa-files-o"></i>
                         <span>ADMINISTRATION</span>
                     </a>
-                    <ul class="treeview-menu menu-open">
+                    <ul class="treeview-menu">
                         {%- for menu in menus['hydra:member'] -%}
                             {%- if
                                 menu.module.path|split('/')[2] == 'users' or
@@ -45,11 +45,11 @@
                                 {{- menu.module.name -}}
                             </a>
                         </li>
-                        {% endif %}
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </li>
-                <li class="treeview active">
+                <li class="treeview active hidden">
                     <a href="#">
                         <i class="fa fa-user-circle-o"></i>
                         <span>ACCOUNT MANAGEMENT</span>
@@ -70,7 +70,7 @@
                         {%- endfor -%}
                     </ul>
                 </li>
-                <li class="treeview active">
+                <li class="treeview active hidden">
                     <a href="#">
                         <i class="fa fa-users"></i>
                         <span>CUSTOMER/CLIENT</span>
@@ -90,7 +90,7 @@
                         {%- endfor -%}
                     </ul>
                 </li>
-                <li class="treeview active">
+                <li class="treeview active hidden">
                     <a href="#">
                         <i class="fa fa-building-o"></i>
                         <span>ORGANIZATION</span>
@@ -112,7 +112,7 @@
                         {%- endfor -%}
                     </ul>
                 </li>
-                <li class="treeview active">
+                <li class="treeview active hidden">
                     <a href="#">
                         <i class="fa fa-wrench"></i>
                         <span>UTILITY</span>

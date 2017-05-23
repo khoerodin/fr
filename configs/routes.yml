@@ -8,7 +8,6 @@ app:
         #Administration
         - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }
         - { path: '/modules', controller: 'Bisnis:Modules@index', methods: ['GET'] }
-        - { path: '/roles', controller: 'Bisnis:Roles@index', methods: ['GET'] }
         - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
         - { path: '/activity_loggers', controller: 'Bisnis:ActivityLoggers@index', methods: ['GET'] }
 
@@ -21,7 +20,10 @@ app:
         #Organization
         - { path: '/companies', controller: 'Bisnis:Companies@index', methods: ['GET'] }
         - { path: '/departments', controller: 'Bisnis:Departments@index', methods: ['GET'] }
+        - { path: '/job_titles', controller: 'Bisnis:JobTitles@index', methods: ['GET'] }
 
+        #Organization
+        - { path: '/units', controller: 'Bisnis:Units@index', methods: ['GET'] }
 
         - { path: '/', controller: 'Bisnis:Home@index', methods: ['GET'] }
         - { path: '/coba', controller: 'Bisnis:Home@coba', methods: ['GET'] }

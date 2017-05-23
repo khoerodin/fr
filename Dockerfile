@@ -72,23 +72,21 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer global require "hirak/prestissimo:^0.3" "alcaeus/mongo-php-adapter:^1.0" --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative \
 && composer clear-cache
 
-WORKDIR /bigerp
+WORKDIR /bigerpfront
 
 COPY composer.json ./
 COPY composer.lock ./
 
 RUN mkdir -p \
 		var/cache \
-		var/logs \
-		var/sessions \
 	&& chmod 777 -R var/ \
 	&& composer install --prefer-dist --no-autoloader --no-scripts --no-progress --no-suggest \
 	&& composer clear-cache
 
-COPY app app/
-COPY bin bin/
-COPY web web/
+COPY configs configs/
 COPY src src/
+COPY web web/
+COPY views views/
 
 RUN composer dump-autoload --optimize --classmap-authoritative
 

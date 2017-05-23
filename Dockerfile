@@ -26,7 +26,7 @@ RUN apt-get remove --purge -y software-properties-common python-software-propert
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* ~/.composer
 
 # Setup Environment
-ENV NGINX_WEBROOT   /bigerp/web
+ENV NGINX_WEBROOT   /bigerpfront/web
 ENV SYMFONY_ENV     dev
 ENV VARNISH_CONFIG  /etc/varnish/default.vcl
 ENV CACHE_SIZE      512m

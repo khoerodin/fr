@@ -23,9 +23,10 @@ class LoginController extends AbstractController
             'password' => $password
         ]);
 
-        //var_dump($response->getContent());die();
+        //var_dump($response->getContent());
         $token = json_decode($response->getContent(), true)['token'];
         $this->store('token', $token);
+        //var_dump($token);die();
 
         if(401 == $response->getStatusCode()){
             $redirect = new RedirectResponse('/login');

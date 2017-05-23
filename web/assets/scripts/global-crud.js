@@ -71,7 +71,7 @@ function getAll(module, columns = []) {
         params: getQueryVariable()
     };
 
-    var columnCount = columns.length+2;
+    columnCount = columns.length+2;
 
     $.ajax({
         url: "/api",
@@ -83,8 +83,15 @@ function getAll(module, columns = []) {
         success: function (data, textStatus, jqXHR) {
 
             arr = JSON.parse(data);
+
+            // jml = arr['hydra:member'].length;
+            // if(jml < 1) {
+            //     jQuery('tbody.'+module).html('<tr><td colspan="'+columnCount+'">NO DATA YET</td></tr>')
+            // }
+
             $.each(arr, function (index, value) {
                 if(index === 'hydra:member'){
+
                     page = getQueryVariable('page');
                     var tr = '';
                     $.each(value, function (idx, val) {
@@ -116,6 +123,9 @@ function getAll(module, columns = []) {
                                 } else if(val[v1] == false) {
                                     tr += '<span class="glyphicon glyphicon-remove"></span>';
                                 } else {
+                                    if (val[v1] == null) {
+                                        val[v1] = '-';
+                                    }
                                     tr += val[v1];
                                 }
                                 tr += '</td>';
@@ -240,10 +250,10 @@ function detail(module,id) {
             jQuery('.'+module+'.edit.btn').text('UPDATE').prop('disabled', true);
             jQuery('tbody.'+module+' tr#'+id).attr('style', 'background-color:#f39c12;transition:background 3s ease;');
 
-            jQuery('.' + module + '.edit-modal.modal input').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
-            jQuery('.' + module + '.edit-modal.modal select').addClass('loading').prop('disabled', true).html('<option selected>LOADING...</option>');
-            jQuery('.' + module + '.edit-modal.modal textarea').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
-            jQuery('.' + module + '.edit-modal.modal input[type="checkbox"]').prop('disabled', true);
+            jQuery('.' + module + '.detail-modal.modal input').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
+            jQuery('.' + module + '.detail-modal.modal select').addClass('loading').prop('disabled', true).html('<option selected>LOADING...</option>');
+            jQuery('.' + module + '.detail-modal.modal textarea').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
+            jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]').prop('disabled', true);
         },
         success: function (data, textStatus, jqXHR) {
             arr = JSON.parse(data);
@@ -281,15 +291,25 @@ function detail(module,id) {
                                     if(indeks === 'hydra:member'){
 
                                         $.each(velyu, function (ind, valu) {
-                                            if (value['id'] === valu.id && objectSelected === index) {
-                                                select += '<option selected value="/api/'+object+'/'+valu.id+'">'+valu[field]+'</option>';
-                                            } else {
+
+                                            if (value == null) {
                                                 select += '<option value="/api/'+object+'/'+valu.id+'">'+valu[field]+'</option>';
+                                            } else {
+                                                if (value['id'] === valu.id && (objectSelected === index || index === 'parent')) {
+                                                    select += '<option selected value="/api/'+object+'/'+valu.id+'">'+valu[field]+'</option>';
+                                                } else {
+                                                    select += '<option value="/api/'+object+'/'+valu.id+'">'+valu[field]+'</option>';
+                                                }
                                             }
+
                                         });
 
                                     }
                                 });
+
+                                if (value == null) {
+                                    select+= '<option selected></option>';
+                                }
                                 jQuery('select[data-object="'+dataObject+'"]').html(select).removeClass('loading').removeAttr('disabled');
                                 jQuery('.'+module+'.edit.btn').prop('disabled', false);
                             },
@@ -302,14 +322,15 @@ function detail(module,id) {
 
                 } else if (index.indexOf('@') <= -1) {
 
-                    if (value === true) {
-                        jQuery('.' + module + '.edit-modal.modal input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');;
-                    } else if (value === false) {
-                        jQuery('.' + module + '.edit-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');;
+                    if (value === true || value === 'undefined') {
+                        jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');;
+                    } else if (value === false || value === 'undefined') {
+                        jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');;
                     } else {
-                        jQuery('.' + module + '.edit-modal.modal input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
-                        jQuery('.' + module + '.edit-modal.modal input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
-                        jQuery('.' + module + '.edit-modal.modal input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE').removeAttr('disabled readonly');
+
+                        jQuery('.' + module + '.detail-modal.modal input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
+                        jQuery('.' + module + '.detail-modal.modal input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
+                        jQuery('.' + module + '.detail-modal.modal input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE').removeAttr('disabled readonly');
                     }
                     jQuery('.'+module+'.edit.btn').prop('disabled', false);
                 }
@@ -373,7 +394,7 @@ function editAction(module, id, params) {
                 });
 
                 toastr.success('Data successfully updated');
-                jQuery('.'+module+'.edit-modal.modal').modal('hide');
+                jQuery('.'+module+'.detail-modal.modal').modal('hide');
                 jQuery('.'+module+'.edit.btn').text('UPDATE').prop('disabled', false);
             }
 
@@ -435,7 +456,7 @@ function getSelect(classElm) {
                 jQuery('#'+id).html('<option selected>LOADING...</option>');
             },
             success: function (data, textStatus, jqXHR) {
-                var select = '';
+                var select = '<option></option>';
                 var arr = JSON.parse(data);
                 $.each(arr, function (index, value) {
                     if(index === 'hydra:member'){
@@ -456,11 +477,7 @@ function getSelect(classElm) {
     });
 }
 
-
-
-
 jQuery(function($) {
-
 
     jQuery(".search-"+field).select2({
         theme: "bootstrap",
@@ -526,9 +543,9 @@ jQuery(function($) {
     $(document).on('click', 'tbody.'+window.module+' .'+window.module+'.detail-btn', function () {
         var id = $(this).attr('data-id');
 
-        jQuery('.'+window.module+'.edit-modal.modal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
-        jQuery('.'+window.module+'.edit-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
-        jQuery('.'+window.module+'.edit-modal.modal').modal({show: true, backdrop: 'static'});
+        jQuery('.'+window.module+'.detail-modal.modal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
+        jQuery('.'+window.module+'.detail-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
+        jQuery('.'+window.module+'.detail-modal.modal').modal({show: true, backdrop: 'static'});
 
         detail(module, id);
     });
@@ -572,11 +589,11 @@ jQuery(function($) {
     });
 
     // edit action aka update
-    $(document).on('click', '.'+window.module+'.edit-modal.modal .'+window.module+'.edit.btn', function () {
+    $(document).on('click', '.'+window.module+'.detail-modal.modal .'+window.module+'.edit.btn', function () {
         var module = window.module;
-        var params = $('.'+module+'.edit.form');
+        var params = $('.'+module+'.detail.form');
 
-        var id = $('.'+module+'.edit.form input#id').val();
+        var id = $('.'+module+'.detail.form input#id').val();
         editAction(module, id, params);
     });
 
@@ -590,14 +607,14 @@ jQuery(function($) {
         jQuery('table.table-striped tbody.'+module+'>tr:nth-of-type(odd)').css('background-color', '#f9f9f9');
     });
 
-    $(document).on('keypress', '.'+window.module+'.add.form input', function (e) {
+    $(document).on('keypress', 'form.'+window.module+'.add input', function (e) {
         if (e.which === 13) {
             $('.'+window.module+'.save.btn').click();
             return false;
         }
     });
 
-    $(document).on('keypress', '.'+window.module+'.edit.form input', function (e) {
+    $(document).on('keypress', 'form.'+window.module+'.detail input', function (e) {
         if (e.which === 13) {
             $('.'+window.module+'.edit.btn').click();
             return false;

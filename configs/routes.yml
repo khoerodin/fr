@@ -12,8 +12,15 @@ app:
         - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
         - { path: '/activity_loggers', controller: 'Bisnis:ActivityLoggers@index', methods: ['GET'] }
 
+        #Accounts
+        - { path: '/accounts', controller: 'Bisnis:Accounts@index', methods: ['GET'] }
+
+        #Customer/Client
+        - { path: '/customers', controller: 'Bisnis:Customers@index', methods: ['GET'] }
+
         #Organization
         - { path: '/companies', controller: 'Bisnis:Companies@index', methods: ['GET'] }
+        - { path: '/departments', controller: 'Bisnis:Departments@index', methods: ['GET'] }
 
 
         - { path: '/', controller: 'Bisnis:Home@index', methods: ['GET'] }

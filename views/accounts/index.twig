@@ -3,13 +3,12 @@
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
     <script>
-        window.module = 'clients';
+        window.module = 'accounts';
         window.field = 'name';
         var columns = [
-            'name',
-            'email',
-            'apiKey',
-            'user.fullname'
+            'parent.name',
+            'code',
+            'name'
         ];
     </script>
 {% endblock %}
@@ -26,7 +25,7 @@
                     </div>
 
                     <div class="col-md-2">
-                        <a href="#" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                        <a href="#" style="visibility: hidden;" class="accounts add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
@@ -34,46 +33,45 @@
                 <div class="box-body">
                     <table class="table table-striped table-bordered">
                         <thead>
-                            <tr>
-                                <th width="5%">#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Api Key</th>
-                                <th>User</th>
-                                <th width="12%">Action</th>
-                            </tr>
+                        <tr>
+                            <th width="5%">#</th>
+                            <th>Parent</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th width="12%">Action</th>
+                        </tr>
                         </thead>
 
-                        <tbody class="clients">
-                            <tr><td colspan="6">LOADING DATA...</td></tr>
+                        <tbody class="accounts">
+                            <tr><td colspan="4">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>
 
                     {#ADD MODAL#}
-                    <div class="clients add-modal modal" tabindex="-1" role="dialog">
+                    <div class="accounts add-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Add a Client</h4>
+                                    <h4 class="modal-title">Add an Account</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="clients add form">
+                                    <form role="form" class="accounts add form">
                                         <div class="box-body">
+                                            <div class="form-group">
+                                                <label>Parent Account</label>
+                                                <select disabled name="parent" id="accounts-name" class="form-control select-add-modal loading">
+                                                    <option selected>Loading...</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="code">Code</label>
+                                                <input type="text" name="code" class="form-control" id="code" placeholder="Code">
+                                            </div>
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <input type="text" name="name" class="form-control" id="name" placeholder="Name">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="email">Email</label>
-                                                <input type="email" name="email" class="form-control" id="email" placeholder="Email">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>User</label>
-                                                <select disabled name="user" id="users-fullname" class="form-control select-add-modal loading">
-                                                    <option selected>Loading...</option>
-                                                </select>
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -81,7 +79,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="clients save btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="accounts save btn btn-flat btn-danger">Save</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -89,29 +87,29 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div class="clients detail-modal modal" tabindex="-1" role="dialog">
+                    <div class="accounts detail-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail of Client</h4>
+                                    <h4 class="modal-title">Detail of Account</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="clients detail form">
+                                    <form role="form" class="accounts detail form">
                                         <div class="box-body">
+                                            <div class="form-group">
+                                                <label>Parent Account</label>
+                                                <select name="user" data-object="accounts-name" data-selected="account-name" class="form-control select-edit-modal">
+                                                    <option selected>Loading...</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="code">Code</label>
+                                                <input type="text" name="code" class="form-control" id="code">
+                                            </div>
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <input type="text" name="name" class="form-control" id="name">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="email">Email</label>
-                                                <input type="text" name="email" class="form-control" id="email">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>User</label>
-                                                <select name="user" data-object="users-fullname" data-selected="user-fullname" class="form-control select-edit-modal">
-                                                    <option selected>Loading...</option>
-                                                </select>
                                             </div>
                                         </div>
                                         <input type="hidden" name="id" id="id">
@@ -120,7 +118,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="clients edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="accounts edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -130,7 +128,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul class="clients pagination pagination-sm no-margin pull-right"></ul>
+                    <ul class="accounts pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

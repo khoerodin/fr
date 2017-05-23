@@ -3,10 +3,9 @@
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
     <script>
-        window.module = 'accounts';
+        window.module = 'units';
         window.field = 'name';
         var columns = [
-            'parent.name',
             'code',
             'name'
         ];
@@ -25,7 +24,7 @@
                     </div>
 
                     <div class="col-md-2">
-                        <a href="#" style="visibility: hidden;" class="accounts add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                        <a href="#" style="visibility: hidden;" class="units add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
@@ -35,36 +34,29 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th>Parent</th>
-                            <th>Code</th>
+                            <th width="20%">Code</th>
                             <th>Name</th>
                             <th width="12%">Action</th>
                         </tr>
                         </thead>
 
-                        <tbody class="accounts">
-                        <tr><td colspan="4">LOADING DATA...</td></tr>
+                        <tbody class="units">
+                            <tr><td colspan="4">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>
 
                     {#ADD MODAL#}
-                    <div class="accounts add-modal modal" tabindex="-1" role="dialog">
+                    <div class="units add-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Add an Account</h4>
+                                    <h4 class="modal-title">Add a Unit</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="accounts add form">
+                                    <form role="form" class="units add form">
                                         <div class="box-body">
-                                            <div class="form-group">
-                                                <label>Parent Account</label>
-                                                <select disabled name="parent" id="accounts-name" class="form-control select-add-modal loading">
-                                                    <option selected>Loading...</option>
-                                                </select>
-                                            </div>
                                             <div class="form-group">
                                                 <label for="code">Code</label>
                                                 <input type="text" name="code" class="form-control" id="code" placeholder="Code">
@@ -79,7 +71,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="accounts save btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="units save btn btn-flat btn-danger">Save</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -87,22 +79,16 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div class="accounts detail-modal modal" tabindex="-1" role="dialog">
+                    <div class="units detail-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail of Account</h4>
+                                    <h4 class="modal-title">Detail of Unit</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="accounts detail form">
+                                    <form role="form" class="units detail form">
                                         <div class="box-body">
-                                            <div class="form-group">
-                                                <label>Parent Account</label>
-                                                <select name="user" data-object="accounts-name" data-selected="account-name" class="form-control select-edit-modal">
-                                                    <option selected>Loading...</option>
-                                                </select>
-                                            </div>
                                             <div class="form-group">
                                                 <label for="code">Code</label>
                                                 <input type="text" name="code" class="form-control" id="code">
@@ -118,7 +104,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="accounts edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="units edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -128,7 +114,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul class="accounts pagination pagination-sm no-margin pull-right"></ul>
+                    <ul class="units pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

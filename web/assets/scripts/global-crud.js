@@ -424,7 +424,7 @@ function del(module, id) {
         data: data,
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
-            elm.hide('slow', function(){ target.remove(); });
+            elm.hide('slow', function(){ elm.remove(); });
             toastr.success('Data successfully deleted');
         },
         error: function (jqXHR, textStatus, errorThrown) {

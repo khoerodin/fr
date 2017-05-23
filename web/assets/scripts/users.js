@@ -69,13 +69,12 @@ $(document).on('change', '.check-role', function () {
         'name' : 'module',
         'value' : '/api/modules/'+moduleId
     };
+
     par = [
         check,
         user,
         module
     ];
-
-    console.log(par);
 
     var data = {
         module : 'roles/'+rolesId,

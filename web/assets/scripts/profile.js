@@ -40,6 +40,53 @@ $(document).on('click', '#update-profile', function () {
                 $('#username').val(data.username);
                 toastr.success('Profile successfully updated');
 
+                if( $('#plainPassword').val().length ) {
+
+                    val = $('#plainPassword').val();
+
+                    var data = {
+                        module : 'change-password',
+                        method : 'put',
+                        params : [ { name : 'plainPassword', value : val } ]
+                    };
+
+                    $.ajax({
+                        url: "/api",
+                        type: "POST",
+                        data: data,
+                        beforeSend: function () {
+                            $('.has-error').removeClass('has-error');
+                            $('p.help-block').remove();
+                            $('#update-profile').text('UPDATING...').prop('disabled', true);
+                        },
+                        success: function (data, textStatus, jqXHR) {
+                            var data = JSON.parse(data);
+                            if ("violations" in data) {
+
+                                $.each(data, function (index, value) {
+                                    if (index === 'violations') {
+                                        $.each(value, function (idx, val) {
+                                            toastr.error('Error when updating your password');
+                                            jQuery('#form-profile #' + val.propertyPath).parent('div').addClass('has-error');
+                                            jQuery('<p class="help-block">' + val.message + '</p>').insertAfter('#form-profile #' + val.propertyPath);
+                                        });
+                                    }
+                                });
+
+                            } else {
+                                toastr.success('Password successfully updated');
+                            }
+                            $('#plainPassword').val('');
+                            $('#update-profile').text('UPDATE').prop('disabled', false);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            $('#update-profile').text('UPDATE').prop('disabled', false);
+                            $('#plainPassword').val('');
+                        }
+                    });
+
+                }
+
             }
             $('#plainPassword').val('');
             $('#update-profile').text('UPDATE').prop('disabled', false);

@@ -76,6 +76,7 @@ WORKDIR /bigerpfront
 
 COPY composer.json ./
 COPY composer.lock ./
+COPY Bootstrap.php ./
 
 RUN mkdir -p \
 		var/cache \

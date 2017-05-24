@@ -16,9 +16,9 @@ $.fn.extend({
     }
 });
 
-function getQueryVariable(variable, query = window.location.search.substring(1))
+function getQueryVariable(variable)
 {
-    //var query = window.location.search.substring(1);
+    var query = window.location.search.substring(1);
     var vars = query.split("&");
     if(typeof variable !== 'undefined') {
         for (var i=0;i<vars.length;i++) {

@@ -2,8 +2,9 @@ app:
     routes:
         #API
         - { path: '/api', controller: 'Bisnis:Api@call', methods: ['POST'] }
-        - { path: '/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
+        - { path: '/api/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
         - { path: '/api/roles', controller: 'Bisnis:Api@getRole', methods: ['POST'] }
+        - { path: '/api/menus', controller: 'Bisnis:Api@menus', methods: ['POST'] }
 
         #Administration
         - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }

@@ -20,8 +20,6 @@ class ApiController extends AbstractController
         $method = $request->get('method');
         $params = $request->get('params');
 
-        //var_dump($params);die();
-
         if ($method == 'post' || $method == 'put') {
             $temps = [];
             foreach ($params as $param) {
@@ -165,5 +163,45 @@ class ApiController extends AbstractController
 
         $response = $this->request('roles', 'get', $params);
         return new Response($response->getContent());
+    }
+
+    private function menusCategoryAction($key)
+    {
+        $array = [
+            'administration' => [
+                ['id' => '1', 'module' => 'clients', 'name' => 'CLIENTS'],
+                ['id' => '2', 'module' => 'modules', 'name' => 'MODULES'],
+                ['id' => '3', 'module' => 'users', 'name' => 'USERS'],
+                ['id' => '4', 'module' => 'activity_loggers', 'name' => 'ACTIVITY LOGGERS']
+            ],
+            'account_management' => [
+                ['id' => '1', 'module' => 'accounts', 'name' => 'ACCOUNTS'],
+                ['id' => '2', 'module' => 'transaction_mappings', 'name' => 'TRANSACTION MAPPINGS']
+            ],
+            'customer_client' => [
+                ['id' => '1', 'module' => 'customers', 'name' => 'CUSTOMERS']
+            ],
+            'organization' => [
+                ['id' => '1', 'module' => 'companies', 'name' => 'COMPANIES'],
+                ['id' => '2', 'module' => 'departments', 'name' => 'DEPARTMENTS'],
+                ['id' => '3', 'module' => 'job_titles', 'name' => 'JOB TITLES'],
+            ],
+            'utility' => [
+                ['id' => '1', 'module' => 'units', 'name' => 'UNITS']
+            ],
+        ];
+
+        return json_encode($array[$key], true);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function menusAction(Request $request)
+    {
+        $category = $request->get('category');
+        return new Response($this->menusCategoryAction($category));
     }
 }

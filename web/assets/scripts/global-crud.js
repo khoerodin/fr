@@ -484,7 +484,7 @@ jQuery(function($) {
         placeholder: "SEARCH A "+field.toUpperCase(),
         allowClear: true,
         ajax: {
-            url: "/search",
+            url: "/api/search",
             dataType: 'json',
             type: 'POST',
             delay: 250,

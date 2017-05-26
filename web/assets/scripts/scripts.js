@@ -1,7 +1,18 @@
-$(document).on('click', 'li.treeview', function () {
+$(document).on('click', 'div.box-menu', function () {
+    title = $(this).find('.inner').find('h4').text();
+    category = $(this).find('input').val();
 
+    menusByCategory(title, category);
+});
+
+$(document).on('click', 'li.treeview > a', function () {
     title = $(this).find('span').text();
     category = $(this).attr('data-catagory');
+
+    menusByCategory(title, category);
+});
+
+function menusByCategory(title, category) {
 
     $.ajax({
         url: "/api/menus",
@@ -12,11 +23,10 @@ $(document).on('click', 'li.treeview', function () {
         beforeSend: function () {
         },
         success: function (data, textStatus, jqXHR) {
-            //data = JSON.parse(data);
             menus = '<div class="row">';
             $.each(data, function (index, value) {
                 menus += '<div class="col-lg-3 col-xs-6">';
-                menus += '  <div class="small-box bg-red">';
+                menus += '  <div class="small-box box-menu bg-red">';
                 menus += '      <div class="inner">';
                 menus += '          <h4>'+value.name+'</h4>';
                 menus += '          <p style="visibility: hidden">Lorem ipsum...</p>';
@@ -24,7 +34,7 @@ $(document).on('click', 'li.treeview', function () {
                 menus += '      <div class="icon">';
                 menus += '          <i class="'+value.iconCls+'"></i>';
                 menus += '      </div>';
-                menus += '      <a href="/'+value.path+'" class="small-box-footer">More <i class="fa fa-arrow-circle-right"></i></a>';
+                menus += '      <span class="small-box-footer" style="visibility: hidden;">More <i class="fa fa-arrow-circle-right"></i></span>';
                 menus += '  </div>';
                 menus += '</div>';
             });
@@ -39,4 +49,5 @@ $(document).on('click', 'li.treeview', function () {
         }
     });
 
-});
+}
+

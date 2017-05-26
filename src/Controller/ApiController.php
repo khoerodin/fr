@@ -175,11 +175,11 @@ class ApiController extends AbstractController
                 ['module' => 'activity_loggers']
             ],
             'account_management' => [
-                ['module' => 'accounts', 'name' => 'ACCOUNTS'],
-                ['module' => 'transaction_mappings', 'name' => 'TRANSACTION MAPPINGS']
+                ['module' => 'accounts'],
+                ['module' => 'transaction_mappings']
             ],
             'customer_client' => [
-                ['module' => 'customers', 'name' => 'CUSTOMERS']
+                ['module' => 'customers']
             ],
             'organization' => [
                 ['module' => 'companies'],

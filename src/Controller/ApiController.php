@@ -169,29 +169,35 @@ class ApiController extends AbstractController
     {
         $array = [
             'administration' => [
-                ['id' => '1', 'module' => 'clients', 'name' => 'CLIENTS'],
-                ['id' => '2', 'module' => 'modules', 'name' => 'MODULES'],
-                ['id' => '3', 'module' => 'users', 'name' => 'USERS'],
-                ['id' => '4', 'module' => 'activity_loggers', 'name' => 'ACTIVITY LOGGERS']
+                ['module' => 'clients'],
+                ['module' => 'modules'],
+                ['module' => 'users'],
+                ['module' => 'activity_loggers']
             ],
             'account_management' => [
-                ['id' => '1', 'module' => 'accounts', 'name' => 'ACCOUNTS'],
-                ['id' => '2', 'module' => 'transaction_mappings', 'name' => 'TRANSACTION MAPPINGS']
+                ['module' => 'accounts', 'name' => 'ACCOUNTS'],
+                ['module' => 'transaction_mappings', 'name' => 'TRANSACTION MAPPINGS']
             ],
             'customer_client' => [
-                ['id' => '1', 'module' => 'customers', 'name' => 'CUSTOMERS']
+                ['module' => 'customers', 'name' => 'CUSTOMERS']
             ],
             'organization' => [
-                ['id' => '1', 'module' => 'companies', 'name' => 'COMPANIES'],
-                ['id' => '2', 'module' => 'departments', 'name' => 'DEPARTMENTS'],
-                ['id' => '3', 'module' => 'job_titles', 'name' => 'JOB TITLES'],
+                ['module' => 'companies'],
+                ['module' => 'departments'],
+                ['module' => 'job_titles']
             ],
             'utility' => [
-                ['id' => '1', 'module' => 'units', 'name' => 'UNITS']
+                ['module' => 'units']
             ],
         ];
 
-        return json_encode($array[$key], true);
+        return $array[$key];
+    }
+
+
+    private function modules()
+    {
+
     }
 
     /**
@@ -202,6 +208,27 @@ class ApiController extends AbstractController
     public function menusAction(Request $request)
     {
         $category = $request->get('category');
-        return new Response($this->menusCategoryAction($category));
+        //return new Response($this->menusCategoryAction($category));
+
+        $response = json_decode($this->fetch('menus'),true)['hydra:member'];
+
+        $modules = array();
+        foreach ($response as $key => $value) {
+
+            $path = explode("/", $value['module']['path'])[2];
+
+            foreach ($this->menusCategoryAction($category) as $module) {
+                if($module['module'] == $path) {
+                    $modules[] = [
+                        'name' => $value['module']['name'],
+                        'path' => explode("/", $value['module']['path'])[2],
+                        'iconCls' => $value['module']['iconCls'],
+                    ];
+                }
+            }
+
+        }
+
+        return new jsonResponse($modules);
     }
 }

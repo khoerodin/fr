@@ -12,7 +12,7 @@ $(document).on('click', 'li.treeview', function () {
         beforeSend: function () {
         },
         success: function (data, textStatus, jqXHR) {
-            data = JSON.parse(data);
+            //data = JSON.parse(data);
             menus = '<div class="row">';
             $.each(data, function (index, value) {
                 menus += '<div class="col-lg-3 col-xs-6">';
@@ -22,9 +22,9 @@ $(document).on('click', 'li.treeview', function () {
                 menus += '          <p style="visibility: hidden">Lorem ipsum...</p>';
                 menus += '      </div>';
                 menus += '      <div class="icon">';
-                menus += '      <i class="fa fa-files-o"></i>';
+                menus += '          <i class="'+value.iconCls+'"></i>';
                 menus += '      </div>';
-                menus += '      <span class="small-box-footer">More <i class="fa fa-arrow-circle-right"></i></span>';
+                menus += '      <a href="/'+value.path+'" class="small-box-footer">More <i class="fa fa-arrow-circle-right"></i></a>';
                 menus += '  </div>';
                 menus += '</div>';
             });

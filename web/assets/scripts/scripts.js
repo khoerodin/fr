@@ -25,17 +25,18 @@ $(document).on('click', '#sign-in', function () {
         },
         beforeSend: function () {
             $('#sign-in').text('SIGNING IN...').prop('disabled', true);
+            $('#login-error').addClass('hidden');
         },
         success: function (data, textStatus, jqXHR) {
             data = JSON.parse(data);
-            console.log(data);
             if(data !== 401) {
                 location.href = '/';
             } else {
-                $('.#username').val('');
-                $('.#password').val('');
-                $('.#login-error').val('');
+                $('#username').val('');
+                $('#password').val('');
+                $('#login-error').val('');
                 $('#sign-in').text('SIGN IN').prop('disabled', false);
+                $('#login-error').removeClass('hidden');
             }
         }
     });
@@ -51,6 +52,13 @@ $(document).on('click', '#sign-out', function () {
             location.href = '/login';
         }
     });
+});
+
+$(document).on('keypress', 'input.login-form', function (e) {
+    if (e.which === 13) {
+        $('#sign-in').click();
+        return false;
+    }
 });
 
 $(document).on('click', 'li.treeview > a', function () {

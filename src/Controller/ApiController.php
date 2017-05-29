@@ -20,20 +20,20 @@ class ApiController extends AbstractController
         $method = $request->get('method');
         $params = $request->get('params');
 
-        //var_dump($params);die();
-
         if ($method == 'post' || $method == 'put') {
             $temps = [];
             foreach ($params as $param) {
-                if(
-                    $param['value'] == 'true' || $param['value'] == '1' ||
-                    $param['value'] == 'false' || $param['value'] == '0'
-                ) {
-                    $value = (bool) $param['value'];
-                } else {
-                    $value = $param['value'];
+                if($param['value'] != '' AND $param['value'] != null) {
+                    if(
+                        $param['value'] == 'true' || $param['value'] == '1' ||
+                        $param['value'] == 'false' || $param['value'] == '0'
+                    ) {
+                        $value = (bool) $param['value'];
+                    } else {
+                        $value = $param['value'];
+                    }
+                    $temps[$param['name']] = $value;
                 }
-                $temps[$param['name']] = $value;
             }
         } elseif($method == 'get') {
             //var_dump($params);die();
@@ -64,12 +64,16 @@ class ApiController extends AbstractController
     {
         $url = $request->get('module');
         $method = $request->get('method');
-        $params = $request->get('q');
+        $q = $request->get('q');
         $field = $request->get('field');
 
-        //]var_dump($params);die();
+        $params = [];
+        foreach ($field as $column) {
+            $params[$column] = $q;
+        }
 
-        $response = $this->request($url, $method, [$field => $params]);
+        //var_dump($params);die();
+        $response = $this->request($url, $method, $params);
         $arr = json_decode($response->getContent(), true)['hydra:member'];
 
         $arrData = [];
@@ -80,7 +84,7 @@ class ApiController extends AbstractController
                     $obj[$key] = $value;
 
                 }
-                if($key == $field){
+                if($key == $field[0]){
                     $obj[$key] = $value;
                 }
             }
@@ -165,5 +169,72 @@ class ApiController extends AbstractController
 
         $response = $this->request('roles', 'get', $params);
         return new Response($response->getContent());
+    }
+
+    private function menusCategoryAction($key)
+    {
+        $array = [
+            'administration' => [
+                ['module' => 'clients'],
+                ['module' => 'modules'],
+                ['module' => 'users'],
+                ['module' => 'activity_loggers']
+            ],
+            'account_management' => [
+                ['module' => 'accounts'],
+                ['module' => 'transaction_mappings']
+            ],
+            'customer_client' => [
+                ['module' => 'customers']
+            ],
+            'organization' => [
+                ['module' => 'companies'],
+                ['module' => 'departments'],
+                ['module' => 'job_titles']
+            ],
+            'utility' => [
+                ['module' => 'units']
+            ],
+        ];
+
+        return $array[$key];
+    }
+
+
+    private function modules()
+    {
+
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function menusAction(Request $request)
+    {
+        $category = $request->get('category');
+        //return new Response($this->menusCategoryAction($category));
+
+        $response = json_decode($this->fetch('menus'),true)['hydra:member'];
+
+        $modules = array();
+        foreach ($response as $key => $value) {
+
+            $path = explode("/", $value['module']['path'])[2];
+
+            foreach ($this->menusCategoryAction($category) as $module) {
+                if($module['module'] == $path) {
+                    $modules[] = [
+                        'name' => $value['module']['name'],
+                        'path' => explode("/", $value['module']['path'])[2],
+                        'iconCls' => $value['module']['iconCls'],
+                    ];
+                }
+            }
+
+        }
+
+        return new jsonResponse($modules);
     }
 }

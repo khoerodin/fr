@@ -10,13 +10,8 @@ class ModulesController extends AdminController
             'title' => 'Modules',
         ];
 
-        $modules = $this->get('modules');
-        $modules = json_decode($modules->getContent(),true);
-
-
         $data = [
-            'meta' => $meta,
-            'modules' => $modules,
+            'meta' => $meta
         ];
 
         return $this->view('modules/index.twig', $data);

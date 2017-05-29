@@ -3,8 +3,8 @@
 namespace Bisnis\Controller;
 
 use Ihsan\Client\Platform\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends AbstractController
 {
@@ -23,23 +23,18 @@ class LoginController extends AbstractController
             'password' => $password
         ]);
 
-        //var_dump($response->getContent());
-        $token = json_decode($response->getContent(), true)['token'];
-        $this->store('token', $token);
-        //var_dump($token);die();
-
-        if(401 == $response->getStatusCode()){
-            $redirect = new RedirectResponse('/login');
-        }else{
-            $redirect = new RedirectResponse('/');
+        if($response->getStatusCode() != 401){
+            $token = json_decode($response->getContent(), true)['token'];
+            $this->store('token', $token);
+            //var_dump($token);die();
         }
 
-        return $redirect;
+        return new Response($response->getStatusCode());
     }
 
     public function logoutAction()
     {
+        $this->request('logout', 'put', []);
         $this->client->remove('token');
-        return new RedirectResponse('/login');
     }
 }

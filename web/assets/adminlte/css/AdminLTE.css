@@ -4964,3 +4964,16 @@ table th, .modal-title, .form-group label, .modal label, button, .btn, input {
 input#username, input#email, input#plainPassword, input#password, input#path, input#iconCls {
   text-transform: inherit !important;
 }
+
+.box-menu {
+  cursor: pointer;
+}
+
+.small-box.box-menu > .small-box-footer {
+  background-color: transparent !important;
+  cursor: pointer;
+}
+
+p.help-block.text-danger {
+  color: #a94442 !important;
+}

@@ -2,8 +2,9 @@ app:
     routes:
         #API
         - { path: '/api', controller: 'Bisnis:Api@call', methods: ['POST'] }
-        - { path: '/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
+        - { path: '/api/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
         - { path: '/api/roles', controller: 'Bisnis:Api@getRole', methods: ['POST'] }
+        - { path: '/api/menus', controller: 'Bisnis:Api@menus', methods: ['POST'] }
 
         #Administration
         - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }
@@ -33,7 +34,4 @@ app:
 
         - { path: '/login', controller: 'Bisnis:Login@index', methods: ['GET'] }
         - { path: '/login_check', controller: 'Bisnis:Login@processLogin', methods: ['POST'] }
-        - { path: '/logout', controller: 'Bisnis:Login@logout', methods: ['GET'] }
-
-        - { path: '/profile', controller: 'Bisnis:Profile@index', methods: ['GET'] }
-        - { path: '/save-profile', controller: 'Bisnis:Profile@save', methods: ['POST'] }
+        - { path: '/logout', controller: 'Bisnis:Login@logout', methods: ['PUT'] }

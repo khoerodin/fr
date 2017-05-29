@@ -16,9 +16,9 @@ $.fn.extend({
     }
 });
 
-function getQueryVariable(variable, query = window.location.search.substring(1))
+function getQueryVariable(variable)
 {
-    //var query = window.location.search.substring(1);
+    var query = window.location.search.substring(1);
     var vars = query.split("&");
     if(typeof variable !== 'undefined') {
         for (var i=0;i<vars.length;i++) {
@@ -84,11 +84,6 @@ function getAll(module, columns = []) {
 
             arr = JSON.parse(data);
 
-            // jml = arr['hydra:member'].length;
-            // if(jml < 1) {
-            //     jQuery('tbody.'+module).html('<tr><td colspan="'+columnCount+'">NO DATA YET</td></tr>')
-            // }
-
             $.each(arr, function (index, value) {
                 if(index === 'hydra:member'){
 
@@ -134,8 +129,8 @@ function getAll(module, columns = []) {
                         });
 
                         tr += '<td>';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' detail-btn btn btn-warning btn-xs btn-flat">DETAILS</button>';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' delete-btn btn btn-danger btn-xs btn-flat">DELETE</button>';
+                        tr += '<button data-id="'+val.id+'" class="'+module+' detail-btn btn btn-default btn-xs btn-flat"><i class="fa fa-eye"></i></button>';
+                        tr += '<button data-id="'+val.id+'" class="'+module+' delete-btn btn btn-danger btn-xs btn-flat"><i class="fa fa-times"></i></button>';
 
                         if(module === 'users') {
                             tr += '<button data-user-fullname="'+val.fullname+'" data-id="'+val.id+'" class="'+module+' roles-btn btn btn-default btn-xs btn-flat">ROLES</button>';
@@ -257,6 +252,7 @@ function detail(module,id) {
         },
         success: function (data, textStatus, jqXHR) {
             arr = JSON.parse(data);
+
             $.each(arr, function (index, value) {
                 if (typeof value === 'object') {
 
@@ -424,7 +420,7 @@ function del(module, id) {
         data: data,
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
-            elm.hide('slow', function(){ target.remove(); });
+            elm.hide('slow', function(){ elm.remove(); });
             toastr.success('Data successfully deleted');
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -484,7 +480,7 @@ jQuery(function($) {
         placeholder: "SEARCH A "+field.toUpperCase(),
         allowClear: true,
         ajax: {
-            url: "/search",
+            url: "/api/search",
             dataType: 'json',
             type: 'POST',
             delay: 250,
@@ -494,14 +490,14 @@ jQuery(function($) {
                     page: params.page,
                     module: module,
                     method: 'get',
-                    field: field
+                    field: field.split('-')
                 };
             },
             processResults: function (data) {
                 if(data.length > 0) {
                     return {
                         results: $.map(data, function(obj) {
-                            return { id: obj.id, text: obj[field] };
+                            return { id: obj.id, text: obj[field.split('-')[0]] };
                         })
                     }
                 } else {
@@ -518,7 +514,7 @@ jQuery(function($) {
         minimumInputLength: 4,
     }).on("select2:select", function () {
         var text = jQuery(".search-"+field+" option:selected").text();
-        changeUrlParam(field, text);
+        changeUrlParam(field.split('-')[0], text);
         getAll(module,columns);
     }).on("select2:unselect", function () {
         history.pushState(false,false,document.location.origin+'/'+module);

@@ -69,11 +69,9 @@
                                                 <input type="password" name="plainPassword" class="form-control" id="plainPassword" placeholder="Password">
                                             </div>
                                             <div class="form-group">
-                                                <label>Select</label>
-                                                <select name="company" class="form-control">
-                                                    {% for company in companies %}
-                                                        <option value="/api/companies/{{ company.id }}">{{ company.name }}</option>
-                                                    {% endfor %}
+                                                <label>Company</label>
+                                                <select disabled name="company" id="companies-name" class="form-control select-add-modal loading">
+                                                    <option selected>Loading...</option>
                                                 </select>
                                             </div>
                                             <div class="checkbox">
@@ -121,6 +119,12 @@
                                                 <label for="plainPassword">Password</label>
                                                 <input type="password" name="plainPassword" class="form-control" id="plainPassword">
                                             </div>
+                                            <div class="form-group">
+                                                <label>Company</label>
+                                                <select name="company" data-object="companies-name" data-selected="company-name" class="form-control select-edit-modal">
+                                                    <option selected>Loading...</option>
+                                                </select>
+                                            </div>
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" name="enabled" id="enabled"> <strong>Enabled</strong>
@@ -156,9 +160,9 @@
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Module</th>
+                                                        <th>Viewable</th>
                                                         <th>Addable</th>
                                                         <th>Editable</th>
-                                                        <th>Viewable</th>
                                                         <th>Deletable</th>
                                                     </tr>
                                                 </thead>
@@ -182,7 +186,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul class="users pagination pagination-sm no-margin pull-right"></ul>
+                    <ul class="users roles-modal pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

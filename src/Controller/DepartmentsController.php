@@ -10,12 +10,8 @@ class DepartmentsController extends AdminController
             'title' => 'Departements',
         ];
 
-        $departements = $this->get('departments');
-        $departements = json_decode($departements->getContent(),true);
-
         $data = [
-            'meta' => $meta,
-            'departments' => $departements
+            'meta' => $meta
         ];
 
         return $this->view('departments/index.twig', $data);

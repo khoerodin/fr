@@ -14,12 +14,8 @@ class CompaniesController extends AdminController
             'title' => 'Companies',
         ];
 
-        $companies = $this->get('companies');
-        $companies = json_decode($companies->getContent(),true);
-
         $data = [
-            'meta' => $meta,
-            'companies' => $companies
+            'meta' => $meta
         ];
 
         return $this->view('companies/index.twig', $data);

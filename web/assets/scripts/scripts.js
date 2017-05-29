@@ -1,4 +1,4 @@
-$(document).on('click', 'div.box-menu', function () {
+$(document).on('click', 'div.home-menu', function () {
     title = $(this).find('.inner').find('h4').text();
     category = $(this).find('input').val();
 
@@ -25,7 +25,7 @@ function menusByCategory(title, category) {
         success: function (data, textStatus, jqXHR) {
             menus = '<div class="row">';
             $.each(data, function (index, value) {
-                menus += '<div class="col-lg-3 col-xs-6">';
+                menus += '<div class="col-lg-3 col-xs-6 right-menu" data-link="/'+value.path+'">';
                 menus += '  <div class="small-box box-menu bg-red">';
                 menus += '      <div class="inner">';
                 menus += '          <h4>'+value.name+'</h4>';
@@ -50,4 +50,9 @@ function menusByCategory(title, category) {
     });
 
 }
+
+$(document).on('click', 'div.right-menu', function () {
+    var url = $(this).attr('data-link');
+    window.location.href = url;
+});
 

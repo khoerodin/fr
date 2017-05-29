@@ -1,3 +1,11 @@
+function checkToken(code) {
+    if (code === 401) {
+        alert('You have been signed out');
+        location.reload();
+    }
+}
+
+
 $(document).on('click', 'div.home-menu', function () {
     title = $(this).find('.inner').find('h4').text();
     category = $(this).find('input').val();

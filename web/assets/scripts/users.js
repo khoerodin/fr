@@ -98,9 +98,9 @@ function rolesResponse(data, id) {
     arr = JSON.parse(data);
     var rolesColumns = [
         'module.name',
+        'viewable',
         'addable',
         'editable',
-        'viewable',
         'deletable'
     ];
 
@@ -129,7 +129,14 @@ function rolesResponse(data, id) {
                         })
                     } else {
                         tr += '<td>';
-                        if(v === 'addable') {
+                        if(v === 'viewable') {
+                            if (val[v1] == true) {
+                                tr += '<input data-id="'+val.id+'" name="viewable" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success">';
+                            } else if(val[v1] == false) {
+                                tr += '<input data-id="'+val.id+'" name="viewable" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success">';
+                            }
+
+                        } else if(v === 'addable') {
                             if (val[v1] == true) {
                                 tr += '<input data-id="'+val.id+'" name="addable" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success">';
                             } else if(val[v1] == false) {
@@ -140,12 +147,6 @@ function rolesResponse(data, id) {
                                 tr += '<input data-id="'+val.id+'" name="editable" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success">';
                             } else if(val[v1] == false) {
                                 tr += '<input data-id="'+val.id+'" name="editable" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            }
-                        } else if(v === 'viewable') {
-                            if (val[v1] == true) {
-                                tr += '<input data-id="'+val.id+'" name="viewable" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            } else if(val[v1] == false) {
-                                tr += '<input data-id="'+val.id+'" name="viewable" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success">';
                             }
                         } else if(v === 'deletable') {
                             if (val[v1] == true) {
@@ -197,7 +198,7 @@ function rolesResponse(data, id) {
                 }
             });
 
-            jQuery('ul.'+module+'.pagination').html(paging);
+            jQuery('ul.users.roles-modal.pagination').html(paging);
         }
     });
 }

@@ -62,12 +62,16 @@ class ApiController extends AbstractController
     {
         $url = $request->get('module');
         $method = $request->get('method');
-        $params = $request->get('q');
+        $q = $request->get('q');
         $field = $request->get('field');
 
-        //]var_dump($params);die();
+        $params = [];
+        foreach ($field as $column) {
+            $params[$column] = $q;
+        }
 
-        $response = $this->request($url, $method, [$field => $params]);
+        //var_dump($params);die();
+        $response = $this->request($url, $method, $params);
         $arr = json_decode($response->getContent(), true)['hydra:member'];
 
         $arrData = [];
@@ -78,7 +82,7 @@ class ApiController extends AbstractController
                     $obj[$key] = $value;
 
                 }
-                if($key == $field){
+                if($key == $field[0]){
                     $obj[$key] = $value;
                 }
             }

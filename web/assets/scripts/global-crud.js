@@ -84,11 +84,6 @@ function getAll(module, columns = []) {
 
             arr = JSON.parse(data);
 
-            // jml = arr['hydra:member'].length;
-            // if(jml < 1) {
-            //     jQuery('tbody.'+module).html('<tr><td colspan="'+columnCount+'">NO DATA YET</td></tr>')
-            // }
-
             $.each(arr, function (index, value) {
                 if(index === 'hydra:member'){
 
@@ -257,6 +252,7 @@ function detail(module,id) {
         },
         success: function (data, textStatus, jqXHR) {
             arr = JSON.parse(data);
+
             $.each(arr, function (index, value) {
                 if (typeof value === 'object') {
 
@@ -494,14 +490,14 @@ jQuery(function($) {
                     page: params.page,
                     module: module,
                     method: 'get',
-                    field: field
+                    field: field.split('-')
                 };
             },
             processResults: function (data) {
                 if(data.length > 0) {
                     return {
                         results: $.map(data, function(obj) {
-                            return { id: obj.id, text: obj[field] };
+                            return { id: obj.id, text: obj[field.split('-')[0]] };
                         })
                     }
                 } else {
@@ -518,7 +514,7 @@ jQuery(function($) {
         minimumInputLength: 4,
     }).on("select2:select", function () {
         var text = jQuery(".search-"+field+" option:selected").text();
-        changeUrlParam(field, text);
+        changeUrlParam(field.split('-')[0], text);
         getAll(module,columns);
     }).on("select2:unselect", function () {
         history.pushState(false,false,document.location.origin+'/'+module);

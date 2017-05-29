@@ -129,8 +129,8 @@ function getAll(module, columns = []) {
                         });
 
                         tr += '<td>';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' detail-btn btn btn-warning btn-xs btn-flat">DETAILS</button>';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' delete-btn btn btn-danger btn-xs btn-flat">DELETE</button>';
+                        tr += '<button data-id="'+val.id+'" class="'+module+' detail-btn btn btn-default btn-xs btn-flat"><i class="fa fa-eye"></i></button>';
+                        tr += '<button data-id="'+val.id+'" class="'+module+' delete-btn btn btn-danger btn-xs btn-flat"><i class="fa fa-times"></i></button>';
 
                         if(module === 'users') {
                             tr += '<button data-user-fullname="'+val.fullname+'" data-id="'+val.id+'" class="'+module+' roles-btn btn btn-default btn-xs btn-flat">ROLES</button>';

@@ -4973,3 +4973,7 @@ input#username, input#email, input#plainPassword, input#password, input#path, in
   background-color: transparent !important;
   cursor: pointer;
 }
+
+p.help-block.text-danger {
+  color: #a94442 !important;
+}

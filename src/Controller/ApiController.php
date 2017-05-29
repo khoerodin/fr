@@ -23,15 +23,17 @@ class ApiController extends AbstractController
         if ($method == 'post' || $method == 'put') {
             $temps = [];
             foreach ($params as $param) {
-                if(
-                    $param['value'] == 'true' || $param['value'] == '1' ||
-                    $param['value'] == 'false' || $param['value'] == '0'
-                ) {
-                    $value = (bool) $param['value'];
-                } else {
-                    $value = $param['value'];
+                if($param['value'] != '' AND $param['value'] != null) {
+                    if(
+                        $param['value'] == 'true' || $param['value'] == '1' ||
+                        $param['value'] == 'false' || $param['value'] == '0'
+                    ) {
+                        $value = (bool) $param['value'];
+                    } else {
+                        $value = $param['value'];
+                    }
+                    $temps[$param['name']] = $value;
                 }
-                $temps[$param['name']] = $value;
             }
         } elseif($method == 'get') {
             //var_dump($params);die();

@@ -34,7 +34,4 @@ app:
 
         - { path: '/login', controller: 'Bisnis:Login@index', methods: ['GET'] }
         - { path: '/login_check', controller: 'Bisnis:Login@processLogin', methods: ['POST'] }
-        - { path: '/logout', controller: 'Bisnis:Login@logout', methods: ['GET'] }
-
-        - { path: '/profile', controller: 'Bisnis:Profile@index', methods: ['GET'] }
-        - { path: '/save-profile', controller: 'Bisnis:Profile@save', methods: ['POST'] }
+        - { path: '/logout', controller: 'Bisnis:Login@logout', methods: ['PUT'] }

@@ -5,12 +5,52 @@ function checkToken(code) {
     }
 }
 
-
 $(document).on('click', 'div.home-menu', function () {
     title = $(this).find('.inner').find('h4').text();
     category = $(this).find('input').val();
 
     menusByCategory(title, category);
+});
+
+$(document).on('click', '#sign-in', function () {
+    var username = $('#login-form #username').val();
+    var password = $('#login-form #password').val();
+
+    $.ajax({
+        url: "/login_check",
+        type: "POST",
+        data: {
+            username:username,
+            password:password
+        },
+        beforeSend: function () {
+            $('#sign-in').text('SIGNING IN...').prop('disabled', true);
+        },
+        success: function (data, textStatus, jqXHR) {
+            data = JSON.parse(data);
+            console.log(data);
+            if(data !== 401) {
+                location.href = '/';
+            } else {
+                $('.#username').val('');
+                $('.#password').val('');
+                $('.#login-error').val('');
+                $('#sign-in').text('SIGN IN').prop('disabled', false);
+            }
+        }
+    });
+});
+
+
+$(document).on('click', '#sign-out', function () {
+    $.ajax({
+        url: "/logout",
+        type: "PUT",
+        beforeSend: function () {},
+        success: function (data, textStatus, jqXHR) {
+            location.href = '/login';
+        }
+    });
 });
 
 $(document).on('click', 'li.treeview > a', function () {

@@ -128,15 +128,15 @@ function getAll(module, columns = []) {
 
                         });
 
-                        tr += '<td>';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' detail-btn btn btn-default btn-xs btn-flat"><i class="fa fa-eye"></i></button>';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' delete-btn btn btn-danger btn-xs btn-flat"><i class="fa fa-times"></i></button>';
+                        tr += '<td><span class="pull-right">';
+                        tr += '<button data-id="'+val.id+'" class="'+module+' detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
+                        tr += '<button data-id="'+val.id+'" class="'+module+' delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
 
                         if(module === 'users') {
-                            tr += '<button data-user-fullname="'+val.fullname+'" data-id="'+val.id+'" class="'+module+' roles-btn btn btn-default btn-xs btn-flat">ROLES</button>';
+                            tr += '<button data-user-fullname="'+val.fullname+'" data-id="'+val.id+'" class="'+module+' roles-btn btn btn-default btn-xs btn-flat" title="ROLES"><i class="fa fa-lock"></i></button>';
                         }
 
-                        tr += '</td>';
+                        tr += '</span></td>';
                         tr += '</tr>';
                     });
                     jQuery('tbody.'+module).html(tr);

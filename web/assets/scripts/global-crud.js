@@ -501,9 +501,12 @@ jQuery(function($) {
                         })
                     }
                 } else {
-                    btn = jQuery('.'+module+'.add-btn.btn').css('visibility', 'visible');
+                    var elms = jQuery('.search-area').removeClass('col-md-12').addClass('col-md-10');
+                        elms += jQuery('.button-area').addClass('col-md-2');
+                        elms += jQuery('.'+module+'.add-btn.btn').css('visibility', 'visible');
+
                     return {
-                        results: btn
+                        results: elms
                     }
                 }
 
@@ -521,6 +524,8 @@ jQuery(function($) {
         getAll(module,columns);
     }).on("select2:open", function () {
         jQuery('.'+module+'.add-btn.btn').css('visibility', 'hidden');
+        jQuery('.search-area').removeClass('col-md-10').addClass('col-md-12');
+        jQuery('.button-area').removeClass('col-md-2');
     });
 
     // Add form
@@ -532,6 +537,8 @@ jQuery(function($) {
 
         if($(this).hasClass('h')){
             jQuery(this).css('visibility', 'hidden');
+            jQuery('.search-area').removeClass('col-md-10').addClass('col-md-12');
+            jQuery('.button-area').removeClass('col-md-2');
         }
     });
 

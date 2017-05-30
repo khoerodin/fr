@@ -28,7 +28,6 @@ $(document).on('click', '#sign-in', function () {
             $('#login-error').addClass('hidden');
         },
         success: function (data, textStatus, jqXHR) {
-            data = JSON.parse(data);
             if(data !== 401) {
                 location.href = '/';
             } else {

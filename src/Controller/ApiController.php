@@ -84,6 +84,8 @@ class ApiController extends AbstractController
                     $obj[$key] = $value;
 
                 }
+
+                //var_dump($field[0]);die();
                 if($key == $field[0]){
                     $obj[$key] = $value;
                 }
@@ -224,7 +226,7 @@ class ApiController extends AbstractController
             $path = explode("/", $value['module']['path'])[2];
 
             foreach ($this->menusCategoryAction($category) as $module) {
-                if($module['module'] == $path) {
+                if($module['module'] == $path && $value['viewable'] != false) {
                     $modules[] = [
                         'name' => $value['module']['name'],
                         'path' => explode("/", $value['module']['path'])[2],

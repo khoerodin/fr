@@ -434,47 +434,51 @@ function del(module, id) {
 // get select/dropdown inside modal
 function getSelect(classElm) {
     var select = jQuery(classElm);
+
     jQuery(select).each( function(index, value) {
 
         var id = value.id;
         var module = id.split("-")[0];
         var field = id.split("-")[1];
-        var data = {
-            module : module,
-            method : 'get',
-        };
 
-        $.ajax({
-            url: "/api",
-            type: "POST",
-            data: data,
-            beforeSend: function () {
-                jQuery('#'+id).html('<option selected>LOADING...</option>');
-            },
-            success: function (data, textStatus, jqXHR) {
-                var select = '<option></option>';
-                var arr = JSON.parse(data);
-                $.each(arr, function (index, value) {
-                    if(index === 'hydra:member'){
+        jQuery("#"+id).select2({
 
-                        $.each(value, function (idx, val) {
-                            select += '<option value="/api/'+module+'/'+val.id+'">'+val[field]+'</option>';
-                        });
-
+            theme: "bootstrap",
+            placeholder: "SEARCH A "+field.toUpperCase(),
+            allowClear: true,
+            ajax: {
+                url: "/api/search",
+                dataType: 'json',
+                type: 'POST',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term,
+                        page: params.page,
+                        module: module,
+                        method: 'get',
+                        field: field.split('-')
+                    };
+                },
+                processResults: function (data) {
+                    if(data.length > 0) {
+                        return {
+                            results: $.map(data, function(obj) {
+                                return { id: obj.id, text: obj[field] };
+                            })
+                        }
                     }
-                });
-                jQuery('select#'+id).html(select).removeClass('loading').removeAttr('disabled');
+                },
+                cache: true,
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                jQuery('select#'+id).html('<option selected>ERROR</option>');
-            }
+            escapeMarkup: function (markup) { return markup; },
+            minimumInputLength: 4
         });
 
     });
 }
 
 jQuery(function($) {
-
     jQuery(".search-"+field).select2({
         theme: "bootstrap",
         placeholder: "SEARCH A "+field.toUpperCase(),

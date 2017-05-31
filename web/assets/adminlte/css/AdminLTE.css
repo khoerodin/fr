@@ -4977,3 +4977,10 @@ input#username, input#email, input#plainPassword, input#password, input#path, in
 .skin-red .sidebar-menu>li:hover>a, .skin-red .sidebar-menu>li.active>a {
   border-left-color: transparent !important;
 }
+
+.transition {
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}

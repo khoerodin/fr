@@ -15,7 +15,6 @@
 
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
-                {#<li class="header">MAIN NAVIGATION</li>#}
                 <li class="treeview active hidden">
                     <a href="javascript:void(0)" data-catagory="administration">
                         <i class="fa fa-files-o"></i>
@@ -24,10 +23,13 @@
                     <ul class="treeview-menu">
                         {%- for menu in menus['hydra:member'] -%}
                             {%- if
+                            (
                                 menu.module.path|split('/')[2] == 'users' or
                                 menu.module.path|split('/')[2] == 'clients' or
                                 menu.module.path|split('/')[2] == 'activity_loggers' or
                                 menu.module.path|split('/')[2] == 'modules'
+                            )
+                            and menu.viewable != false
                             -%}
                         <li>
                             <a href="/{{- menu.module.path|split('/')[2] -}}">
@@ -47,8 +49,11 @@
                     <ul class="treeview-menu">
                         {%- for menu in menus['hydra:member'] -%}
                             {%- if
+                            (
                                 menu.module.path|split('/')[2] == 'accounts' or
                                 menu.module.path|split('/')[2] == 'transaction_mappings'
+                            )
+                            and menu.viewable != false
                             -%}
                         <li>
                             <a href="/{{- menu.module.path|split('/')[2] -}}">
@@ -68,7 +73,8 @@
                     <ul class="treeview-menu">
                         {%- for menu in menus['hydra:member'] -%}
                             {%- if
-                                menu.module.path|split('/')[2] == 'customers'
+                            (menu.module.path|split('/')[2] == 'customers')
+                            and menu.viewable != false
                             -%}
                         <li>
                             <a href="/{{- menu.module.path|split('/')[2] -}}">
@@ -88,9 +94,12 @@
                     <ul class="treeview-menu">
                         {%- for menu in menus['hydra:member'] -%}
                             {%- if
-                            menu.module.path|split('/')[2] == 'companies' or
-                            menu.module.path|split('/')[2] == 'departments' or
-                            menu.module.path|split('/')[2] == 'job_titles'
+                            (
+                                menu.module.path|split('/')[2] == 'companies' or
+                                menu.module.path|split('/')[2] == 'departments' or
+                                menu.module.path|split('/')[2] == 'job_titles'
+                            )
+                            and menu.viewable != false
                             -%}
                         <li>
                             <a href="/{{- menu.module.path|split('/')[2] -}}">
@@ -110,7 +119,8 @@
                     <ul class="treeview-menu">
                         {%- for menu in menus['hydra:member'] -%}
                             {%- if
-                                menu.module.path|split('/')[2] == 'units'
+                            (menu.module.path|split('/')[2] == 'units')
+                            and menu.viewable != false
                             -%}
                                 <li>
                                     <a href="/{{- menu.module.path|split('/')[2] -}}">

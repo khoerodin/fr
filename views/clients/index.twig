@@ -19,13 +19,13 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header row">
-                    <div class="col-md-10">
-                        <select class="search-name form-control select2">
+                    <div class="col-md-12 search-area transition">
+                        <select class="search-name form-control select2" style="width: 100%;">
                             <option></option>
                         </select>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="button-area transition">
                         <a href="#" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@
                                 <th>Email</th>
                                 <th>Api Key</th>
                                 <th>User</th>
-                                <th width="12%"><span class="pull-right">Action</span></th>
+                                <th width="5%"><span class="pull-right">Action</span></th>
                             </tr>
                         </thead>
 
@@ -51,7 +51,7 @@
                     </table>
 
                     {#ADD MODAL#}
-                    <div class="clients add-modal modal" tabindex="-1" role="dialog">
+                    <div class="clients add-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -71,8 +71,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>User</label>
-                                                <select disabled name="user" id="users-fullname" class="form-control select-add-modal loading">
-                                                    <option selected>Loading...</option>
+                                                <select name="user" id="users-username" class="form-control select-add-modal">
+                                                    <option></option>
                                                 </select>
                                             </div>
                                         </div>

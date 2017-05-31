@@ -11,13 +11,13 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header row">
-                    <div class="col-md-10">
-                        <select class="search-username form-control select2">
+                    <div class="col-md-12 search-area transition">
+                        <select class="search-username form-control select2" style="width: 100%;">
                             <option></option>
                         </select>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="button-area transition">
                         <a href="#" style="visibility: hidden;" class="users add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
@@ -32,7 +32,7 @@
                                 <th style="width:30%;">Fullname</th>
                                 <th style="width:30%;">Username</th>
                                 <th style="width:15%;">Email</th>
-                                <th style="width:16%;"><span class="pull-right">Action</span></th>
+                                <th width="6%"><span class="pull-right">Action</span></th>
                             </tr>
                         </thead>
 
@@ -42,7 +42,7 @@
                     </table>
 
                     {#ADD MODAL#}
-                    <div class="users add-modal modal" tabindex="-1" role="dialog">
+                    <div class="users add-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -70,8 +70,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Company</label>
-                                                <select disabled name="company" id="companies-name" class="form-control select-add-modal loading">
-                                                    <option selected>Loading...</option>
+                                                <select name="company" id="companies-name" class="form-control select-add-modal">
+                                                    <option></option>
                                                 </select>
                                             </div>
                                             <div class="checkbox">

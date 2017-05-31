@@ -28,14 +28,14 @@ $(document).on('click', '#sign-in', function () {
             $('#login-error').addClass('hidden');
         },
         success: function (data, textStatus, jqXHR) {
-            if(data !== 401) {
-                location.href = '/';
-            } else {
+            if(data == 401) {
                 $('#username').val('');
                 $('#password').val('');
                 $('#login-error').val('');
                 $('#sign-in').text('SIGN IN').prop('disabled', false);
                 $('#login-error').removeClass('hidden');
+            } else {
+                location.href = '/';
             }
         }
     });

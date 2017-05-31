@@ -2,18 +2,19 @@
 
 namespace Bisnis\Controller;
 
-class JobTitlesController extends AdminController
+
+class UserActivitiesController extends AdminController
 {
     public function indexAction()
     {
         $meta = [
-            'title' => 'Job Titles',
+            'title' => 'User Activities',
         ];
 
         $data = [
             'meta' => $meta
         ];
 
-        return $this->view('job_titles/index.twig', $data);
+        return $this->view('user-activities/index.twig', $data);
     }
 }

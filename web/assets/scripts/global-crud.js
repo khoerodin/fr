@@ -113,16 +113,35 @@ function getAll(module, columns = []) {
                                 })
                             } else {
                                 tr += '<td>';
-                                if (val[v1] == true) {
-                                    tr += '<span class="glyphicon glyphicon-ok"></span>';
-                                } else if(val[v1] == false) {
-                                    tr += '<span class="glyphicon glyphicon-remove"></span>';
-                                } else {
-                                    if (val[v1] == null) {
-                                        val[v1] = '-';
+
+                                if (module === 'users') {
+
+                                    if (val[v1] == true) {
+                                        tr += '<input type="checkbox" class="loginState" data-id="'+val.id+'" name="loggedIn" checked>';
+                                    } else if (val[v1] == false) {
+                                        tr += '<input type="checkbox" class="loginState" data-id="'+val.id+'" name="loggedIn">';
+                                    } else {
+                                        if (val[v1] == null) {
+                                            val[v1] = '-';
+                                        }
+                                        tr += val[v1];
                                     }
-                                    tr += val[v1];
+
+                                } else {
+
+                                    if (val[v1] == true) {
+                                        tr += '<span class="glyphicon glyphicon-ok"></span>';
+                                    } else if(val[v1] == false) {
+                                        tr += '<span class="glyphicon glyphicon-remove"></span>';
+                                    } else {
+                                        if (val[v1] == null) {
+                                            val[v1] = '-';
+                                        }
+                                        tr += val[v1];
+                                    }
+
                                 }
+
                                 tr += '</td>';
                             }
 
@@ -317,7 +336,7 @@ function detail(module,id) {
                     });
 
                 } else if (index.indexOf('@') <= -1) {
-
+                    console.log(index+': '+value);
                     if (value === true || value === 'undefined') {
                         jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');;
                     } else if (value === false || value === 'undefined') {
@@ -404,7 +423,7 @@ function editAction(module, id, params) {
 }
 
 // delete a data
-function del(module, id) {
+function del(module, id, columns) {
 
     var data = {
         module : module+'/'+id,
@@ -422,6 +441,7 @@ function del(module, id) {
         success: function (data, textStatus, jqXHR) {
             elm.hide('slow', function(){ elm.remove(); });
             toastr.success('Data successfully deleted');
+            getAll(module,columns);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             toastr.error('Error when deleting your data');
@@ -464,7 +484,7 @@ function getSelect(classElm) {
                     if(data.length > 0) {
                         return {
                             results: $.map(data, function(obj) {
-                                return { id: obj.id, text: obj[field] };
+                                return { id: '/api/'+module+'/'+obj.id, text: obj[field] };
                             })
                         }
                     }
@@ -546,7 +566,7 @@ jQuery(function($) {
         }
     });
 
-    // Edit form
+    // detail form
     $(document).on('click', 'tbody.'+window.module+' .'+window.module+'.detail-btn', function () {
         var id = $(this).attr('data-id');
 
@@ -554,7 +574,11 @@ jQuery(function($) {
         jQuery('.'+window.module+'.detail-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
         jQuery('.'+window.module+'.detail-modal.modal').modal({show: true, backdrop: 'static'});
 
-        detail(module, id);
+        if (module !== 'user-activities') {
+            detail(module, id);
+        } else {
+            detailUserActivities(id);
+        }
     });
 
     // Delete action
@@ -579,7 +603,7 @@ jQuery(function($) {
                     if (result === false) {
                         elm.removeClass('bg-red');
                     } else {
-                        del(module, id);
+                        del(module, id, columns);
                     }
                 }
             });

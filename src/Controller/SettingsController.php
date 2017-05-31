@@ -2,18 +2,18 @@
 
 namespace Bisnis\Controller;
 
-class AccountsController extends AdminController
+class SettingsController extends AdminController
 {
     public function indexAction()
     {
         $meta = [
-            'title' => 'Accounts',
+            'title' => 'Settings',
         ];
 
         $data = [
             'meta' => $meta
         ];
 
-        return $this->view('accounts/index.twig', $data);
+        return $this->view('settings/index.twig', $data);
     }
 }

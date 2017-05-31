@@ -177,35 +177,14 @@ class ApiController extends AbstractController
     {
         $array = [
             'administration' => [
-                ['module' => 'clients'],
-                ['module' => 'modules'],
                 ['module' => 'users'],
-                ['module' => 'activity_loggers']
-            ],
-            'account_management' => [
-                ['module' => 'accounts'],
-                ['module' => 'transaction_mappings']
-            ],
-            'customer_client' => [
-                ['module' => 'customers']
-            ],
-            'organization' => [
-                ['module' => 'companies'],
-                ['module' => 'departments'],
-                ['module' => 'job_titles']
-            ],
-            'utility' => [
-                ['module' => 'units']
+                ['module' => 'user-activities'],
+                ['module' => 'clients'],
+                ['module' => 'settings']
             ],
         ];
 
         return $array[$key];
-    }
-
-
-    private function modules()
-    {
-
     }
 
     /**

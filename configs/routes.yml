@@ -1,5 +1,8 @@
 app:
     routes:
+        #Index
+        - { path: '/', controller: 'Bisnis:Home@index', methods: ['GET'] }
+
         #API
         - { path: '/api', controller: 'Bisnis:Api@call', methods: ['POST'] }
         - { path: '/api/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
@@ -10,28 +13,13 @@ app:
         - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }
         - { path: '/modules', controller: 'Bisnis:Modules@index', methods: ['GET'] }
         - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
-        - { path: '/activity_loggers', controller: 'Bisnis:ActivityLoggers@index', methods: ['GET'] }
+        - { path: '/settings', controller: 'Bisnis:Settings@index', methods: ['GET'] }
+        - { path: '/user-activities', controller: 'Bisnis:UserActivities@index', methods: ['GET'] }
 
-        #Accounts
-        - { path: '/accounts', controller: 'Bisnis:Accounts@index', methods: ['GET'] }
+        #Profile
+        - { path: '/profile', controller: 'Bisnis:Profile@index', methods: ['GET'] }
 
-        #Customer/Client
-        - { path: '/customers', controller: 'Bisnis:Customers@index', methods: ['GET'] }
-
-        #Organization
-        - { path: '/companies', controller: 'Bisnis:Companies@index', methods: ['GET'] }
-        - { path: '/departments', controller: 'Bisnis:Departments@index', methods: ['GET'] }
-        - { path: '/job_titles', controller: 'Bisnis:JobTitles@index', methods: ['GET'] }
-
-        #Organization
-        - { path: '/units', controller: 'Bisnis:Units@index', methods: ['GET'] }
-
-        - { path: '/', controller: 'Bisnis:Home@index', methods: ['GET'] }
-        - { path: '/coba', controller: 'Bisnis:Home@coba', methods: ['GET'] }
-        - { path: '/me', controller: 'Bisnis:Home@me', methods: ['GET'] }
-        - { path: '/404', controller: 'Bisnis:Home@error404', methods: ['GET'] }
-        - { path: '/500', controller: 'Bisnis:Home@error500', methods: ['GET'] }
-
+        #Login
         - { path: '/login', controller: 'Bisnis:Login@index', methods: ['GET'] }
         - { path: '/login_check', controller: 'Bisnis:Login@processLogin', methods: ['POST'] }
         - { path: '/logout', controller: 'Bisnis:Login@logout', methods: ['PUT'] }

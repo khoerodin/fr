@@ -1,16 +1,14 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
+    <script src="/assets/scripts/global-crud.js"></script>
     <script>
-        window.module = 'modules';
+        window.module = 'advertising/classifications';
         window.field = 'name';
         var columns = [
-            'name',
-            'iconCls',
-            'path',
+            'name'
         ];
     </script>
-    <script src="/assets/scripts/global-crud.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -25,7 +23,7 @@
                     </div>
 
                     <div class="button-area transition">
-                        <a href="JavaScript:Void(0);" data-btn-add="modules" style="visibility: hidden;" class="modules add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                        <a href="JavaScript:Void(0);" data-btn-add="advertising/classifications" style="visibility: hidden;" class="add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
@@ -36,40 +34,30 @@
                         <tr>
                             <th width="5%">#</th>
                             <th>Name</th>
-                            <th>Icon Class</th>
-                            <th>Path</th>
                             <th width="5%"><span class="pull-right">Action</span></th>
                         </tr>
                         </thead>
 
-                        <tbody data-list="modules">
-                            <tr><td colspan="5">LOADING DATA...</td></tr>
+                        <tbody data-list="advertising/classifications">
+                            <tr><td colspan="3">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>
 
                     {#ADD MODAL#}
-                    <div data-modal-add="modules" class="modules add-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-add="advertising/classifications" class="add-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Add a Module</h4>
+                                    <h4 class="modal-title">Add a Clasification</h4>
                                 </div>
-                                <div class="modal-body modules add">
-                                    <form role="form" class="modules add form">
+                                <div class="modal-body">
+                                    <form role="form" class="add form">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <input type="text" name="name" class="form-control" id="name" placeholder="Name">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="iconCls">Icon Class</label>
-                                                <input type="text" name="iconCls" class="form-control" id="iconCls" placeholder="Icon Class">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="path">path</label>
-                                                <input type="text" name="path" class="form-control" id="path" placeholder="Path">
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -77,7 +65,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="modules save btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="save btn btn-flat btn-danger">Save</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -85,36 +73,27 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div data-modal-detail="modules" class="modules detail-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-detail="advertising/classifications" class="detail-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail of Module</h4>
+                                    <h4 class="modal-title">Detail of Clasification</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="modules detail form">
+                                    <form role="form" class="detail form">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
-                                                <input type="text" name="name" class="form-control" id="name">
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
                                             </div>
-                                            <div class="form-group">
-                                                <label for="iconCls">Icon Class</label>
-                                                <input type="text" name="iconCls" class="form-control" id="iconCls">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="path">Name</label>
-                                                <input type="text" name="path" class="form-control" id="path">
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="id" id="id">
-                                        <!-- /.box-body -->
+                                            <input type="hidden" name="id" id="id">
+                                            <!-- /.box-body -->
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="modules edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -124,7 +103,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul data-paging="modules" class="modules pagination pagination-sm no-margin pull-right"></ul>
+                    <ul data-paging="advertising/classifications" class="pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

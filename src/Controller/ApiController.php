@@ -76,6 +76,10 @@ class ApiController extends AbstractController
         $response = $this->request($url, $method, $params);
         $arr = json_decode($response->getContent(), true)['hydra:member'];
 
+        if(count($arr)<1) {
+            return new JsonResponse(array());
+        }
+
         $arrData = [];
         foreach ($arr as $value) {
             $obj = [];
@@ -177,10 +181,27 @@ class ApiController extends AbstractController
     {
         $array = [
             'administration' => [
+                ['module' => 'modules'],
                 ['module' => 'users'],
                 ['module' => 'user-activities'],
                 ['module' => 'clients'],
-                ['module' => 'settings']
+                ['module' => 'settings'],
+            ],
+            'advertising' => [
+                ['module' => 'advertising/account-executives'],
+                ['module' => 'advertising/ads'],
+                ['module' => 'advertising/ad-brands'],
+                ['module' => 'advertising/ad-copies'],
+                ['module' => 'advertising/brands'],
+                ['module' => 'advertising/budgets'],
+                ['module' => 'advertising/categories'],
+                ['module' => 'advertising/classifications'],
+                ['module' => 'advertising/layouts'],
+                ['module' => 'advertising/payment-methods'],
+                ['module' => 'advertising/positions'],
+                ['module' => 'advertising/sections'],
+                ['module' => 'advertising/specifications'],
+                ['module' => 'advertising/types']
             ],
         ];
 

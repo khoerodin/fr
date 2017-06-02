@@ -7,6 +7,7 @@ class ModulesController extends AdminController
     public function indexAction()
     {
         $meta = [
+            'parentMenu' => 'Administration',
             'title' => 'Modules',
         ];
 

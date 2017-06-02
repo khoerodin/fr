@@ -72,7 +72,8 @@ function detailUserActivities(id) {
             $('#path').val(data.path);
             $('#requestMethod').val(data.requestMethod);
             $('#remark').val(data.remark);
-            $('#responseContent').text(data.responseContent);
+            $('#responseContent').text(JSON.stringify(data.responseContent));
+            console.log(data.responseContent);
 
             $('input, select').removeClass('loading').attr('placeholder', '');
         },

@@ -18,7 +18,7 @@
                     </div>
 
                     <div class="button-area transition">
-                        <a href="#" style="visibility: hidden;" class="users add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                        <a href="JavaScript:Void(0);" data-btn-add="users" style="visibility: hidden;" class="users add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
@@ -37,13 +37,13 @@
                             </tr>
                         </thead>
 
-                        <tbody class="users">
+                        <tbody data-list="users">
                             <tr><td colspan="5">LOADING DATA...</td></tr>
                         </tbody>
                     </table>
 
                     {#ADD MODAL#}
-                    <div class="users add-modal modal" role="dialog">
+                    <div data-modal-add="users" class="users add-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -88,7 +88,7 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div class="users detail-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-detail="users" class="users detail-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -175,7 +175,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul class="users roles-modal pagination pagination-sm no-margin pull-right"></ul>
+                    <ul data-paging="users" class="users roles-modal pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

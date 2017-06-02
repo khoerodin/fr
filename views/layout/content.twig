@@ -3,6 +3,9 @@
         <h1>{{- meta.title | upper | raw -}}</h1>
         <ol class="breadcrumb">
             <li><a href="/">HOME</a></li>
+            {% if meta.parentMenu is not empty %}
+                <li>{{- meta.parentMenu | upper | raw -}}</li>
+            {% endif %}
             <li class="active">{{- meta.title | upper | raw -}}</li>
         </ol>
     </section>

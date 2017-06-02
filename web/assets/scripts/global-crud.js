@@ -16,9 +16,8 @@ $.fn.extend({
     }
 });
 
-function getQueryVariable(variable)
+function getQueryVariable(variable, query = window.location.search.substring(1))
 {
-    var query = window.location.search.substring(1);
     var vars = query.split("&");
     if(typeof variable !== 'undefined') {
         for (var i=0;i<vars.length;i++) {
@@ -78,7 +77,7 @@ function getAll(module, columns = []) {
         type: "POST",
         data: data,
         beforeSend: function () {
-            jQuery('tbody.'+module).html('<tr><td colspan="'+columnCount+'">LOADING DATA...</td></tr>')
+            jQuery('tbody[data-list="'+module+'"]').html('<tr><td colspan="'+columnCount+'">LOADING DATA...</td></tr>')
         },
         success: function (data, textStatus, jqXHR) {
 
@@ -148,17 +147,17 @@ function getAll(module, columns = []) {
                         });
 
                         tr += '<td><span class="pull-right">';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                        tr += '<button data-id="'+val.id+'" class="'+module+' delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+                        tr += '<button data-id="'+val.id+'" class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
+                        tr += '<button data-id="'+val.id+'" class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
 
                         if(module === 'users') {
-                            tr += '<button data-user-fullname="'+val.fullname+'" data-id="'+val.id+'" class="'+module+' roles-btn btn btn-default btn-xs btn-flat" title="ROLES"><i class="fa fa-lock"></i></button>';
+                            tr += '<button data-user-fullname="'+val.fullname+'" data-id="'+val.id+'" class="roles-btn btn btn-default btn-xs btn-flat" title="ROLES"><i class="fa fa-lock"></i></button>';
                         }
 
                         tr += '</span></td>';
                         tr += '</tr>';
                     });
-                    jQuery('tbody.'+module).html(tr);
+                    jQuery('tbody[data-list="'+module+'"]').html(tr);
                 }
 
                 if(index === 'hydra:view') {
@@ -190,7 +189,7 @@ function getAll(module, columns = []) {
                         }
                     });
 
-                    jQuery('ul.'+module+'.pagination').html(paging);
+                    jQuery('ul[data-paging="'+module+'"].pagination').html(paging);
                 }
             });
 
@@ -215,7 +214,7 @@ function post(module, params, columns = []) {
         beforeSend: function () {
             jQuery('div .has-error').removeClass('has-error');
             jQuery('p.help-block').remove();
-            jQuery('.'+module+'.save.btn').text('SAVING...').prop('disabled', true);
+            jQuery('div[data-modal-add="'+module+'"] .save.btn').text('SAVING...').prop('disabled', true);
         },
         success: function (data, textStatus, jqXHR) {
 
@@ -225,8 +224,8 @@ function post(module, params, columns = []) {
                 $.each(arr, function (index, value) {
                     if(index === 'violations'){
                         $.each(value, function (idx, val) {
-                            jQuery('.'+module+'.add.form #'+val.propertyPath).parent('div').addClass('has-error');
-                            jQuery( '<p class="help-block">'+val.message+'</p>' ).insertAfter( '.'+module+'.add.form #'+val.propertyPath );
+                            jQuery('div[data-modal-add="'+module+'"] form #'+val.propertyPath).parent('div').addClass('has-error');
+                            jQuery( '<p class="help-block">'+val.message+'</p>' ).insertAfter( 'div[data-modal-add="'+module+'"] form #'+val.propertyPath );
                         });
                     }
                 });
@@ -234,13 +233,13 @@ function post(module, params, columns = []) {
             } else {
                 history.pushState(false,false,document.location.origin+'/'+module);
                 getAll(module,columns);
-                jQuery('.'+module+'.add-modal.modal').modal('hide');
+                jQuery('div[data-modal-add="'+module+'"]').modal('hide');
             }
 
-            jQuery('.'+module+'.save.btn').text('SAVE').prop('disabled', false);
+            jQuery('div[data-modal-add="'+module+'"] .save.btn').text('SAVE').prop('disabled', false);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            jQuery('.'+module+'.save.btn').text('SAVE').prop('disabled', false);
+            jQuery('div[data-modal-add="'+module+'"] .save.btn').text('SAVE').prop('disabled', false);
         }
     });
 }
@@ -261,13 +260,13 @@ function detail(module,id) {
         beforeSend: function () {
             jQuery('div .has-error').removeClass('has-error');
             jQuery('p.help-block').remove();
-            jQuery('.'+module+'.edit.btn').text('UPDATE').prop('disabled', true);
-            jQuery('tbody.'+module+' tr#'+id).attr('style', 'background-color:#f39c12;transition:background 3s ease;');
+            jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', true);
+            jQuery('tbody[data-list="'+module+'"] tr#'+id).attr('style', 'background-color:#f39c12;transition:background 3s ease;');
 
-            jQuery('.' + module + '.detail-modal.modal input').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
-            jQuery('.' + module + '.detail-modal.modal select').addClass('loading').prop('disabled', true).html('<option selected>LOADING...</option>');
-            jQuery('.' + module + '.detail-modal.modal textarea').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
-            jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]').prop('disabled', true);
+            jQuery('div[data-modal-detail="'+module+'"] input').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
+            jQuery('div[data-modal-detail="'+module+'"] select').addClass('loading').prop('disabled', true).html('<option selected>LOADING...</option>');
+            jQuery('div[data-modal-detail="'+module+'"] textarea').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
+            jQuery('div[data-modal-detail="'+module+'"] input[type="checkbox"]').prop('disabled', true);
         },
         success: function (data, textStatus, jqXHR) {
             arr = JSON.parse(data);
@@ -297,7 +296,7 @@ function detail(module,id) {
                             data: data,
                             beforeSend: function () {
                                 jQuery('select[data-object="'+dataObject+'"]').html('<option selected>LOADING..</option>');
-                                jQuery('.'+module+'.edit.btn').prop('disabled', true);
+                                jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', true);
                             },
                             success: function (data, textStatus, jqXHR) {
                                 var select = '';
@@ -326,33 +325,33 @@ function detail(module,id) {
                                     select+= '<option selected></option>';
                                 }
                                 jQuery('select[data-object="'+dataObject+'"]').html(select).removeClass('loading').removeAttr('disabled');
-                                jQuery('.'+module+'.edit.btn').prop('disabled', false);
+                                jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', false);
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-                                jQuery('.'+module+'.edit.btn').prop('disabled', true);
+                                jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', true);
                             }
                         });
 
                     });
 
                 } else if (index.indexOf('@') <= -1) {
-                    console.log(index+': '+value);
+                    //console.log(index+': '+value);
                     if (value === true || value === 'undefined') {
-                        jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');;
+                        jQuery('div[data-modal-detail="'+module+'"] input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');;
                     } else if (value === false || value === 'undefined') {
                         jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');;
                     } else {
 
-                        jQuery('.' + module + '.detail-modal.modal input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
-                        jQuery('.' + module + '.detail-modal.modal input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
-                        jQuery('.' + module + '.detail-modal.modal input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE').removeAttr('disabled readonly');
+                        jQuery('div[data-modal-detail="'+module+'"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
+                        jQuery('div[data-modal-detail="'+module+'"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
+                        jQuery('div[data-modal-detail="'+module+'"] input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE').removeAttr('disabled readonly');
                     }
-                    jQuery('.'+module+'.edit.btn').prop('disabled', false);
+                    jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', false);
                 }
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            jQuery('.'+module+'.edit.btn').prop('disabled', true);
+            jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', true);
         }
     });
 }
@@ -373,7 +372,7 @@ function editAction(module, id, params) {
         beforeSend: function () {
             jQuery('div .has-error').removeClass('has-error');
             jQuery('p.help-block').remove();
-            jQuery('.'+module+'.edit.btn').text('UPDATING...').prop('disabled', true);
+            jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATING...').prop('disabled', true);
         },
         success: function (data, textStatus, jqXHR) {
 
@@ -383,25 +382,25 @@ function editAction(module, id, params) {
                 $.each(arr, function (index, value) {
                     if (index === 'violations') {
                         $.each(value, function (idx, val) {
-                            jQuery('.' + module + '.edit.form #' + val.propertyPath).parent('div').addClass('has-error');
-                            jQuery('<p class="help-block">' + val.message + '</p>').insertAfter('.' + module + '.edit.form #' + val.propertyPath);
+                            jQuery('div[data-modal-detail="'+module+'"] form #' + val.propertyPath).parent('div').addClass('has-error');
+                            jQuery('<p class="help-block">' + val.message + '</p>').insertAfter('div[data-modal-detail="'+module+'"] form #' + val.propertyPath);
                         });
                     }
                 });
 
-                jQuery('.'+module+'.edit.btn').text('UPDATE').prop('disabled', false);
+                jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', false);
                 toastr.error('Error when updating your data');
             } else {
-                console.log(arr);
+                //console.log(arr);
                 jQuery.each(columns, function (idx,val) {
                     kolom = idx+2;
                     jQuery.each(arr, function (i,v) {
                         if (val === i) {
-                            jQuery('tbody.'+module+' tr#'+id+' td:nth-child('+kolom+')').text(v);
+                            jQuery('tbody[data-list="'+module+'"] tr#'+id+' td:nth-child('+kolom+')').text(v);
                         } else if(v instanceof Object && val.split('.')[0] === i) {
                             jQuery.each(v, function (ix,vl) {
                                 if(ix === val.split('.')[1]) {
-                                    jQuery('tbody.'+module+' tr#'+id+' td:nth-child('+kolom+')').text(vl);
+                                    jQuery('tbody[data-list="'+module+'"] tr#'+id+' td:nth-child('+kolom+')').text(vl);
                                 }
                             });
                         }
@@ -409,13 +408,13 @@ function editAction(module, id, params) {
                 });
 
                 toastr.success('Data successfully updated');
-                jQuery('.'+module+'.detail-modal.modal').modal('hide');
-                jQuery('.'+module+'.edit.btn').text('UPDATE').prop('disabled', false);
+                jQuery('div[data-modal-detail="'+module+'"]').modal('hide');
+                jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', false);
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            jQuery('.'+module+'.edit.btn').text('UPDATE').prop('disabled', false);
+            jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', false);
             toastr.error('Error when updating your data');
         }
     });
@@ -431,7 +430,7 @@ function del(module, id, columns) {
         params: {}
     };
 
-    var elm = jQuery('.'+module+' tr#'+id);
+    var elm = jQuery('tbody[data-list="'+module+'"] tr#'+id);
 
     $.ajax({
         url: "/api",
@@ -527,7 +526,7 @@ jQuery(function($) {
                 } else {
                     var elms = jQuery('.search-area').removeClass('col-md-12').addClass('col-md-10');
                         elms += jQuery('.button-area').addClass('col-md-2');
-                        elms += jQuery('.'+module+'.add-btn.btn').css('visibility', 'visible');
+                        elms += jQuery('a[data-btn-add="'+module+'"]').css('visibility', 'visible');
 
                     return {
                         results: elms
@@ -547,14 +546,15 @@ jQuery(function($) {
         history.pushState(false,false,document.location.origin+'/'+module);
         getAll(module,columns);
     }).on("select2:open", function () {
-        jQuery('.'+module+'.add-btn.btn').css('visibility', 'hidden');
+        jQuery('a[data-btn-add="'+module+'"]').css('visibility', 'hidden');
         jQuery('.search-area').removeClass('col-md-10').addClass('col-md-12');
         jQuery('.button-area').removeClass('col-md-2');
     });
 
     // Add form
-    $(document).on('click', '.box-header .'+window.module+'.add-btn', function () {
-        var $this = $('.'+window.module+'.add-modal.modal');
+    $(document).on('click', 'a[data-btn-add="'+window.module+'"]', function () {
+        $('.add-datetime').datetimepicker();
+        var $this = $('div[data-modal-add="'+window.module+'"]');
         $this.modal({show: true, backdrop: 'static'});
 
         getSelect('.select-add-modal');
@@ -567,12 +567,12 @@ jQuery(function($) {
     });
 
     // detail form
-    $(document).on('click', 'tbody.'+window.module+' .'+window.module+'.detail-btn', function () {
+    $(document).on('click', 'tbody[data-list="'+window.module+'"] .detail-btn', function () {
         var id = $(this).attr('data-id');
 
-        jQuery('.'+window.module+'.detail-modal.modal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
-        jQuery('.'+window.module+'.detail-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
-        jQuery('.'+window.module+'.detail-modal.modal').modal({show: true, backdrop: 'static'});
+        jQuery('div[data-modal-detail="'+window.module+'"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
+        jQuery('div[data-modal-detail="'+window.module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
+        jQuery('div[data-modal-detail="'+window.module+'"]').modal({show: true, backdrop: 'static'});
 
         if (module !== 'user-activities') {
             detail(module, id);
@@ -582,10 +582,10 @@ jQuery(function($) {
     });
 
     // Delete action
-    $(document).on('click', 'tbody.'+window.module+' .'+window.module+'.delete-btn', function () {
+    $(document).on('click', 'tbody[data-list="'+window.module+'"] .delete-btn', function () {
         var module = window.module;
         var id = $(this).attr('data-id');
-        var elm = jQuery('tbody.'+module+' tr#'+id);
+        var elm = jQuery('tbody[data-list="'+module+'"] tr#'+id);
         elm.addClass('bg-red');
         setTimeout(function(){
             bootbox.confirm({
@@ -612,42 +612,42 @@ jQuery(function($) {
     });
 
     // save action
-    $(document).on('click', '.'+window.module+'.add-modal.modal .'+window.module+'.save.btn', function () {
+    $(document).on('click', 'div[data-modal-add="'+window.module+'"] .save.btn', function () {
         var module = window.module;
-        var params = $('.'+module+'.add.form');
+        var params = $('div[data-modal-add="'+window.module+'"] form');
 
         post(module,params,columns);
     });
 
     // edit action aka update
-    $(document).on('click', '.'+window.module+'.detail-modal.modal .'+window.module+'.edit.btn', function () {
+    $(document).on('click', 'div[data-modal-detail="'+window.module+'"] .edit.btn', function () {
         var module = window.module;
-        var params = $('.'+module+'.detail.form');
+        var params = $('div[data-modal-detail="'+window.module+'"] form');
 
-        var id = $('.'+module+'.detail.form input#id').val();
+        var id = $('div[data-modal-detail="'+window.module+'"] form input#id').val();
         editAction(module, id, params);
     });
 
-    $('.'+window.module+'.modal').on('hidden.bs.modal', function () {
+    $('.modal').on('hidden.bs.modal', function () {
         $(this).find('input,textarea,select').val('').end();
         $(this).find('input[type="checkbox"]').prop('checked', false).end();
         $('div .has-error').removeClass('has-error');
         $('p.help-block').remove();
 
-        jQuery('table.table-striped tbody.'+module+' tr').css('background-color', 'inherit');
-        jQuery('table.table-striped tbody.'+module+'>tr:nth-of-type(odd)').css('background-color', '#f9f9f9');
+        jQuery('table.table-striped tbody[data-list="'+module+'"] tr').css('background-color', 'inherit');
+        jQuery('table.table-striped tbody[data-list="'+module+'"]>tr:nth-of-type(odd)').css('background-color', '#f9f9f9');
     });
 
-    $(document).on('keypress', 'form.'+window.module+'.add input', function (e) {
+    $(document).on('keypress', 'div[data-modal-add="'+window.module+'"] form input', function (e) {
         if (e.which === 13) {
-            $('.'+window.module+'.save.btn').click();
+            $('div[data-modal-add="'+window.module+'"] .save.btn').click();
             return false;
         }
     });
 
-    $(document).on('keypress', 'form.'+window.module+'.detail input', function (e) {
+    $(document).on('keypress', 'div[data-modal-detail="'+window.module+'"] form input', function (e) {
         if (e.which === 13) {
-            $('.'+window.module+'.edit.btn').click();
+            $('div[data-modal-detail="'+window.module+'"] .edit.btn').click();
             return false;
         }
     });

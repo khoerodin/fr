@@ -52,39 +52,102 @@ $(document).on('change', '.loginState', function () {
     });
 });
 
-jQuery('.'+window.module+'.roles-modal.modal').on('hidden.bs.modal', function (e) {
+jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function (e) {
     jQuery('tbody#roles-check').html('<tr><td colspan="6">Loading...</td></tr>');
 })
 
 // Roles form
-$(document).on('click', 'tbody.'+window.module+' .'+window.module+'.roles-btn', function () {
-    var id = $(this).attr('data-id');
-    var fullname = $(this).attr('data-user-fullname');
-    jQuery('.modal-title.roles span').text(fullname);
-    jQuery('.'+window.module+'.roles-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
-    jQuery('.'+window.module+'.roles-modal.modal').modal({show: true, backdrop: 'static'});
-
-    var par = {
-        'user.id' : id
+$(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', function () {
+    var userId = $(this).attr('data-id');
+    var moduleData = {
+        module: 'modules',
+        method: 'get'
     }
 
-    var data = {
-        module : 'roles',
-        method : 'get',
-        params : par
-    };
+    var roleData = {
+        module: 'roles',
+        method: 'get',
+        params: [{'user.id': userId}]
+    }
 
     $.ajax({
-        url: "/api/roles",
+        url: "/api",
         type: "POST",
-        data: data,
+        data: moduleData,
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
-            jQuery('.'+window.module+'.roles-modal.modal input[type="checkbox"]').prop('disabled', false);
-            rolesResponse(data, id);
+            data = JSON.parse(data);
+            //console.log(data);
+            $.each(data, function (index, value) {
+                if(index === 'hydra:member'){
+                    var modules = [];
+                    $.each(value, function (idx, val) {
+                        $.each(val, function (i, v) {
+                            if(i === 'id') {
+                                modules.push(v);
+                            }
+                        });
+                    });
+                    //console.log(modules);
+                }
+            });
         },
         error: function (jqXHR, textStatus, errorThrown) {}
     });
+
+    $.ajax({
+        url: "/api",
+        type: "POST",
+        data: roleData,
+        beforeSend: function () {},
+        success: function (data, textStatus, jqXHR) {
+            data = JSON.parse(data);
+            $.each(data, function (index, value) {
+                if(index === 'hydra:member'){
+                    var roles = [];
+                    $.each(value, function (idx, val) {
+                        roles.push({
+                            'module' : val['module']['path'].replace('/api/', ''),
+                            'user' : parseInt(userId),
+                            'viewable' : val['viewable'],
+                            'addable' : val['addable'],
+                            'editable' : val['editable'],
+                            'deletable' : val['deletable']
+                        });
+                    });
+                    console.log(roles);
+                }
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {}
+    });
+
+    // var fullname = $(this).attr('data-user-fullname');
+    // jQuery('.modal-title.roles span').text(fullname);
+    // jQuery('.roles-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
+    // jQuery('.roles-modal.modal').modal({show: true, backdrop: 'static'});
+
+    // var params = {
+    //     'user.id' : id
+    // }
+    //
+    // var data = {
+    //     module : 'roles',
+    //     method : 'get',
+    //     params : params
+    // };
+    //
+    // $.ajax({
+    //     url: "/api/roles",
+    //     type: "POST",
+    //     data: data,
+    //     beforeSend: function () {},
+    //     success: function (data, textStatus, jqXHR) {
+    //         jQuery('.roles-modal.modal input[type="checkbox"]').prop('disabled', false);
+    //         rolesResponse(data, id);
+    //     },
+    //     error: function (jqXHR, textStatus, errorThrown) {}
+    // });
 
 });
 

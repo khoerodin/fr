@@ -9,13 +9,6 @@ app:
         - { path: '/api/roles', controller: 'Bisnis:Api@getRole', methods: ['POST'] }
         - { path: '/api/menus', controller: 'Bisnis:Api@menus', methods: ['POST'] }
 
-        #Administration
-        - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }
-        - { path: '/modules', controller: 'Bisnis:Modules@index', methods: ['GET'] }
-        - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
-        - { path: '/settings', controller: 'Bisnis:Settings@index', methods: ['GET'] }
-        - { path: '/user-activities', controller: 'Bisnis:UserActivities@index', methods: ['GET'] }
-
         #Profile
         - { path: '/profile', controller: 'Bisnis:Profile@index', methods: ['GET'] }
 
@@ -23,3 +16,27 @@ app:
         - { path: '/login', controller: 'Bisnis:Login@index', methods: ['GET'] }
         - { path: '/login_check', controller: 'Bisnis:Login@processLogin', methods: ['POST'] }
         - { path: '/logout', controller: 'Bisnis:Login@logout', methods: ['PUT'] }
+
+        #Administration
+        - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }
+        - { path: '/modules', controller: 'Bisnis:Modules@index', methods: ['GET'] }
+        - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
+        - { path: '/settings', controller: 'Bisnis:Settings@index', methods: ['GET'] }
+        - { path: '/user-activities', controller: 'Bisnis:UserActivities@index', methods: ['GET'] }
+
+        #Advertising
+        #Master
+        - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
+        - { path: '/advertising/ad-brands', controller: 'Bisnis:AdvertisingAdBrands@index', methods: ['GET'] }
+        - { path: '/advertising/ad-copies', controller: 'Bisnis:AdvertisingAdCopies@index', methods: ['GET'] }
+        - { path: '/advertising/ads', controller: 'Bisnis:AdvertisingAds@index', methods: ['GET'] }
+        - { path: '/advertising/brands', controller: 'Bisnis:AdvertisingBrands@index', methods: ['GET'] }
+        - { path: '/advertising/budgets', controller: 'Bisnis:AdvertisingBudgets@index', methods: ['GET'] }
+        - { path: '/advertising/categories', controller: 'Bisnis:AdvertisingCategories@index', methods: ['GET'] }
+        - { path: '/advertising/classifications', controller: 'Bisnis:AdvertisingClassifications@index', methods: ['GET'] }
+        - { path: '/advertising/layouts', controller: 'Bisnis:AdvertisingLayouts@index', methods: ['GET'] }
+        - { path: '/advertising/payment-methods', controller: 'Bisnis:AdvertisingPaymentMethods@index', methods: ['GET'] }
+        - { path: '/advertising/positions', controller: 'Bisnis:AdvertisingPositions@index', methods: ['GET'] }
+        - { path: '/advertising/sections', controller: 'Bisnis:AdvertisingSections@index', methods: ['GET'] }
+        - { path: '/advertising/specifications', controller: 'Bisnis:AdvertisingSpecifications@index', methods: ['GET'] }
+        - { path: '/advertising/types', controller: 'Bisnis:AdvertisingTypes@index', methods: ['GET'] }

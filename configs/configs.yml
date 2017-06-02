@@ -2,7 +2,7 @@ app:
     api:
         base_url: 'http://10.5.5.206:8000/app_dev.php/api/'
 #        base_url: 'https://82600595.ngrok.io/api/'
-        api_key: '61d757f800a5f35159c5143215158fe15ed036ad'
+        api_key: '968e3c474b407ec8f232db3fd50808693b97a9c6'
         param_key: 'api_key'
     template:
         path: 'views'

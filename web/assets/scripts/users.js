@@ -70,98 +70,90 @@ $(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', funct
         params: [{'user.id': userId}]
     }
 
-    $.ajax({
+    var modules;
+    var roles;
+
+    var ajax1 = $.ajax({
         url: "/api",
         type: "POST",
         data: moduleData,
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
-            data = JSON.parse(data);
-            //console.log(data);
-            $.each(data, function (index, value) {
-                if(index === 'hydra:member'){
-                    var modules = [];
-                    $.each(value, function (idx, val) {
-                        $.each(val, function (i, v) {
-                            if(i === 'id') {
-                                modules.push(v);
-                            }
-                        });
-                    });
-                    //console.log(modules);
-                }
-            });
         },
         error: function (jqXHR, textStatus, errorThrown) {}
     });
 
-    $.ajax({
+    var ajax2 = $.ajax({
         url: "/api",
         type: "POST",
         data: roleData,
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
-            data = JSON.parse(data);
-            $.each(data, function (index, value) {
-                if(index === 'hydra:member'){
-                    var roles = [];
-                    $.each(value, function (idx, val) {
-                        roles.push({
-                            'module' : val['module']['path'].replace('/api/', ''),
-                            'user' : parseInt(userId),
-                            'viewable' : val['viewable'],
-                            'addable' : val['addable'],
-                            'editable' : val['editable'],
-                            'deletable' : val['deletable']
-                        });
-                    });
-                    console.log(roles);
-                }
-            });
         },
         error: function (jqXHR, textStatus, errorThrown) {}
     });
 
-    // var fullname = $(this).attr('data-user-fullname');
-    // jQuery('.modal-title.roles span').text(fullname);
-    // jQuery('.roles-modal.modal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
-    // jQuery('.roles-modal.modal').modal({show: true, backdrop: 'static'});
+    $.when(ajax1, ajax2).done(function(a1, a2){
 
-    // var params = {
-    //     'user.id' : id
-    // }
-    //
-    // var data = {
-    //     module : 'roles',
-    //     method : 'get',
-    //     params : params
-    // };
-    //
-    // $.ajax({
-    //     url: "/api/roles",
-    //     type: "POST",
-    //     data: data,
-    //     beforeSend: function () {},
-    //     success: function (data, textStatus, jqXHR) {
-    //         jQuery('.roles-modal.modal input[type="checkbox"]').prop('disabled', false);
-    //         rolesResponse(data, id);
-    //     },
-    //     error: function (jqXHR, textStatus, errorThrown) {}
-    // });
+        if((a2[1] === 'success' && a2[1] === 'success')) {
+
+            var data2 = JSON.parse(a2[0]);
+            roles = [];
+            $.each(data2['hydra:member'], function (idx, val) {
+                roles[val.module.id] = {
+                    roleId: val.id,
+                    moduleName: val.module.name,
+                    module: val.module.id,
+                    viewable: val.viewable,
+                    addable: val.addable,
+                    editable: val.editable,
+                    deletable: val.deletable
+                };
+            });
+
+            var userRoles = [];
+            var data1 = JSON.parse(a1[0]);
+            $.each(data1['hydra:member'], function (idx, val) {
+                if ('undefined' !== typeof roles[val.id]) {
+                    userRoles[val.id] = {
+                        moduleName: roles[val.id].moduleName,
+                        module: roles[val.id].module,
+                        viewable: roles[val.id].viewable,
+                        addable: roles[val.id].addable,
+                        editable: roles[val.id].editable,
+                        deletable: roles[val.id].deletable,
+                        roleId: roles[val.id].roleId
+                    };
+                } else {
+                    userRoles[val.id] = {
+                        moduleName: val.name,
+                        module: val.id,
+                        viewable: false,
+                        addable: false,
+                        editable: false,
+                        deletable: false,
+                        roleId: null
+                    };
+                }
+            });
+
+            rolesResponse(userRoles, userId);
+        }
+    });
 
 });
 
 $(document).on('change', '.check-role', function () {
-    checkName = $(this).attr('name');
-    rolesId = $(this).attr('data-id');
-    userId = $('#userid').val();
-    moduleId = $(this).closest('tr').find('input.moduleId').val();
-    console.log(moduleId);
+    var $this = $(this);
+    var checkName = $this.attr('name');
+    var userId = $('#rolesUserId').val();
+    var moduleId = $this.closest('tr').attr('id');
+    var roleId = $this.closest('tr').attr('data-role');
 
     if ($(this).is(':checked')){
-        checkValue = 1;
+        var checkValue = true;
     } else {
-        checkValue = 0;
+        checkValue = false;
     }
 
     var check = {
@@ -179,16 +171,25 @@ $(document).on('change', '.check-role', function () {
         'value' : '/api/modules/'+moduleId
     };
 
-    par = [
+    if (roleId !== 'null') {
+        var method = 'put';
+        var mod = 'roles/'+roleId;
+    } else {
+        var method = 'post';
+        var mod = 'roles';
+    }
+
+
+    var params = [
         check,
         user,
         module
     ];
 
     var data = {
-        module : 'roles/'+rolesId,
-        method : 'put',
-        params : par
+        module : mod,
+        method : method,
+        params : params
     };
 
     $.ajax({
@@ -197,117 +198,61 @@ $(document).on('change', '.check-role', function () {
         data: data,
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
-            toastr.success('Role successfully changed')
+            data = JSON.parse(data);
+            $this.closest('tr').attr('data-role', data.id);
+            toastr.success('Role successfully changed');
         },
         error: function (jqXHR, textStatus, errorThrown) {}
     });
 });
 
-function rolesResponse(data, id) {
-    arr = JSON.parse(data);
-    var rolesColumns = [
-        'module.name',
-        'viewable',
-        'addable',
-        'editable',
-        'deletable'
-    ];
+function rolesResponse(data,userId) {
 
-    $.each(arr, function (index, value) {
-        if(index === 'hydra:member'){
-            var tr = '';
-            $.each(value, function (idx, val) {
+    var rolesCheck = '';
+    var no = 1;
+    jQuery.each(data, function (index, value) {
 
-                no = idx+1;
-                tr += '<tr id="'+val.id+'">';
-                tr += '<td>'+no+'</td>';
-                $.each(rolesColumns, function (i,v) {
-                    var v1 = v.split(".")[0];
-                    var v2 = v.split(".")[1];
+        if (typeof value != 'undefined') {
 
-                    if (val[v1] instanceof Object) {
-                        $.each(val[v1], function(ind, vl) {
+            rolesCheck += '<tr id="'+value.module+'" data-role="'+value.roleId+'"><td>'+no+++'</td>';
+            if(value.moduleName) {
+                rolesCheck += '<td>'+value.moduleName+'</td>'
+            }
 
-                            if(ind == 'id'){
-                                tr += '<input type="hidden" value="'+vl+'" class="moduleId">';
-                            }
+            if(value.viewable === true) {
+                rolesCheck += '<td><input name="viewable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
+            } else {
+                rolesCheck += '<td><input name="viewable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
+            }
 
-                            if(ind == v2){
-                                tr += '<td>'+vl+'</td>';
-                            }
-                        })
-                    } else {
-                        tr += '<td>';
-                        if(v === 'viewable') {
-                            if (val[v1] == true) {
-                                tr += '<input data-id="'+val.id+'" name="viewable" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            } else if(val[v1] == false) {
-                                tr += '<input data-id="'+val.id+'" name="viewable" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            }
+            if(value.addable === true) {
+                rolesCheck += '<td><input name="addable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
+            } else {
+                rolesCheck += '<td><input name="addable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
+            }
 
-                        } else if(v === 'addable') {
-                            if (val[v1] == true) {
-                                tr += '<input data-id="'+val.id+'" name="addable" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            } else if(val[v1] == false) {
-                                tr += '<input data-id="'+val.id+'" name="addable" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            }
-                        } else if(v === 'editable') {
-                            if (val[v1] == true) {
-                                tr += '<input data-id="'+val.id+'" name="editable" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            } else if(val[v1] == false) {
-                                tr += '<input data-id="'+val.id+'" name="editable" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            }
-                        } else if(v === 'deletable') {
-                            if (val[v1] == true) {
-                                tr += '<input data-id="'+val.id+'" name="deletable" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            } else if(val[v1] == false) {
-                                tr += '<input data-id="'+val.id+'" name="deletable" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success">';
-                            }
-                        } else {
-                            tr += val[v1];
-                        }
-                        tr += '</td>';
-                    }
+            if(value.editable === true) {
+                rolesCheck += '<td><input name="editable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
+            } else {
+                rolesCheck += '<td><input name="editable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
+            }
 
-                });
+            if(value.deletable === true) {
+                rolesCheck += '<td><input name="deletable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
+            } else {
+                rolesCheck += '<td><input name="deletable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
+            }
 
-                tr += '</tr>';
-                tr += '<input type="hidden" value="'+id+'" id="userid">';
-            });
-            jQuery('tbody#roles-check').html(tr);
-            $('.check-role').bootstrapToggle();
+            rolesCheck += '</tr>';
+            rolesCheck += '<input type="hidden" value="'+userId+'" id="rolesUserId">';
         }
 
-        if(index === 'hydra:view') {
-            var paging = '';
-            $.each(value, function (idx, val) {
-                page = getQueryVariable('page',val);
-                if(idx.startsWith('hydra')){
-                    if(idx.endsWith('first')) {
-                        paging += '<li><span class="to-page" data-page="'+page+'" title="FIRST PAGE">FIRST</span></li>';
-                    }
-                }
-            });
-
-            $.each(value, function (idx, val) {
-                page = getQueryVariable('page',val);
-                if(idx.startsWith('hydra')){
-                    if(idx.endsWith('next')) {
-                        paging += '<li><span class="to-page" data-page="'+page+'" title="NEXT PAGE">NEXT</span></li>';
-                    }
-                }
-            });
-
-            $.each(value, function (idx, val) {
-                page = getQueryVariable('page',val);
-                if(idx.startsWith('hydra')){
-                    if(idx.endsWith('last')) {
-                        paging += '<li><span class="to-page" data-page="'+page+'" title="LAST PAGE">LAST</span></li>';
-                    }
-                }
-            });
-
-            jQuery('ul.users.roles-modal.pagination').html(paging);
-        }
     });
+
+    jQuery('tbody#roles-check').html(rolesCheck);
+    $('.check-role').bootstrapToggle();
+
+    var $this = $('.roles-modal');
+    $this.modal({show: true, backdrop: 'static'});
+
 }

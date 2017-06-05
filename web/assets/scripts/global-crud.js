@@ -335,14 +335,14 @@ function detail(module,id) {
                     });
 
                 } else if (index.indexOf('@') <= -1) {
-                    //console.log(index+': '+value);
                     if (value === true || value === 'undefined') {
                         jQuery('div[data-modal-detail="'+module+'"] input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');;
                     } else if (value === false || value === 'undefined') {
                         jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');;
                     } else {
-
+                        console.log(value);
                         jQuery('div[data-modal-detail="'+module+'"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
+                        jQuery('div[data-modal-detail="'+module+'"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                         jQuery('div[data-modal-detail="'+module+'"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
                         jQuery('div[data-modal-detail="'+module+'"] input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE').removeAttr('disabled readonly');
                     }
@@ -456,11 +456,11 @@ function getSelect(classElm) {
 
     jQuery(select).each( function(index, value) {
 
-        var id = value.id;
+        var id = value.getAttribute('data-module');
         var module = id.split("-")[0];
         var field = id.split("-")[1];
 
-        jQuery("#"+id).select2({
+        jQuery('select[data-module="'+id+'"]').select2({
 
             theme: "bootstrap",
             placeholder: "SEARCH A "+field.toUpperCase(),
@@ -636,6 +636,11 @@ jQuery(function($) {
 
         jQuery('table.table-striped tbody[data-list="'+module+'"] tr').css('background-color', 'inherit');
         jQuery('table.table-striped tbody[data-list="'+module+'"]>tr:nth-of-type(odd)').css('background-color', '#f9f9f9');
+    });
+
+    $('.modal').on('hide.bs.modal', function () {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
     });
 
     $(document).on('keypress', 'div[data-modal-add="'+window.module+'"] form input', function (e) {

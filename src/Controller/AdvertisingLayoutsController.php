@@ -8,7 +8,7 @@ class AdvertisingLayoutsController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Advertising',
-            'title' => 'Layouts',
+            'title' => 'Layout Iklan',
         ];
 
         $data = [

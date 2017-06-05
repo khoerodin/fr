@@ -55,9 +55,11 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
                     return new RedirectResponse('/login');
                 } else {
                     $session->set('me', $me->getContent());
-                    $menus = $client->get('roles/me');
+                    $userId = json_decode($me->getContent(), true)['id'];
+                    $menus = $client->get('roles?user.id='.$userId );
                     $session->set('menus', $menus->getContent());
-                    //var_dump($menus->getContent());die();
+                    //var_dump($userId);die();
+
                 }
             }
         }

@@ -25,8 +25,8 @@ class ApiController extends AbstractController
             foreach ($params as $param) {
                 if($param['value'] != '' AND $param['value'] != null) {
                     if(
-                        $param['value'] == 'true' || $param['value'] == '1' ||
-                        $param['value'] == 'false' || $param['value'] == '0'
+                        $param['value'] == 'true' ||
+                        $param['value'] == 'false'
                     ) {
                         $value = (bool) $param['value'];
                     } else {
@@ -188,18 +188,11 @@ class ApiController extends AbstractController
                 ['module' => 'settings'],
             ],
             'advertising' => [
-                ['module' => 'advertising/account-executives'],
                 ['module' => 'advertising/ads'],
-                ['module' => 'advertising/ad-brands'],
-                ['module' => 'advertising/ad-copies'],
-                ['module' => 'advertising/brands'],
-                ['module' => 'advertising/budgets'],
                 ['module' => 'advertising/categories'],
-                ['module' => 'advertising/classifications'],
                 ['module' => 'advertising/layouts'],
                 ['module' => 'advertising/payment-methods'],
                 ['module' => 'advertising/positions'],
-                ['module' => 'advertising/sections'],
                 ['module' => 'advertising/specifications'],
                 ['module' => 'advertising/types']
             ],

@@ -8,7 +8,7 @@ class AdvertisingCategoriesController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Advertising',
-            'title' => 'Categories',
+            'title' => 'Kategori Iklan',
         ];
 
         $data = [

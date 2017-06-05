@@ -26,17 +26,11 @@ app:
 
         #Advertising
         #Master
-        - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
-        - { path: '/advertising/ad-brands', controller: 'Bisnis:AdvertisingAdBrands@index', methods: ['GET'] }
-        - { path: '/advertising/ad-copies', controller: 'Bisnis:AdvertisingAdCopies@index', methods: ['GET'] }
         - { path: '/advertising/ads', controller: 'Bisnis:AdvertisingAds@index', methods: ['GET'] }
-        - { path: '/advertising/brands', controller: 'Bisnis:AdvertisingBrands@index', methods: ['GET'] }
-        - { path: '/advertising/budgets', controller: 'Bisnis:AdvertisingBudgets@index', methods: ['GET'] }
         - { path: '/advertising/categories', controller: 'Bisnis:AdvertisingCategories@index', methods: ['GET'] }
-        - { path: '/advertising/classifications', controller: 'Bisnis:AdvertisingClassifications@index', methods: ['GET'] }
         - { path: '/advertising/layouts', controller: 'Bisnis:AdvertisingLayouts@index', methods: ['GET'] }
         - { path: '/advertising/payment-methods', controller: 'Bisnis:AdvertisingPaymentMethods@index', methods: ['GET'] }
         - { path: '/advertising/positions', controller: 'Bisnis:AdvertisingPositions@index', methods: ['GET'] }
-        - { path: '/advertising/sections', controller: 'Bisnis:AdvertisingSections@index', methods: ['GET'] }
         - { path: '/advertising/specifications', controller: 'Bisnis:AdvertisingSpecifications@index', methods: ['GET'] }
+        - { path: '/advertising/specification-details', controller: 'Bisnis:AdvertisingSpecificationDetails@index', methods: ['GET'] }
         - { path: '/advertising/types', controller: 'Bisnis:AdvertisingTypes@index', methods: ['GET'] }

@@ -2,19 +2,19 @@
 
 namespace Bisnis\Controller;
 
-class AdvertisingAdCopiesController extends AdminController
+class AdvertisingSpecificationDetailsController extends AdminController
 {
     public function indexAction()
     {
         $meta = [
             'parentMenu' => 'Advertising',
-            'title' => 'Ad Copies',
+            'title' => 'Detil Jenis Iklan',
         ];
 
         $data = [
             'meta' => $meta
         ];
 
-        return $this->view('advertising-ad-copies/index.twig', $data);
+        return $this->view('advertising-specification-details/index.twig', $data);
     }
 }

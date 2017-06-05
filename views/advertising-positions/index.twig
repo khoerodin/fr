@@ -3,7 +3,7 @@
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
     <script>
-        window.module = 'advertising/classifications';
+        window.module = 'advertising/positions';
         window.field = 'name';
         var columns = [
             'name'
@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="button-area transition">
-                        <a href="JavaScript:Void(0);" data-btn-add="advertising/classifications" style="visibility: hidden;" class="add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                        <a href="JavaScript:Void(0);" data-btn-add="advertising/positions" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
@@ -33,31 +33,31 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th>Name</th>
-                            <th width="5%"><span class="pull-right">Action</span></th>
+                            <th>Posisi</th>
+                            <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>
 
-                        <tbody data-list="advertising/classifications">
-                            <tr><td colspan="3">LOADING DATA...</td></tr>
+                        <tbody data-list="advertising/positions">
+                        <tr><td colspan="3">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>
 
                     {#ADD MODAL#}
-                    <div data-modal-add="advertising/classifications" class="add-modal modal" role="dialog">
+                    <div data-modal-add="advertising/positions" class="clients add-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Add a Clasification</h4>
+                                    <h4 class="modal-title">Tambah Posisi Iklan</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="add form">
+                                    <form role="form" class="clients add form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label for="name">Name</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                                <label for="name">Posisi</label>
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Posisi">
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="save btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="clients save btn btn-flat btn-danger">Save</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -73,27 +73,28 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div data-modal-detail="advertising/classifications" class="detail-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-detail="advertising/positions" class="clients detail-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail of Clasification</h4>
+                                    <h4 class="modal-title">Detail Posisi Iklan</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="detail form">
+                                    <form role="form" class="clients detail form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label for="name">Name</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                                <label for="name">Posisi</label>
+                                                <input type="text" name="name" class="form-control" id="name">
                                             </div>
-                                            <input type="hidden" name="id" id="id">
-                                            <!-- /.box-body -->
+                                        </div>
+                                        <input type="hidden" name="id" id="id">
+                                        <!-- /.box-body -->
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="clients edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -103,7 +104,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul data-paging="advertising/classifications" class="pagination pagination-sm no-margin pull-right"></ul>
+                    <ul data-paging="advertising/positions" class="clients pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

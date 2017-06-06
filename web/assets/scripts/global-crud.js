@@ -703,4 +703,10 @@ jQuery(function($) {
         changeUrlParam('page', pageNum);
         getAll(module,columns);
     });
+
+    $(document).on('click', '.to-roles-page', function () {
+        var pageNum = $(this).attr('data-page');
+
+        getAll('roles', columns);
+    });
 });

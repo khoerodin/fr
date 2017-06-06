@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "ad3n/client-platform",
-            "version": "1.7.5",
+            "version": "1.7.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ad3n/ClientPlatform.git",
-                "reference": "a264daccdf28123ad136ed231563f047859a4b48"
+                "reference": "0eff27e2b22933f7ef9d137db4b71858ff561d23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ad3n/ClientPlatform/zipball/a264daccdf28123ad136ed231563f047859a4b48",
-                "reference": "a264daccdf28123ad136ed231563f047859a4b48",
+                "url": "https://api.github.com/repos/ad3n/ClientPlatform/zipball/0eff27e2b22933f7ef9d137db4b71858ff561d23",
+                "reference": "0eff27e2b22933f7ef9d137db4b71858ff561d23",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
             ],
             "description": "The Web Api Client Framework",
             "homepage": "https://github.com/ad3n/ClientPlatform",
-            "time": "2017-05-30T04:22:08+00:00"
+            "time": "2017-06-05T09:51:33+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

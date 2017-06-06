@@ -128,9 +128,10 @@ function getAll(module, columns = []) {
 
                                 } else {
 
-                                    if (val[v1] == true) {
+                                    if (val[v1] == true && val[v1] !== '1') {
+                                        //console.log(val[v1]);
                                         tr += '<span class="glyphicon glyphicon-ok"></span>';
-                                    } else if(val[v1] == false) {
+                                    } else if(val[v1] == false && val[v1] !== '0') {
                                         tr += '<span class="glyphicon glyphicon-remove"></span>';
                                     } else {
                                         if (val[v1] == null) {
@@ -279,12 +280,12 @@ function detail(module,id) {
                     $.each(select, function (indSlct, valSlct) {
 
                         var dataSelected = $(valSlct).attr('data-selected');
-                        var objectSelected = dataSelected.split("-")[0];
-                        var fieldSelected = dataSelected.split("-")[1];
+                        var objectSelected = dataSelected.split("#")[0];
+                        var fieldSelected = dataSelected.split("#")[1];
 
                         var dataObject = $(valSlct).attr('data-object');
-                        var object = dataObject.split("-")[0];
-                        var field = dataObject.split("-")[1];
+                        var object = dataObject.split("#")[0];
+                        var field = dataObject.split("#")[1];
                         var data = {
                             module : object,
                             method : 'get',
@@ -340,7 +341,7 @@ function detail(module,id) {
                     } else if (value === false || value === 'undefined') {
                         jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');;
                     } else {
-                        console.log(value);
+                        //console.log(value);
                         jQuery('div[data-modal-detail="'+module+'"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                         jQuery('div[data-modal-detail="'+module+'"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                         jQuery('div[data-modal-detail="'+module+'"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
@@ -456,11 +457,11 @@ function getSelect(classElm) {
 
     jQuery(select).each( function(index, value) {
 
-        var id = value.getAttribute('data-module');
-        var module = id.split("-")[0];
-        var field = id.split("-")[1];
+        var id = value.getAttribute('data-object');
+        var module = id.split("#")[0];
+        var field = id.split("#")[1];
 
-        jQuery('select[data-module="'+id+'"]').select2({
+        jQuery('select[data-object="'+id+'"]').select2({
 
             theme: "bootstrap",
             placeholder: "SEARCH A "+field.toUpperCase(),
@@ -491,7 +492,7 @@ function getSelect(classElm) {
                 cache: true,
             },
             escapeMarkup: function (markup) { return markup; },
-            minimumInputLength: 4
+            minimumInputLength: 2
         });
 
     });
@@ -537,7 +538,7 @@ jQuery(function($) {
             cache: true,
         },
         escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-        minimumInputLength: 4,
+        minimumInputLength: 2,
     }).on("select2:select", function () {
         var text = jQuery(".search-"+field+" option:selected").text();
         changeUrlParam(field.split('-')[0], text);

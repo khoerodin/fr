@@ -20,8 +20,6 @@ class ApiController extends AbstractController
         $method = $request->get('method');
         $params = $request->get('params');
 
-        //var_dump($params);die();
-
         if ($method == 'post' || $method == 'put') {
             $temps = [];
             foreach ($params as $param) {
@@ -40,7 +38,6 @@ class ApiController extends AbstractController
                 }
             }
         } elseif($method == 'get') {
-            //var_dump($params);die();
             if(count($params) > 0) {
                 $temps = array_reduce($params, 'array_merge', array());
                 if(count($temps) > 0) {
@@ -51,9 +48,13 @@ class ApiController extends AbstractController
             } else {
                 $temps = [];
             }
+
+            $temps = array_merge($temps, array('order[id]' => 'DESC'));
         } else {
             $temps = [];
         }
+
+
 
         $response = $this->request($url, $method, $temps);
         return new Response($response->getContent());
@@ -190,6 +191,7 @@ class ApiController extends AbstractController
                 ['module' => 'user-activities'],
                 ['module' => 'clients'],
                 ['module' => 'settings'],
+                ['module' => 'cities'],
             ],
             'advertising' => [
                 ['module' => 'advertising/ads'],

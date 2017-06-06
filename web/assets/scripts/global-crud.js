@@ -290,7 +290,39 @@ function detail(module,id) {
                             method : 'get',
                         };
 
+                        jQuery('select[data-object="'+dataObject+'"]').select2({
 
+                            theme: "bootstrap",
+                            placeholder: "SEARCH A "+field.toUpperCase(),
+                            allowClear: true,
+                            ajax: {
+                                url: "/api/search",
+                                dataType: 'json',
+                                type: 'POST',
+                                delay: 250,
+                                data: function (params) {
+                                    return {
+                                        q: params.term,
+                                        page: params.page,
+                                        module: object,
+                                        method: 'get',
+                                        field: field.split('#')
+                                    };
+                                },
+                                processResults: function (data) {
+                                    if(data.length > 0) {
+                                        return {
+                                            results: $.map(data, function(obj) {
+                                                return { id: '/api/'+object+'/'+obj.id, text: obj[field] };
+                                            })
+                                        }
+                                    }
+                                },
+                                cache: true,
+                            },
+                            escapeMarkup: function (markup) { return markup; },
+                            minimumInputLength: 2
+                        });
 
                         $.ajax({
                             url: "/api",
@@ -342,6 +374,7 @@ function detail(module,id) {
                     } else if (value === false || value === 'undefined') {
                         jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');;
                     } else {
+                        //console.log(value);
                         jQuery('div[data-modal-detail="'+module+'"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                         jQuery('div[data-modal-detail="'+module+'"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                         jQuery('div[data-modal-detail="'+module+'"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
@@ -392,6 +425,7 @@ function editAction(module, id, params) {
                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', false);
                 toastr.error('Error when updating your data');
             } else {
+                //console.log(arr);
                 jQuery.each(columns, function (idx,val) {
                     kolom = idx+2;
                     jQuery.each(arr, function (i,v) {

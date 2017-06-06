@@ -27,7 +27,8 @@
                                 menu.module.path|replace({'/api/': ''}) == 'users' or
                                 menu.module.path|replace({'/api/': ''}) == 'clients' or
                                 menu.module.path|replace({'/api/': ''}) == 'user-activities' or
-                                menu.module.path|replace({'/api/': ''}) == 'modules'
+                                menu.module.path|replace({'/api/': ''}) == 'modules' or
+                                menu.module.path|replace({'/api/': ''}) == 'cities'
                             )
                             and menu.viewable != false
                             -%}

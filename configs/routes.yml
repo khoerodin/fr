@@ -23,6 +23,7 @@ app:
         - { path: '/users', controller: 'Bisnis:Users@index', methods: ['GET'] }
         - { path: '/settings', controller: 'Bisnis:Settings@index', methods: ['GET'] }
         - { path: '/user-activities', controller: 'Bisnis:UserActivities@index', methods: ['GET'] }
+        - { path: '/cities', controller: 'Bisnis:Cities@index', methods: ['GET'] }
 
         #Advertising
         #Master

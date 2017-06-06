@@ -4984,3 +4984,7 @@ input#username, input#email, input#plainPassword, input#password, input#path, in
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
+
+input#file-image {
+  display: none;
+}

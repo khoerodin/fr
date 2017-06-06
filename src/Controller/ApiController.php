@@ -30,7 +30,11 @@ class ApiController extends AbstractController
                         $param['value'] == '1' ||
                         $param['value'] == '0'
                     ) {
-                        $value = (bool) $param['value'];
+                        if ('true' === $param['value'] || 1 === (int) $param['value']) {
+                            $value = true;
+                        } else {
+                            $value = false;
+                        }
                     } else {
                         $value = $param['value'];
                     }
@@ -53,8 +57,6 @@ class ApiController extends AbstractController
         } else {
             $temps = [];
         }
-
-
 
         $response = $this->request($url, $method, $temps);
         return new Response($response->getContent());

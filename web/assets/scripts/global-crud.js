@@ -327,6 +327,40 @@ function detail(module,id) {
                                 }
                                 jQuery('select[data-object="'+dataObject+'"]').html(select).removeClass('loading').removeAttr('disabled');
                                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', false);
+
+                                jQuery('select[data-object="'+dataObject+'"]').select2({
+
+                                    theme: "bootstrap",
+                                    placeholder: "SEARCH A "+field.toUpperCase(),
+                                    allowClear: true,
+                                    ajax: {
+                                        url: "/api/search",
+                                        dataType: 'json',
+                                        type: 'POST',
+                                        delay: 250,
+                                        data: function (params) {
+                                            return {
+                                                q: params.term,
+                                                page: params.page,
+                                                module: object,
+                                                method: 'get',
+                                                field: field.split('#')
+                                            };
+                                        },
+                                        processResults: function (data) {
+                                            if(data.length > 0) {
+                                                return {
+                                                    results: $.map(data, function(obj) {
+                                                        return { id: '/api/'+object+'/'+obj.id, text: obj[field] };
+                                                    })
+                                                }
+                                            }
+                                        },
+                                        cache: true,
+                                    },
+                                    escapeMarkup: function (markup) { return markup; },
+                                    minimumInputLength: 2
+                                });
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', true);
@@ -457,11 +491,11 @@ function getSelect(classElm) {
 
     jQuery(select).each( function(index, value) {
 
-        var id = value.getAttribute('data-object');
-        var module = id.split("#")[0];
-        var field = id.split("#")[1];
+        var object = value.getAttribute('data-object');
+        var module = object.split("#")[0];
+        var field = object.split("#")[1];
 
-        jQuery('select[data-object="'+id+'"]').select2({
+        jQuery('select[data-object="'+object+'"]').select2({
 
             theme: "bootstrap",
             placeholder: "SEARCH A "+field.toUpperCase(),
@@ -477,7 +511,7 @@ function getSelect(classElm) {
                         page: params.page,
                         module: module,
                         method: 'get',
-                        field: field.split('-')
+                        field: field.split('#')
                     };
                 },
                 processResults: function (data) {
@@ -514,14 +548,14 @@ jQuery(function($) {
                     page: params.page,
                     module: module,
                     method: 'get',
-                    field: field.split('-')
+                    field: field.split('#')
                 };
             },
             processResults: function (data) {
                 if(data.length > 0) {
                     return {
                         results: $.map(data, function(obj) {
-                            return { id: obj.id, text: obj[field.split('-')[0]] };
+                            return { id: obj.id, text: obj[field.split('#')[0]] };
                         })
                     }
                 } else {

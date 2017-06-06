@@ -205,6 +205,8 @@ $(document).on('change', '.check-role', function () {
         module
     ];
 
+    console.log(params);
+
     var data = {
         module : mod,
         method : method,

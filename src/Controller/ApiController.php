@@ -20,13 +20,17 @@ class ApiController extends AbstractController
         $method = $request->get('method');
         $params = $request->get('params');
 
+        //var_dump($params);die();
+
         if ($method == 'post' || $method == 'put') {
             $temps = [];
             foreach ($params as $param) {
                 if($param['value'] != '' AND $param['value'] != null) {
                     if(
                         $param['value'] == 'true' ||
-                        $param['value'] == 'false'
+                        $param['value'] == 'false' ||
+                        $param['value'] == '1' ||
+                        $param['value'] == '0'
                     ) {
                         $value = (bool) $param['value'];
                     } else {
@@ -194,7 +198,8 @@ class ApiController extends AbstractController
                 ['module' => 'advertising/payment-methods'],
                 ['module' => 'advertising/positions'],
                 ['module' => 'advertising/specifications'],
-                ['module' => 'advertising/types']
+                ['module' => 'advertising/types'],
+                ['module' => 'advertising/specification-details']
             ],
         ];
 
@@ -209,20 +214,18 @@ class ApiController extends AbstractController
     public function menusAction(Request $request)
     {
         $category = $request->get('category');
-        //return new Response($this->menusCategoryAction($category));
-
         $response = json_decode($this->fetch('menus'),true)['hydra:member'];
 
         $modules = array();
         foreach ($response as $key => $value) {
 
-            $path = explode("/", $value['module']['path'])[2];
+            $path = str_replace('/api/', '', $value['module']['path']);
 
             foreach ($this->menusCategoryAction($category) as $module) {
                 if($module['module'] == $path && $value['viewable'] != false) {
                     $modules[] = [
                         'name' => $value['module']['name'],
-                        'path' => explode("/", $value['module']['path'])[2],
+                        'path' => str_replace('/api/', '', $value['module']['path']),
                         'iconCls' => $value['module']['iconCls'],
                     ];
                 }

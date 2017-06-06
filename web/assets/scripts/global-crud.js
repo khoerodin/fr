@@ -291,6 +291,8 @@ function detail(module,id) {
                             method : 'get',
                         };
 
+
+
                         $.ajax({
                             url: "/api",
                             type: "POST",
@@ -327,40 +329,6 @@ function detail(module,id) {
                                 }
                                 jQuery('select[data-object="'+dataObject+'"]').html(select).removeClass('loading').removeAttr('disabled');
                                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', false);
-
-                                jQuery('select[data-object="'+dataObject+'"]').select2({
-
-                                    theme: "bootstrap",
-                                    placeholder: "SEARCH A "+field.toUpperCase(),
-                                    allowClear: true,
-                                    ajax: {
-                                        url: "/api/search",
-                                        dataType: 'json',
-                                        type: 'POST',
-                                        delay: 250,
-                                        data: function (params) {
-                                            return {
-                                                q: params.term,
-                                                page: params.page,
-                                                module: object,
-                                                method: 'get',
-                                                field: field.split('#')
-                                            };
-                                        },
-                                        processResults: function (data) {
-                                            if(data.length > 0) {
-                                                return {
-                                                    results: $.map(data, function(obj) {
-                                                        return { id: '/api/'+object+'/'+obj.id, text: obj[field] };
-                                                    })
-                                                }
-                                            }
-                                        },
-                                        cache: true,
-                                    },
-                                    escapeMarkup: function (markup) { return markup; },
-                                    minimumInputLength: 2
-                                });
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', true);
@@ -535,7 +503,6 @@ function getSelect(classElm) {
 jQuery(function($) {
     jQuery(".search-"+field).select2({
         theme: "bootstrap",
-        placeholder: "SEARCH A "+field.toUpperCase(),
         allowClear: true,
         ajax: {
             url: "/api/search",

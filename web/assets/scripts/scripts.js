@@ -65,6 +65,15 @@ $(document).on('click', 'li.treeview > a', function () {
     category = $(this).attr('data-catagory');
 
     menusByCategory(title, category);
+    console.log(title, category);
+});
+
+$(document).on('click', 'ol.breadcrumb li.parent-crumb', function () {
+    title = $(this).text();
+    category = $(this).attr('data-catagory');
+
+    menusByCategory(title, category);
+    //console.log(title, category);
 });
 
 function menusByCategory(title, category) {

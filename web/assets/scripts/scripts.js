@@ -73,7 +73,6 @@ $(document).on('click', 'ol.breadcrumb li.parent-crumb', function () {
     category = $(this).attr('data-catagory');
 
     menusByCategory(title, category);
-    //console.log(title, category);
 });
 
 function menusByCategory(title, category) {

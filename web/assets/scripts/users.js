@@ -96,7 +96,7 @@ $(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', funct
     $.when(ajax1, ajax2).done(function(a1, a2){
 
         if((a2[1] === 'success' && a2[1] === 'success')) {
-            console.log(a2[0]);
+
             var data2 = JSON.parse(a2[0]);
             roles = [];
             $.each(data2['hydra:member'], function (idx, val) {
@@ -136,6 +136,25 @@ $(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', funct
                     };
                 }
             });
+
+            var paging = '';
+            $.each(data2['hydra:view'], function (index, value) {
+                if(index.endsWith('first')) {
+                    page = getQueryVariable('page',value);
+                    paging += '<li><span class="to-roles-page" data-page="'+page+'" title="FIRST PAGE">FIRST</span></li>';
+                }
+
+                if(index.endsWith('next')) {
+                    page = getQueryVariable('page',value);
+                    paging += '<li><span class="to-roles-page" data-page="'+page+'" title="NEXT PAGE">NEXT</span></li>';
+                }
+
+                if(index.endsWith('last')) {
+                    page = getQueryVariable('page',value);
+                    paging += '<li><span class="to-roles-page" data-page="'+page+'" title="LAST PAGE">LAST</span></li>';
+                }
+            });
+            jQuery('ul[data-paging="roles"].pagination').html(paging);
 
             rolesResponse(userRoles, userId);
         }

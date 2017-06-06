@@ -4,7 +4,7 @@
         <ol class="breadcrumb">
             <li><a href="/">HOME</a></li>
             {% if meta.parentMenu is not empty %}
-                <li>{{- meta.parentMenu | upper | raw -}}</li>
+                <li class="parent-crumb" data-catagory="{{- meta.parentMenu | lower | raw -}}">{{- meta.parentMenu | upper | raw -}}</li>
             {% endif %}
             <li class="active">{{- meta.title | upper | raw -}}</li>
         </ol>

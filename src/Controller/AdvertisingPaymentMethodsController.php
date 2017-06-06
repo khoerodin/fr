@@ -8,7 +8,7 @@ class AdvertisingPaymentMethodsController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Advertising',
-            'title' => 'Metode Pembayaran',
+            'title' => 'Metode Pembayaran Iklan',
         ];
 
         $data = [

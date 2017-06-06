@@ -8,7 +8,7 @@ class AdvertisingTypesController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Advertising',
-            'title' => 'Tipe',
+            'title' => 'Tipe Iklan',
         ];
 
         $data = [

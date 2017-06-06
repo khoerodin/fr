@@ -49,7 +49,7 @@ function changeUrlParam (param, value) {
         try {
             window.history.replaceState('', '', newURL.slice(0, - 1) );
         } catch (e) {
-            //console.log(e);
+
         }
     } else {
         var currURL = window.location.href;
@@ -129,7 +129,6 @@ function getAll(module, columns = []) {
                                 } else {
 
                                     if (val[v1] == true && val[v1] !== '1') {
-                                        //console.log(val[v1]);
                                         tr += '<span class="glyphicon glyphicon-ok"></span>';
                                     } else if(val[v1] == false && val[v1] !== '0') {
                                         tr += '<span class="glyphicon glyphicon-remove"></span>';
@@ -343,7 +342,6 @@ function detail(module,id) {
                     } else if (value === false || value === 'undefined') {
                         jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');;
                     } else {
-                        //console.log(value);
                         jQuery('div[data-modal-detail="'+module+'"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                         jQuery('div[data-modal-detail="'+module+'"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                         jQuery('div[data-modal-detail="'+module+'"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
@@ -394,7 +392,6 @@ function editAction(module, id, params) {
                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', false);
                 toastr.error('Error when updating your data');
             } else {
-                //console.log(arr);
                 jQuery.each(columns, function (idx,val) {
                     kolom = idx+2;
                     jQuery.each(arr, function (i,v) {

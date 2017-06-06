@@ -706,7 +706,7 @@ jQuery(function($) {
 
     $(document).on('click', '.to-roles-page', function () {
         var pageNum = $(this).attr('data-page');
-
-        getAll('roles', columns);
+        console.log(pageNum);
+        //getAll('roles', columns);
     });
 });

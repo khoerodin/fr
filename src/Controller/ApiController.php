@@ -194,6 +194,8 @@ class ApiController extends AbstractController
                 ['module' => 'clients'],
                 ['module' => 'settings'],
                 ['module' => 'cities'],
+                ['module' => 'banks'],
+                ['module' => 'representatives'],
             ],
             'advertising' => [
                 ['module' => 'advertising/ads'],
@@ -204,6 +206,11 @@ class ApiController extends AbstractController
                 ['module' => 'advertising/specifications'],
                 ['module' => 'advertising/types'],
                 ['module' => 'advertising/specification-details']
+            ],
+            'billing' => [
+                ['module' => 'billing/areas'],
+                ['module' => 'billing/groups'],
+                ['module' => 'billing/identities']
             ],
         ];
 

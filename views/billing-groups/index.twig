@@ -1,16 +1,16 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
+    <script src="/assets/scripts/global-crud.js"></script>
     <script>
-        window.module = 'modules';
+        window.module = 'billing/groups';
         window.field = 'name';
         var columns = [
-            'description',
-            'iconCls',
-            'path',
+            'parent.name',
+            'code',
+            'name'
         ];
     </script>
-    <script src="/assets/scripts/global-crud.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -19,13 +19,13 @@
             <div class="box">
                 <div class="box-header row">
                     <div class="col-md-12 search-area transition">
-                        <select data-placeholder="CARI NAMA MODULE" class="search-name form-control select2" style="width: 100%;">
+                        <select data-placeholder="CARI NAMA GRUP BILLING" class="search-name form-control select2" style="width: 100%;">
                             <option></option>
                         </select>
                     </div>
 
                     <div class="button-area transition">
-                        <a href="JavaScript:Void(0);" data-btn-add="modules" style="visibility: hidden;" class="modules add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                        <a href="JavaScript:Void(0);" data-btn-add="billing/groups" style="visibility: hidden;" class="add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
@@ -35,45 +35,43 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th width="20%">Name</th>
-                            <th>Icon Class</th>
-                            <th>Path</th>
-                            <th width="5%"><span class="pull-right">Action</span></th>
+                            <th width="30%">Grup Induk</th>
+                            <th>Nama Grup</th>
+                            <th>Kode Grup</th>
+                            <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>
 
-                        <tbody data-list="modules">
-                            <tr><td colspan="6">LOADING DATA...</td></tr>
+                        <tbody data-list="billing/groups">
+                            <tr><td colspan="4">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>
 
                     {#ADD MODAL#}
-                    <div data-modal-add="modules" class="modules add-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-add="billing/groups" class="add-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Add a Module</h4>
+                                    <h4 class="modal-title">Tambah Grup Billing</h4>
                                 </div>
-                                <div class="modal-body modules add">
-                                    <form role="form" class="modules add form">
+                                <div class="modal-body">
+                                    <form role="form" class="add form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label for="name">Name</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                                <label>Grup Induk</label>
+                                                <select name="parent" data-object="billing/groups#name" class="form-control select-add-modal">
+                                                    <option></option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="description">Description</label>
-                                                <input type="text" name="description" class="form-control" id="description" placeholder="Description">
+                                                <label for="code">Kode Grup</label>
+                                                <input type="text" name="code" class="form-control" id="code" placeholder="Kode Grup">
                                             </div>
                                             <div class="form-group">
-                                                <label for="iconCls">Icon Class</label>
-                                                <input type="text" name="iconCls" class="form-control" id="iconCls" placeholder="Icon Class">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="path">path</label>
-                                                <input type="text" name="path" class="form-control" id="path" placeholder="Path">
+                                                <label for="name">Nama Grup</label>
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Nama Grup">
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -81,7 +79,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="modules save btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="save btn btn-flat btn-danger">Save</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -89,31 +87,29 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div data-modal-detail="modules" class="modules detail-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-detail="billing/groups" class="detail-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail of Module</h4>
+                                    <h4 class="modal-title">Detail Grup Billing</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="modules detail form">
+                                    <form role="form" class="clients detail form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label for="name">Name</label>
+                                                <label>Grup Induk</label>
+                                                <select name="parent" data-object="billing/groups#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                    <option selected>Loading...</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="code">Kode Grup</label>
+                                                <input type="text" name="code" class="form-control" id="code">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="name">Nama Grup</label>
                                                 <input type="text" name="name" class="form-control" id="name">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="description">Description</label>
-                                                <input type="text" name="description" class="form-control" id="description">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="iconCls">Icon Class</label>
-                                                <input type="text" name="iconCls" class="form-control" id="iconCls">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="path">Name</label>
-                                                <input type="text" name="path" class="form-control" id="path">
                                             </div>
                                         </div>
                                         <input type="hidden" name="id" id="id">
@@ -122,7 +118,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="modules edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -132,7 +128,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul data-paging="modules" class="modules pagination pagination-sm no-margin pull-right"></ul>
+                    <ul data-paging="billing/groups" class="clients pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

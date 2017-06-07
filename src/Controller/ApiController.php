@@ -81,11 +81,18 @@ class ApiController extends AbstractController
 
         //var_dump($params);die();
         $response = $this->request($url, $method, $params);
-        $arr = json_decode($response->getContent(), true)['hydra:member'];
+        $arr = json_decode($response->getContent(), true);
 
-        if(count($arr)<1) {
+        if (array_key_exists('hydra:member', $arr)) {
+            if(count($arr) > 0 ) {
+                $arr = $arr['hydra:member'];
+            } else {
+                return new JsonResponse(array());
+            }
+        } else {
             return new JsonResponse(array());
         }
+
 
         $arrData = [];
         foreach ($arr as $value) {

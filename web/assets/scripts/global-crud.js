@@ -572,7 +572,19 @@ jQuery(function($) {
         escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
         minimumInputLength: 2,
     }).on("select2:select", function () {
-        var text = jQuery(".search-"+field+" option:selected").text();
+        var id = jQuery(".search-"+field+"").val();
+        var text = jQuery(".search-"+field+"").text();
+
+        jQuery('div[data-modal-detail="'+window.module+'"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
+        jQuery('div[data-modal-detail="'+window.module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
+        jQuery('div[data-modal-detail="'+window.module+'"]').modal({show: true, backdrop: 'static'});
+
+        if (module !== 'user-activities') {
+            detail(module, id);
+        } else {
+            detailUserActivities(id);
+        }
+
         changeUrlParam(field.split('-')[0], text);
         getAll(module,columns);
     }).on("select2:unselect", function () {

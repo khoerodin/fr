@@ -24,6 +24,8 @@ app:
         - { path: '/settings', controller: 'Bisnis:Settings@index', methods: ['GET'] }
         - { path: '/user-activities', controller: 'Bisnis:UserActivities@index', methods: ['GET'] }
         - { path: '/cities', controller: 'Bisnis:Cities@index', methods: ['GET'] }
+        - { path: '/banks', controller: 'Bisnis:Banks@index', methods: ['GET'] }
+        - { path: '/representatives', controller: 'Bisnis:Representatives@index', methods: ['GET'] }
 
         #Advertising
         #Master
@@ -35,3 +37,7 @@ app:
         - { path: '/advertising/specifications', controller: 'Bisnis:AdvertisingSpecifications@index', methods: ['GET'] }
         - { path: '/advertising/specification-details', controller: 'Bisnis:AdvertisingSpecificationDetails@index', methods: ['GET'] }
         - { path: '/advertising/types', controller: 'Bisnis:AdvertisingTypes@index', methods: ['GET'] }
+
+        #Billing
+        - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }
+        - { path: '/billing/groups', controller: 'Bisnis:BillingGroups@index', methods: ['GET'] }

@@ -28,7 +28,9 @@
                                 menu.module.path|replace({'/api/': ''}) == 'clients' or
                                 menu.module.path|replace({'/api/': ''}) == 'user-activities' or
                                 menu.module.path|replace({'/api/': ''}) == 'modules' or
-                                menu.module.path|replace({'/api/': ''}) == 'cities'
+                                menu.module.path|replace({'/api/': ''}) == 'cities' or
+                                menu.module.path|replace({'/api/': ''}) == 'banks' or
+                                menu.module.path|replace({'/api/': ''}) == 'representatives'
                             )
                             and menu.viewable != false
                             -%}
@@ -38,6 +40,31 @@
                                 {{- menu.module.name -}}
                             </a>
                         </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="treeview active hidden">
+                    <a href="javascript:void(0)" data-catagory="billing">
+                        <i class="fa fa-files-o"></i>
+                        <span>BILLING</span>
+                    </a>
+                    <ul class="treeview-menu">
+                        {%- for menu in menus['hydra:member'] -%}
+                            {%- if
+                            (
+                            menu.module.path|replace({'/api/': ''}) == 'billing/areas' or
+                            menu.module.path|replace({'/api/': ''}) == 'billing/groups' or
+                            menu.module.path|replace({'/api/': ''}) == 'billing/identities'
+                            )
+                            and menu.viewable != false
+                            -%}
+                                <li>
+                                    <a href="/{{- menu.module.path|replace({'/api/': ''}) -}}">
+                                        <i class="fa fa-circle-o"></i>
+                                        {{- menu.module.name -}}
+                                    </a>
+                                </li>
                             {% endif %}
                         {% endfor %}
                     </ul>

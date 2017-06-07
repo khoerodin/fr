@@ -3,7 +3,7 @@ MAINTAINER Muhammad Surya Ihsanuddin<surya.kejawen@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# RUN sed -i 's/http:\/\/archive.ubuntu.com/http:\/\/kambing.ui.ac.id/g' /etc/apt/sources.list
+RUN sed -i 's/http:\/\/archive.ubuntu.com/http:\/\/kambing.ui.ac.id/g' /etc/apt/sources.list
 
 # Install Software
 RUN apt-get update && apt-get upgrade -y

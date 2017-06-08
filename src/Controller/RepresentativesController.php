@@ -8,7 +8,7 @@ class RepresentativesController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'title' => 'Representatives',
+            'title' => 'Perwakilan',
         ];
 
         $data = [

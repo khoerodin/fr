@@ -7,7 +7,7 @@ class AdvertisingTypesController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Advertising',
+            'parentMenu' => 'Iklan',
             'title' => 'Tipe Iklan',
         ];
 

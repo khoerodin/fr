@@ -8,8 +8,8 @@ class UserActivitiesController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Administration',
-            'title' => 'User Activities',
+            'parentMenu' => 'Admin',
+            'title' => 'Aktivitas pengguna',
         ];
 
         $data = [

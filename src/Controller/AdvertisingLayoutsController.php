@@ -7,7 +7,7 @@ class AdvertisingLayoutsController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Advertising',
+            'parentMenu' => 'Iklan',
             'title' => 'Layout Iklan',
         ];
 

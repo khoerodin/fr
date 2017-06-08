@@ -7,8 +7,8 @@ class BillingGroupsController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Billing',
-            'title' => 'Billing Group',
+            'parentMenu' => 'Tagihan',
+            'title' => 'Group Tagihan',
         ];
 
         $data = [

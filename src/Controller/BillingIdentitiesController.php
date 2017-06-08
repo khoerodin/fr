@@ -7,8 +7,8 @@ class BillingIdentitiesController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Billing',
-            'title' => 'Billing Identities',
+            'parentMenu' => 'Tagihan',
+            'title' => 'Identities Tagihan',
         ];
 
         $data = [

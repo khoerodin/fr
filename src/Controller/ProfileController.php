@@ -7,7 +7,7 @@ class ProfileController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'title' => 'Profile',
+            'title' => 'Profil',
         ];
 
         $data = [

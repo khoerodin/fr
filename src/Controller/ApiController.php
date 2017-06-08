@@ -38,9 +38,19 @@ class ApiController extends AbstractController
                     } else {
                         $value = $param['value'];
                     }
+
                     $temps[$param['name']] = $value;
                 }
+
+                if($param['name'] == 'fullname' && $url == 'users') {
+                    $fullname = $value;
+                }
             }
+
+            if ($url == 'users') {
+                $temps['username'] = $this->generateUsername($fullname);
+            }
+
         } elseif($method == 'get') {
             if(count($params) > 0) {
                 $temps = array_reduce($params, 'array_merge', array());
@@ -57,6 +67,8 @@ class ApiController extends AbstractController
         } else {
             $temps = [];
         }
+
+        //var_dump($fullname);die();
 
         $response = $this->request($url, $method, $temps);
         return new Response($response->getContent());
@@ -79,7 +91,6 @@ class ApiController extends AbstractController
             $params[$column] = $q;
         }
 
-        //var_dump($params);die();
         $response = $this->request($url, $method, $params);
         $arr = json_decode($response->getContent(), true);
 
@@ -251,6 +262,17 @@ class ApiController extends AbstractController
 
         }
 
-        return new jsonResponse($modules);
+        return new JsonResponse($modules);
+    }
+
+    public function callImage($path)
+    {
+        return $this->request('files/'.$path, 'get');
+    }
+
+    private function generateUsername($fullname)
+    {
+        $username = $this->request('username/generate/'.$fullname, 'get');
+        return json_decode($username->getContent(), true)['username'];
     }
 }

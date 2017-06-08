@@ -7,7 +7,7 @@ class CitiesController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Administration',
+            'parentMenu' => 'Admin',
             'title' => 'Kota',
         ];
 

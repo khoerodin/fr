@@ -162,11 +162,21 @@ function getAll(module, columns = []) {
 
                 if(index === 'hydra:view') {
                     var paging = '';
+
                     $.each(value, function (idx, val) {
                         page = getQueryVariable('page',val);
                         if(idx.startsWith('hydra')){
                             if(idx.endsWith('first')) {
                                 paging += '<li><span class="to-page" data-page="'+page+'" title="FIRST PAGE">FIRST</span></li>';
+                            }
+                        }
+                    });
+
+                    $.each(value, function (idx, val) {
+                        page = getQueryVariable('page',val);
+                        if(idx.startsWith('hydra')){
+                            if(idx.endsWith('previous')) {
+                                paging += '<li><span class="to-page" data-page="'+page+'" title="PREVIOUS PAGE">PREVIOUS</span></li>';
                             }
                         }
                     });

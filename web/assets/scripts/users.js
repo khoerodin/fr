@@ -158,7 +158,7 @@ function getRoles(userId, pageNum = '') {
                     paging += '<li><span class="to-roles-page" data-page="'+page+'" title="LAST PAGE">LAST</span></li>';
                 }
             });
-            jQuery('ul[data-paging="roles"].pagination').html(paging);
+            jQuery('ul[data-paging="roles"].pagination').empty().html(paging);
 
             rolesResponse(userRoles, userId, pageNum);
         }

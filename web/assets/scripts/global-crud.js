@@ -162,11 +162,21 @@ function getAll(module, columns = []) {
 
                 if(index === 'hydra:view') {
                     var paging = '';
+
                     $.each(value, function (idx, val) {
                         page = getQueryVariable('page',val);
                         if(idx.startsWith('hydra')){
                             if(idx.endsWith('first')) {
                                 paging += '<li><span class="to-page" data-page="'+page+'" title="FIRST PAGE">FIRST</span></li>';
+                            }
+                        }
+                    });
+
+                    $.each(value, function (idx, val) {
+                        page = getQueryVariable('page',val);
+                        if(idx.startsWith('hydra')){
+                            if(idx.endsWith('previous')) {
+                                paging += '<li><span class="to-page" data-page="'+page+'" title="PREVIOUS PAGE">PREVIOUS</span></li>';
                             }
                         }
                     });
@@ -572,8 +582,8 @@ jQuery(function($) {
         escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
         minimumInputLength: 2,
     }).on("select2:select", function () {
-        var id = jQuery(".search-"+field+"").val();
-        var text = jQuery(".search-"+field+"").text();
+        var id = jQuery(".search-"+field).val();
+        var text = jQuery(".search-"+field).text();
 
         jQuery('div[data-modal-detail="'+window.module+'"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
         jQuery('div[data-modal-detail="'+window.module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
@@ -594,10 +604,17 @@ jQuery(function($) {
         jQuery('a[data-btn-add="'+module+'"]').css('visibility', 'hidden');
         jQuery('.search-area').removeClass('col-md-10').addClass('col-md-12');
         jQuery('.button-area').removeClass('col-md-2');
+    }).on("select2:closing", function () {
+        var searchTerms = $('span.select2-search.select2-search--dropdown input.select2-search__field').val();
+        localStorage.setItem("searchTerms", searchTerms);
     });
 
     // Add form
     $(document).on('click', 'a[data-btn-add="'+window.module+'"]', function () {
+        var searchTerms = localStorage.getItem("searchTerms");
+        console.log(searchTerms);
+        $('input#'+field).val(searchTerms);
+
         $('.add-datetime').datetimepicker();
         var $this = $('div[data-modal-add="'+window.module+'"]');
         $this.modal({show: true, backdrop: 'static'});
@@ -686,6 +703,10 @@ jQuery(function($) {
     $('.modal').on('hide.bs.modal', function () {
         $('body').removeClass('modal-open');
         $('.modal-backdrop').remove();
+    });
+
+    $('.modal').on('shown.bs.modal', function () {
+        $('input#'+field).focus();
     });
 
     $(document).on('keypress', 'div[data-modal-add="'+window.module+'"] form input', function (e) {

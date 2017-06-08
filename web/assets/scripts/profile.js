@@ -120,7 +120,7 @@ function readFile() {
 
             var imgExt = dataExt.split('/')[1];
             var imgString = e.target.result.split(',')[1];
-
+            console.log(imgString);
             $('input[name="imageExtension"]').val(imgExt);
             $('input[name="imageString"]').val(imgString);
         });

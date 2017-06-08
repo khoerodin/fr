@@ -114,7 +114,7 @@ function readFile() {
         var FR= new FileReader();
 
         FR.addEventListener("load", function(e) {
-            jQuery(".profile-image").css('background-image', 'url('+e.target.result+')');
+            $(".profile-image").css('background-image', 'url('+e.target.result+')');
             var dataExt = e.target.result.split(';')[0];
             dataExt = dataExt.split(':')[1];
 

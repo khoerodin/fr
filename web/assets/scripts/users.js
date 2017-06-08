@@ -160,7 +160,7 @@ function getRoles(userId, pageNum = '') {
             });
             jQuery('ul[data-paging="roles"].pagination').html(paging);
 
-            rolesResponse(userRoles, userId);
+            rolesResponse(userRoles, userId, pageNum);
         }
     });
 }
@@ -242,7 +242,7 @@ $(document).on('change', '.check-role', function () {
     });
 });
 
-function rolesResponse(data,userId) {
+function rolesResponse(data,userId,page) {
 
     var rolesCheck = '';
     var no = 1;
@@ -250,7 +250,15 @@ function rolesResponse(data,userId) {
 
         if (typeof value != 'undefined') {
 
-            rolesCheck += '<tr id="'+value.module+'" data-role="'+value.roleId+'"><td>'+no+++'</td>';
+            if(page > 1) {
+                c = page - 1;
+                p = 17 * c;
+                no = index+1+p-1;
+            } else {
+                no = index-1;
+            }
+
+            rolesCheck += '<tr id="'+value.module+'" data-role="'+value.roleId+'"><td>'+no+'</td>';
             if(value.moduleName) {
                 rolesCheck += '<td>'+value.moduleName+'</td>'
             }

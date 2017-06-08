@@ -5,8 +5,9 @@
     <script src="/assets/scripts/user-activities.js"></script>
     <script>
         window.module = 'user-activities';
-        window.field = 'username';
+        window.field = 'clientName';
         var columns = [
+            'createdAt',
             'clientName',
             'username',
             'path',
@@ -21,7 +22,7 @@
             <div class="box">
                 <div class="box-header row">
                     <div class="col-md-12 search-area transition">
-                        <select data-placeholder="CARI NAME" class="search-username form-control select2" style="width: 100%;">
+                        <select data-placeholder="CARI CLIENT NAME" class="search-clientName form-control select2" style="width: 100%;">
                             <option></option>
                         </select>
                     </div>
@@ -37,7 +38,8 @@
                         <thead>
                             <tr>
                                 <th width="5%">#</th>
-                                <th width="20%">Name</th>
+                                <th width="20%">Waktu</th>
+                                <th width="20%">Client Name</th>
                                 <th width="15">Username</th>
                                 <th width="20">Path</th>
                                 <th width="5">Request</th>

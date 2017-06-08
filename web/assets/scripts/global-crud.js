@@ -16,7 +16,7 @@ $.fn.extend({
     }
 });
 
-function getQueryVariable(variable, query = window.location.search.substring(1))
+function getQueryVariable(variable, query = decodeURIComponent(window.location.search.substring(1)))
 {
     var vars = query.split("&");
     if(typeof variable !== 'undefined') {

@@ -13,15 +13,17 @@
                 <div class="box-body">
 
                     <div class="col-md-2">
-                        <label for="file-image">
-                            <img class="profile-user-img img-responsive img-circle" src="/img/user2-160x160.jpg" alt="User profile picture">
-                        </label>
+                        <label for="file-image" class="profile-image"
+                               style="background-image: url('/img/user2-160x160.jpg');" title="{{- me.fullname | raw -}}&nbsp;PROFILE PHOTO"></label>
                         <input id="file-image" type="file"/>
                     </div>
 
                     <div class="col-md-10">
                         <div class="tab-pane" id="settings">
                             <form class="form-horizontal" id="form-profile">
+                                <input type="hidden" name="imageExtension">
+                                <input type="hidden" name="imageString">
+                                {#<input type="text" id="profileImage" value="{{- me.profileImage | raw -}}">#}
                                 <div class="form-group">
                                     <label for="fullname" class="col-sm-1 control-label">Fullname</label>
 

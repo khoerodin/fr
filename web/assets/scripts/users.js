@@ -54,14 +54,13 @@ $(document).on('change', '.loginState', function () {
 
 jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function (e) {
     jQuery('tbody#roles-check').html('<tr><td colspan="6">Loading...</td></tr>');
-})
+});
 
-// Roles form
-$(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', function () {
-    var userId = $(this).attr('data-id');
+function getRoles(userId, pageNum = '') {
     var moduleData = {
         module: 'modules',
-        method: 'get'
+        method: 'get',
+        params: [{'page': pageNum}]
     }
 
     var roleData = {
@@ -139,6 +138,11 @@ $(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', funct
 
             var paging = '';
             $.each(data2['hydra:view'], function (index, value) {
+                if(index.endsWith('previous')) {
+                    page = getQueryVariable('page',value);
+                    paging += '<li><span class="to-roles-page" data-page="'+page+'" title="PREVIOUS PAGE">PREVIOUS</span></li>';
+                }
+
                 if(index.endsWith('first')) {
                     page = getQueryVariable('page',value);
                     paging += '<li><span class="to-roles-page" data-page="'+page+'" title="FIRST PAGE">FIRST</span></li>';
@@ -159,7 +163,18 @@ $(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', funct
             rolesResponse(userRoles, userId);
         }
     });
+}
 
+// Roles form
+$(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', function () {
+    var userId = $(this).attr('data-id');
+    getRoles(userId);
+});
+
+$(document).on('click', '.to-roles-page', function () {
+    var pageNum = $(this).attr('data-page');
+    var userId = $('.roles-modal input#rolesUserId').val();
+    getRoles(userId, pageNum);
 });
 
 $(document).on('change', '.check-role', function () {

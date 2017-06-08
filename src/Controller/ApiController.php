@@ -216,8 +216,8 @@ class ApiController extends AbstractController
             ],
             'billing' => [
                 ['module' => 'billing/areas'],
+                ['module' => 'billing/identities'],
                 ['module' => 'billing/groups'],
-                ['module' => 'billing/identities']
             ],
         ];
 

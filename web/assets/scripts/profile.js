@@ -106,3 +106,28 @@ $(document).on('keypress', '#form-profile input', function (e) {
         return false;
     }
 });
+
+function readFile() {
+
+    if (this.files && this.files[0]) {
+
+        var FR= new FileReader();
+
+        FR.addEventListener("load", function(e) {
+            jQuery(".profile-image").css('background-image', 'url('+e.target.result+')');
+            var dataExt = e.target.result.split(';')[0];
+            dataExt = dataExt.split(':')[1];
+
+            var imgExt = dataExt.split('/')[1];
+            var imgString = e.target.result.split(',')[1];
+
+            $('input[name="imageExtension"]').val(imgExt);
+            $('input[name="imageString"]').val(imgString);
+        });
+
+        FR.readAsDataURL( this.files[0] );
+    }
+
+}
+
+document.getElementById("file-image").addEventListener("change", readFile);

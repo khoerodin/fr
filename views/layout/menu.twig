@@ -54,8 +54,8 @@
                             {%- if
                             (
                             menu.module.path|replace({'/api/': ''}) == 'billing/areas' or
-                            menu.module.path|replace({'/api/': ''}) == 'billing/groups' or
-                            menu.module.path|replace({'/api/': ''}) == 'billing/identities'
+                            menu.module.path|replace({'/api/': ''}) == 'billing/identities' or
+                            menu.module.path|replace({'/api/': ''}) == 'billing/groups'
                             )
                             and menu.viewable != false
                             -%}

@@ -7,8 +7,8 @@ class ClientsController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Administration',
-            'title' => 'Clients',
+            'parentMenu' => 'Admin',
+            'title' => 'Klien',
         ];
 
         $data = [

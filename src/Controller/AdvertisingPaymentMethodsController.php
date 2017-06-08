@@ -7,7 +7,7 @@ class AdvertisingPaymentMethodsController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Advertising',
+            'parentMenu' => 'Iklan',
             'title' => 'Metode Pembayaran Iklan',
         ];
 

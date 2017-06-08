@@ -8,7 +8,7 @@ class AdvertisingAdsController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Advertising',
+            'parentMenu' => 'Iklan',
             'title' => 'Iklan',
         ];
 

@@ -6,6 +6,7 @@
         window.module = 'advertising/specifications';
         window.field = 'name';
         var columns = [
+            'parent.name',
             'name'
         ];
     </script>
@@ -33,6 +34,7 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
+                            <th>Jenis Iklan Induk</th>
                             <th>Jenis Iklan</th>
                             <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
@@ -56,6 +58,12 @@
                                     <form role="form" class="clients add form">
                                         <div class="box-body">
                                             <div class="form-group">
+                                                <label>Tipe</label>
+                                                <select name="parent" data-object="advertising/specifications#name" class="form-control select-add-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="name">Jenis Iklan</label>
                                                 <input type="text" name="name" class="form-control" id="name" placeholder="Name">
                                             </div>
@@ -73,7 +81,7 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div data-modal-detail="advertising/specifications" class="clients detail-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-detail="advertising/specifications" class="clients detail-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -83,6 +91,12 @@
                                 <div class="modal-body">
                                     <form role="form" class="clients detail form">
                                         <div class="box-body">
+                                            <div class="form-group">
+                                                <label>Jenis Iklan Induk</label>
+                                                <select name="parent" data-object="advertising/specifications#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                    <option selected>Loading...</option>
+                                                </select>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="name">Jenis Iklan</label>
                                                 <input type="text" name="name" class="form-control" id="name">

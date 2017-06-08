@@ -7,8 +7,8 @@ class BillingAreasController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Billing',
-            'title' => 'Billing Area',
+            'parentMenu' => 'Tagihan',
+            'title' => 'Area Tagihan',
         ];
 
         $data = [

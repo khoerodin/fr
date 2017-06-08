@@ -7,8 +7,8 @@ class UsersController extends AdminController
     public function indexAction()
     {
         $meta = [
-            'parentMenu' => 'Administration',
-            'title' => 'Users',
+            'parentMenu' => 'Admin',
+            'title' => 'Pengguna',
         ];
 
         $data = [

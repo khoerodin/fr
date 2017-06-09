@@ -34,6 +34,7 @@ $(document).on('click', '#sign-in', function () {
                 $('#login-error').val('');
                 $('#sign-in').text('SIGN IN').prop('disabled', false);
                 $('#login-error').removeClass('hidden');
+                $('#username').focus();
             } else {
                 location.href = '/';
             }

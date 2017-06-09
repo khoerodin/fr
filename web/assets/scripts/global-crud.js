@@ -205,20 +205,20 @@ function getAll(module, columns = []) {
 
                     if (index === 'hydra:totalItems') {
                         if (value < 1) {
-                            jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33">NO DATA AVAILABLE</td></tr>');
+                            jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33">TIDAK ADA DATA</td></tr>');
                         }
                     }
 
                 });
             } else {
                 toastr.error('Error when getting your data');
-                jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR WHEN GETTING YOUR DATA</span></td></tr>');
+                jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR KETIKA MENGAMBIL DATA</span></td></tr>');
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
             toastr.error('Error when getting your data');
-            jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR WHEN GETTING YOUR DATA</span></td></tr>');
+            jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR KETIKA MENGAMBIL DATA</span></td></tr>');
         }
     });
 }
@@ -748,6 +748,9 @@ jQuery(function($) {
     });
 
     $('.modal').on('shown.bs.modal', function () {
+        jQuery('a[data-btn-add="'+module+'"]').css('visibility', 'hidden');
+        jQuery('.search-area').removeClass('col-md-10').addClass('col-md-12');
+        jQuery('.button-area').removeClass('col-md-2');
         $('input#'+field).focus();
     });
 

@@ -82,126 +82,138 @@ function getAll(module, columns = []) {
         success: function (data, textStatus, jqXHR) {
 
             arr = JSON.parse(data);
+            if('hydra:member' in arr) {
+                $.each(arr, function (index, value) {
 
-            $.each(arr, function (index, value) {
-                if(index === 'hydra:member'){
+                    if (index === 'hydra:member') {
 
-                    page = getQueryVariable('page');
-                    var tr = '';
-                    $.each(value, function (idx, val) {
-                        if(page > 1) {
-                            c = page - 1;
-                            p = 17 * c;
-                            no = idx+1+p;
-                        } else {
-                            no = idx+1;
-                        }
-
-                        no = no;
-                        tr += '<tr id="'+val.id+'">';
-                        tr += '<td>'+no+'</td>'
-                        $.each(columns, function (i,v) {
-                            var v1 = v.split(".")[0];
-                            var v2 = v.split(".")[1];
-
-                            if (val[v1] instanceof Object) {
-                                $.each(val[v1], function(ind, vl) {
-                                    if(ind == v2){
-                                        tr += '<td>'+vl+'</td>';
-                                    }
-                                })
+                        page = getQueryVariable('page');
+                        var tr = '';
+                        $.each(value, function (idx, val) {
+                            if (page > 1) {
+                                c = page - 1;
+                                p = 17 * c;
+                                no = idx + 1 + p;
                             } else {
-                                tr += '<td>';
+                                no = idx + 1;
+                            }
 
-                                if (module === 'users') {
+                            no = no;
+                            tr += '<tr id="' + val.id + '">';
+                            tr += '<td>' + no + '</td>'
+                            $.each(columns, function (i, v) {
+                                var v1 = v.split(".")[0];
+                                var v2 = v.split(".")[1];
 
-                                    if (val[v1] == true) {
-                                        tr += '<input type="checkbox" class="loginState" data-id="'+val.id+'" name="loggedIn" checked>';
-                                    } else if (val[v1] == false) {
-                                        tr += '<input type="checkbox" class="loginState" data-id="'+val.id+'" name="loggedIn">';
-                                    } else {
-                                        if (val[v1] == null) {
-                                            val[v1] = '-';
+                                if (val[v1] instanceof Object) {
+                                    $.each(val[v1], function (ind, vl) {
+                                        if (ind == v2) {
+                                            tr += '<td>' + vl + '</td>';
                                         }
-                                        tr += val[v1];
-                                    }
-
+                                    })
                                 } else {
+                                    tr += '<td>';
 
-                                    if (val[v1] == true && val[v1] !== '1') {
-                                        tr += '<span class="glyphicon glyphicon-ok"></span>';
-                                    } else if(val[v1] == false && val[v1] !== '0') {
-                                        tr += '<span class="glyphicon glyphicon-remove"></span>';
-                                    } else {
-                                        if (val[v1] == null) {
-                                            val[v1] = '-';
+                                    if (module === 'users') {
+
+                                        if (val[v1] == true) {
+                                            tr += '<input type="checkbox" class="loginState" data-id="' + val.id + '" name="loggedIn" checked>';
+                                        } else if (val[v1] == false) {
+                                            tr += '<input type="checkbox" class="loginState" data-id="' + val.id + '" name="loggedIn">';
+                                        } else {
+                                            if (val[v1] == null) {
+                                                val[v1] = '-';
+                                            }
+                                            tr += val[v1];
                                         }
-                                        tr += val[v1];
+
+                                    } else {
+
+                                        if (val[v1] == true && val[v1] !== '1') {
+                                            tr += '<span class="glyphicon glyphicon-ok"></span>';
+                                        } else if (val[v1] == false && val[v1] !== '0') {
+                                            tr += '<span class="glyphicon glyphicon-remove"></span>';
+                                        } else {
+                                            if (val[v1] == null) {
+                                                val[v1] = '-';
+                                            }
+                                            tr += val[v1];
+                                        }
+
                                     }
 
+                                    tr += '</td>';
                                 }
 
-                                tr += '</td>';
+                            });
+
+                            tr += '<td><span class="pull-right">';
+                            tr += '<button data-id="' + val.id + '" class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
+                            tr += '<button data-id="' + val.id + '" class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+
+                            if (module === 'users') {
+                                tr += '<button data-user-fullname="' + val.fullname + '" data-id="' + val.id + '" class="roles-btn btn btn-default btn-xs btn-flat" title="ROLES"><i class="fa fa-lock"></i></button>';
                             }
 
+                            tr += '</span></td>';
+                            tr += '</tr>';
+                        });
+                        jQuery('tbody[data-list="' + module + '"]').html(tr);
+                    }
+
+                    if (index === 'hydra:view') {
+                        var paging = '';
+
+                        $.each(value, function (idx, val) {
+                            page = getQueryVariable('page', val);
+                            if (idx.startsWith('hydra')) {
+                                if (idx.endsWith('first')) {
+                                    paging += '<li><span class="to-page" data-page="' + page + '" title="FIRST PAGE">FIRST</span></li>';
+                                }
+                            }
                         });
 
-                        tr += '<td><span class="pull-right">';
-                        tr += '<button data-id="'+val.id+'" class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                        tr += '<button data-id="'+val.id+'" class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
-
-                        if(module === 'users') {
-                            tr += '<button data-user-fullname="'+val.fullname+'" data-id="'+val.id+'" class="roles-btn btn btn-default btn-xs btn-flat" title="ROLES"><i class="fa fa-lock"></i></button>';
-                        }
-
-                        tr += '</span></td>';
-                        tr += '</tr>';
-                    });
-                    jQuery('tbody[data-list="'+module+'"]').html(tr);
-                }
-
-                if(index === 'hydra:view') {
-                    var paging = '';
-
-                    $.each(value, function (idx, val) {
-                        page = getQueryVariable('page',val);
-                        if(idx.startsWith('hydra')){
-                            if(idx.endsWith('first')) {
-                                paging += '<li><span class="to-page" data-page="'+page+'" title="FIRST PAGE">FIRST</span></li>';
+                        $.each(value, function (idx, val) {
+                            page = getQueryVariable('page', val);
+                            if (idx.startsWith('hydra')) {
+                                if (idx.endsWith('previous')) {
+                                    paging += '<li><span class="to-page" data-page="' + page + '" title="PREVIOUS PAGE">PREVIOUS</span></li>';
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    $.each(value, function (idx, val) {
-                        page = getQueryVariable('page',val);
-                        if(idx.startsWith('hydra')){
-                            if(idx.endsWith('previous')) {
-                                paging += '<li><span class="to-page" data-page="'+page+'" title="PREVIOUS PAGE">PREVIOUS</span></li>';
+                        $.each(value, function (idx, val) {
+                            page = getQueryVariable('page', val);
+                            if (idx.startsWith('hydra')) {
+                                if (idx.endsWith('next')) {
+                                    paging += '<li><span class="to-page" data-page="' + page + '" title="NEXT PAGE">NEXT</span></li>';
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    $.each(value, function (idx, val) {
-                        page = getQueryVariable('page',val);
-                        if(idx.startsWith('hydra')){
-                            if(idx.endsWith('next')) {
-                                paging += '<li><span class="to-page" data-page="'+page+'" title="NEXT PAGE">NEXT</span></li>';
+                        $.each(value, function (idx, val) {
+                            page = getQueryVariable('page', val);
+                            if (idx.startsWith('hydra')) {
+                                if (idx.endsWith('last')) {
+                                    paging += '<li><span class="to-page" data-page="' + page + '" title="LAST PAGE">LAST</span></li>';
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    $.each(value, function (idx, val) {
-                        page = getQueryVariable('page',val);
-                        if(idx.startsWith('hydra')){
-                            if(idx.endsWith('last')) {
-                                paging += '<li><span class="to-page" data-page="'+page+'" title="LAST PAGE">LAST</span></li>';
-                            }
-                        }
-                    });
+                        jQuery('ul[data-paging="' + module + '"].pagination').html(paging);
+                    }
 
-                    jQuery('ul[data-paging="'+module+'"].pagination').html(paging);
-                }
-            });
+                    if (index === 'hydra:totalItems') {
+                        if (value < 1) {
+                            jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33">NO DATA AVAILABLE</td></tr>');
+                        }
+                    }
+
+                });
+            } else {
+                toastr.error('Error when getting your data');
+                jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR WHEN GETTING YOUR DATA</span></td></tr>');
+            }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {}
@@ -240,16 +252,22 @@ function post(module, params, columns = []) {
                     }
                 });
 
-            } else {
+                toastr.error('Error when saving your data');
+
+            } else if('id' in arr) {
                 history.pushState(false,false,document.location.origin+'/'+module);
                 getAll(module,columns);
                 jQuery('div[data-modal-add="'+module+'"]').modal('hide');
+                toastr.success('Data successfully added');
+            } else {
+                toastr.error('Error when saving your data');
             }
 
             jQuery('div[data-modal-add="'+module+'"] .save.btn').text('SAVE').prop('disabled', false);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             jQuery('div[data-modal-add="'+module+'"] .save.btn').text('SAVE').prop('disabled', false);
+            toastr.error('Error when saving your data');
         }
     });
 }
@@ -258,7 +276,7 @@ function post(module, params, columns = []) {
 function detail(module,id) {
 
     var data = {
-        module : module+'/'+id,
+        module: module+'/'+id,
         method: 'get',
         params: {}
     };
@@ -281,121 +299,130 @@ function detail(module,id) {
         success: function (data, textStatus, jqXHR) {
             arr = JSON.parse(data);
 
-            $.each(arr, function (index, value) {
-                if (typeof value === 'object') {
+            if('id' in arr) {
+                $.each(arr, function (index, value) {
+                    if (typeof value === 'object') {
 
-                    var select = jQuery('select.select-edit-modal');
+                        var select = jQuery('select.select-edit-modal');
 
-                    $.each(select, function (indSlct, valSlct) {
+                        $.each(select, function (indSlct, valSlct) {
 
-                        var dataSelected = $(valSlct).attr('data-selected');
-                        var objectSelected = dataSelected.split("#")[0];
-                        var fieldSelected = dataSelected.split("#")[1];
+                            var dataSelected = $(valSlct).attr('data-selected');
+                            var objectSelected = dataSelected.split("#")[0];
+                            var fieldSelected = dataSelected.split("#")[1];
 
-                        var dataObject = $(valSlct).attr('data-object');
-                        var object = dataObject.split("#")[0];
-                        var field = dataObject.split("#")[1];
-                        var data = {
-                            module : object,
-                            method : 'get',
-                        };
+                            var dataObject = $(valSlct).attr('data-object');
+                            var object = dataObject.split("#")[0];
+                            var field = dataObject.split("#")[1];
+                            var data = {
+                                module: object,
+                                method: 'get',
+                            };
 
-                        jQuery('select[data-object="'+dataObject+'"]').select2({
+                            jQuery('select[data-object="' + dataObject + '"]').select2({
 
-                            theme: "bootstrap",
-                            placeholder: "SEARCH A "+field.toUpperCase(),
-                            allowClear: true,
-                            ajax: {
-                                url: "/api/search",
-                                dataType: 'json',
-                                type: 'POST',
-                                delay: 250,
-                                data: function (params) {
-                                    return {
-                                        q: params.term,
-                                        page: params.page,
-                                        module: object,
-                                        method: 'get',
-                                        field: field.split('#')
-                                    };
-                                },
-                                processResults: function (data) {
-                                    if(data.length > 0) {
+                                theme: "bootstrap",
+                                placeholder: "SEARCH A " + field.toUpperCase(),
+                                allowClear: true,
+                                ajax: {
+                                    url: "/api/search",
+                                    dataType: 'json',
+                                    type: 'POST',
+                                    delay: 250,
+                                    data: function (params) {
                                         return {
-                                            results: $.map(data, function(obj) {
-                                                return { id: '/api/'+object+'/'+obj.id, text: obj[field] };
-                                            })
-                                        }
-                                    }
-                                },
-                                cache: true,
-                            },
-                            escapeMarkup: function (markup) { return markup; },
-                            minimumInputLength: 2
-                        });
-
-                        $.ajax({
-                            url: "/api",
-                            type: "POST",
-                            data: data,
-                            beforeSend: function () {
-                                jQuery('select[data-object="'+dataObject+'"]').html('<option selected>LOADING..</option>');
-                                jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', true);
-                            },
-                            success: function (data, textStatus, jqXHR) {
-                                var select = '';
-                                var arr = JSON.parse(data);
-                                $.each(arr, function (indeks, velyu) {
-                                    if(indeks === 'hydra:member'){
-
-                                        $.each(velyu, function (ind, valu) {
-
-                                            if (value == null) {
-                                                select += '<option value="/api/'+object+'/'+valu.id+'">'+valu[field]+'</option>';
-                                            } else {
-                                                if (value['id'] === valu.id && (objectSelected === index || index === 'parent')) {
-                                                    select += '<option selected value="/api/'+object+'/'+valu.id+'">'+valu[field]+'</option>';
-                                                } else {
-                                                    select += '<option value="/api/'+object+'/'+valu.id+'">'+valu[field]+'</option>';
-                                                }
+                                            q: params.term,
+                                            page: params.page,
+                                            module: object,
+                                            method: 'get',
+                                            field: field.split('#')
+                                        };
+                                    },
+                                    processResults: function (data) {
+                                        if (data.length > 0) {
+                                            return {
+                                                results: $.map(data, function (obj) {
+                                                    return {id: '/api/' + object + '/' + obj.id, text: obj[field]};
+                                                })
                                             }
+                                        }
+                                    },
+                                    cache: true,
+                                },
+                                escapeMarkup: function (markup) {
+                                    return markup;
+                                },
+                                minimumInputLength: 2
+                            });
 
-                                        });
+                            $.ajax({
+                                url: "/api",
+                                type: "POST",
+                                data: data,
+                                beforeSend: function () {
+                                    jQuery('select[data-object="' + dataObject + '"]').html('<option selected>LOADING..</option>');
+                                    jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', true);
+                                },
+                                success: function (data, textStatus, jqXHR) {
+                                    var select = '';
+                                    var arr = JSON.parse(data);
+                                    $.each(arr, function (indeks, velyu) {
+                                        if (indeks === 'hydra:member') {
 
+                                            $.each(velyu, function (ind, valu) {
+
+                                                if (value == null) {
+                                                    select += '<option value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
+                                                } else {
+                                                    if (value['id'] === valu.id && (objectSelected === index || index === 'parent')) {
+                                                        select += '<option selected value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
+                                                    } else {
+                                                        select += '<option value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
+                                                    }
+                                                }
+
+                                            });
+
+                                        }
+                                    });
+
+                                    if (value == null) {
+                                        select += '<option selected></option>';
                                     }
-                                });
-
-                                if (value == null) {
-                                    select+= '<option selected></option>';
+                                    jQuery('select[data-object="' + dataObject + '"]').html(select).removeClass('loading').removeAttr('disabled');
+                                    jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', false);
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', true);
                                 }
-                                jQuery('select[data-object="'+dataObject+'"]').html(select).removeClass('loading').removeAttr('disabled');
-                                jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', false);
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', true);
-                            }
+                            });
+
                         });
 
-                    });
-
-                } else if (index.indexOf('@') <= -1) {
-                    if (value === true || value === 'undefined') {
-                        jQuery('div[data-modal-detail="'+module+'"] input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');;
-                    } else if (value === false || value === 'undefined') {
-                        jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');;
-                    } else {
-                        //console.log(value);
-                        jQuery('div[data-modal-detail="'+module+'"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
-                        jQuery('div[data-modal-detail="'+module+'"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
-                        jQuery('div[data-modal-detail="'+module+'"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
-                        jQuery('div[data-modal-detail="'+module+'"] input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE').removeAttr('disabled readonly');
+                    } else if (index.indexOf('@') <= -1) {
+                        if (value === true || value === 'undefined') {
+                            jQuery('div[data-modal-detail="' + module + '"] input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');
+                            ;
+                        } else if (value === false || value === 'undefined') {
+                            jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');
+                            ;
+                        } else {
+                            //console.log(value);
+                            jQuery('div[data-modal-detail="' + module + '"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
+                            jQuery('div[data-modal-detail="' + module + '"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
+                            jQuery('div[data-modal-detail="' + module + '"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
+                            jQuery('div[data-modal-detail="' + module + '"] input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE').removeAttr('disabled readonly');
+                        }
+                        jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', false);
                     }
-                    jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', false);
-                }
-            });
+                });
+            } else {
+                toastr.error('Error when getting your data');
+            }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             jQuery('div[data-modal-detail="'+module+'"] .edit.btn').prop('disabled', true);
+            toastr.error('Error when getting your data');
         }
     });
 }
@@ -434,7 +461,7 @@ function editAction(module, id, params) {
 
                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', false);
                 toastr.error('Error when updating your data');
-            } else {
+            } else if('id' in arr) {
                 //console.log(arr);
                 jQuery.each(columns, function (idx,val) {
                     kolom = idx+2;
@@ -454,6 +481,8 @@ function editAction(module, id, params) {
                 toastr.success('Data successfully updated');
                 jQuery('div[data-modal-detail="'+module+'"]').modal('hide');
                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', false);
+            } else {
+                toastr.error('Error when updating your data');
             }
 
         },

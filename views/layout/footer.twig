@@ -20,5 +20,10 @@
     <script src="/assets/bootstrap-toggle/bootstrap-toggle.min.js"></script>
     <script src="/assets/toastr/toastr.min.js"></script>
     <script src="/assets/bootbox/bootbox.min.js"></script>
-    <script>(function() {jQuery('li.treeview:has(ul.treeview-menu li)').removeClass('hidden');})();</script>
+    <script>
+        (function() {
+            jQuery('li.treeview:has(ul.treeview-menu li)').removeClass('hidden');
+            jQuery('ul.treeview-menu:has(ul.treeview-menu li)').removeClass('hidden');
+        })();
+    </script>
 {%- endspaceless -%}

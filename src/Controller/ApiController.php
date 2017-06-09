@@ -2,13 +2,18 @@
 
 namespace Bisnis\Controller;
 
+use Bisnis\Filter\FilterFactory;
 use Ihsan\Client\Platform\Controller\AbstractController;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
+use Ihsan\Client\Platform\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApiController extends AbstractController
+class ApiController extends AbstractController implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @param Request $request
      *
@@ -19,26 +24,16 @@ class ApiController extends AbstractController
         $url = $request->get('module');
         $method = $request->get('method');
         $params = $request->get('params');
+        $fullname = null;
 
         if ($method == 'post' || $method == 'put') {
             $temps = [];
             foreach ($params as $param) {
-                if($param['value'] != '' AND $param['value'] != null) {
-                    if(
-                        $param['value'] == 'true' ||
-                        $param['value'] == 'false' ||
-                        $param['value'] == '1' ||
-                        $param['value'] == '0'
-                    ) {
-                        if ('true' === $param['value'] || 1 === (int) $param['value']) {
-                            $value = true;
-                        } else {
-                            $value = false;
-                        }
-                    } else {
-                        $value = $param['value'];
-                    }
+                /** @var FilterFactory $filter */
+                $filter = $this->container['app.filter_factory'];
+                $value = $filter->cast($param['value']);
 
+                if (null !== $value) {
                     $temps[$param['name']] = $value;
                 }
 
@@ -47,7 +42,7 @@ class ApiController extends AbstractController
                 }
             }
 
-            if ($url == 'users') {
+            if ($url == 'users' && $method == 'post') {
                 $temps['username'] = $this->generateUsername($fullname);
             }
 
@@ -108,21 +103,22 @@ class ApiController extends AbstractController
         $arrData = [];
         foreach ($arr as $value) {
             $obj = [];
-            foreach ($value as $key => $value) {
-                if($key == 'id'){
-                    $obj[$key] = $value;
+            foreach ($value as $k => $v) {
+                if($k == 'id'){
+                    $obj[$k] = $v;
 
                 }
 
                 //var_dump($field[0]);die();
-                if($key == $field[0]){
-                    $obj[$key] = $value;
+                if($k == $field[0]){
+                    $obj[$k] = $v;
                 }
             }
             $arrData[] = $obj;
         }
 
         $data = $arrData;
+
         return new JsonResponse($data);
     }
 

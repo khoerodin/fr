@@ -216,7 +216,10 @@ function getAll(module, columns = []) {
             }
 
         },
-        error: function (jqXHR, textStatus, errorThrown) {}
+        error: function (jqXHR, textStatus, errorThrown) {
+            toastr.error('Error when getting your data');
+            jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR WHEN GETTING YOUR DATA</span></td></tr>');
+        }
     });
 }
 

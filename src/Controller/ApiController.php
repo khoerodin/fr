@@ -267,7 +267,21 @@ class ApiController extends AbstractController
 
     public function callImage($path)
     {
-        return $this->request('files/'.$path, 'get');
+        $this->request('files/'.$path, 'get');
+
+        $filename = basename($path);
+        $file_extension = strtolower(substr(strrchr($filename,"."),1));
+
+        switch( $file_extension ) {
+            case "gif": $ctype="image/gif"; break;
+            case "png": $ctype="image/png"; break;
+            case "jpeg":
+            case "jpg": $ctype="image/jpeg"; break;
+            default:
+        }
+
+        header('Content-type: ' . $ctype);
+        readfile($path);
     }
 
     private function generateUsername($fullname)

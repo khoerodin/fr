@@ -14,6 +14,8 @@ class NullFilter extends AbstractFilter
     public function cast($value)
     {
         if ('' === $value) {
+            $this->stopNext = true;
+
             return null;
         }
 

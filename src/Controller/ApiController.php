@@ -20,10 +20,14 @@ class ApiController extends AbstractController
         $method = $request->get('method');
         $params = $request->get('params');
 
+        echo "<pre>";
+        var_dump($params);
+        echo "<pre>";die();
+
         if ($method == 'post' || $method == 'put') {
             $temps = [];
             foreach ($params as $param) {
-                if($param['value'] != '' AND $param['value'] != null) {
+                if($param['value'] != '' AND $param['value'] != null AND $param['name'] != 'creditLimit') {
                     if(
                         $param['value'] == 'true' ||
                         $param['value'] == 'false' ||
@@ -40,6 +44,9 @@ class ApiController extends AbstractController
                     }
 
                     $temps[$param['name']] = $value;
+
+                } elseif ($param['name'] == 'creditLimit') {
+                    $temps[$param['name']] = (float) $param['value'];
                 }
 
                 if($param['name'] == 'fullname' && $url == 'users') {
@@ -218,6 +225,7 @@ class ApiController extends AbstractController
             'advertising' => [
                 ['module' => 'advertising/ads'],
                 ['module' => 'advertising/categories'],
+                ['module' => 'advertising/customers'],
                 ['module' => 'advertising/layouts'],
                 ['module' => 'advertising/payment-methods'],
                 ['module' => 'advertising/positions'],

@@ -647,7 +647,12 @@ jQuery(function($) {
         console.log(searchTerms);
         $('input#'+field).val(searchTerms);
 
-        $('.add-datetime').datetimepicker();
+
+        $('input.add-datetime').datetimepicker().on('dp.change', function(e){
+            var tgl = e.date.format();
+            $(this).val(tgl);
+        });
+
         var $this = $('div[data-modal-add="'+window.module+'"]');
         $this.modal({show: true, backdrop: 'static'});
 

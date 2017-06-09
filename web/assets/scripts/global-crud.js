@@ -660,6 +660,16 @@ jQuery(function($) {
         }
     });
 
+    $(document).on('keyup', '.select2-search__field', function (e) {
+        if (e.which === 13) {
+            if (!$('body').hasClass("modal-open")) {
+                $(".search-"+field).select2("close");
+                $('a[data-btn-add="'+window.module+'"]').trigger('click');
+            }
+            return false;
+        }
+    });
+
     // detail form
     $(document).on('click', 'tbody[data-list="'+window.module+'"] .detail-btn', function () {
         var id = $(this).attr('data-id');

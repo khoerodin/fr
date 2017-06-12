@@ -96,7 +96,7 @@
                                             <div class="form-group">
                                                 <label for="partnershipDate">Tanggal Registrasi</label>
                                                 <input type="text" class="form-control add-datetime" id="partnershipDate" placeholder="Tanggal Registrasi">
-                                                <input type="hidden" name="partnershipDate">
+                                                <input type="hidden" id="partnershipDateOk" name="partnershipDate">
                                             </div>
                                             <div class="form-group">
                                                 <label for="taxNumber">DATA PAJAK: NPWP</label>
@@ -108,7 +108,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>DATA PAJAK: Kota</label>
-                                                <select name="city" data-object="cities#name" class="form-control select-add-modal">
+                                                <select name="taxCity" data-object="cities#name" class="form-control select-add-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
@@ -133,8 +133,10 @@
                                                 <input type="text" name="bankAccountNumber" class="form-control" id="bankAccountNumber" placeholder="Nomor Rekening">
                                             </div>
                                             <div class="form-group">
-                                                <label for="bankName">Nama Bank</label>
-                                                <input type="text" name="bankName" class="form-control" id="bankName" placeholder="Nama Bank">
+                                                <label>Nama Bank</label>
+                                                <select name="bank" data-object="banks#name" class="form-control select-add-modal">
+                                                    <option></option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="remark">Catatan</label>
@@ -170,7 +172,7 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div data-modal-detail="advertising/customers" class="clients detail-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-detail="advertising/customers" class="clients detail-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -181,14 +183,99 @@
                                     <form role="form" class="clients detail form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Kategori Induk</label>
-                                                <select name="parent" data-object="advertising/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
-                                                    <option selected>Loading...</option>
+                                                <label for="code">Kode</label>
+                                                <input type="text" name="code" class="form-control" id="code" placeholder="Kode">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="name">Nama</label>
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Nama">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address">Alamat</label>
+                                                <textarea name="address" class="form-control" id="address" placeholder="Alamat"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Kota</label>
+                                                <select name="city" data-object="cities#name" data-selected="city#name" class="form-control select-edit-modal">
+                                                    <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Kategori</label>
-                                                <input type="text" name="name" class="form-control" id="name">
+                                                <label for="postalCode">Kode Pos</label>
+                                                <input type="text" name="postalCode" class="form-control" id="postalCode" placeholder="Kode Pos">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="phoneNumber">No. Telepon</label>
+                                                <input type="text" name="phoneNumber" class="form-control" id="phoneNumber" placeholder="No. Telepon">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="faxNumber">No. Fax</label>
+                                                <input type="text" name="faxNumber" class="form-control" id="faxNumber" placeholder="No. Fax">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="partnershipDate">Tanggal Registrasi</label>
+                                                <input type="text" class="form-control edit-datetime" id="partnershipDate" placeholder="Tanggal Registrasi">
+                                                <input type="hidden" id="partnershipDateOk" name="partnershipDate">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="taxNumber">DATA PAJAK: NPWP</label>
+                                                <input type="text" name="taxNumber" class="form-control" id="taxNumber" placeholder="DATA PAJAK: NPWP">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="taxAddress">DATA PAJAK: Alamat</label>
+                                                <textarea name="taxAddress" class="form-control" id="taxAddress" placeholder="DATA PAJAK: Alamat"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>DATA PAJAK: Kota</label>
+                                                <select name="taxCity" data-object="cities#name" data-selected="taxCity#name" class="form-control select-edit-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="taxPhoneNumber">DATA PAJAK: No. Telepon</label>
+                                                <input type="text" name="taxPhoneNumber" class="form-control" id="taxPhoneNumber" placeholder="DATA PAJAK: No. Telepon">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="taxFaxNumber">DATA PAJAK: No. Fax</label>
+                                                <input type="text" name="taxFaxNumber" class="form-control" id="taxFaxNumber" placeholder="DATA PAJAK: No. Fax">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="presidentDirectorName">Nama Presiden Direktur</label>
+                                                <input type="text" name="presidentDirectorName" class="form-control" id="presidentDirectorName" placeholder="Nama Presiden Direktur">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="mediaManagerName">Nama Manajer Media</label>
+                                                <input type="text" name="mediaManagerName" class="form-control" id="mediaManagerName" placeholder="Nama Manajer Media">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="bankAccountNumber">Nomor Rekening</label>
+                                                <input type="text" name="bankAccountNumber" class="form-control" id="bankAccountNumber" placeholder="Nomor Rekening">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Nama Bank</label>
+                                                <select name="bank" data-object="banks#name" data-selected="bank#name" class="form-control select-edit-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="remark">Catatan</label>
+                                                <input type="text" name="remark" class="form-control" id="remark" placeholder="Catatan">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="creditLimit">Limit Kredit</label>
+                                                <input type="text" name="creditLimit" class="form-control" id="creditLimit" placeholder="Limit Kredit">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Grup Tagihan</label>
+                                                <select name="billingGroup" data-object="billing/groups#name" data-selected="billingGroup#name" class="form-control select-edit-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Perwakilan</label>
+                                                <select name="representative" data-object="representatives#name" data-selected="representative#name" class="form-control select-edit-modal">
+                                                    <option></option>
+                                                </select>
                                             </div>
                                         </div>
                                         <input type="hidden" name="id" id="id">
@@ -197,7 +284,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="clients edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -207,7 +294,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul data-paging="advertising/customers" class="clients pagination pagination-sm no-margin pull-right"></ul>
+                    <ul data-paging="advertising/customers" class="pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

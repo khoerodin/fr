@@ -1,3 +1,4 @@
 app:
     middlewares:
         - { class: 'Bisnis\Middleware\SecurityMiddleware' }
+        - { class: 'Bisnis\Middleware\FilterMiddleware', parameters: [['Bisnis\Filter\BooleanFilter', 'Bisnis\Filter\NullFilter', 'Bisnis\Filter\FloatFilter']] }

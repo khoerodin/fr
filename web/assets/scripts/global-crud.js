@@ -405,10 +405,8 @@ function detail(module,id) {
                     } else if (index.indexOf('@') <= -1) {
                         if (value === true || value === 'undefined') {
                             jQuery('div[data-modal-detail="' + module + '"] input[type="checkbox"]#' + index).prop('checked', true).removeAttr('disabled');
-                            ;
                         } else if (value === false || value === 'undefined') {
                             jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');
-                            ;
                         } else {
                             //console.log(value);
                             jQuery('div[data-modal-detail="' + module + '"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
@@ -419,6 +417,22 @@ function detail(module,id) {
                         jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', false);
                     }
                 });
+
+                var inputDate = jQuery('input.edit-datetime');
+                jQuery(inputDate).each( function(index, value) {
+                    var inputId = value.id;
+                    var inputValue =$('input.edit-datetime#' + inputId).val();
+
+                    $('input#'+inputId).datetimepicker({
+                        format: 'DD/MM/YYYY'
+                    }).on('dp.change', function(e){
+                        var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+                        $('input#'+inputId+'Ok').val(tgl);
+                    });
+
+                    $('input#'+inputId).val(customDateDdMmmYyyy(inputValue))
+                });
+
             } else {
                 toastr.error('Error when getting your data');
             }
@@ -647,10 +661,15 @@ jQuery(function($) {
         console.log(searchTerms);
         $('input#'+field).val(searchTerms);
 
-
-        $('input.add-datetime').datetimepicker().on('dp.change', function(e){
-            var tgl = e.date.format();
-            $(this).val(tgl);
+        var inputDate = jQuery('input.add-datetime');
+        jQuery(inputDate).each( function(index, value) {
+            var inputId = value.id;
+            $('input#'+inputId).datetimepicker({
+                format: 'DD/MM/YYYY'
+            }).on('dp.change', function(e){
+                var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+                $('input#'+inputId+'Ok').val(tgl);
+            });
         });
 
         var $this = $('div[data-modal-add="'+window.module+'"]');
@@ -787,3 +806,19 @@ jQuery(function($) {
         getAll(module,columns);
     });
 });
+
+var customDateDdMmmYyyy = function (dateString) {
+    date = new Date(dateString);
+    year = date.getFullYear();
+    month = date.getMonth()+1;
+    dt = date.getDate();
+
+    if (dt < 10) {
+        dt = '0' + dt;
+    }
+    if (month < 10) {
+        month = '0' + month;
+    }
+
+    return dt+'/' + month + '/'+year;
+};

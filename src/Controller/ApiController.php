@@ -277,7 +277,6 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         }
 
         header('Content-type: ' . $ctype);
-        readfile($path);
     }
 
     private function generateUsername($fullname)

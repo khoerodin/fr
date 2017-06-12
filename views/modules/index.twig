@@ -5,8 +5,8 @@
         window.module = 'modules';
         window.field = 'name';
         var columns = [
-            'name',
             'description',
+            'name',
             'iconCls',
             'path',
         ];
@@ -36,8 +36,8 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
+                            <th width="20%">Kategori</th>
                             <th width="20%">Nama</th>
-                            <th>Deakripsi</th>
                             <th>Icon Class</th>
                             <th>Path</th>
                             <th width="5%"><span class="pull-right">Action</span></th>
@@ -62,12 +62,12 @@
                                     <form role="form" class="modules add form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label for="name">Name</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                                <label for="description">Kategori</label>
+                                                <input type="text" name="description" class="form-control" id="description" placeholder="Kategori">
                                             </div>
                                             <div class="form-group">
-                                                <label for="description">Description</label>
-                                                <input type="text" name="description" class="form-control" id="description" placeholder="Description">
+                                                <label for="name">Nama</label>
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Nama">
                                             </div>
                                             <div class="form-group">
                                                 <label for="iconCls">Icon Class</label>
@@ -102,12 +102,12 @@
                                     <form role="form" class="modules detail form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label for="name">Name</label>
-                                                <input type="text" name="name" class="form-control" id="name">
+                                                <label for="description">Kategori</label>
+                                                <input type="text" name="description" class="form-control" id="description">
                                             </div>
                                             <div class="form-group">
-                                                <label for="description">Description</label>
-                                                <input type="text" name="description" class="form-control" id="description">
+                                                <label for="name">Nama</label>
+                                                <input type="text" name="name" class="form-control" id="name">
                                             </div>
                                             <div class="form-group">
                                                 <label for="iconCls">Icon Class</label>

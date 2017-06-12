@@ -33,7 +33,7 @@ class FilterMiddleware implements HttpKernelInterface, ContainerAwareInterface
     public function __construct(HttpKernelInterface $app, array $filters = [])
     {
         $this->app = $app;
-        $this->filters;
+        $this->filters = $filters;
     }
 
     /**

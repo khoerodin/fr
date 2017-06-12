@@ -264,23 +264,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
     public function callImageAction($path, Request $request)
     {
-        try {
-            $url = sprintf('%s%s/%s.%s', $this->container['api']['base_url'], 'files', $path, $request->query->get('format'));
-            $apiKey = $this->container['api']['api_key'];
-            $paramKey = $this->container['api']['param_key'];
-
-            $this->client->addHeader('Authorization', sprintf('Bearer %s', $this->fetch('token')));
-
-            return $this->client->get($url);
-        } catch (RequestException $e) {
-            $response = $e->getResponse();
-
-            return new Response(
-                $response->getBody()->getContents(),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            );
-        }
+        return $this->request(sprintf('%s/%s.%s', 'files', $path, $request->query->get('ext')), 'get');
     }
 
     private function generateUsername($fullname)

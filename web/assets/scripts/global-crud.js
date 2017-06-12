@@ -429,7 +429,9 @@ function detail(module,id) {
                         var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
                         $('input.edit#'+inputId+'Ok').val(tgl);
                     });
+                        
 
+                    $('input.edit#'+inputId+'Ok').val(inputValue);
                     $('input.edit-datetime#'+inputId).val(customDateDdMmmYyyy(inputValue));
                     jQuery('div[data-modal-detail="'+module+'"] input.edit').prop('readonly', false).prop('disabled', false).removeClass('loading');
                 });

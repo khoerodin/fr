@@ -429,7 +429,7 @@ function detail(module,id) {
                         var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
                         $('input.edit#'+inputId+'Ok').val(tgl);
                     });
-                        
+
 
                     $('input.edit#'+inputId+'Ok').val(inputValue);
                     $('input.edit-datetime#'+inputId).val(customDateDdMmmYyyy(inputValue));

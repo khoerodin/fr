@@ -3,6 +3,7 @@
 namespace Bisnis\Controller;
 
 use Bisnis\Filter\FilterFactory;
+use GuzzleHttp\Exception\RequestException;
 use Ihsan\Client\Platform\Controller\AbstractController;
 use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
 use Ihsan\Client\Platform\DependencyInjection\ContainerAwareTrait;
@@ -261,22 +262,25 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         return new JsonResponse($modules);
     }
 
-    public function callImage($path)
+    public function callImageAction($path, Request $request)
     {
-        $this->request('files/'.$path, 'get');
+        try {
+            $url = sprintf('%s%s/%s.%s', $this->container['api']['base_url'], 'files', $path, $request->query->get('format'));
+            $apiKey = $this->container['api']['api_key'];
+            $paramKey = $this->container['api']['param_key'];
 
-        $filename = basename($path);
-        $file_extension = strtolower(substr(strrchr($filename,"."),1));
+            $this->client->addHeader('Authorization', sprintf('Bearer %s', $this->fetch('token')));
 
-        switch( $file_extension ) {
-            case "gif": $ctype="image/gif"; break;
-            case "png": $ctype="image/png"; break;
-            case "jpeg":
-            case "jpg": $ctype="image/jpeg"; break;
-            default:
+            return $this->client->get($url);
+        } catch (RequestException $e) {
+            $response = $e->getResponse();
+
+            return new Response(
+                $response->getBody()->getContents(),
+                $response->getStatusCode(),
+                $response->getHeaders()
+            );
         }
-
-        header('Content-type: ' . $ctype);
     }
 
     private function generateUsername($fullname)

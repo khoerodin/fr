@@ -266,10 +266,14 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
     {
         $response = $this->request(sprintf('%s/%s.%s', 'files', $path, $request->query->get('ext')), 'get');
         if (Response::HTTP_NOT_FOUND === $response) {
-            $response->setContent(file_get_contents(sprintf('%s/web/img/default_avatar.png', $this->container['project_dir'])));
+            $filePath = sprintf('%s/web/img/default_avatar.png', $this->container['project_dir']);
+
+            $response->setContent(file_get_contents($filePath));
             $response->setStatusCode(Response::HTTP_OK);
 
-            return $response;
+            $response->headers->set('Cache-Control', 'private');
+            $response->headers->set('Content-type', mime_content_type($filePath));
+            $response->headers->set('Content-length', filesize($filePath));
         }
 
         return $response;

@@ -264,7 +264,15 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
     public function callImageAction($path, Request $request)
     {
-        return $this->request(sprintf('%s/%s.%s', 'files', $path, $request->query->get('ext')), 'get');
+        $response = $this->request(sprintf('%s/%s.%s', 'files', $path, $request->query->get('ext')), 'get');
+        if (Response::HTTP_NOT_FOUND === $response) {
+            $response->setContent(file_get_contents(sprintf('%s/web/img/default_avatar.png', $this->container['project_dir'])));
+            $response->setStatusCode(Response::HTTP_OK);
+
+            return $response;
+        }
+
+        return $response;
     }
 
     private function generateUsername($fullname)

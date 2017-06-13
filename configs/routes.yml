@@ -33,6 +33,7 @@ app:
         - { path: '/advertising/ads', controller: 'Bisnis:AdvertisingAds@index', methods: ['GET'] }
         - { path: '/advertising/categories', controller: 'Bisnis:AdvertisingCategories@index', methods: ['GET'] }
         - { path: '/advertising/customers', controller: 'Bisnis:AdvertisingCustomers@index', methods: ['GET'] }
+        - { path: '/advertising/prices', controller: 'Bisnis:AdvertisingPrices@index', methods: ['GET'] }
         - { path: '/advertising/layouts', controller: 'Bisnis:AdvertisingLayouts@index', methods: ['GET'] }
         - { path: '/advertising/payment-methods', controller: 'Bisnis:AdvertisingPaymentMethods@index', methods: ['GET'] }
         - { path: '/advertising/positions', controller: 'Bisnis:AdvertisingPositions@index', methods: ['GET'] }

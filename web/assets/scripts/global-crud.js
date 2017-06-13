@@ -10,7 +10,7 @@ $.fn.extend({
         //Now, find all the checkboxes and append their "checked" state to the results.
         this.find('input[type=checkbox]').each(function(id, item) {
             var $item = $(item);
-            results.push({name: $item.attr('name'), value: $item.is(":checked") ? 1 : 0});
+            results.push({name: $item.attr('name'), value: $item.is(":checked") ? true : false});
         });
         return results;
     }
@@ -62,7 +62,7 @@ function changeUrlParam (param, value) {
 }
 
 // get all data
-function getAll(module, columns = []) {
+function getAll(module, columns = [], tbody = 'data-list') {
 
     var data = {
         module : module,
@@ -77,7 +77,7 @@ function getAll(module, columns = []) {
         type: "POST",
         data: data,
         beforeSend: function () {
-            jQuery('tbody[data-list="'+module+'"]').html('<tr><td colspan="'+columnCount+'">LOADING DATA...</td></tr>')
+            jQuery('tbody['+tbody+'="'+module+'"]').html('<tr><td colspan="'+columnCount+'">LOADING DATA...</td></tr>')
         },
         success: function (data, textStatus, jqXHR) {
 
@@ -158,7 +158,7 @@ function getAll(module, columns = []) {
                             tr += '</span></td>';
                             tr += '</tr>';
                         });
-                        jQuery('tbody[data-list="' + module + '"]').html(tr);
+                        jQuery('tbody['+tbody+'="' + module + '"]').html(tr);
                     }
 
                     if (index === 'hydra:view') {
@@ -205,14 +205,14 @@ function getAll(module, columns = []) {
 
                     if (index === 'hydra:totalItems') {
                         if (value < 1) {
-                            jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33">TIDAK ADA DATA</td></tr>');
+                            jQuery('tbody['+tbody+'="' + module + '"]').html('<tr><td colspan="33">TIDAK ADA DATA</td></tr>');
                         }
                     }
 
                 });
             } else {
                 toastr.error('Error when getting your data');
-                jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR KETIKA MENGAMBIL DATA</span></td></tr>');
+                jQuery('tbody['+tbody+'="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR KETIKA MENGAMBIL DATA</span></td></tr>');
             }
 
         },
@@ -429,7 +429,7 @@ function detail(module,id) {
                         var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
                         $('input.edit#'+inputId+'Ok').val(tgl);
                     });
-                        
+
 
                     $('input.edit#'+inputId+'Ok').val(inputValue);
                     $('input.edit-datetime#'+inputId).val(customDateDdMmmYyyy(inputValue));

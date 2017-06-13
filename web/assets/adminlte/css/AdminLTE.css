@@ -5002,3 +5002,11 @@ input#file-image {
   border: 3px solid #ccc;
   cursor: pointer;
 }
+
+tr.active {
+  background-color: ;
+}
+
+.adv-cat tr:hover {
+  cursor: pointer;
+}

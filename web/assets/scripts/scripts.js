@@ -119,4 +119,3 @@ $(document).on('click', 'div.right-menu', function () {
     var url = $(this).attr('data-link');
     window.location.href = url;
 });
-

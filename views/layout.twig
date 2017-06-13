@@ -9,6 +9,8 @@
     </head>
         <body class="skin-red sidebar-mini">
             <div class="wrapper">
+                {% set image = me.profileImage | split('.') %}
+
                 {%- include 'layout/body_header.twig' -%}
                 {%- include 'layout/menu.twig' -%}
                 {%- include 'layout/content.twig' with {content: block('content')} -%}

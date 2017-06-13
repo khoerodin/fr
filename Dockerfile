@@ -52,7 +52,6 @@ RUN chmod 777 /var/log/nginx/site.error.log
 # PHP Configuration
 ADD docker/php/php.ini /etc/php/7.1/fpm/php.ini
 ADD docker/php/php.ini /etc/php/7.1/cli/php.ini
-ADD docker/php/php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf
 RUN mkdir /run/php
 RUN touch /run/php/php7.1-fpm.sock
 RUN chmod 777 /run/php/php7.1-fpm.sock

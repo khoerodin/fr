@@ -3,16 +3,41 @@
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
     <script>
-        window.module = 'advertising/categories';
+        window.module = 'advertising/categories/root';
         window.field = 'name';
         var columns = [
-            'parent.name',
             'name'
         ];
 
-        $("#advCategories a").click(function(e){
-            e.preventDefault();
-            $(this).tab('show');
+        $(document).on('click', 'tbody[data-list="advertising/categories/root"] tr', function (e) {
+            var parentId = $(this).attr('id');
+
+            if ($(this).hasClass("bg-yellow")) {
+                $(this).removeClass("bg-yellow");
+            } else {
+                $(this).addClass("bg-yellow");
+                $(this).siblings().removeClass('bg-yellow');
+            }
+
+            changeUrlParam('parent.id', parentId);
+            getAll('advertising/categories', columns, 'data-list-2');
+            $('.sektor').attr('data-toggle', 'tab');
+            $('.sub-sektor').removeAttr('data-toggle');
+        });
+
+        $(document).on('click', 'tbody[data-list-2="advertising/categories"] tr', function (e) {
+            var parentId = $(this).attr('id');
+
+            if ($(this).hasClass("bg-yellow")) {
+                $(this).removeClass("bg-yellow");
+            } else {
+                $(this).addClass("bg-yellow");
+                $(this).siblings().removeClass('bg-yellow');
+            }
+
+            changeUrlParam('parent.id', parentId);
+            getAll('advertising/categories', columns, 'data-list-3');
+            $('.sub-sektor').attr('data-toggle', 'tab');
         });
     </script>
 {% endblock %}
@@ -37,9 +62,9 @@
                 <div class="box-body">
 
                     <ul class="nav nav-tabs" id="advCategories">
-                        <li class="active"><a href="#emiten">EMITEN</a></li>
-                        <li><a href="#sektor">SEKTOR</a></li>
-                        <li><a href="#sub-sektor">SUB SEKTOR</a></li>
+                        <li class="active"><a href="#emiten" data-toggle="tab">EMITEN</a></li>
+                        <li><a class="sektor" href="#sektor">SEKTOR</a></li>
+                        <li><a class="sub-sektor" href="#sub-sektor">SUB SEKTOR</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="emiten" class="tab-pane fade in active">
@@ -47,23 +72,48 @@
                                 <thead>
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th width="30%">Kategori Induk</th>
-                                    <th>Nama Kategori</th>
+                                    <th>EMITEN</th>
                                     <th width="5%"><span class="pull-right">Aksi</span></th>
                                 </tr>
                                 </thead>
 
-                                <tbody data-list="advertising/categories">
-                                <tr><td colspan="4">LOADING DATA...</td></tr>
+                                <tbody data-list="advertising/categories/root" class="adv-cat">
+                                    <tr><td colspan="3">...</td></tr>
                                 </tbody>
 
                             </table>
                         </div>
                         <div id="sektor" class="tab-pane fade">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>SEKTOR</th>
+                                    <th width="5%"><span class="pull-right">Aksi</span></th>
+                                </tr>
+                                </thead>
 
+                                <tbody data-list-2="advertising/categories" class="adv-cat">
+                                    <tr><td colspan="3">...</td></tr>
+                                </tbody>
+
+                            </table>
                         </div>
                         <div id="sub-sektor" class="tab-pane fade">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>SUB SEKTOR</th>
+                                    <th width="5%"><span class="pull-right">Aksi</span></th>
+                                </tr>
+                                </thead>
 
+                                <tbody data-list-3="advertising/categories" class="adv-cat">
+                                <tr><td colspan="3">...</td></tr>
+                                </tbody>
+
+                            </table>
                         </div>
                     </div>
 

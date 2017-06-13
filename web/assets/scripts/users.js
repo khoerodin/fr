@@ -253,9 +253,9 @@ function rolesResponse(data,userId,page) {
             if(page > 1) {
                 c = page - 1;
                 p = 17 * c;
-                no = index+1+p-1;
+                no = index+1+p;
             } else {
-                no = index-1;
+                no = index-3;
             }
 
             rolesCheck += '<tr id="'+value.module+'" data-role="'+value.roleId+'"><td>'+no+'</td>';

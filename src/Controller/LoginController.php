@@ -26,7 +26,6 @@ class LoginController extends AbstractController
         if($response->getStatusCode() != 401){
             $token = json_decode($response->getContent(), true)['token'];
             $this->store('token', $token);
-            //var_dump($token);die();
         }
 
         return new Response($response->getStatusCode());

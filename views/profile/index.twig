@@ -5,6 +5,7 @@
 {%- endblock -%}
 
 {%- block content -%}
+
     <div class="row">
         <div class="col-md-12">
             <div class="box">
@@ -14,7 +15,8 @@
 
                     <div class="col-md-2">
                         <label for="file-image" class="profile-image"
-                               style="background-image: url('/img/user2-160x160.jpg');" title="CLICK TO CHANGE YOUR PROFILE PHOTO"></label>
+                               style="background-image: url('/api/images/{{ image[0] }}?ext={{ image[1] }}');"
+                               title="CLICK TO CHANGE YOUR PROFILE PHOTO"></label>
                         <input id="file-image" type="file"/>
                     </div>
 

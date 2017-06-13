@@ -10,7 +10,7 @@ $.fn.extend({
         //Now, find all the checkboxes and append their "checked" state to the results.
         this.find('input[type=checkbox]').each(function(id, item) {
             var $item = $(item);
-            results.push({name: $item.attr('name'), value: $item.is(":checked") ? 1 : 0});
+            results.push({name: $item.attr('name'), value: $item.is(":checked") ? true : false});
         });
         return results;
     }
@@ -429,7 +429,7 @@ function detail(module,id) {
                         var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
                         $('input.edit#'+inputId+'Ok').val(tgl);
                     });
-                        
+
 
                     $('input.edit#'+inputId+'Ok').val(inputValue);
                     $('input.edit-datetime#'+inputId).val(customDateDdMmmYyyy(inputValue));

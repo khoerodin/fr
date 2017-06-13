@@ -3,17 +3,13 @@
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
     <script>
-        window.module = 'advertising/categories';
-        window.field = 'name';
+        window.module = 'advertising/prices';
+        window.field = 'price';
         var columns = [
-            'parent.name',
-            'name'
+            'year',
+            'specificationDetail.name',
+            'price'
         ];
-
-        $("#advCategories a").click(function(e){
-            e.preventDefault();
-            $(this).tab('show');
-        });
     </script>
 {% endblock %}
 
@@ -23,70 +19,59 @@
             <div class="box">
                 <div class="box-header row">
                     <div class="col-md-12 search-area transition">
-                        <select data-placeholder="CARI NAMA KATEGORI IKLAN" class="search-name form-control select2" style="width: 100%;">
+                        <select data-placeholder="CARI HARGA" class="search-price form-control select2" style="width: 100%;">
                             <option></option>
                         </select>
                     </div>
 
                     <div class="button-area transition">
-                        <a href="JavaScript:Void(0);" data-btn-add="advertising/categories" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                        <a href="JavaScript:Void(0);" data-btn-add="advertising/prices" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th width="5%">#</th>
+                            <th>Tahun</th>
+                            <th>Detail Jenis Iklan</th>
+                            <th>Harga</th>
+                            <th width="5%"><span class="pull-right">Aksi</span></th>
+                        </tr>
+                        </thead>
 
-                    <ul class="nav nav-tabs" id="advCategories">
-                        <li class="active"><a href="#emiten">EMITEN</a></li>
-                        <li><a href="#sektor">SEKTOR</a></li>
-                        <li><a href="#sub-sektor">SUB SEKTOR</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="emiten" class="tab-pane fade in active">
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th width="30%">Kategori Induk</th>
-                                    <th>Nama Kategori</th>
-                                    <th width="5%"><span class="pull-right">Aksi</span></th>
-                                </tr>
-                                </thead>
+                        <tbody data-list="advertising/prices">
+                            <tr><td colspan="5">LOADING DATA...</td></tr>
+                        </tbody>
 
-                                <tbody data-list="advertising/categories">
-                                <tr><td colspan="4">LOADING DATA...</td></tr>
-                                </tbody>
-
-                            </table>
-                        </div>
-                        <div id="sektor" class="tab-pane fade">
-
-                        </div>
-                        <div id="sub-sektor" class="tab-pane fade">
-
-                        </div>
-                    </div>
+                    </table>
 
                     {#ADD MODAL#}
-                    <div data-modal-add="advertising/categories" class="clients add-modal modal" role="dialog">
+                    <div data-modal-add="advertising/prices" class="add-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Tambah Kategori Iklan</h4>
+                                    <h4 class="modal-title">Tambah Harga Iklan</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="clients add form">
+                                    <form role="form" class="add form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Kategori Induk</label>
-                                                <select name="parent" data-object="advertising/categories#name" class="form-control select-add-modal">
+                                                <label for="year">Tahun</label>
+                                                <input type="number" name="year" class="form-control" id="year" placeholder="Tahun">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Detail Jenis Iklan</label>
+                                                    <select name="specificationDetail" data-object="advertising/specification-details#name" class="form-control select-add-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Kategori</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                                <label for="price">Harga</label>
+                                                <input type="text" name="price" class="form-control" id="price" placeholder="Harga">
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -94,7 +79,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="clients save btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="save btn btn-flat btn-danger">Save</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -102,25 +87,29 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div data-modal-detail="advertising/categories" class="clients detail-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-detail="advertising/prices" class="detail-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail Kategori Iklan</h4>
+                                    <h4 class="modal-title">Detail Area Billing</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="clients detail form">
+                                    <form role="form" class="detail form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Kategori Induk</label>
-                                                <select name="parent" data-object="advertising/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                <label for="year">Tahun</label>
+                                                <input type="number" name="year" class="form-control" id="year" placeholder="Year">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Detail Jenis Iklan</label>
+                                                <select name="specificationDetail" data-object="advertising/specification-details#name" data-selected="specificationDetail#name" class="form-control select-edit-modal">
                                                     <option selected>Loading...</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Kategori</label>
-                                                <input type="text" name="name" class="form-control" id="name">
+                                                <label for="price">Harga</label>
+                                                <input type="text" name="price" class="form-control" id="price" placeholder="Harga">
                                             </div>
                                         </div>
                                         <input type="hidden" name="id" id="id">
@@ -129,7 +118,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="clients edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -139,7 +128,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul data-paging="advertising/categories" class="clients pagination pagination-sm no-margin pull-right"></ul>
+                    <ul data-paging="advertising/prices" class="pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

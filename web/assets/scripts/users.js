@@ -18,9 +18,9 @@ $(document).on('change', '.loginState', function () {
     userId = $(this).attr('data-id');
 
     if ($(this).is(':checked')){
-        checkValue = 1;
+        checkValue = true;
     } else {
-        checkValue = 0;
+        checkValue = false;
     }
 
     var check = {

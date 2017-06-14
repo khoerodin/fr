@@ -70,6 +70,8 @@ function getAll(module, columns = [], tbody = 'data-list') {
         params: getQueryVariable()
     };
 
+    console.log(getQueryVariable());
+
     columnCount = columns.length+2;
 
     $.ajax({
@@ -638,10 +640,10 @@ jQuery(function($) {
         jQuery('div[data-modal-detail="'+window.module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
         jQuery('div[data-modal-detail="'+window.module+'"]').modal({show: true, backdrop: 'static'});
 
-        if (module !== 'user-activities') {
-            detail(module, id);
-        } else {
+        if (module === 'user-activities') {
             detailUserActivities(id);
+        } else {
+            detail(module, id);
         }
 
         changeUrlParam(field.split('-')[0], text);
@@ -705,10 +707,10 @@ jQuery(function($) {
         jQuery('div[data-modal-detail="'+window.module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
         jQuery('div[data-modal-detail="'+window.module+'"]').modal({show: true, backdrop: 'static'});
 
-        if (module !== 'user-activities') {
-            detail(module, id);
-        } else {
+        if (module === 'user-activities') {
             detailUserActivities(id);
+        } else {
+            detail(module, id);
         }
     });
 

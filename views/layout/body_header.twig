@@ -20,13 +20,18 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="/img/user2-160x160.jpg" class="user-image" alt="{{- me.fullname | raw -}}">
+                            <label class="avatar-img user-image"
+                                  style="background-image: url('/api/images/{{ image[0] }}?ext={{ image[1] }}');"
+                            ></label>
                             <span class="hidden-xs">{{- me.fullname | raw -}}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="/img/bi.png" class="img-circle" alt="{{- me.fullname | raw -}}">
+
+                                <label class="avatar-img big-avatar"
+                                       style="background-image: url('/api/images/{{ image[0] }}?ext={{ image[1] }}');"
+                                ></label>
 
                                 <p>
                                     {{- me.fullname | raw }}

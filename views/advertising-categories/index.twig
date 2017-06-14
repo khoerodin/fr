@@ -1,45 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/global-crud.js"></script>
-    <script>
-        window.module = 'advertising/categories/root';
-        window.field = 'name';
-        var columns = [
-            'name'
-        ];
-
-        $(document).on('click', 'tbody[data-list="advertising/categories/root"] tr', function (e) {
-            var parentId = $(this).attr('id');
-
-            if ($(this).hasClass("bg-yellow")) {
-                $(this).removeClass("bg-yellow");
-            } else {
-                $(this).addClass("bg-yellow");
-                $(this).siblings().removeClass('bg-yellow');
-            }
-
-            changeUrlParam('parent.id', parentId);
-            getAll('advertising/categories', columns, 'data-list-2');
-            $('.sektor').attr('data-toggle', 'tab');
-            $('.sub-sektor').removeAttr('data-toggle');
-        });
-
-        $(document).on('click', 'tbody[data-list-2="advertising/categories"] tr', function (e) {
-            var parentId = $(this).attr('id');
-
-            if ($(this).hasClass("bg-yellow")) {
-                $(this).removeClass("bg-yellow");
-            } else {
-                $(this).addClass("bg-yellow");
-                $(this).siblings().removeClass('bg-yellow');
-            }
-
-            changeUrlParam('parent.id', parentId);
-            getAll('advertising/categories', columns, 'data-list-3');
-            $('.sub-sektor').attr('data-toggle', 'tab');
-        });
-    </script>
+    <script src="/assets/scripts/advertising-categories.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -58,7 +20,7 @@
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
-                <!-- /.box-header -->
+
                 <div class="box-body">
 
                     <ul class="nav nav-tabs" id="advCategories">
@@ -68,57 +30,94 @@
                     </ul>
                     <div class="tab-content">
                         <div id="emiten" class="tab-pane fade in active">
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th>EMITEN</th>
-                                    <th width="5%"><span class="pull-right">Aksi</span></th>
-                                </tr>
-                                </thead>
+                            {#EMITEN TAB#}
+                            <div class="box-body">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th>EMITEN</th>
+                                            <th width="5%"><span class="pull-right">Aksi</span></th>
+                                        </tr>
+                                        </thead>
 
-                                <tbody data-list="advertising/categories/root" class="adv-cat">
-                                    <tr><td colspan="3">...</td></tr>
-                                </tbody>
+                                        <tbody id="emitenTable">
+                                            <tr><td colspan="3">...</td></tr>
+                                        </tbody>
+                                </table>
+                            </div>
+                            <div class="box-footer clearfix">
+                                <ul class="pagination pagination-sm no-margin pull-right"></ul>
+                            </div>
 
-                            </table>
+                            {#DETAIL EMITEN#}
+                            <div id="emitenModal" class="detail-modal modal" role="dialog">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">Detail Emiten</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form role="form" class="detail form">
+                                                <div class="box-body">
+                                                    <div class="form-group">
+                                                        <label for="name">Emiten</label>
+                                                        <input type="text" name="name" class="form-control" id="name">
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="id" id="id">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" class="edit btn btn-flat btn-danger">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {#END DETAIL EMITEN#}
+
+                            {#END EMITEN TAB#}
                         </div>
                         <div id="sektor" class="tab-pane fade">
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th>SEKTOR</th>
-                                    <th width="5%"><span class="pull-right">Aksi</span></th>
-                                </tr>
-                                </thead>
+                            <div class="box-body">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th>SEKTOR</th>
+                                        <th width="5%"><span class="pull-right">Aksi</span></th>
+                                    </tr>
+                                    </thead>
 
-                                <tbody data-list-2="advertising/categories" class="adv-cat">
-                                    <tr><td colspan="3">...</td></tr>
-                                </tbody>
-
-                            </table>
+                                    <tbody id="sektorTable">
+                                        <tr><td colspan="3">...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div id="sub-sektor" class="tab-pane fade">
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th>SUB SEKTOR</th>
-                                    <th width="5%"><span class="pull-right">Aksi</span></th>
-                                </tr>
-                                </thead>
+                            <div class="box-body">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th>SUB SEKTOR</th>
+                                        <th width="5%"><span class="pull-right">Aksi</span></th>
+                                    </tr>
+                                    </thead>
 
-                                <tbody data-list-3="advertising/categories" class="adv-cat">
-                                <tr><td colspan="3">...</td></tr>
-                                </tbody>
-
-                            </table>
+                                    <tbody id="subSektorTable">
+                                        <tr><td colspan="3">...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
                     {#ADD MODAL#}
-                    <div data-modal-add="advertising/categories" class="clients add-modal modal" role="dialog">
+                    <div id="" class="clients add-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -151,48 +150,7 @@
                     </div><!-- /.modal -->
                     {#END ADD MODAL#}
 
-                    {#DETAIL MODAL#}
-                    <div data-modal-detail="advertising/categories" class="clients detail-modal modal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail Kategori Iklan</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form role="form" class="clients detail form">
-                                        <div class="box-body">
-                                            <div class="form-group">
-                                                <label>Kategori Induk</label>
-                                                <select name="parent" data-object="advertising/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
-                                                    <option selected>Loading...</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="name">Kategori</label>
-                                                <input type="text" name="name" class="form-control" id="name">
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="id" id="id">
-                                        <!-- /.box-body -->
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="clients edit btn btn-flat btn-danger">Update</button>
-                                </div>
-                            </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
-                    {#END DETAIL MODAL#}
-
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer clearfix">
-                    <ul data-paging="advertising/categories" class="clients pagination pagination-sm no-margin pull-right"></ul>
-                </div>
-            </div>
-            <!-- /.box -->
+                </div> {#end box body#}
         </div>
     </div>
 {%- endblock -%}

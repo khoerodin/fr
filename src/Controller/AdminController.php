@@ -13,8 +13,6 @@ class AdminController extends AbstractController
             'menus' => json_decode($this->fetch('menus'),true),
         ];
 
-        //var_dump($autoLoad);die();
-
         return $this->renderResponse($view, array_merge($autoLoad, $variables));
     }
 }

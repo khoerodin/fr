@@ -12,7 +12,7 @@ $.fn.extend({
         //Now, find all the checkboxes and append their "checked" state to the results.
         this.find('input[type=checkbox]').each(function(id, item) {
             var $item = $(item);
-            results.push({name: $item.attr('name'), value: $item.is(":checked") ? true : false});
+            results.push({name: $item.attr('name'), value: !!$item.is(":checked")});
         });
         return results;
     }
@@ -78,7 +78,7 @@ function getAllElementsWithAttribute(attribute)
     return matchingElements;
 }
 
-function simpleCrud(){
+function getGrid() {
     var elm = $(getAllElementsWithAttribute('sc-module'));
     $.each(elm, function (iE, vE) {
 
@@ -125,13 +125,24 @@ function simpleCrud(){
                     gridTable += '<th '+length+'>' + columnName + '</th>';
                 });
 
+                page = getQueryVariable('page');
                 gridTable += '<th width="7%"><span class="pull-right">ACTION</span></th>';
                 gridTable += '</tr>';
                 gridTable += '</thead>';
-                gridTable += '<tbody>';
+                gridTable += '<tbody sc-id="'+module+'">';
                 $.each(memberData, function (index, value) {
-                    gridTable += '<tr>';
-                    gridTable += '<td>####</td>';
+
+                    if (page > 1) {
+                        c = page - 1;
+                        p = 17 * c;
+                        no = index + 1 + p;
+                    } else {
+                        no = index + 1;
+                    }
+
+                    no = no;
+                    gridTable += '<tr id="'+value['id']+'">';
+                    gridTable += '<td>'+no+'</td>';
                     $.each(gridColumns, function (i, v) {
                         var columns = v.split('#')[1];
                         var column1 = columns.split(".")[0];
@@ -143,15 +154,33 @@ function simpleCrud(){
                             gridTable += '<td>'+value[column1]+'</td>';
                         }
                     });
-                    gridTable += '<td>####</td>';
+                    gridTable += '<td><span class="pull-right">';
+                    gridTable += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
+                    gridTable += '<button class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+                    gridTable += '</span></td>';
                     gridTable += '</tr>';
                 });
                 gridTable += '</tbody>';
 
                 $this.append(gridTable);
+                getDetail();
 
             }
         });
 
     });
+}
+
+function getDetail(module) {
+    $(document).on('click', 'tbody[sc-id="'+module+'"] .detail-btn', function () {
+        var id = $(this).closest('tr').attr('data-id');
+
+        jQuery('div[data-modal-detail="'+module+'"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
+        jQuery('div[data-modal-detail="'+module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
+        jQuery('div[data-modal-detail="'+module+'"]').modal({show: true, backdrop: 'static'});
+    });
+}
+
+function simpleCrud(){
+    getGrid();
 }

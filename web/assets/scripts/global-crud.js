@@ -70,8 +70,6 @@ function getAll(module, columns = [], tbody = 'data-list') {
         params: getQueryVariable()
     };
 
-    console.log(getQueryVariable());
-
     columnCount = columns.length+2;
 
     $.ajax({
@@ -82,7 +80,7 @@ function getAll(module, columns = [], tbody = 'data-list') {
             jQuery('tbody['+tbody+'="'+module+'"]').html('<tr><td colspan="'+columnCount+'">LOADING DATA...</td></tr>')
         },
         success: function (data, textStatus, jqXHR) {
-
+            console.log(data);
             arr = JSON.parse(data);
             if('hydra:member' in arr) {
                 $.each(arr, function (index, value) {

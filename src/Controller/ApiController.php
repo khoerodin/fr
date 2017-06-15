@@ -59,7 +59,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 $temps = [];
             }
 
-            $temps = array_merge($temps, array('order[id]' => 'DESC'));
+            $temps = array_merge($temps, array('order[createdAt]' => 'DESC'));
         } else {
             $temps = [];
         }
@@ -215,6 +215,8 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
             'advertising' => [
                 ['module' => 'advertising/ads'],
                 ['module' => 'advertising/categories'],
+                ['module' => 'advertising/customers'],
+                ['module' => 'advertising/prices'],
                 ['module' => 'advertising/layouts'],
                 ['module' => 'advertising/payment-methods'],
                 ['module' => 'advertising/positions'],

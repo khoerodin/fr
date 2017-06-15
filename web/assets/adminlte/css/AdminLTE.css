@@ -4989,16 +4989,33 @@ input#file-image {
   display: none;
 }
 
-.profile-image {
+.avatar-img {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  width: 200px;
-  height: 200px;
   background-position: center center;
   background-repeat: no-repeat;
+}
+
+.profile-image {
+  width: 200px;
+  height: 200px;
   border-radius: 100px;
   border: 3px solid #ccc;
+  cursor: pointer;
+}
+
+.big-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+}
+
+tr.active {
+  background-color: ;
+}
+
+#emitenTable tr:hover, #sektorTable tr:hover {
   cursor: pointer;
 }

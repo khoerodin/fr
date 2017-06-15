@@ -34,10 +34,8 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th width="30%">Kategori Induk</th>
+                            <th width="30%">Parent</th>
                             <th>Nama Kategori</th>
-                            <th>Kota</th>
-                            <th>Kode Pos</th>
                             <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>
@@ -60,24 +58,14 @@
                                     <form role="form" class="clients add form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Kategori Induk</label>
+                                                <label>Parent</label>
                                                 <select name="parent" data-object="helpdesk/categories#name" class="form-control select-add-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Kategori</label>
+                                                <label for="name">Nama Kategori</label>
                                                 <input type="text" name="name" class="form-control" id="name" placeholder="Name">
-                                            <div class="form-group">
-                                                    <label>Kota</label>
-                                                    <select name="city" data-object="cities#name" class="form-control select-add-modal">
-                                                        <option></option>
-                                                    </select>
-                                            </div>
-                                            <div class="form-group">
-                                                    <label for="postalCode">Kode Pos</label>
-                                                    <input type="text" name="postalCode" class="form-control" id="postalCode" placeholder="Kode Pos">
-                                            </div>
                                             </div>
                                         <!-- /.box-body -->
                                     </form>
@@ -103,24 +91,14 @@
                                     <form role="form" class="clients detail form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Kategori Induk</label>
-                                                <select name="parent" data-object="helpdesk/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
-                                                    <option selected>Loading...</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="name">Kategori</label>
-                                                <input type="text" name="name" class="form-control" id="name">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Kota</label>
-                                                <select name="city" data-object="cities#name" class="form-control select-add-modal">
+                                                <label>Parent</label>
+                                                <select name="parent" data-object="helpdesk/categories#name" class="form-control select-add-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="postalCode">Kode Pos</label>
-                                                <input type="text" name="postalCode" class="form-control" id="postalCode" placeholder="Kode Pos">
+                                                <label for="name">Nama Kategori</label>
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
                                             </div>
                                         </div>
                                         <input type="hidden" name="id" id="id">

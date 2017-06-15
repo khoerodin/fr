@@ -484,7 +484,6 @@ function editAction(module, id, params) {
                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', false);
                 toastr.error('Error when updating your data');
             } else if('id' in arr) {
-                //console.log(arr);
                 jQuery.each(columns, function (idx,val) {
                     kolom = idx+2;
                     jQuery.each(arr, function (i,v) {

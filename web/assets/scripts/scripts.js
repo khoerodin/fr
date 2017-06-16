@@ -48,7 +48,9 @@ $(document).on('click', '#sign-out', function () {
         type: "PUT",
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
-            location.href = '/login';
+            if(jqXHR.status == 200) {
+                location.href = '/login';
+            }
         }
     });
 });

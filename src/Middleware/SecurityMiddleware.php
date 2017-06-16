@@ -73,10 +73,6 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
                         ];
                     }
 
-                    /*echo "<pre>";
-                    print_r($modules);
-                    echo "</pre>";die();*/
-
                     $session->set('menus', $modules);
                 }
             }

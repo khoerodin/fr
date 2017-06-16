@@ -42,7 +42,6 @@ $(document).on('click', '#sign-in', function () {
     });
 });
 
-
 $(document).on('click', '#sign-out', function () {
     $.ajax({
         url: "/logout",

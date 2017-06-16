@@ -45,5 +45,9 @@ app:
         - { path: '/billing/groups', controller: 'Bisnis:BillingGroups@index', methods: ['GET'] }
         - { path: '/billing/identities', controller: 'Bisnis:BillingIdentities@index', methods: ['GET'] }
 
-        #cobatwig
-        - { path: '/cobatwig', controller: 'Bisnis:Banks@index', methods: ['GET'] }
+         #Helpdesk
+        - { path: '/helpdesk/categories', controller: 'Bisnis:HelpdeskCategories@index', methods: ['GET'] }
+        - { path: '/helpdesk/notifications', controller: 'Bisnis:HelpdeskNotifications@index', methods: ['GET'] }
+        - { path: '/helpdesk/staffs', controller: 'Bisnis:HelpdeskStaffs@index', methods: ['GET'] }
+        - { path: '/helpdesk/ticket-responses', controller: 'Bisnis:HelpdeskTicketResponses@index', methods: ['GET'] }
+        - { path: '/helpdesk/tickets', controller: 'Bisnis:HelpdeskTickets@index', methods: ['GET'] }

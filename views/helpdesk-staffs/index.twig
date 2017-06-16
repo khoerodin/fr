@@ -3,12 +3,11 @@
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
     <script>
-        window.module = 'representatives';
+        window.module = 'helpdesk/staffs';
         window.field = 'name';
         var columns = [
-            'code',
-            'name',
-            'address'
+            'parent.name',
+            'name'
         ];
     </script>
 {% endblock %}
@@ -19,13 +18,13 @@
             <div class="box">
                 <div class="box-header row">
                     <div class="col-md-12 search-area transition">
-                        <select data-placeholder="CARI NAMA" class="search-name form-control select2" style="width: 100%;">
+                        <select data-placeholder="CARI NAMA KATEGORI HELPDESK" class="search-name form-control select2" style="width: 100%;">
                             <option></option>
                         </select>
                     </div>
 
                     <div class="button-area transition">
-                        <a href="JavaScript:Void(0);" data-btn-add="representatives" style="visibility: hidden;" class="add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                        <a href="JavaScript:Void(0);" data-btn-add="helpdesk/staffs" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
                     </div>
                     &nbsp;&nbsp;&nbsp;
                 </div>
@@ -35,41 +34,38 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th>Kode</th>
-                            <th>Nama</th>
-                            <th>Alamat</th>
+                            <th width="30%">Kategori Induk</th>
+                            <th>Nama Kategori</th>
                             <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>
 
-                        <tbody data-list="representatives">
-                            <tr><td colspan="5">...</td></tr>
+                        <tbody data-list="helpdesk/staffs">
+                        <tr><td colspan="4">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>
 
                     {#ADD MODAL#}
-                    <div data-modal-add="representatives" class="add-modal modal" role="dialog">
+                    <div data-modal-add="helpdesk/staffs" class="clients add-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Tambah Representative</h4>
+                                    <h4 class="modal-title">Tambah Kategori Helpdesk</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="add form">
+                                    <form role="form" class="clients add form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label for="code">Kode</label>
-                                                <input type="text" name="code" class="form-control" id="code" placeholder="Kode">
+                                                <label>Kategori Induk</label>
+                                                <select name="parent" data-object="helpdesk/staffs#name" class="form-control select-add-modal">
+                                                    <option></option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Nama</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Nama">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="address">Alamat</label>
-                                                <input type="text" name="address" class="form-control" id="address" placeholder="Alamat">
+                                                <label for="name">Kategori</label>
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -77,7 +73,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="save btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="clients save btn btn-flat btn-danger">Save</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -85,47 +81,47 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div data-modal-detail="representatives" class="detail-modal modal" tabindex="-1" role="dialog">
+                    <div data-modal-detail="helpdesk/staffs" class="clients detail-modal modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail Representative</h4>
+                                    <h4 class="modal-title">Detail Kategori Helpdesk</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="detail form">
+                                    <form role="form" class="clients detail form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label for="code">Kode</label>
-                                                <input type="text" name="code" class="form-control" id="code" placeholder="Kode">
+                                                <label>Kategori Induk</label>
+                                                <select name="parent" data-object="helpdesk/staffs#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                    <option selected>Loading...</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Nama</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Nama">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="address">Alamat</label>
-                                                <input type="text" name="address" class="form-control" id="address" placeholder="Alamat">
+                                                <label for="name">Kategori</label>
+                                                <input type="text" name="name" class="form-control" id="name">
                                             </div>
                                         </div>
                                         <input type="hidden" name="id" id="id">
+                                        <!-- /.box-body -->
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="clients edit btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
                     {#END DETAIL MODAL#}
 
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <ul data-paging="helpdesk/staffs" class="clients pagination pagination-sm no-margin pull-right"></ul>
+                </div>
             </div>
-            <!-- /.box-body -->
-            <div class="box-footer clearfix">
-                <ul data-paging="representatives" class="pagination pagination-sm no-margin pull-right"></ul>
-            </div>
+            <!-- /.box -->
         </div>
-        <!-- /.box -->
     </div>
 {%- endblock -%}

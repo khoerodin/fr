@@ -18,9 +18,9 @@ $(document).on('change', '.loginState', function () {
     userId = $(this).attr('data-id');
 
     if ($(this).is(':checked')){
-        checkValue = 1;
+        checkValue = true;
     } else {
-        checkValue = 0;
+        checkValue = false;
     }
 
     var check = {
@@ -94,8 +94,7 @@ function getRoles(userId, pageNum = '') {
 
     $.when(ajax1, ajax2).done(function(a1, a2){
 
-        if((a2[1] === 'success' && a2[1] === 'success')) {
-
+        if((a1[1] === 'success' && a2[1] === 'success')) {
             var data2 = JSON.parse(a2[0]);
             roles = [];
             $.each(data2['hydra:member'], function (idx, val) {
@@ -114,7 +113,7 @@ function getRoles(userId, pageNum = '') {
             var data1 = JSON.parse(a1[0]);
             $.each(data1['hydra:member'], function (idx, val) {
                 if ('undefined' !== typeof roles[val.id]) {
-                    userRoles[val.id] = {
+                    userRoles[idx] = {
                         moduleName: roles[val.id].moduleName,
                         module: roles[val.id].module,
                         viewable: roles[val.id].viewable,
@@ -124,7 +123,7 @@ function getRoles(userId, pageNum = '') {
                         roleId: roles[val.id].roleId
                     };
                 } else {
-                    userRoles[val.id] = {
+                    userRoles[idx] = {
                         moduleName: val.name,
                         module: val.id,
                         viewable: false,
@@ -159,6 +158,7 @@ function getRoles(userId, pageNum = '') {
                 }
             });
             jQuery('ul[data-paging="roles"].pagination').empty().html(paging);
+
 
             rolesResponse(userRoles, userId, pageNum);
         }
@@ -220,8 +220,6 @@ $(document).on('change', '.check-role', function () {
         module
     ];
 
-    console.log(params);
-
     var data = {
         module : mod,
         method : method,
@@ -253,9 +251,9 @@ function rolesResponse(data,userId,page) {
             if(page > 1) {
                 c = page - 1;
                 p = 17 * c;
-                no = index+1+p-1;
+                no = index+1+p;
             } else {
-                no = index-1;
+                no = index-3;
             }
 
             rolesCheck += '<tr id="'+value.module+'" data-role="'+value.roleId+'"><td>'+no+'</td>';

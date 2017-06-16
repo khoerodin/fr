@@ -62,7 +62,7 @@ function changeUrlParam (param, value) {
 }
 
 // get all data
-function getAll(module, columns = []) {
+function getAll(module, columns = [], tbody = 'data-list') {
 
     var data = {
         module : module,
@@ -77,10 +77,10 @@ function getAll(module, columns = []) {
         type: "POST",
         data: data,
         beforeSend: function () {
-            jQuery('tbody[data-list="'+module+'"]').html('<tr><td colspan="'+columnCount+'">LOADING DATA...</td></tr>')
+            jQuery('tbody['+tbody+'="'+module+'"]').html('<tr><td colspan="'+columnCount+'">LOADING DATA...</td></tr>')
         },
         success: function (data, textStatus, jqXHR) {
-
+            console.log(data);
             arr = JSON.parse(data);
             if('hydra:member' in arr) {
                 $.each(arr, function (index, value) {
@@ -158,7 +158,7 @@ function getAll(module, columns = []) {
                             tr += '</span></td>';
                             tr += '</tr>';
                         });
-                        jQuery('tbody[data-list="' + module + '"]').html(tr);
+                        jQuery('tbody['+tbody+'="' + module + '"]').html(tr);
                     }
 
                     if (index === 'hydra:view') {
@@ -205,14 +205,14 @@ function getAll(module, columns = []) {
 
                     if (index === 'hydra:totalItems') {
                         if (value < 1) {
-                            jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33">TIDAK ADA DATA</td></tr>');
+                            jQuery('tbody['+tbody+'="' + module + '"]').html('<tr><td colspan="33">TIDAK ADA DATA</td></tr>');
                         }
                     }
 
                 });
             } else {
                 toastr.error('Error when getting your data');
-                jQuery('tbody[data-list="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR KETIKA MENGAMBIL DATA</span></td></tr>');
+                jQuery('tbody['+tbody+'="' + module + '"]').html('<tr><td colspan="33"><span class="text-danger">ERROR KETIKA MENGAMBIL DATA</span></td></tr>');
             }
 
         },
@@ -482,7 +482,6 @@ function editAction(module, id, params) {
                 jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', false);
                 toastr.error('Error when updating your data');
             } else if('id' in arr) {
-                //console.log(arr);
                 jQuery.each(columns, function (idx,val) {
                     kolom = idx+2;
                     jQuery.each(arr, function (i,v) {
@@ -638,10 +637,10 @@ jQuery(function($) {
         jQuery('div[data-modal-detail="'+window.module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
         jQuery('div[data-modal-detail="'+window.module+'"]').modal({show: true, backdrop: 'static'});
 
-        if (module !== 'user-activities') {
-            detail(module, id);
-        } else {
+        if (module === 'user-activities') {
             detailUserActivities(id);
+        } else {
+            detail(module, id);
         }
 
         changeUrlParam(field.split('-')[0], text);
@@ -705,10 +704,10 @@ jQuery(function($) {
         jQuery('div[data-modal-detail="'+window.module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
         jQuery('div[data-modal-detail="'+window.module+'"]').modal({show: true, backdrop: 'static'});
 
-        if (module !== 'user-activities') {
-            detail(module, id);
-        } else {
+        if (module === 'user-activities') {
             detailUserActivities(id);
+        } else {
+            detail(module, id);
         }
     });
 

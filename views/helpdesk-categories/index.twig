@@ -1,0 +1,126 @@
+{% extends 'layout.twig' %}
+
+{% block js %}
+    <script src="/assets/scripts/global-crud.js"></script>
+    <script>
+        window.module = 'helpdesk/categories';
+        window.field = 'name';
+        var columns = [
+            'parent.name',
+            'name',
+            'city.name',
+            'postalCode'
+        ];
+    </script>
+{% endblock %}
+
+{%- block content -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header row">
+                    <div class="col-md-12 search-area transition">
+                        <select data-placeholder="CARI NAMA KATEGORI HELPDESK" class="search-name form-control select2" style="width: 100%;"></select>
+                    </div>
+
+                    <div class="button-area transition">
+                        <a href="JavaScript:Void(0);" data-btn-add="helpdesk/categories" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th width="5%">#</th>
+                            <th width="30%">Parent</th>
+                            <th>Nama Kategori</th>
+                            <th width="5%"><span class="pull-right">Aksi</span></th>
+                        </tr>
+                        </thead>
+
+                        <tbody data-list="helpdesk/categories">
+                        <tr><td colspan="6">LOADING DATA...</td></tr>
+                        </tbody>
+
+                    </table>
+
+                    {#ADD MODAL#}
+                    <div data-modal-add="helpdesk/categories" class="add-modal modal" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Tambah Kategori Helpdesk</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" class="clients add form">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label>Parent</label>
+                                                <select name="parent" data-object="helpdesk/categories#name" class="form-control select-add-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="name">Nama Kategori</label>
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                            </div>
+                                        <!-- /.box-body -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="save btn btn-flat btn-danger">Save</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    {#END ADD MODAL#}
+
+                    {#DETAIL MODAL#}
+                    <div data-modal-detail="helpdesk/categories" class="detail-modal modal" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Detail Kategori Helpdesk</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" class="clients detail form">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label>Parent</label>
+                                                <select name="parent" data-object="helpdesk/categories#name" class="form-control select-add-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="name">Nama Kategori</label>
+                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="id" id="id">
+                                        <!-- /.box-body -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    {#END DETAIL MODAL#}
+
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <ul data-paging="helpdesk/categories" class="pagination pagination-sm no-margin pull-right"></ul>
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{%- endblock -%}

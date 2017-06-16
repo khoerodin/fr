@@ -33,7 +33,9 @@ class LoginController extends AbstractController
 
     public function logoutAction()
     {
-        $this->request('logout', 'put', []);
+        $response = $this->request('logout', 'put', []);
         $this->client->removeAll();
+
+        return $response;
     }
 }

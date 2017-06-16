@@ -10,7 +10,7 @@ class AdminController extends AbstractController
     {
         $autoLoad = [
             'me' => json_decode($this->fetch('me')),
-            'menus' => json_decode($this->fetch('menus'),true),
+            'menus' => $this->fetch('menus'),
         ];
 
         return $this->renderResponse($view, array_merge($autoLoad, $variables));

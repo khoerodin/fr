@@ -2,7 +2,7 @@
 
 //for development only
 ini_set('display_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ERROR | E_PARSE);
 //end for development only
 
 require __DIR__.'/../vendor/autoload.php';

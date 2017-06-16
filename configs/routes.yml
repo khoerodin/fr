@@ -8,7 +8,7 @@ app:
         - { path: '/api', controller: 'Bisnis:Api@call', methods: ['POST'] }
         - { path: '/api/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
         - { path: '/api/roles', controller: 'Bisnis:Api@getRole', methods: ['POST'] }
-        - { path: '/api/menus', controller: 'Bisnis:Api@menus', methods: ['POST'] }
+#        - { path: '/api/menus', controller: 'Bisnis:Api@menus', methods: ['POST'] }
 
         #Profile
         - { path: '/profile', controller: 'Bisnis:Profile@index', methods: ['GET'] }

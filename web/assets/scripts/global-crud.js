@@ -80,7 +80,6 @@ function getAll(module, columns = [], tbody = 'data-list') {
             jQuery('tbody['+tbody+'="'+module+'"]').html('<tr><td colspan="'+columnCount+'">LOADING DATA...</td></tr>')
         },
         success: function (data, textStatus, jqXHR) {
-            console.log(data);
             arr = JSON.parse(data);
             if('hydra:member' in arr) {
                 $.each(arr, function (index, value) {
@@ -408,7 +407,6 @@ function detail(module,id) {
                         } else if (value === false || value === 'undefined') {
                             jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');
                         } else {
-                            //console.log(value);
                             jQuery('div[data-modal-detail="' + module + '"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                             jQuery('div[data-modal-detail="' + module + '"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                             jQuery('div[data-modal-detail="' + module + '"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
@@ -660,7 +658,7 @@ jQuery(function($) {
     // Add form
     $(document).on('click', 'a[data-btn-add="'+window.module+'"]', function () {
         var searchTerms = localStorage.getItem("searchTerms");
-        console.log(searchTerms);
+
         $('input#'+field).val(searchTerms);
 
         var inputDate = jQuery('input.add-datetime');

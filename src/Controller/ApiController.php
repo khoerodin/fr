@@ -209,9 +209,16 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $response = json_decode($this->fetch('menus'),true)['hydra:member'];
         $modules = array();
         foreach ($response as $key => $value) {
+            $name = $value['module']['name'];
+            $group = $value['module']['group'];
+            $description = $value['module']['description'];
+            $path = str_replace('/api/', '', $value['module']['path']);
+            $conCls = $value['module']['iconCls'];
+
             $modules[] = [
                 'name' => $value['module']['name'],
                 'group' => $value['module']['group'],
+                'description' => $value['module']['description'],
                 'path' => str_replace('/api/', '', $value['module']['path']),
                 'iconCls' => $value['module']['iconCls'],
             ];

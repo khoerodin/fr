@@ -83,9 +83,9 @@ function getGrid() {
     $.each(elm, function (iE, vE) {
 
         var $this = $(vE);
-        var module = $this.attr('sc-module');
+        var module = $this.attr('sc-module').trim();
         var grid = $this.attr('sc-grid');
-        var searchField = $this.attr('sc-search');
+        var searchField = $this.attr('sc-search').trim();
 
         var gridColumns = grid.split(',');
         var data = {
@@ -113,7 +113,7 @@ function getGrid() {
                 gridTable += '<th width="3%">#</th>';
 
                 $.each(gridColumns, function (indexColumn, valueColumn) {
-                    var headColumn = valueColumn.split('#')[0];
+                    var headColumn = valueColumn.split('#')[1];
                     if (headColumn.indexOf(".") != -1) {
                         columnName = headColumn.split('.')[0];
                         length = 'width="'+headColumn.split('.')[1]+'%"';
@@ -144,7 +144,7 @@ function getGrid() {
                     gridTable += '<tr id="'+value['id']+'">';
                     gridTable += '<td>'+no+'</td>';
                     $.each(gridColumns, function (i, v) {
-                        var columns = v.split('#')[1];
+                        var columns = v.split('#')[0];
                         var column1 = columns.split(".")[0];
                         var column2 = columns.split(".")[1];
 
@@ -162,8 +162,24 @@ function getGrid() {
                 });
                 gridTable += '</tbody>';
 
-                $this.append(gridTable);
-                getDetail();
+                var modal  = '<div id="'+module+'DetailModal" class="modal" role="dialog">';
+                    modal += '  <div class="modal-dialog modal-lg">';
+                    modal += '      <div class="modal-content">';
+                    modal += '          <div class="modal-header">';
+                    modal += '              <button type="button" class="close" data-dismiss="modal">&times;</button>';
+                    modal += '              <h4 class="modal-title">Detail '+module+'</h4>';
+                    modal += '          </div>';
+                    modal += '          <div class="modal-body"><div>';
+                    modal += '          <div class="modal-footer">';
+                    modal += '              <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>';
+                    modal += '              <button type="button" class="btn btn-flat btn-danger">Close</button>';
+                    modal += '          <div>';
+                    modal += '       </div>';
+                    modal += '   </div>';
+                    modal += '</div>';
+
+                $this.html(gridTable+modal);
+                getDetail(module);
 
             }
         });
@@ -174,10 +190,9 @@ function getGrid() {
 function getDetail(module) {
     $(document).on('click', 'tbody[sc-id="'+module+'"] .detail-btn', function () {
         var id = $(this).closest('tr').attr('data-id');
-
-        jQuery('div[data-modal-detail="'+module+'"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
-        jQuery('div[data-modal-detail="'+module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
-        jQuery('div[data-modal-detail="'+module+'"]').modal({show: true, backdrop: 'static'});
+        jQuery('div#'+module+'DetailModal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
+        jQuery('div#'+module+'DetailModal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
+        jQuery('div#'+module+'DetailModal').modal({show: true, backdrop: 'static'});
     });
 }
 

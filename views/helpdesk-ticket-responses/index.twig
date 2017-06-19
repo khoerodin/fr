@@ -34,8 +34,11 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th width="30%">Kategori Induk</th>
-                            <th>Nama Kategori</th>
+                            <th width="30%">Respon</th>
+                            <th>Nama Staf</th>
+                            <th>Tiket</th>
+                            <th>Nama Klien</th>
+                            <th>Pesan</th>
                             <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>
@@ -58,14 +61,32 @@
                                     <form role="form" class="clients add form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Kategori Induk</label>
-                                                <select name="parent" data-object="helpdesk/ticket-responses#name" class="form-control select-add-modal">
+                                                <label>Respon</label>
+                                                <select name="parent" data-object="helpdesk/ticket-responses#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                    <option selected>Loading...</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Staff</label>
+                                                <select name="parent" data-object="helpdesk/staffs#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                    <option selected></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ticket">Tiket</label>
+                                                <select name="ticket" data-object="helpdesk/tickets#name" data-selected="tickets#name" class="form-control select-edit-modal">
+                                                    <option selected></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Nama Klien</label>
+                                                <select name="name" data-object="clients#name" data-selected="client#name" class="form-control select-edit-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Kategori</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                                <label for="message">Pesan</label>
+                                                <textarea name="message" class="form-control" id="message" placeholder="Pesan"></textarea>
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -92,15 +113,34 @@
                                     <form role="form" class="clients detail form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Kategori Induk</label>
+                                                <label>Respon</label>
                                                 <select name="parent" data-object="helpdesk/ticket-responses#name" data-selected="parent#name" class="form-control select-edit-modal">
                                                     <option selected>Loading...</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Kategori</label>
-                                                <input type="text" name="name" class="form-control" id="name">
+                                                <label>Staff</label>
+                                                <select name="parent" data-object="helpdesk/staffs#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                    <option selected></option>
+                                                </select>
                                             </div>
+                                            <div class="form-group">
+                                                <label for="ticket">Tiket</label>
+                                                <select name="ticket" data-object="helpdesk/tickets#name" data-selected="tickets#name" class="form-control select-edit-modal">
+                                                    <option selected></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Nama Klien</label>
+                                                <select name="name" data-object="clients#name" data-selected="client#name" class="form-control select-edit-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                                <div class="form-group">
+                                                <label for="message">Pesan</label>
+                                                <textarea name="message" class="form-control" id="message" placeholder="Pesan"></textarea>
+                                        </div>
                                         </div>
                                         <input type="hidden" name="id" id="id">
                                         <!-- /.box-body -->

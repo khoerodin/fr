@@ -7,7 +7,7 @@
         window.field = 'name';
         var columns = [
             'parent.name',
-            'name'
+            'user.fullname'
         ];
     </script>
 {% endblock %}
@@ -34,8 +34,9 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th width="30%">User</th>
+                            <th width="30%">Pengguna</th>
                             <th>Kategori</th>
+                            <th>Nama Lengkap</th>
                             <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>
@@ -52,26 +53,30 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Tambah Kategori Helpdesk</h4>
+                                    <h4 class="modal-title">Tambah Staf Helpdesk</h4>
                                 </div>
                                 <div class="modal-body">
                                     <form role="form" class="clients add form">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label>Pengguna</label>
-                                                <select name="name" data-object="users#name" data-selected="user#name" class="form-control select-edit-modal">
+                                                <select name="user" data-object="users#username" class="form-control select-add-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label>Kategori</label>
-                                                <select name="parent" data-object="helpdesk/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                <select name="category" data-object="helpdesk/categories#name" class="form-control select-add-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="title">Judul</label>
                                                 <input type="text" name="title" class="form-control" id="title" placeholder="Judul">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="title">Nama Lengkap</label>
+                                                <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Nama Lengkap">
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
@@ -96,22 +101,31 @@
                                 </div>
                                 <div class="modal-body">
                                     <form role="form" class="clients detail form">
-                                        <div class="box-body">
-                                            <div class="form-group">
-                                                <label>Kategori Induk</label>
-                                                <select name="parent" data-object="helpdesk/staffs#name" data-selected="parent#name" class="form-control select-edit-modal">
-                                                    <option selected>Loading...</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="name">Kategori</label>
-                                                <input type="text" name="name" class="form-control" id="name">
-                                            </div>
+                                        <div class="form-group">
+                                            <label>Pengguna</label>
+                                            <select name="user" data-object="users#username" data-selected="user#username" class="form-control select-edit-modal">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Kategori</label>
+                                            <select name="parent" data-object="helpdesk/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="title">Judul</label>
+                                            <input type="text" name="title" class="form-control" id="title" placeholder="Judul">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="title">Nama Lengkap</label>
+                                            <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Nama Lengkap">
                                         </div>
                                         <input type="hidden" name="id" id="id">
                                         <!-- /.box-body -->
                                     </form>
                                 </div>
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
                                     <button type="button" class="clients edit btn btn-flat btn-danger">Update</button>

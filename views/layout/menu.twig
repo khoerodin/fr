@@ -13,106 +13,41 @@
                 </div>
             </div>#}
 
-            <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
-                <li class="treeview active hidden">
-                    <a href="javascript:void(0)" data-catagory="administration">
-                        <i class="fa fa-files-o"></i>
-                        <span>ADMIN</span>
-                    </a>
-                    <ul class="treeview-menu">
-                        {%- for menu in menus['hydra:member'] -%}
-                            {%- if
-                            (
-                                menu.module.path|replace({'/api/': ''}) == 'users' or
-                                menu.module.path|replace({'/api/': ''}) == 'clients' or
-                                menu.module.path|replace({'/api/': ''}) == 'user-activities' or
-                                menu.module.path|replace({'/api/': ''}) == 'modules' or
-                                menu.module.path|replace({'/api/': ''}) == 'cities' or
-                                menu.module.path|replace({'/api/': ''}) == 'banks' or
-                                menu.module.path|replace({'/api/': ''}) == 'representatives'
-                            )
-                            and menu.viewable != false
-                            -%}
-                        <li>
-                            <a href="/{{- menu.module.path|replace({'/api/': ''}) -}}">
-                                <i class="fa fa-circle-o"></i>
-                                {{- menu.module.name -}}
-                            </a>
-                        </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li class="treeview active hidden">
-                    <a href="javascript:void(0)" data-catagory="billing">
-                        <i class="fa fa-credit-card"></i>
-                        <span>TAGIHAN</span>
-                    </a>
-                    <ul class="treeview-menu">
-                        {%- for menu in menus['hydra:member'] -%}
-                            {%- if
-                            (
-                            menu.module.path|replace({'/api/': ''}) == 'billing/areas' or
-                            menu.module.path|replace({'/api/': ''}) == 'billing/identities' or
-                            menu.module.path|replace({'/api/': ''}) == 'billing/groups'
-                            )
-                            and menu.viewable != false
-                            -%}
-                                <li>
-                                    <a href="/{{- menu.module.path|replace({'/api/': ''}) -}}">
-                                        <i class="fa fa-circle-o"></i>
-                                        {{- menu.module.name -}}
-                                    </a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li class="treeview active hidden">
-                    <a href="javascript:void(0)" data-catagory="advertising">
-                        <i class="fa fa-file-image-o"></i>
-                        <span>PERIKLANAN</span>
-                    </a>
+                {% for key, category in menus %}
+                    <li class="treeview active hidden">
+                        <a href="javascript:void(0)" title="{{ key|upper }}">
+                            <i class="fa fa-file-image-o"></i>
+                            <span>{{ key|upper }}</span>
+                        </a>
 
-                    <ul class="treeview-menu hidden">
-                        <li class="treeview active">
-                            <a href="javascript:void(0)" data-category="advertising"><i class="fa fa-circle-o"></i> MASTER
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                {%- for menu in menus['hydra:member'] -%}
-                                        {%- if
-                                    (
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/ads' or
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/categories' or
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/customers' or
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/prices' or
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/layouts' or
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/positions' or
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/payment-methods' or
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/specifications' or
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/specification-details' or
-                                    menu.module.path|replace({'/api/': ''}) == 'advertising/types'
-                                    )
-                                    and menu.viewable != false
-                                    -%}
-                                        <li>
-                                            <a href="/{{- menu.module.path|replace({'/api/': ''}) -}}">
-                                                <i class="fa fa-circle-o"></i>
-                                                {{- menu.module.name -}}
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
+                        <ul class="treeview-menu hidden">
+                            {% for noduleKey, module in category %}
+                            <li class="treeview active">
+                                <a href="javascript:void(0)" title="{{ noduleKey|upper }}">
+                                    <i class="fa fa-circle-o"></i> {{ noduleKey|upper }}
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    {% for menuKey, menu in module %}
+                                    <li>
+                                        <a href="/{{ menu.path }}" title="{{ menu.name|upper }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            {{ menu.name|upper }}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+
+
             </ul>
         </section>
-        <!-- /.sidebar -->
     </aside>
 {%- endspaceless -%}

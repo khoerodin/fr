@@ -59,7 +59,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 $temps = [];
             }
 
-            $temps = array_merge($temps, array('order[createdAt]' => 'DESC'));
+            $temps = array_merge($temps, array('order[id]' => 'DESC'));
         } else {
             $temps = [];
         }
@@ -199,41 +199,6 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         return new Response($response->getContent());
     }
 
-    private function menusCategoryAction($key)
-    {
-        $array = [
-            'administration' => [
-                ['module' => 'modules'],
-                ['module' => 'users'],
-                ['module' => 'user-activities'],
-                ['module' => 'clients'],
-                ['module' => 'settings'],
-                ['module' => 'cities'],
-                ['module' => 'banks'],
-                ['module' => 'representatives'],
-            ],
-            'advertising' => [
-                ['module' => 'advertising/ads'],
-                ['module' => 'advertising/categories'],
-                ['module' => 'advertising/customers'],
-                ['module' => 'advertising/prices'],
-                ['module' => 'advertising/layouts'],
-                ['module' => 'advertising/payment-methods'],
-                ['module' => 'advertising/positions'],
-                ['module' => 'advertising/specifications'],
-                ['module' => 'advertising/types'],
-                ['module' => 'advertising/specification-details']
-            ],
-            'billing' => [
-                ['module' => 'billing/areas'],
-                ['module' => 'billing/identities'],
-                ['module' => 'billing/groups'],
-            ],
-        ];
-
-        return $array[$key];
-    }
-
     /**
      * @param Request $request
      *
@@ -241,24 +206,22 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
      */
     public function menusAction(Request $request)
     {
-        $category = $request->get('category');
         $response = json_decode($this->fetch('menus'),true)['hydra:member'];
-
         $modules = array();
         foreach ($response as $key => $value) {
-
+            $name = $value['module']['name'];
+            $group = $value['module']['group'];
+            $description = $value['module']['description'];
             $path = str_replace('/api/', '', $value['module']['path']);
+            $conCls = $value['module']['iconCls'];
 
-            foreach ($this->menusCategoryAction($category) as $module) {
-                if($module['module'] == $path && $value['viewable'] != false) {
-                    $modules[] = [
-                        'name' => $value['module']['name'],
-                        'path' => str_replace('/api/', '', $value['module']['path']),
-                        'iconCls' => $value['module']['iconCls'],
-                    ];
-                }
-            }
-
+            $modules[] = [
+                'name' => $value['module']['name'],
+                'group' => $value['module']['group'],
+                'description' => $value['module']['description'],
+                'path' => str_replace('/api/', '', $value['module']['path']),
+                'iconCls' => $value['module']['iconCls'],
+            ];
         }
 
         return new JsonResponse($modules);
@@ -267,7 +230,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
     public function callImageAction($path, Request $request)
     {
         $response = $this->request(sprintf('%s/%s.%s', 'files', $path, $request->query->get('ext')), 'get');
-        if (Response::HTTP_NOT_FOUND === $response) {
+        if (Response::HTTP_NOT_FOUND === $response->getStatusCode()) {
             $filePath = sprintf('%s/web/img/default_avatar.png', $this->container['project_dir']);
 
             $response->setContent(file_get_contents($filePath));

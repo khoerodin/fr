@@ -56,18 +56,18 @@ jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function
     jQuery('tbody#roles-check').html('<tr><td colspan="6">Loading...</td></tr>');
 });
 
-function getRoles(userId, pageNum = '') {
+function getRoles(userId, pageNum) {
     var moduleData = {
         module: 'modules',
         method: 'get',
         params: [{'page': pageNum}]
-    }
+    };
 
     var roleData = {
         module: 'roles',
         method: 'get',
         params: [{'user.id': userId}]
-    }
+    };
 
     var modules;
     var roles;

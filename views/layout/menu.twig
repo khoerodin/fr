@@ -22,10 +22,10 @@
                         </a>
 
                         <ul class="treeview-menu hidden">
-                            {% for noduleKey, module in category %}
+                            {% for moduleKey, module in category %}
                             <li class="treeview active">
-                                <a href="javascript:void(0)" title="{{ noduleKey|upper }}">
-                                    <i class="fa fa-circle-o"></i> {{ noduleKey|upper }}
+                                <a href="javascript:void(0)" title="{{ moduleKey|upper }}">
+                                    <i class="fa fa-circle-o"></i> {{ moduleKey|upper }}
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right"></i>
                                     </span>

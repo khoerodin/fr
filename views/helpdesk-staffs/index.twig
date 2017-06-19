@@ -34,8 +34,8 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th width="30%">Kategori Induk</th>
-                            <th>Nama Kategori</th>
+                            <th width="30%">User</th>
+                            <th>Kategori</th>
                             <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>
@@ -58,14 +58,20 @@
                                     <form role="form" class="clients add form">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Kategori Induk</label>
-                                                <select name="parent" data-object="helpdesk/staffs#name" class="form-control select-add-modal">
+                                                <label>Pengguna</label>
+                                                <select name="name" data-object="users#name" data-selected="user#name" class="form-control select-edit-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Kategori</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                                                <label>Kategori</label>
+                                                <select name="parent" data-object="helpdesk/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="title">Judul</label>
+                                                <input type="text" name="title" class="form-control" id="title" placeholder="Judul">
                                             </div>
                                         </div>
                                         <!-- /.box-body -->

@@ -6,11 +6,13 @@
         window.module = 'helpdesk/tickets';
         window.field = 'name';
         var columns = [
-            'code',
-            'name',
-            'city.name',
-            'postalCode',
-            'phoneNumber'
+            'client.name',
+            'staff.fullname',
+            'category.name',
+            'tittle',
+            'message',
+            'priority',
+            'status'
         ];
     </script>
 {% endblock %}

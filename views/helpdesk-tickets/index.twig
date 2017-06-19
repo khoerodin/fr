@@ -6,11 +6,12 @@
         window.module = 'helpdesk/tickets';
         window.field = 'name';
         var columns = [
-            'code',
-            'name',
-            'city.name',
-            'postalCode',
-            'phoneNumber'
+            'staff.name',
+            'parent.name',
+            'title',
+            'message',
+            'priority',
+            'status'
         ];
     </script>
 {% endblock %}
@@ -81,7 +82,7 @@
                                             <div class="form-group">
                                                 <label>Kategori</label>
                                                 <select name="parent" data-object="helpdesk/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
-                                                    <option selected>Loading...</option>
+                                                    <option selected></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">

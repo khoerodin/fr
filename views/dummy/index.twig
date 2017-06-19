@@ -2,18 +2,60 @@
 
 {% block js %}
     <script src="/assets/scripts/master-crud.js"></script>
+    <script>
+        $('#clientsCrud').simpleCrud({
+            module: 'clients',
+            gridTable: [
+                {
+                    field: 'name',
+                    header: 'Nama',
+                    width: '20%',
+                },
+                {
+                    field: 'email',
+                    header: 'Email',
+                },
+                {
+                    field: 'apiKey',
+                    header: 'Api Key',
+                },
+                {
+                    field: 'user.fullname',
+                    header: 'Nama',
+                },
+            ],
+            detailForm: [
+                {
+                    field: 'name',
+                    label: 'Nama',
+                    form: 'inputText',
+                },
+                {
+                    field: 'email',
+                    label: 'Email',
+                    form: 'inputEmail',
+                },
+                {
+                    field: 'apiKey',
+                    label: 'Api Key',
+                    form: 'inputText',
+                },
+                {
+                    field: 'user.fullname',
+                    label: 'User',
+                    form: 'inputText',
+                },
+            ]
+        });
+    </script>
 {% endblock %}
 
 {%- block content -%}
     <div class="row">
         <div class="col-md-12">
             <div class="box">
-                <div class="box-body"
-                     sc-module="clients"
-                     sc-grid="name#Nama,email#Email,apiKey#API Key,user.fullname#User"
-                     sc-detail="inputText#name#Nama,inputEmail#email#Email,inputText#apiKey#API Key,user.fullname#User"
-                     sc-search="name"
-                ></div>
+                <div id="clientsCrud" class="box-body"></div>
+            </div>
         </div>
     </div>
 {%- endblock -%}

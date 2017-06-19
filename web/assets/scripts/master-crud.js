@@ -1,5 +1,3 @@
-simpleCrud();
-
 //Store the reference to the original method:
 var _serializeArray = $.fn.serializeArray;
 
@@ -78,124 +76,130 @@ function getAllElementsWithAttribute(attribute)
     return matchingElements;
 }
 
-function getGrid() {
-    var elm = $(getAllElementsWithAttribute('sc-module'));
-    $.each(elm, function (iE, vE) {
+function getGrid(element, settings) {
+    var $this = element;
+    var module = settings.module;
+    var gridTable = settings.gridTable;
 
-        var $this = $(vE);
-        var module = $this.attr('sc-module').trim();
-        var grid = $this.attr('sc-grid');
-        var searchField = $this.attr('sc-search').trim();
+    var data = {
+        module : module,
+        method: 'get',
+        params: getQueryVariable()
+    };
 
-        var gridColumns = grid.split(',');
-        var data = {
-            module : module,
-            method: 'get',
-            params: getQueryVariable()
-        };
+    $.ajax({
+        url: "/api",
+        type: "POST",
+        data: data,
+        success: function (successData) {
+            var successData = JSON.parse(successData);
+            var memberData = successData['hydra:member'];
+            var totalData = successData['hydra:totalItems'];
+            var pagingData = successData['hydra:view'];
 
-        $.ajax({
-            url: "/api",
-            type: "POST",
-            data: data,
-            beforeSend: function () {
+            var table = '<table class="table table-striped table-bordered table-hover">';
+            table += '<thead>';
+            table += '<tr>';
+            table += '<th width="3%">#</th>';
 
-            },
-            success: function (successData) {
-                var successData = JSON.parse(successData);
-                var memberData = successData['hydra:member'];
-                var totalData = successData['hydra:totalItems'];
-                var pagingData = successData['hydra:view'];
+            $.each(gridTable, function (index, value) {
+                var header = value.header;
+                var field = value.field;
+                if (value.width !== undefined) {
+                    var columnWidth = 'width="'+value.width+'"';
+                } else {
+                    var columnWidth = '';
+                }
+                table += '<th '+columnWidth+'>' + header + '</th>';
+            });
 
-                var gridTable = '<table class="table table-striped table-bordered table-hover">';
-                gridTable += '<thead>';
-                gridTable += '<tr>';
-                gridTable += '<th width="3%">#</th>';
+            page = getQueryVariable('page');
+            table += '<th width="5%"><span class="pull-right">ACTION</span></th>';
+            table += '</tr>';
+            table += '</thead>';
+            table += '<tbody sc-id="'+module+'">';
+            page = getQueryVariable('page');
+            $.each(memberData, function (mIndex, mValue) {
+                if (page > 1) {
+                    c = page - 1;
+                    p = 17 * c;
+                    no = mIndex + 1 + p;
+                } else {
+                    no = mIndex + 1;
+                }
 
-                $.each(gridColumns, function (indexColumn, valueColumn) {
-                    var headColumn = valueColumn.split('#')[1];
-                    if (headColumn.indexOf(".") != -1) {
-                        columnName = headColumn.split('.')[0];
-                        length = 'width="'+headColumn.split('.')[1]+'%"';
+                no = no;
+                table += '<tr id="'+mValue['id']+'">';
+                table += '<td>'+no+'</td>';
+
+                $.each(gridTable, function (fIndex, fValue) {
+
+                    var column1 = fValue.field.split(".")[0];
+                    var column2 = fValue.field.split(".")[1];
+                    if(column2) {
+                        table += '<td>'+mValue[column1][column2]+'</td>';
                     } else {
-                        columnName = headColumn;
-                        length = '';
+                        table += '<td>'+mValue[column1]+'</td>';
                     }
 
-                    gridTable += '<th '+length+'>' + columnName + '</th>';
                 });
 
-                page = getQueryVariable('page');
-                gridTable += '<th width="7%"><span class="pull-right">ACTION</span></th>';
-                gridTable += '</tr>';
-                gridTable += '</thead>';
-                gridTable += '<tbody sc-id="'+module+'">';
-                $.each(memberData, function (index, value) {
+                table += '<td><span class="pull-right">';
+                table += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
+                table += '<button class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+                table += '</span></td>';
 
-                    if (page > 1) {
-                        c = page - 1;
-                        p = 17 * c;
-                        no = index + 1 + p;
-                    } else {
-                        no = index + 1;
-                    }
+                table += '</tr>';
+            });
 
-                    no = no;
-                    gridTable += '<tr id="'+value['id']+'">';
-                    gridTable += '<td>'+no+'</td>';
-                    $.each(gridColumns, function (i, v) {
-                        var columns = v.split('#')[0];
-                        var column1 = columns.split(".")[0];
-                        var column2 = columns.split(".")[1];
+            table += '</tbody>';
+            table += '</table>';
 
-                        if(value[column1] instanceof Object) {
-                            gridTable += '<td>'+value[column1][column2]+'</td>';
-                        } else {
-                            gridTable += '<td>'+value[column1]+'</td>';
-                        }
-                    });
-                    gridTable += '<td><span class="pull-right">';
-                    gridTable += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                    gridTable += '<button class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
-                    gridTable += '</span></td>';
-                    gridTable += '</tr>';
-                });
-                gridTable += '</tbody>';
+            var modal  = '<div id="'+module+'DetailModal" class="modal" role="dialog">';
+            modal += '  <div class="modal-dialog modal-lg">';
+            modal += '      <div class="modal-content">';
+            modal += '          <div class="modal-header">';
+            modal += '              <button type="button" class="close" data-dismiss="modal">&times;</button>';
+            modal += '              <h4 class="modal-title">Detail '+module+'</h4>';
+            modal += '          </div>';
+            modal += '          <div class="modal-body">';
+            modal += '          <input type="hidden" name="id">';
+            modal += '          <div>';
+            modal += '          <div class="modal-footer">';
+            modal += '              <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>';
+            modal += '              <button type="button" class="btn btn-flat btn-danger">Close</button>';
+            modal += '          <div>';
+            modal += '       </div>';
+            modal += '   </div>';
+            modal += '</div>';
 
-                var modal  = '<div id="'+module+'DetailModal" class="modal" role="dialog">';
-                    modal += '  <div class="modal-dialog modal-lg">';
-                    modal += '      <div class="modal-content">';
-                    modal += '          <div class="modal-header">';
-                    modal += '              <button type="button" class="close" data-dismiss="modal">&times;</button>';
-                    modal += '              <h4 class="modal-title">Detail '+module+'</h4>';
-                    modal += '          </div>';
-                    modal += '          <div class="modal-body"><div>';
-                    modal += '          <div class="modal-footer">';
-                    modal += '              <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>';
-                    modal += '              <button type="button" class="btn btn-flat btn-danger">Close</button>';
-                    modal += '          <div>';
-                    modal += '       </div>';
-                    modal += '   </div>';
-                    modal += '</div>';
-
-                $this.html(gridTable+modal);
-                getDetail(module);
-
-            }
-        });
-
+            $this.html(table+modal);
+            getDetail(module);
+        }
     });
 }
 
 function getDetail(module) {
     $(document).on('click', 'tbody[sc-id="'+module+'"] .detail-btn', function () {
-        var id = $(this).closest('tr').attr('data-id');
-        jQuery('div#'+module+'DetailModal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
-        jQuery('div#'+module+'DetailModal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
-        jQuery('div#'+module+'DetailModal').modal({show: true, backdrop: 'static'});
+        var id = $(this).closest('tr').attr('id');
+        $('div#'+module+'DetailModal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
+        $('div#'+module+'DetailModal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
+        $('div#'+module+'DetailModal input[name="id"]').val(id);
+        $('div#'+module+'DetailModal').modal({show: true, backdrop: 'static'});
     });
 }
 
-function simpleCrud(){
-    getGrid();
-}
+(function($) {
+
+    $.fn.simpleCrud = function(options) {
+
+        var settings = $.extend({
+            module       : null,
+            gridTable    : null,
+            detailForm   : null
+        }, options);
+        getGrid($(this), settings);
+
+    }
+
+}(jQuery));

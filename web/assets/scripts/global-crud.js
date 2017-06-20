@@ -28,7 +28,10 @@ function getQueryVariable(variable, query = decodeURIComponent(window.location.s
         var keys = [];
         for (var i=0;i<vars.length;i++) {
             var pair = vars[i].split("=");
-            keys.push({[pair[0]] : pair[1]});
+            var param = {};
+            param[pair[0]] = pair[1];
+
+            keys.push(param);
         }
         return keys;
     }
@@ -411,6 +414,7 @@ function detail(module,id) {
                             jQuery('div[data-modal-detail="' + module + '"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
                             jQuery('div[data-modal-detail="' + module + '"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
                             jQuery('div[data-modal-detail="' + module + '"] input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE').removeAttr('disabled readonly');
+                            jQuery('div[data-modal-detail="' + module + '"] select#' + index + ' option[value="'+value+'"]').attr('selected', 'selected');
                         }
                         jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', false);
                     }

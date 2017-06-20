@@ -131,9 +131,9 @@ function getAll(module, columns = [], tbody = 'data-list') {
 
                                     } else {
 
-                                        if (val[v1] == true && val[v1] !== '1') {
+                                        if (val[v1] == true && val[v1] !== '1' && val[v1] !== '') {
                                             tr += '<span class="glyphicon glyphicon-ok"></span>';
-                                        } else if (val[v1] == false && val[v1] !== '0') {
+                                        } else if (val[v1] == false && val[v1] !== '0' && val[v1] !== '') {
                                             tr += '<span class="glyphicon glyphicon-remove"></span>';
                                         } else {
                                             if (val[v1] == null) {
@@ -155,6 +155,10 @@ function getAll(module, columns = [], tbody = 'data-list') {
 
                             if (module === 'users') {
                                 tr += '<button data-user-fullname="' + val.fullname + '" data-id="' + val.id + '" class="roles-btn btn btn-default btn-xs btn-flat" title="ROLES"><i class="fa fa-lock"></i></button>';
+                            }
+
+                            if (module === 'advertising/specifications') {
+                                tr += '<button data-id="' + val.id + '" class="detail-adv btn btn-default btn-xs btn-flat" title="LEBIH DETAIL"><i class="fa fa-file-text-o"></i></button>';
                             }
 
                             tr += '</span></td>';

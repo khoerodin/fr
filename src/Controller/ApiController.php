@@ -61,7 +61,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 $temps = [];
             }
 
-            //$temps = array_merge($temps, array('order[createdAt]' => 'DESC'));
+            $temps = array_merge($temps, array('order[createdAt]' => 'DESC'));
         } else {
             $temps = [];
         }
@@ -248,5 +248,12 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
     {
         $username = $this->request('username/generate/'.$fullname, 'get');
         return json_decode($username->getContent(), true)['username'];
+    }
+
+    public function advDetailAction(Request $request)
+    {
+        $advSpecId = $request->get('advSpecId');
+        $response = $this->request('advertising/specification-details', 'get', ['specification.id' => $advSpecId]);
+        return new JsonResponse(json_decode($response->getContent(), true));
     }
 }

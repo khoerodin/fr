@@ -76,6 +76,52 @@ function getAllElementsWithAttribute(attribute)
     return matchingElements;
 }
 
+function createForm(formType, attributes) {
+    var attr = '';
+    var inputValue = '';
+    var otherAttr = '';
+    var value = '';
+    var choices = [];
+    if (attributes instanceof Object) {
+        $.each(attributes, function (index, value) {
+            if (value instanceof Object) {
+                choices['value'] = index;
+            } else {
+                if (index === 'value') {
+                    inputValue = value;
+                } else {
+                    otherAttr += index + '="' + value + '" ';
+                }
+            }
+        });
+        attr = otherAttr;
+        value = inputValue;
+    }
+
+    var form = '';
+    switch (formType) {
+        case 'inputText':
+            form = '<input type="text" '+attr+'value="'+value+'">';
+            break;
+
+        case 'textArea':
+            form = '<textarea '+attr+'>'+value+'</textarea>';
+            break;
+        case 'select':
+            form += '<select '+attr+'>';
+            $.each(choices, function (cIndex, cValue) {
+                form += '<option value="'+cValue+'">'+cIndex+'</option>';
+            });
+            form += '</select>';
+            break;
+        default:
+            form = '';
+    }
+    return form;
+}
+
+console.log(createForm('select', {class: 'bismillah a', options: {ddd: 'abcdef'}, value: 'halooo'}));
+
 function getGrid(element, settings) {
     var $this = element;
     var module = settings.module;

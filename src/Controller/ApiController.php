@@ -49,22 +49,22 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
         } elseif($method == 'get') {
             if(count($params) > 0) {
-                $temps = array_reduce($params, 'array_merge', array());
-                if(count($temps) > 0) {
-                    $temps = array_filter($temps);
-                } else {
-                    $temps = [];
+                $temps = [];
+                foreach ($params as $value) {
+                    foreach ($value as $k => $v) {
+                        $temps[$k] = $v;
+                    }
                 }
+                //var_dump($temps);
+                //die();
             } else {
                 $temps = [];
             }
 
-            $temps = array_merge($temps, array('order[id]' => 'DESC'));
+            //$temps = array_merge($temps, array('order[createdAt]' => 'DESC'));
         } else {
             $temps = [];
         }
-
-        //var_dump($fullname);die();
 
         $response = $this->request($url, $method, $temps);
         return new Response($response->getContent());

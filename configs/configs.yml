@@ -4,6 +4,7 @@ app:
 #        base_url: 'https://82600595.ngrok.io/api/'
         api_key: '2c5c73d28375176046344bbc018e408890d67c2c'
         param_key: 'api_key'
+    http: ~
     template:
         path: 'views'
         cache_dir: 'caches'

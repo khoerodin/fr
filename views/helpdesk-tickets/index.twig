@@ -6,8 +6,8 @@
         window.module = 'helpdesk/tickets';
         window.field = 'name';
         var columns = [
+            'client.name',
             'staff.name',
-            'parent.name',
             'title',
             'message',
             'priority',
@@ -69,19 +69,19 @@
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label>Nama Klien</label>
-                                                <select name="name" data-object="clients#name" class="form-control select-add-modal">
+                                                <select name="client" data-object="clients#name" class="form-control select-add-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label>Nama Staf</label>
-                                                <select name="name" data-object="staffs#name" class="form-control select-add-modal">
+                                                <select name="staff" data-object="helpdesk/staffs#fullname" class="form-control select-add-modal">
                                                     <option></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label>Kategori</label>
-                                                <select name="parent" data-object="helpdesk/categories#name" class="form-control select-add-modal">
+                                                <select name="category" data-object="helpdesk/categories#name" class="form-control select-add-modal">
                                                     <option selected></option>
                                                 </select>
                                             </div>
@@ -151,7 +151,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Kategori</label>
-                                                <select name="parent" data-object="helpdesk/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
+                                                <select name="category" data-object="helpdesk/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
                                                     <option></option>
                                                 </select>
                                             </div>

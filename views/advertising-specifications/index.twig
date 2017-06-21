@@ -114,6 +114,7 @@
                                     <table class="table table-striped table-bordered table-hover">
                                         <thead>
                                             <tr>
+                                                <th>#</th>
                                                 <th>Nama</th>
                                                 <th>Tipe</th>
                                                 <th>Keterangan</th>
@@ -149,17 +150,19 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="tipe">Tipe</label>
-                                            <input type="text" name="tipe" class="form-control" id="tipe">
+                                            <select name="type" id="type" class="form-control"></select>
                                         </div>
                                         <div class="form-group">
                                             <label for="remark">Keterangan</label>
                                             <textarea name="remark" class="form-control" id="remark" placeholder="Keterangan"></textarea>
                                         </div>
                                         </div>
+                                        <input type="hidden" name="id">
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="update-detail btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div>
                         </div>

@@ -10,7 +10,7 @@ $(document).on('ajaxComplete', function () {
         $('div#form-detail').modal({show: true, backdrop: 'static'});
 
         var advDetailId = $(this).closest('tr').data('id');
-        var name = $(this).closest('tr').find("td:eq(0)").text();
+        var name = $(this).closest('tr').find("td:eq(1)").text();
         $.ajax({
             url: '/api',
             data: {
@@ -129,7 +129,73 @@ $(document).on('click', '.update-detail', function () {
             $('tr[data-id="'+id+'"]').find("td:eq(3)").text(td3);
             if (jqXHR.status === 200) {
                 $('#form-detail').modal('hide');
+                toastr.success(td1+' successfully updated');
+            } else {
+                toastr.erroe('Error when updating your data');
             }
         }
     });
+});
+
+$(document).on('keypress', '#form-detail form input', function (e) {
+    if (e.which === 13) {
+        $('#form-detail button.update-detail').click();
+        return false;
+    }
+});
+
+function del(module, id, formId) {
+
+    var data = {
+        module : module+'/'+id,
+        method: 'delete',
+        params: {}
+    };
+
+    var elm = jQuery('#'+formId+' tr[data-id="'+id+'"]');
+
+    $.ajax({
+        url: "/api",
+        type: "POST",
+        data: data,
+        success: function (data, textStatus, jqXHR) {
+            elm.hide('slow', function(){ elm.remove(); });
+            toastr.success('Data successfully deleted');
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            toastr.error('Error when deleting your data');
+            elm.removeClass('bg-red');
+        }
+    });
+
+}
+
+$(document).on('click', '#detail-jenis .delete-btn', function () {
+    var module = 'advertising/specification-details';
+    var id = $(this).closest('tr').data('id');
+    var elm = jQuery('#detail-jenis tbody tr[data-id="'+id+'"]');
+    console.log(elm);
+    elm.addClass('bg-red');
+    setTimeout(function(){
+        bootbox.confirm({
+            message: "ARE YOU SURE YOU WANT TO DELETE THIS DATA?",
+            animate: false,
+            buttons: {
+                confirm: {
+                    className: 'btn-danger btn-flat'
+                },
+                cancel: {
+                    className: 'btn-default btn-flat'
+                }
+            },
+            callback: function (result) {
+                if (result === false) {
+                    elm.removeClass('bg-red');
+                } else {
+                    del(module, id, 'detail-jenis');
+                }
+            }
+        });
+    }, 20);
+
 });

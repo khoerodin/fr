@@ -3,6 +3,7 @@ $(document).on('click', 'tbody[data-list="advertising/specifications"] .detail-a
     getAdvDetail(advSpecId);
     $('#detail-jenis tbody').html('')
     $('div#detail-jenis').modal({show: true, backdrop: 'static'});
+    $('div#detail-jenis .button-detail-jenis-area a').attr('data-id', advSpecId);
 
     $('#detail-jenis select#search-spec-detail').select2({
 
@@ -33,6 +34,14 @@ $(document).on('click', 'tbody[data-list="advertising/specifications"] .detail-a
                             return { id: obj.id, text: obj.name };
                         })
                     }
+                } else {
+                    var elms = $('.detail-jenis-search').removeClass('col-md-12').addClass('col-md-10');
+                    elms += $('.button-detail-jenis-area').addClass('col-md-2');
+                    elms += $('.button-detail-jenis-area a.add-btn').css('visibility', 'visible');
+
+                    return {
+                        results: elms
+                    }
                 }
             },
             cache: true,
@@ -42,6 +51,10 @@ $(document).on('click', 'tbody[data-list="advertising/specifications"] .detail-a
     }).on("select2:select", function () {
         var specName = $('#detail-jenis select#search-spec-detail option:selected').text();
         getAdvDetail(advSpecId, specName);
+    }).on("select2:open", function () {
+        $('.detail-jenis-search').removeClass('col-md-10').addClass('col-md-12');
+        $('.button-detail-jenis-area').removeClass('col-md-2');
+        $('.button-detail-jenis-area a.add-btn').css('visibility', 'hidden');
     });
 
 });
@@ -173,7 +186,7 @@ $(document).on('click', '.update-detail', function () {
                 $('#form-detail').modal('hide');
                 toastr.success(td1+' successfully updated');
             } else {
-                toastr.erroe('Error when updating your data');
+                toastr.error('Error when updating your data');
             }
         }
     });
@@ -239,5 +252,72 @@ $(document).on('click', '#detail-jenis .delete-btn', function () {
             }
         });
     }, 20);
+});
 
+$(document).on('click', '.add-btn.add-adv-detail', function () {
+    var advSpecId = $(this).data('id');
+    $('div#form-add-detail').modal({show: true, backdrop: 'static'});
+    $('div#form-add-detail .add-detail').attr('data-id', advSpecId);
+    $('div#form-add-detail form input[name="specification"]').val('/api/advertising/specifications/'+advSpecId);
+
+    $('#form-add-detail select#type').select2({
+
+        theme: "bootstrap",
+        placeholder: "SEARCH TYPE",
+        allowClear: true,
+        ajax: {
+            url: "/api/search",
+            dataType: 'json',
+            type: 'POST',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    page: params.page,
+                    module: 'advertising/types',
+                    method: 'get',
+                    field: 'name'.split('#')
+                };
+            },
+            processResults: function (data) {
+                if(data.length > 0) {
+                    return {
+                        results: $.map(data, function(obj) {
+                            return { id: '/api/advertising/types/'+obj.id, text: obj.name };
+                        })
+                    }
+                }
+            },
+            cache: true,
+        },
+        escapeMarkup: function (markup) { return markup; },
+        minimumInputLength: 2
+    });
+});
+
+$(document).on('click', '#form-add-detail .add-detail', function () {
+    var advSpecId = $(this).data('id');
+    var data = {
+        'module' : 'advertising/specification-details',
+        'params' : jQuery('#form-add-detail form').serializeArray(),
+        'method' : 'post'
+    };
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: data,
+        success: function (successData, textStatus, jqXHR) {
+            var successData = JSON.parse(successData);
+            console.log(successData);
+            console.log(textStatus);
+            console.log(jqXHR);
+            if (jqXHR.status === 200) {
+                getAdvDetail(advSpecId);
+                $('#form-add-detail').modal('hide');
+                toastr.success('Data saved successfully');
+            } else {
+                toastr.error('Error when saving your data');
+            }
+        }
+    });
 });

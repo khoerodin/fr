@@ -3,6 +3,47 @@ $(document).on('click', 'tbody[data-list="advertising/specifications"] .detail-a
     getAdvDetail(advSpecId);
     $('#detail-jenis tbody').html('')
     $('div#detail-jenis').modal({show: true, backdrop: 'static'});
+
+    $('#detail-jenis select#search-spec-detail').select2({
+
+        theme: "bootstrap",
+        placeholder: "SEARCH TYPE",
+        allowClear: true,
+        ajax: {
+            url: "/api/search",
+            dataType: 'json',
+            type: 'POST',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    page: params.page,
+                    module: 'advertising/specification-details',
+                    method: 'get',
+                    field: 'name'.split('#'),
+                    params: {
+                        'specification.id' : advSpecId
+                    }
+                };
+            },
+            processResults: function (data) {
+                if(data.length > 0) {
+                    return {
+                        results: $.map(data, function(obj) {
+                            return { id: obj.id, text: obj.name };
+                        })
+                    }
+                }
+            },
+            cache: true,
+        },
+        escapeMarkup: function (markup) { return markup; },
+        minimumInputLength: 2
+    }).on("select2:select", function () {
+        var specName = $('#detail-jenis select#search-spec-detail option:selected').text();
+        getAdvDetail(advSpecId, specName);
+    });
+
 });
 
 $(document).on('ajaxComplete', function () {
@@ -26,7 +67,7 @@ $(document).on('ajaxComplete', function () {
                 $('#form-detail select#type').html('<option value="/api/advertising/types/'+successData.type.id+'">'+successData.type.name+'</option>');
                 $('#form-detail input[name="id"]').val(successData.id);
 
-                jQuery('#form-detail select#type').select2({
+                $('#form-detail select#type').select2({
 
                     theme: "bootstrap",
                     placeholder: "SEARCH TYPE",
@@ -74,10 +115,11 @@ $('#form-detail').on('hidden', function() {
     $('#detail-jenis').removeData("modal").modal({});
 });
 
-function getAdvDetail(advSpecId) {
+function getAdvDetail(advSpecId, specName) {
     $.ajax({
         data: {
             advSpecId: advSpecId,
+            specName: specName
         },
         url: '/api/adv-spec-detail',
         type: 'POST',

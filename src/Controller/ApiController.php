@@ -81,11 +81,19 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $method = $request->get('method');
         $q = $request->get('q');
         $field = $request->get('field');
+        $params2 = $request->get('params');
 
         $params = [];
         foreach ($field as $column) {
             $params[$column] = $q;
         }
+
+        $params3 = [];
+        foreach ($params2 as $key => $value) {
+            $params3[$key] = $value;
+        }
+
+        $params = array_merge($params, $params3);
 
         $response = $this->request($url, $method, $params);
         $arr = json_decode($response->getContent(), true);
@@ -253,7 +261,19 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
     public function advDetailAction(Request $request)
     {
         $advSpecId = $request->get('advSpecId');
-        $response = $this->request('advertising/specification-details', 'get', ['specification.id' => $advSpecId]);
+        $specName = $request->get('specName');
+
+        if (!empty($specName)) {
+            $params = array('specification.id' => $advSpecId, 'name' => $specName);
+        } else {
+            $params = array('specification.id' => $advSpecId);
+        }
+
+        /*echo "<pre>";
+        print_r($params);
+        echo "</pre>";die();*/
+
+        $response = $this->request('advertising/specification-details', 'get', $params);
         return new JsonResponse(json_decode($response->getContent(), true));
     }
 }

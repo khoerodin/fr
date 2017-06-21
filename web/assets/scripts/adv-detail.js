@@ -20,9 +20,46 @@ $(document).on('ajaxComplete', function () {
             type: 'POST',
             success: function (successData) {
                 var successData = JSON.parse(successData);
-                $('#form-detail .modal-title').text('Edit Iklan '+name)
-                $('#form-detail input#name').val(successData.name)
-                $('#form-detail input#remark').val(successData.name)
+                $('#form-detail .modal-title').text('Edit Iklan '+name);
+                $('#form-detail input#name').val(successData.name);
+                $('#form-detail textarea#remark').val(successData.remark);
+                $('#form-detail select#type').html('<option value="/api/advertising/types/'+successData.type.id+'">'+successData.type.name+'</option>');
+                $('#form-detail input[name="id"]').val(successData.id);
+
+                jQuery('#form-detail select#type').select2({
+
+                    theme: "bootstrap",
+                    placeholder: "SEARCH TYPE",
+                    allowClear: true,
+                    ajax: {
+                        url: "/api/search",
+                        dataType: 'json',
+                        type: 'POST',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                q: params.term,
+                                page: params.page,
+                                module: 'advertising/types',
+                                method: 'get',
+                                field: 'name'.split('#')
+                            };
+                        },
+                        processResults: function (data) {
+                            if(data.length > 0) {
+                                return {
+                                    results: $.map(data, function(obj) {
+                                        return { id: '/api/advertising/types/'+obj.id, text: obj.name };
+                                    })
+                                }
+                            }
+                        },
+                        cache: true,
+                    },
+                    escapeMarkup: function (markup) { return markup; },
+                    minimumInputLength: 2
+                });
+
             }
         });
     });
@@ -47,8 +84,10 @@ function getAdvDetail(advSpecId) {
         success: function (successData, textStatus, jqXHR) {
             var memberData = successData['hydra:member'];
             var tr = '';
+            var no = 1;
             $.each(memberData, function (index, value) {
                 tr += '<tr data-id="' + value.id + '">';
+                tr += '<td>'+no+'</td>';
                 tr += '<td>'+value.name+'</td>';
                 tr += '<td>'+value.type.name+'</td>';
                 tr += '<td>'+value.remark+'</td>';
@@ -59,6 +98,7 @@ function getAdvDetail(advSpecId) {
                 tr += '</span></td>';
                 tr += '</td>';
                 tr += '</tr>';
+                no++;
             });
             $('#detail-jenis tbody').html(tr);
         },
@@ -67,3 +107,29 @@ function getAdvDetail(advSpecId) {
         }
     });
 }
+
+$(document).on('click', '.update-detail', function () {
+    var id = $('#form-detail input[name="id"]').val();
+    $.ajax({
+        url: '/api',
+        data: {
+            module: 'advertising/specification-details/'+id,
+            method: 'put',
+            params: jQuery('#form-detail form').serializeArray()
+        },
+        type: 'POST',
+        success: function (successData, textStatus, jqXHR) {
+            successData = JSON.parse(successData);
+            var td1 = successData.name;
+            var td2 = successData.type.name;
+            var td3 = successData.remark;
+
+            $('tr[data-id="'+id+'"]').find("td:eq(1)").text(td1);
+            $('tr[data-id="'+id+'"]').find("td:eq(2)").text(td2);
+            $('tr[data-id="'+id+'"]').find("td:eq(3)").text(td3);
+            if (jqXHR.status === 200) {
+                $('#form-detail').modal('hide');
+            }
+        }
+    });
+});

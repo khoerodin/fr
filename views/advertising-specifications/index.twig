@@ -2,11 +2,11 @@
 
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
+    <script src="/assets/scripts/adv-detail.js"></script>
     <script>
         window.module = 'advertising/specifications';
         window.field = 'name';
         var columns = [
-            'parent.name',
             'name'
         ];
     </script>
@@ -34,9 +34,8 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th>Jenis Iklan Induk</th>
                             <th>Jenis Iklan</th>
-                            <th width="5%"><span class="pull-right">Aksi</span></th>
+                            <th width="7%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>
 
@@ -57,12 +56,6 @@
                                 <div class="modal-body">
                                     <form role="form" class="clients add form">
                                         <div class="box-body">
-                                            <div class="form-group">
-                                                <label>Tipe</label>
-                                                <select name="parent" data-object="advertising/specifications#name" class="form-control select-add-modal">
-                                                    <option></option>
-                                                </select>
-                                            </div>
                                             <div class="form-group">
                                                 <label for="name">Jenis Iklan</label>
                                                 <input type="text" name="name" class="form-control" id="name" placeholder="Name">
@@ -86,17 +79,11 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail Jenis Iklan</h4>
+                                    <h4 class="modal-title">Jenis Iklan</h4>
                                 </div>
                                 <div class="modal-body">
                                     <form role="form" class="clients detail form">
                                         <div class="box-body">
-                                            <div class="form-group">
-                                                <label>Jenis Iklan Induk</label>
-                                                <select name="parent" data-object="advertising/specifications#name" data-selected="parent#name" class="form-control select-edit-modal">
-                                                    <option selected>Loading...</option>
-                                                </select>
-                                            </div>
                                             <div class="form-group">
                                                 <label for="name">Jenis Iklan</label>
                                                 <input type="text" name="name" class="form-control" id="name">
@@ -114,6 +101,74 @@
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
                     {#END DETAIL MODAL#}
+
+                    {#JENIS DETAIL MODAL#}
+                    <div id="detail-jenis" class="modal" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Detail Jenis Iklan</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <select id="search-spec-detail" class="form-control"></select>
+                                    <table class="table table-striped table-bordered table-hover" style="margin-top: 20px;">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Nama</th>
+                                                <th>Tipe</th>
+                                                <th>Keterangan</th>
+                                                <th width="10%"><span class="pull-right">Action</span></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {#END JENIS DETAIL MODAL#}
+
+                    {#FORM DETAIL MODAL#}
+                    <div id="form-detail" class="modal" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title"></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" class="clients detail form">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                            <label for="name">Nama</label>
+                                            <input type="text" name="name" class="form-control" id="name" placeholder="Nama">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tipe">Tipe</label>
+                                            <select name="type" id="type" class="form-control"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="remark">Keterangan</label>
+                                            <textarea name="remark" class="form-control" id="remark" placeholder="Keterangan"></textarea>
+                                        </div>
+                                        </div>
+                                        <input type="hidden" name="id">
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="update-detail btn btn-flat btn-danger">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {#END FORM DETAIL MODAL#}
 
                 </div>
                 <!-- /.box-body -->

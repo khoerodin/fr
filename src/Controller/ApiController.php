@@ -49,22 +49,22 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
         } elseif($method == 'get') {
             if(count($params) > 0) {
-                $temps = array_reduce($params, 'array_merge', array());
-                if(count($temps) > 0) {
-                    $temps = array_filter($temps);
-                } else {
-                    $temps = [];
+                $temps = [];
+                foreach ($params as $value) {
+                    foreach ($value as $k => $v) {
+                        $temps[$k] = $v;
+                    }
                 }
+                //var_dump($temps);
+                //die();
             } else {
                 $temps = [];
             }
 
-            $temps = array_merge($temps, array('order[id]' => 'DESC'));
+            $temps = array_merge($temps, array('order[createdAt]' => 'DESC'));
         } else {
             $temps = [];
         }
-
-        //var_dump($fullname);die();
 
         $response = $this->request($url, $method, $temps);
         return new Response($response->getContent());
@@ -81,11 +81,19 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $method = $request->get('method');
         $q = $request->get('q');
         $field = $request->get('field');
+        $params2 = $request->get('params');
 
         $params = [];
         foreach ($field as $column) {
             $params[$column] = $q;
         }
+
+        $params3 = [];
+        foreach ($params2 as $key => $value) {
+            $params3[$key] = $value;
+        }
+
+        $params = array_merge($params, $params3);
 
         $response = $this->request($url, $method, $params);
         $arr = json_decode($response->getContent(), true);
@@ -248,5 +256,24 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
     {
         $username = $this->request('username/generate/'.$fullname, 'get');
         return json_decode($username->getContent(), true)['username'];
+    }
+
+    public function advDetailAction(Request $request)
+    {
+        $advSpecId = $request->get('advSpecId');
+        $specName = $request->get('specName');
+
+        if (!empty($specName)) {
+            $params = array('specification.id' => $advSpecId, 'name' => $specName);
+        } else {
+            $params = array('specification.id' => $advSpecId);
+        }
+
+        /*echo "<pre>";
+        print_r($params);
+        echo "</pre>";die();*/
+
+        $response = $this->request('advertising/specification-details', 'get', $params);
+        return new JsonResponse(json_decode($response->getContent(), true));
     }
 }

@@ -13,11 +13,10 @@ class IntFilter extends AbstractFilter
      */
     public function cast($value)
     {
-        $value = (string) $value;
         if (is_numeric($value)) {
             $this->stopNext = true;
 
-            return (integer) $value;
+            return (int) $value;
         }
 
         return $value;

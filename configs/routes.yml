@@ -9,6 +9,7 @@ app:
         - { path: '/api/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
         - { path: '/api/roles', controller: 'Bisnis:Api@getRole', methods: ['POST'] }
         - { path: '/api/menus', controller: 'Bisnis:Api@menus', methods: ['POST'] }
+        - { path: '/api/adv-spec-detail', controller: 'Bisnis:Api@advDetail', methods: ['POST'] }
 
         #Profile
         - { path: '/profile', controller: 'Bisnis:Profile@index', methods: ['GET'] }
@@ -31,7 +32,7 @@ app:
         #Advertising
         #Master
         - { path: '/advertising/ads', controller: 'Bisnis:AdvertisingAds@index', methods: ['GET'] }
-        - { path: '/advertising/categories', controller: 'Bisnis:AdvertisingCategories@index', methods: ['GET'] }
+        - { path: '/advertising/emiten', controller: 'Bisnis:AdvertisingCategories@index', methods: ['GET'] }
         - { path: '/advertising/customers', controller: 'Bisnis:AdvertisingCustomers@index', methods: ['GET'] }
         - { path: '/advertising/layouts', controller: 'Bisnis:AdvertisingLayouts@index', methods: ['GET'] }
         - { path: '/advertising/payment-methods', controller: 'Bisnis:AdvertisingPaymentMethods@index', methods: ['GET'] }
@@ -39,6 +40,7 @@ app:
         - { path: '/advertising/specifications', controller: 'Bisnis:AdvertisingSpecifications@index', methods: ['GET'] }
         - { path: '/advertising/specification-details', controller: 'Bisnis:AdvertisingSpecificationDetails@index', methods: ['GET'] }
         - { path: '/advertising/types', controller: 'Bisnis:AdvertisingTypes@index', methods: ['GET'] }
+        - { path: '/advertising/prices', controller: 'Bisnis:AdvertisingPrices@index', methods: ['GET'] }
 
         #Billing
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }
@@ -51,3 +53,6 @@ app:
         - { path: '/helpdesk/staffs', controller: 'Bisnis:HelpdeskStaffs@index', methods: ['GET'] }
         - { path: '/helpdesk/ticket-responses', controller: 'Bisnis:HelpdeskTicketResponses@index', methods: ['GET'] }
         - { path: '/helpdesk/tickets', controller: 'Bisnis:HelpdeskTickets@index', methods: ['GET'] }
+
+        #jangan di hapus,
+        - { path: '/dummy', controller: 'Bisnis:Dummy@index', methods: ['GET'] }

@@ -253,7 +253,7 @@ function rolesResponse(data,userId,page) {
                 p = 17 * c;
                 no = index+1+p;
             } else {
-                no = index-3;
+                no = index+1;
             }
 
             rolesCheck += '<tr id="'+value.module+'" data-role="'+value.roleId+'"><td>'+no+'</td>';

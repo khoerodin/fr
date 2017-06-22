@@ -17,4 +17,6 @@ interface FilterInterface
      * @return bool
      */
     public function stopNext();
+
+    public function reset();
 }

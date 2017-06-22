@@ -30,6 +30,8 @@ class FilterFactory
             $value = $filter->cast($value);
 
             if ($filter->stopNext()) {
+                $filter->reset();
+
                 return $value;
             }
         }

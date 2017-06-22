@@ -158,7 +158,7 @@ function getAll(module, columns = [], tbody = 'data-list') {
                             }
 
                             if (module === 'advertising/specifications') {
-                                tr += '<button data-id="' + val.id + '" class="detail-adv btn btn-default btn-xs btn-flat" title="LEBIH DETAIL"><i class="fa fa-file-text-o"></i></button>';
+                                tr += '<button data-id="' + val.id + '" class="detail-adv btn btn-default btn-xs btn-flat" title="DETAIL JENIS IKLAN"><i class="fa fa-file-text-o"></i></button>';
                             }
 
                             tr += '</span></td>';

@@ -19,4 +19,9 @@ abstract class AbstractFilter implements FilterInterface
     {
         return $this->stopNext;
     }
+
+    public function reset()
+    {
+        $this->stopNext = false;
+    }
 }

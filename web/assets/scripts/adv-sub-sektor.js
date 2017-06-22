@@ -25,6 +25,7 @@ $(document).on('change', 'select#select-emiten', function () {
     var emitenId = $(this).val();
     $('select#select-sektor').prop('disabled', false);
     $('#sub-sektor-body').html('<tr><td colspan="3">SILAKAN PILIH SEKTOR</td></tr>');
+    $('.button-adv-sub-sektor a').css('visibility', 'hidden');
     getSelectSektor(emitenId);
 });
 
@@ -96,6 +97,7 @@ function getSubSektorData(sektorId){
                 $('#sub-sektor-body').html('<tr><td colspan="3">TIDAK ADA SUB SEKTOR</td></tr>');
             } else {
                 $('#sub-sektor-body').html(tr);
+                $('.button-adv-sub-sektor a').css('visibility', 'visible');
             }
         }
     });

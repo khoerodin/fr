@@ -58,6 +58,7 @@ function getSelectSektor(emitenId) {
 
 $(document).on('change', 'select#select-sektor', function () {
     var sektorId = $('select#select-sektor').val();
+    $('.button-adv-sub-sektor a').css('visibility', 'visible');
     getSubSektorData(sektorId);
 });
 
@@ -97,7 +98,6 @@ function getSubSektorData(sektorId){
                 $('#sub-sektor-body').html('<tr><td colspan="3">TIDAK ADA SUB SEKTOR</td></tr>');
             } else {
                 $('#sub-sektor-body').html(tr);
-                $('.button-adv-sub-sektor a').css('visibility', 'visible');
             }
         }
     });

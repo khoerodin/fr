@@ -199,7 +199,7 @@ $(document).on('keypress', '#form-detail form input', function (e) {
     }
 });
 
-function del(module, id, formId) {
+function del(module, id, tbodyId) {
 
     var data = {
         module : module+'/'+id,
@@ -207,7 +207,7 @@ function del(module, id, formId) {
         params: {}
     };
 
-    var elm = jQuery('#'+formId+' tr[data-id="'+id+'"]');
+    var elm = jQuery('#'+tbodyId+' tr[data-id="'+id+'"]');
 
     $.ajax({
         url: "/api",
@@ -229,7 +229,6 @@ $(document).on('click', '#detail-jenis .delete-btn', function () {
     var module = 'advertising/specification-details';
     var id = $(this).closest('tr').data('id');
     var elm = jQuery('#detail-jenis tbody tr[data-id="'+id+'"]');
-    console.log(elm);
     elm.addClass('bg-red');
     setTimeout(function(){
         bootbox.confirm({
@@ -308,9 +307,6 @@ $(document).on('click', '#form-add-detail .add-detail', function () {
         data: data,
         success: function (successData, textStatus, jqXHR) {
             var successData = JSON.parse(successData);
-            console.log(successData);
-            console.log(textStatus);
-            console.log(jqXHR);
             if (jqXHR.status === 200) {
                 getAdvDetail(advSpecId);
                 $('#form-add-detail').modal('hide');

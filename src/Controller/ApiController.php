@@ -49,19 +49,17 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
         } elseif($method == 'get') {
             if(count($params) > 0) {
-                $temps = [];
-                foreach ($params as $value) {
-                    foreach ($value as $k => $v) {
-                        $temps[$k] = $v;
-                    }
+                $temps = array_reduce($params, 'array_merge', array());
+                if(count($temps) > 0) {
+                    $temps = array_filter($temps);
+                } else {
+                    $temps = [];
                 }
-                //var_dump($temps);
-                //die();
             } else {
                 $temps = [];
             }
 
-            $temps = array_merge($temps, array('order[createdAt]' => 'DESC'));
+            $temps = array_merge($temps, array('order[id]' => 'DESC'));
         } else {
             $temps = [];
         }
@@ -88,12 +86,13 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
             $params[$column] = $q;
         }
 
-        $params3 = [];
-        foreach ($params2 as $key => $value) {
-            $params3[$key] = $value;
+        if (is_null($params2)) {
+            $params3 = [];
+            foreach ($params2 as $key => $value) {
+                $params3[$key] = $value;
+            }
+            $params = array_merge($params, $params3);
         }
-
-        $params = array_merge($params, $params3);
 
         $response = $this->request($url, $method, $params);
         $arr = json_decode($response->getContent(), true);

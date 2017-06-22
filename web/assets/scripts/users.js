@@ -136,7 +136,7 @@ function getRoles(userId, pageNum) {
             });
 
             var paging = '';
-            $.each(data2['hydra:view'], function (index, value) {
+            $.each(data1['hydra:view'], function (index, value) {
                 if(index.endsWith('previous')) {
                     page = getQueryVariable('page',value);
                     paging += '<li><span class="to-roles-page" data-page="'+page+'" title="PREVIOUS PAGE">PREVIOUS</span></li>';

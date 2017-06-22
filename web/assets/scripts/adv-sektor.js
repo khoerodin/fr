@@ -12,7 +12,7 @@ function getSelectEmiten() {
         success: function (successData, textStatus, jqXHR) {
             successData = JSON.parse(successData);
             var memberData = successData['hydra:member'];
-            var select = '<option selected>PILIH EMITEN</option>';
+            var select = '<option selected value="nodata">PILIH EMITEN</option>';
             $.each(memberData, function (index, value) {
                 select += '<option value="'+value.id+'">'+value.name+'</option>';
             });
@@ -65,6 +65,11 @@ function getSektorData(id) {
 $(document).on('change', 'select#select-emiten', function () {
     var id = $(this).val();
     getSektorData(id);
+    if(id !== 'nodata') {
+        $('.button-adv-sektor a').css('visibility', 'visible');
+    } else {
+        $('.button-adv-sektor a').css('visibility', 'hidden');
+    }
 });
 
 $(document).on('click', '#sektor-body .detail-btn', function () {

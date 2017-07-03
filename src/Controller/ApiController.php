@@ -268,10 +268,6 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
             $params = array('specification.id' => $advSpecId);
         }
 
-        /*echo "<pre>";
-        print_r($params);
-        echo "</pre>";die();*/
-
         $response = $this->request('advertising/specification-details', 'get', $params);
         return new JsonResponse(json_decode($response->getContent(), true));
     }

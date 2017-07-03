@@ -5,8 +5,8 @@
         window.module = 'modules';
         window.field = 'name';
         var columns = [
-            'menuDisplay',
             'groupName',
+            'menuDisplay',
             'name',
             'iconCls',
             'path',
@@ -37,8 +37,8 @@
                         <thead>
                         <tr>
                             <th width="5%">#</th>
-                            <th width="7%">Menu Display</th>
                             <th width="20%">Grup</th>
+                            <th width="7%">Menu Display</th>
                             <th width="20%">Nama</th>
                             <th>Icon Class</th>
                             <th>Path</th>
@@ -83,6 +83,14 @@
                                                 <label for="menuOrder">Menu Order</label>
                                                 <input type="number" name="menuOrder" class="form-control" id="menuOrder" placeholder="Menu Order">
                                             </div>
+                                            <div class="form-group">
+                                                <label for="menuDisplay">Menu Display</label>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="menuDisplay" id="menuDisplay"> Menu Display
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <!-- /.box-body -->
                                     </form>
@@ -126,6 +134,14 @@
                                             <div class="form-group">
                                                 <label for="menuOrder">Menu Order</label>
                                                 <input type="number" name="menuOrder" class="form-control" id="menuOrder" placeholder="Menu Order">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="menuDisplay">Menu Display</label>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="menuDisplay" id="menuDisplay"> Menu Display
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                         <input type="hidden" name="id" id="id">

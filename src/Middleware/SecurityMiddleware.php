@@ -56,7 +56,7 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
                 } else {
                     $session->set('me', $me->getContent());
                     $userId = json_decode($me->getContent(), true)['id'];
-                    $menus = $client->get('roles', ['user.id' => $userId]);
+                    $menus = $client->get('roles', ['user.id' => $userId, 'module.menuDisplay' => true]);
 
                     $menus = json_decode($menus->getContent(), true)['hydra:member'];
                     $modules = array();
@@ -73,9 +73,6 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
                         ];
                     }
 
-                    /*echo "<pre>";
-                    print_r($modules);
-                    echo "</pre>";die();*/
                     $session->set('menus', $modules);
                 }
             }

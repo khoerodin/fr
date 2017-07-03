@@ -132,9 +132,9 @@ function getAll(module, columns = [], tbody = 'data-list') {
                                     } else {
 
                                         if (val[v1] == true && val[v1] !== '1' && val[v1] !== '') {
-                                            tr += '<span class="glyphicon glyphicon-ok"></span>';
+                                            tr += '<span class="glyphicon glyphicon-ok text-success"></span>';
                                         } else if (val[v1] == false && val[v1] !== '0' && val[v1] !== '') {
-                                            tr += '<span class="glyphicon glyphicon-remove"></span>';
+                                            tr += '<span class="glyphicon glyphicon-remove text-danger"></span>';
                                         } else {
                                             if (val[v1] == null) {
                                                 val[v1] = '-';

@@ -75,21 +75,13 @@ function getRoles(userId, pageNum) {
     var ajax1 = $.ajax({
         url: "/api",
         type: "POST",
-        data: moduleData,
-        beforeSend: function () {},
-        success: function (data, textStatus, jqXHR) {
-        },
-        error: function (jqXHR, textStatus, errorThrown) {}
+        data: moduleData
     });
 
     var ajax2 = $.ajax({
         url: "/api",
         type: "POST",
-        data: roleData,
-        beforeSend: function () {},
-        success: function (data, textStatus, jqXHR) {
-        },
-        error: function (jqXHR, textStatus, errorThrown) {}
+        data: roleData
     });
 
     $.when(ajax1, ajax2).done(function(a1, a2){

@@ -108,11 +108,14 @@ function getAll(module, columns = [], tbody = 'data-list') {
                                 var v2 = v.split(".")[1];
 
                                 if (val[v1] instanceof Object) {
-                                    $.each(val[v1], function (ind, vl) {
-                                        if (ind == v2) {
-                                            tr += '<td>' + vl + '</td>';
-                                        }
-                                    })
+                                    // $.each(val[v1], function (ind, vl) {
+                                    //     if (ind == v2) {
+                                    //         tr += '<td>' + vl + '</td>';
+                                    //     }
+                                    // })
+                                    tr += '<td>' + val[v] + '</td>';
+                                    //console.log(val[v]);
+                                    //console.log(val[v1]);
                                 } else {
                                     tr += '<td>';
 

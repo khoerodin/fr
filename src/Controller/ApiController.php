@@ -117,7 +117,6 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
                 }
 
-                //var_dump($field[0]);die();
                 if($k == $field[0]){
                     $obj[$k] = $v;
                 }

@@ -7,7 +7,8 @@
         window.field = 'name';
         var columns = [
             'client.name',
-            'staff.name',
+            'staff.user.fullname',
+            'category.name',
             'title',
             'message'
         ];
@@ -47,7 +48,7 @@
                         </thead>
 
                         <tbody data-list="helpdesk/tickets">
-                        <tr><td colspan="9">LOADING DATA...</td></tr>
+                        <tr><td colspan="7">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>

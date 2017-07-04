@@ -7,11 +7,10 @@
         window.field = 'name';
         var columns = [
             'client.name',
-            'staff.name',
+            'staff.user.fullname',
+            'category.name',
             'title',
-            'message',
-            'priority',
-            'status'
+            'message'
         ];
     </script>
 {% endblock %}
@@ -43,15 +42,13 @@
                             <th>Kategori</th>
                             <th>Judul</th>
                             <th>Pesan</th>
-                            <th>Prioritas</th>
-                            <th>Status</th>
 
                             <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>
 
                         <tbody data-list="helpdesk/tickets">
-                        <tr><td colspan="9">LOADING DATA...</td></tr>
+                        <tr><td colspan="7">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>
@@ -93,25 +90,7 @@
                                                 <label for="message">Pesan</label>
                                                 <textarea name="message" class="form-control" id="message" placeholder="Pesan"></textarea>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="priority">PRIORITAS</label>
-                                                <select class="form-control" name="priority" id="priority">
-                                                    <option value="very_urgent">SANGAT PENTING</option>
-                                                    <option value="urgent">PENTING</option>
-                                                    <option value="normal">BIASA</option>
-                                                    <option value="low">KURANG PENTING</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="status">Status</label>
-                                                <select class="form-control" name="priority" id="priority">
-                                                    <option value="opened">DIBUKA</option>
-                                                    <option value="assignment">PENUGASAN</option>
-                                                    <option value="onprogress">DALAM PROSES</option>
-                                                    <option value="resolved">SELESAI</option>
-                                                    <option value="closed">DITUTUP</option>
-                                                </select>
-                                            </div>
+
                                         </div>
                                         <!-- /.box-body -->
                                     </form>
@@ -163,25 +142,7 @@
                                                 <label for="message">Pesan</label>
                                                 <textarea name="message" class="form-control" id="message" placeholder="Pesan"></textarea>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="priority">Prioritas</label>
-                                                <select class="form-control" name="priority" id="priority">
-                                                    <option value="very_urgent">SANGAT PENTING</option>
-                                                    <option value="urgent">PENTING</option>
-                                                    <option value="normal">BIASA</option>
-                                                    <option value="low">KURANG PENTING</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="status">Status</label>
-                                                <select class="form-control" name="priority" id="priority">
-                                                    <option value="opened">DIBUKA</option>
-                                                    <option value="assignment">PENUGASAN</option>
-                                                    <option value="onprogress">DALAM PROSES</option>
-                                                    <option value="resolved">SELESAI</option>
-                                                    <option value="closed">DITUTUP</option>
-                                                </select>
-                                            </div>
+
                                         </div>
                                         <input type="hidden" name="id" id="id">
                                         <!-- /.box-body -->

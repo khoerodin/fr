@@ -2,6 +2,7 @@
 
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
+    <script src="/assets/scripts/advertising-prices.js"></script>
     <script>
         window.module = 'advertising/prices';
         window.field = 'price';
@@ -19,9 +20,7 @@
             <div class="box">
                 <div class="box-header row">
                     <div class="col-md-12 search-area transition">
-                        <select data-placeholder="CARI HARGA" class="search-price form-control select2" style="width: 100%;">
-                            <option></option>
-                        </select>
+                        <select id="search-specificationDetailName" data-placeholder="CARI DETAIL JENIS IKLAN" class="form-control select2" style="width: 100%;"></select>
                     </div>
 
                     <div class="button-area transition">

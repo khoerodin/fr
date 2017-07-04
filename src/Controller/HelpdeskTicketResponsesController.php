@@ -22,6 +22,7 @@ class HelpdeskTicketResponsesController extends AdminController
             'meta' => $meta
         ];
 
-        return $this->view('helpdesk-ticket-responses/index.twig', $data);
+//        return $this->view('helpdesk-ticket-responses/index.twig', $data);
+        return $this->view('helpdesk-ticket-responses/index1.twig', $data);
     }
 }

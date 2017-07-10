@@ -78,7 +78,7 @@ function tampilIklan() {
             $.each(aaa, function (index, value) {
                 dataAd += '<tr data-id="'+value.id+'">';
                 dataAd += '<td>'+value.name+'</td>';
-                dataAd += '<td><button class="detail-btn btn btn-default btn-xs btn-flat">DETAIL</button>';
+                dataAd += '<td><button class="detail-btn btn btn-success btn-xs btn-flat">DETAIL</button>' ;
                 dataAd += '<button class="delete-btn btn btn-danger btn-xs btn-flat delete-ads">DELETE</button></td>';
                 dataAd += '<tr>';
             });

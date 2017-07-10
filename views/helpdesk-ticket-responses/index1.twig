@@ -34,22 +34,22 @@
                     <!-- Conversations are loaded here -->
                     <div class="direct-chat-messages">
                         <!-- Message. Default to the left -->
-                        {#<div class="direct-chat-msg">#}
-                            {#<div class="direct-chat-info clearfix">#}
-                                {#<span class="direct-chat-name pull-left">{{ me.fullname }}</span>#}
-                                {#<span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>#}
-                            {#</div>#}
-                            {#<!-- /.direct-chat-info -->#}
-                            {#<img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">#}
-                            {#<!-- /.direct-chat-img -->#}
-                            {#<div class="direct-chat-text">#}
-                                {#Hai.. Apa Kabar?#}
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-info clearfix">
+                                <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
+                                <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+                            </div>
+                            <!-- /.direct-chat-info -->
+                            <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">
+                                Hai.. Apa Kabar?
 
-                                {#Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim odio non ipsum fringilla aliquam. Donec quis auctor justo. Curabitur malesuada sit amet mi id congue. Maecenas sed mollis ante. Pellentesque quam diam, molestie vitae ullamcorper ut, suscipit ut ligula. Donec a nibh congue, tristique mauris non, blandit mi. Sed blandit pretium neque nec condimentum. Nulla dignissim lectus eget nunc accumsan laoreet. Ut id fermentum sem.#}
-                            {#</div>#}
-                            {#<!-- /.direct-chat-text -->#}
-                        {#</div>#}
-                        {#<!-- /.direct-chat-msg -->#}
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim odio non ipsum fringilla aliquam. Donec quis auctor justo. Curabitur malesuada sit amet mi id congue. Maecenas sed mollis ante. Pellentesque quam diam, molestie vitae ullamcorper ut, suscipit ut ligula. Donec a nibh congue, tristique mauris non, blandit mi. Sed blandit pretium neque nec condimentum. Nulla dignissim lectus eget nunc accumsan laoreet. Ut id fermentum sem.
+                            </div>
+                            <!-- /.direct-chat-text -->
+                        </div>
+                        <!-- /.direct-chat-msg -->
 
                         {#<!-- Message to the right -->#}
                         {#<div class="direct-chat-msg right">#}
@@ -87,7 +87,7 @@
                             </li>
                             <!-- End Contact Item -->
                         </ul>
-                        <!-- /.contatcts-list -->
+                        <!-- /.contacts-list -->
                     </div>
                     <!-- /.direct-chat-pane -->
                 </div>

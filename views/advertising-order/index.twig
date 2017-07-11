@@ -1,0 +1,248 @@
+{% extends 'layout.twig' %}
+
+{% block js %}
+    <script>
+        $("#orderFrom").select2({theme: 'bootstrap'});
+        $('#dtBookedAt').datetimepicker({
+            locale: 'id'
+        });
+        $('#dtInvoicedAt').datetimepicker({
+            locale: 'id'
+        });
+    </script>
+{% endblock %}
+
+{%- block content -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <form class="row">
+                        <div class="col-md-6 row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Order Dari</label>
+                                    <select name="orderFrom" id="orderFrom" class="form-control">
+                                        <option selected disabled>PILIH PERWAKILAN</option>
+                                        {% for rep in representatives %}
+                                            <option value="/api/representatives/{{ rep.id }}">{{ rep.code }} - {{ rep.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Nomor Order</label>
+                                    <input type="text" name="orderNumber" id="orderNumber" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Tanggal Booking</label>
+                                    <div class='input-group date' id='dtBookedAt'>
+                                        <input type='text' name="bookedAt" id="bookedAt" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Nomor Surat Order</label>
+                                    <input name="orderLetter" id="orderLetter" type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Tanggal Faktur</label>
+                                    <div class='input-group date' id='dtInvoicedAt'>
+                                        <input type='text' name="invoicedAt" id="invoicedAt" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Pemasang</label>
+                                    <div class="input-group">
+                                        <input type="text" name="pemasang" class="form-control" placeholder="Pemasang">
+                                        <input type="hidden" name="customer" id="customer" >
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Alamat</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Klien</label>
+                                    <div class="input-group">
+                                        <input type="text" name="klien" class="form-control" placeholder="Klien">
+                                        <input type="hidden" name="client" id="client">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Cetak Di Faktur</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Surat Perjanjian</label>
+                                    <div class="input-group">
+                                        <input type="text" name="Surat Perjanjian" class="form-control" placeholder="Surat Perjanjian">
+                                        <input type="hidden" name="contractLetter" id="contractLetter" >
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Jenis Iklan</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Emiten</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Emiten">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Nomor PIC</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Nomor PIC">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Tipe Iklan</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Tipe Iklan">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Pasang Di</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Pasang Di">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Sektor</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Sektor">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Sub Sektor</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Sub Sektor">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Judul Iklan</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Ukuran</label>
+                                    <div class="row">
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Terbit</label>
+                                    <div class="row">
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <button class="btn btn-default btn-flat">Edisi Terbit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Tarif Iklan</label>
+                                    <div class="row">
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <button class="btn btn-default btn-flat">Rincian Diskon %</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="box-footer clearfix">
+                    {#Footer content here#}
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{%- endblock -%}

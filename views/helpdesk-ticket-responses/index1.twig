@@ -2,6 +2,7 @@
 
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
+    <script src="/assets/scripts/helpdesk-ticket-responses.js"></script>
     <script>
         window.module = 'helpdesk/ticket-responses';
         window.field = 'name';
@@ -10,158 +11,159 @@
 {% endblock %}
 
 {%- block content -%}
-    <!-- Construct the box with style you want. Here we are using box-danger -->
-    <!-- Then add the class direct-chat and choose the direct-chat-* contexual class -->
-    <!-- The contextual class should match the box, so we are using direct-chat-danger -->
-    <div class="box box-danger direct-chat direct-chat-danger">
-        <div class="box-header with-border">
-            <h3 class="box-title">Helpdesk Live Chat</h3>
-            <div class="box-tools pull-right">
-                <span data-toggle="tooltip" title="2805 New Messages" class="badge bg-red">2805</span>
-                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                <!-- In box-tools add this button if you intend to use the contacts pane -->
-                <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
-                <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-            </div>
-        </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            <!-- Conversations are loaded here -->
-            <div class="direct-chat-messages">
-                <!-- Message. Default to the left -->
-                <div class="direct-chat-msg">
-                    <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
-                        <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                        Hai.. Apa Kabar?
 
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim odio non ipsum fringilla aliquam. Donec quis auctor justo. Curabitur malesuada sit amet mi id congue. Maecenas sed mollis ante. Pellentesque quam diam, molestie vitae ullamcorper ut, suscipit ut ligula. Donec a nibh congue, tristique mauris non, blandit mi. Sed blandit pretium neque nec condimentum. Nulla dignissim lectus eget nunc accumsan laoreet. Ut id fermentum sem.
-                    </div>
-                    <!-- /.direct-chat-text -->
-                </div>
-                <!-- /.direct-chat-msg -->
+    <div class="row">
+        <div class="col-md-3">
 
-                <!-- Message to the right -->
-                <div class="direct-chat-msg right">
-                    <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-right">Khoerudin</span>
-                        <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
+            <!-- Construct the box with style you want. Here we are using box-danger -->
+            <!-- Then add the class direct-chat and choose the direct-chat-* contexual class -->
+            <!-- The contextual class should match the box, so we are using direct-chat-danger -->
+            <div class="box box-primary direct-chat direct-chat-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Helpdesk Live Chat</h3>
+                    <div class="box-tools pull-right">
+                        <span data-toggle="tooltip" title="2 New Messages" class="badge bg-blue">2</span>
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <!-- In box-tools add this button if you intend to use the contacts pane -->
+                        <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="/img/user3-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                        Kabar baik! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim odio non ipsum fringilla aliquam. Donec quis auctor justo. Curabitur malesuada sit amet mi id congue. Maecenas sed mollis ante. Pellentesque quam diam, molestie vitae ullamcorper ut, suscipit ut ligula. Donec a nibh congue, tristique mauris non, blandit mi. Sed blandit pretium neque nec condimentum. Nulla dignissim lectus eget nunc accumsan laoreet. Ut id fermentum sem.
-                    </div>
-                    <!-- /.direct-chat-text -->
                 </div>
-                <!-- /.direct-chat-msg -->
-            </div>
-            <!--/.direct-chat-messages-->
-            <div class="direct-chat-messages">
-                <!-- Message. Default to the left -->
-                <div class="direct-chat-msg">
-                    <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
-                        <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                        Mau ngadu nih..
-                    </div>
-                    <!-- /.direct-chat-text -->
-                </div>
-                <!-- /.direct-chat-msg -->
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <!-- Conversations are loaded here -->
+                    <div class="direct-chat-messages">
+                        <!-- Message. Default to the left -->
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-info clearfix">
+                                <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
+                                <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+                            </div>
+                            <!-- /.direct-chat-info -->
+                            <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
+                            <!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">
+                                Hai.. Apa Kabar?
 
-                <!-- Message to the right -->
-                <div class="direct-chat-msg right">
-                    <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-right">Khoerudin</span>
-                        <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="/img/user3-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                        Ngadu apa? Layanan kami 24jam
-                    </div>
-                    <!-- /.direct-chat-text -->
-                </div>
-                <!-- /.direct-chat-msg -->
-            </div>
-            <!--/.direct-chat-messages--><div class="direct-chat-messages">
-                <!-- Message. Default to the left -->
-                <div class="direct-chat-msg">
-                    <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
-                        <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-                    </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                       Server lantai basement mati.. Gimana dong coy?
-                    </div>
-                    <!-- /.direct-chat-text -->
-                </div>
-                <!-- /.direct-chat-msg -->
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim odio non ipsum fringilla aliquam. Donec quis auctor justo. Curabitur malesuada sit amet mi id congue. Maecenas sed mollis ante. Pellentesque quam diam, molestie vitae ullamcorper ut, suscipit ut ligula. Donec a nibh congue, tristique mauris non, blandit mi. Sed blandit pretium neque nec condimentum. Nulla dignissim lectus eget nunc accumsan laoreet. Ut id fermentum sem.
+                            </div>
+                            <!-- /.direct-chat-text -->
+                        </div>
+                        <!-- /.direct-chat-msg -->
 
-                <!-- Message to the right -->
-                <div class="direct-chat-msg right">
-                    <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-right">Khoerudin</span>
-                        <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
+                        {#<!-- Message to the right -->#}
+                        {#<div class="direct-chat-msg right">#}
+                            {#<div class="direct-chat-info clearfix">#}
+                                {#<span class="direct-chat-name pull-right">Khoerudin</span>#}
+                                {#<span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>#}
+                            {#</div>#}
+                            {#<!-- /.direct-chat-info -->#}
+                            {#<img class="direct-chat-img" src="/img/user3-128x128.jpg" alt="message user image">#}
+                            {#<!-- /.direct-chat-img -->#}
+                            {#<div class="direct-chat-text">#}
+                                {#Kabar baik! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim odio non ipsum fringilla aliquam. Donec quis auctor justo. Curabitur malesuada sit amet mi id congue. Maecenas sed mollis ante. Pellentesque quam diam, molestie vitae ullamcorper ut, suscipit ut ligula. Donec a nibh congue, tristique mauris non, blandit mi. Sed blandit pretium neque nec condimentum. Nulla dignissim lectus eget nunc accumsan laoreet. Ut id fermentum sem.#}
+                            {#</div>#}
+                            {#<!-- /.direct-chat-text -->#}
+                        {#</div>#}
+                        {#<!-- /.direct-chat-msg -->#}
                     </div>
-                    <!-- /.direct-chat-info -->
-                    <img class="direct-chat-img" src="/img/user3-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                        Bim salabim.. Abrakadabrahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-                    </div>
-                    <!-- /.direct-chat-text -->
-                </div>
-                <!-- /.direct-chat-msg -->
-            </div>
-            <!--/.direct-chat-messages-->
-            <!-- Contacts are loaded here -->
-            <div class="direct-chat-contacts">
-                <ul class="contacts-list">
-                    <li>
-                        <a href="#">
-                            <img class="contacts-list-img" src="/img/user1-128x128.jpg" alt="Contact Avatar">
-                            <div class="contacts-list-info">
+
+                    <!--/.direct-chat-messages-->
+                    <!-- Contacts are loaded here -->
+                    <div class="direct-chat-contacts">
+                        <ul class="contacts-list">
+                            <li>
+                                <a href="#">
+                                    <img class="contacts-list-img" src="/img/user1-128x128.jpg" alt="Contact Avatar">
+                                    <div class="contacts-list-info">
               <span class="contacts-list-name">
                 Count Dracula
                 <small class="contacts-list-date pull-right">2/28/2015</small>
                 </span>
-                                <span class="contacts-list-msg">How have you been? I was...</span>
-                            </div>
-                            <!-- /.contacts-list-info -->
-                        </a>
-                    </li>
-                    <!-- End Contact Item -->
-                </ul>
-                <!-- /.contatcts-list -->
-            </div>
-            <!-- /.direct-chat-pane -->
-        </div>
-        <!-- /.box-body -->
-        <div class="box-footer">
-            <div class="input-group">
-                <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-                <span class="input-group-btn">
-                <button type="button" class="btn btn-danger btn-flat">Send</button>
+                                        <span class="contacts-list-msg">How have you been? I was...</span>
+                                    </div>
+                                    <!-- /.contacts-list-info -->
+                                </a>
+                            </li>
+                            <!-- End Contact Item -->
+                        </ul>
+                        <!-- /.contacts-list -->
+                    </div>
+                    <!-- /.direct-chat-pane -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <div class="input-group">
+                        <input type="text" name="message" placeholder="Type Message ..." class="form-control" id="data-message">
+                        <span class="input-group-btn">
+                <button type="button" class="btn btn-primary btn-flat" id="send">Send</button>
                 </span>
+                    </div>
+                </div>
+                <!-- /.box-footer-->
+            </div>
+            <!--/.direct-chat -->
+
+        </div>
+        <div class="col-md-6">
+            <button class="btn btn-success btn-flat" id="kirim">KLIK DISINI COY</button>
+            <br>
+            <br>
+            {#<input id="enter" type="text" class="form-control" placeholder="Apa yang Anda pikirkan?">#}
+
+
+
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="data-user"></tbody>
+            </table>
+
+            <br>
+            <br>
+
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                <th>Tipe Iklan</th>
+                <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody id="data-ad"></tbody>
+            </table>
+
+            <!-- Modal -->
+            <div class="modal" id="adsModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Modal Header</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Some text in the modal.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-        <!-- /.box-footer-->
     </div>
-    <!--/.direct-chat -->
+
+
+
 {%- endblock -%}
+

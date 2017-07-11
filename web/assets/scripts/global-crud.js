@@ -162,6 +162,10 @@ function getAll(module, columns = [], tbody = 'data-list') {
                                 tr += '<button data-id="' + val.id + '" class="detail-adv btn btn-default btn-xs btn-flat" title="DETAIL JENIS IKLAN"><i class="fa fa-file-text-o"></i></button>';
                             }
 
+                            if (module === 'helpdesk/tickets') {
+                                tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="STATUS DAN PRIORITAS TIKET"><i class="fa fa-file-text-o"></i></button>';
+                            }
+
                             tr += '</span></td>';
                             tr += '</tr>';
                         });

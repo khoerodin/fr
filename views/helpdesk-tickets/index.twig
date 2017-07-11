@@ -2,6 +2,7 @@
 
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
+    <script src="/assets/scripts/helpdesk-tickets.js"></script>
     <script>
         window.module = 'helpdesk/tickets';
         window.field = 'name';
@@ -43,15 +44,69 @@
                             <th>Judul</th>
                             <th>Pesan</th>
 
-                            <th width="5%"><span class="pull-right">Aksi</span></th>
+
+                            <th width="10%"><span class="pull-right" >Aksi</span></th>
                         </tr>
                         </thead>
 
-                        <tbody data-list="helpdesk/tickets">
-                        <tr><td colspan="7">LOADING DATA...</td></tr>
+                        <tbody id="data-tiket" data-list="helpdesk/tickets">
+                        <tr><td colspan="9">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>
+
+                    {#MODAL DETAIL SUB-MENU TIKET#}
+                    <div class="modal" id="tiketModal" role="dialog" >
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Status dan Prioritas Tiket</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" class="clients detail form">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label>Nama Klien</label>
+                                                <select name="name" data-object="clients#name" data-selected="client#name" class="form-control select-edit-modal" disabled>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Nama Staf</label>
+                                                <select name="name" data-object="staffs#name" data-selected="staff#name" class="form-control select-edit-modal" disabled>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Kategori</label>
+                                                <select name="category" data-object="helpdesk/categories#name" data-selected="parent#name" class="form-control select-edit-modal" selected disabled>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="title">Judul</label>
+                                                <input type="text" name="title" class="form-control" id="title" placeholder="Judul" readonly="readonly">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="message">Pesan</label>
+                                                <textarea name="message" class="form-control" id="message" placeholder="Pesan" readonly="readonly"></textarea>
+                                            </div>
+
+                                        </div>
+                                        <input type="hidden" name="id" id="id">
+                                        <!-- /.box-body -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
 
                     {#ADD MODAL#}
                     <div data-modal-add="helpdesk/tickets" class="clients add-modal modal" role="dialog">

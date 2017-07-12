@@ -5019,3 +5019,7 @@ tr.active {
 #emitenTable tr:hover, #sektorTable tr:hover {
   cursor: pointer;
 }
+
+.not-ucase {
+  text-transform: inherit;
+}

@@ -4,34 +4,34 @@ $(document).on('click', '#kirim', function () {
     //deleteUser();
 });
 
-function tampilUser() {
-    $.ajax({
-        type: 'POST',
-        url: '/api',
-        data: {
-            module: 'users',
-            method: 'GET'
-        },
-        success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data);
-            var aaa = memberData['hydra:member'];
-            var dataUser = '';
-            $.each(aaa, function (index, value) {
-                dataUser += '<tr data-id="'+value.id+'">';
-                dataUser += '<td>'+value.fullname+'</td>';
-                dataUser += '<td>'+value.email+'</td>';
-                dataUser += '<td>'+value.username+'</td>';
-                dataUser += '<td><label class="label label-danger delete-user">DELETE</label></td>';
-                dataUser += '<tr>';
-            });
-
-            $('#data-user').html(dataUser);
-        },
-        error: function () {
-
-        }
-    });
-}
+// function tampilUser() {
+//     $.ajax({
+//         type: 'POST',
+//         url: '/api',
+//         data: {
+//             module: 'users',
+//             method: 'GET'
+//         },
+//         success: function (data, textStatus, jqXHR) {
+//             var memberData = JSON.parse(data);
+//             var aaa = memberData['hydra:member'];
+//             var dataUser = '';
+//             $.each(aaa, function (index, value) {
+//                 dataUser += '<tr data-id="'+value.id+'">';
+//                 dataUser += '<td>'+value.fullname+'</td>';
+//                 dataUser += '<td>'+value.email+'</td>';
+//                 dataUser += '<td>'+value.username+'</td>';
+//                 dataUser += '<td><label class="label label-danger delete-user">DELETE</label></td>';
+//                 dataUser += '<tr>';
+//             });
+//
+//             $('#data-user').html(dataUser);
+//         },
+//         error: function () {
+//
+//         }
+//     });
+// }
 
 // function deleteUser(id) {
 //     $.ajax({

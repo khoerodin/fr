@@ -323,9 +323,9 @@ function searchEmiten() {
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[0];
         if (td) {
+            $('#warn-nodata').remove();
             if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
-                $('#warn-nodata').remove();
             } else {
                 tr[i].style.display = "none";
             }
@@ -342,7 +342,6 @@ function getEmiten() {
             method: 'get'
         },
         success: function (data, textStatus, jqXHR) {
-            //disini searchnya
             var memberData = JSON.parse(data)['hydra:member'];
             localStorage.setItem("emitenList", JSON.stringify(memberData));
 

@@ -5023,3 +5023,7 @@ tr.active {
 .not-ucase {
   text-transform: inherit;
 }
+
+.form-control[readonly] {
+  background-color: inherit;
+}

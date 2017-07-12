@@ -2,11 +2,25 @@
  * Created by mispc3 on 10/07/17.
  */
 
+<<<<<<< HEAD
+$(document).on('click', '.detail-tic', function () {
+=======
 $(document).on('click', '.detail-tic', function (e) {
+>>>>>>> 48854f74ff894adf4c8591da5edfb40e5a2d7efe
     $('#tiketModal').modal({show: true, backdrop: 'static'});
 
 });
 
+<<<<<<< HEAD
+$(document).on('keypress', '#enter', function (e) {
+    if (e.which === 13) {
+        //tampilUser();
+        // var isi = $(this).val();
+        // alert(isi);
+        // console.log(e);
+        return false;
+    }
+=======
 // $(document).on('click', '#chatHistory', function (e) {
 //     $('#send').modal({
 //         show: true,
@@ -29,6 +43,7 @@ $('.ticket-priority').select2({
     placeholder: "Pilih prioritas tiket",
     allowClear: true
 
+>>>>>>> 48854f74ff894adf4c8591da5edfb40e5a2d7efe
 });
 
 $(document).find('#chatMessage').on('keypress', function(e){

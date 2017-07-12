@@ -19,7 +19,7 @@ body {
   height: 100%;
 }
 body {
-  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'FontAwesome';
   font-weight: 400;
   overflow-x: hidden;
   overflow-y: auto;
@@ -5018,4 +5018,12 @@ tr.active {
 
 #emitenTable tr:hover, #sektorTable tr:hover {
   cursor: pointer;
+}
+
+.not-ucase {
+  text-transform: inherit;
+}
+
+.form-control[readonly] {
+  background-color: inherit;
 }

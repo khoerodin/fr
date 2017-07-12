@@ -114,8 +114,9 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Emiten</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Emiten">
+                                    <div class="input-group" id="emiten">
+                                        <input type="text" readonly name="emiten" class="form-control" placeholder="Emiten">
+                                        <input type="hidden" id="cat1" name="cat1">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button">Pilih</button>
                                         </span>
@@ -360,4 +361,28 @@
         </div>
     </div>
     {#End Media Iklan#}
+
+    {#Emiten#}
+    <div id="emitenModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Emiten</h4>
+                    <small class="text-success">Dobel klik emiten untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachEmiten" placeholder="CARI EMITEN">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Emiten#}
 {%- endblock -%}

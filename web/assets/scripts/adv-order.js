@@ -296,3 +296,92 @@ $(document).ajaxComplete(function() {
     });
 });
 // end Media Iklan
+
+// Emiten
+$(document).on('click', '#emiten button', function () {
+    getEmiten();
+    $('#emitenModal').modal({show: true, backdrop: 'static'});
+    $('#emitenModal input#serachList').focus();
+});
+
+$(document).on('keyup', '#serachEmiten', function () {
+    searchEmiten();
+    if($('#emitenData').children(':visible').length == 0) {
+        $('#emitenData').append('<tr id="warn-nodata"><td class="text-danger">TIDAK ADA DATA</td></tr>');
+    }
+});
+
+function searchEmiten() {
+    // Declare variables
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("serachEmiten");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("emitenData");
+    tr = table.getElementsByTagName("tr");
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+                $('#warn-nodata').remove();
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function getEmiten() {
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'advertising/categories/root',
+            method: 'get'
+        },
+        success: function (data, textStatus, jqXHR) {
+            //disini searchnya
+            var memberData = JSON.parse(data)['hydra:member'];
+            localStorage.setItem("emitenList", JSON.stringify(memberData));
+
+            tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Emiten</th></tr></thead>';
+            tableData += '<tbody id="emitenData">';
+
+            $.each(memberData, function (index, value) {
+                tableData += '<tr style="cursor: pointer" data-id="'+value.id+'">';
+                tableData += '<td>'+value.name+'</td>';
+                tableData += '</tr>';
+            });
+
+            tableData += '</tbody>';
+            tableData += '<table>';
+            tableData += '';
+
+            if (memberData.length > 0) {
+                tableData = tableData;
+            } else {
+                tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Emiten</th></tr></thead>';
+                tableData += '<tbody>';
+                tableData += '<tr><td colspan="1" class="text-danger">TIDAK ADA DATA</td></tr>';
+                tableData += '</tbody>';
+                tableData += '<tbody>';
+            }
+            $('#emitenModal .modal-body #data-list').html(tableData);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+}
+
+$(document).ajaxComplete(function() {
+    $(document).on('dblclick', '#emitenData tr', function () {
+        var emitenId = $(this).data('id');
+        $('#emiten').val(emitenId);
+        $('input[name="emiten"]').val($(this).find('td:eq(0)').text());
+        $('#emitenModal').modal('hide');
+    });
+});
+// end Emiten

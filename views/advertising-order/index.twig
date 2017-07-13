@@ -14,7 +14,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Order Dari</label>
-                                    <select name="orderFrom" id="orderFrom" class="form-control">
+                                    <select name="orderFrom" id="orderFrom" class="form-control" style="width: 100%">
                                         <option selected disabled>PILIH PERWAKILAN</option>
                                         {% for rep in representatives %}
                                             <option value="/api/representatives/{{ rep.id }}">{{ rep.code }} - {{ rep.name }}</option>
@@ -22,10 +22,16 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Nomor Order</label>
-                                    <input type="text" name="orderNumber" id="orderNumber" class="form-control" placeholder="Nomor Order - otomatis">
+                                    <input type="text" name="orderNumber" id="orderNumber" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Nomor Surat Order</label>
+                                    <input type="text" name="orderLetter" id="orderLetter" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -41,12 +47,6 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Nomor Surat Order</label>
-                                    <input type="text" name="orderLetter" id="orderLetter" class="form-control" placeholder="Nomor Surat Order - free text">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <label for="">Tanggal Faktur</label>
                                     <div class='input-group date' id='dtInvoicedAt'>
                                         <input type='text' name="invoicedAt" id="invoicedAt" class="form-control" />
@@ -57,13 +57,16 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
+                                <hr>
+                            </div>
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Pemasang</label>
                                     <div class="input-group" id="pemasang">
-                                        <input type="text" readonly name="pemasang" class="form-control" placeholder="Silakan Pilih Pemasang">
+                                        <input type="text" readonly name="pemasang" class="form-control">
                                         <input type="hidden" name="customer" id="customer" >
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -71,17 +74,17 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Alamat</label>
-                                    <input readonly id="customerAddress" type="text" class="form-control" placeholder="Silakan Pilih Pemasang">
+                                    <input readonly id="customerAddress" type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Klien</label>
                                     <div class="input-group" id="klien">
-                                        <input type="text" readonly name="klien" class="form-control" placeholder="Klien">
+                                        <input type="text" readonly name="klien" class="form-control">
                                         <input type="hidden" name="client" id="client">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -89,24 +92,28 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Cetak Di Faktur</label>
-                                    <input type="text" class="form-control">
+                                    <select type="text" class="form-control" id="cetakDiFaktur" style="width: 100%">
+                                        <option disabled selected>PILIH</option>
+                                        <option value="customer">PEMASANG</option>
+                                        <option value="client">KLIEN</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Surat Perjanjian</label>
-                                    <input type="text" name="Surat Perjanjian" class="form-control" placeholder="Surat Perjanjian">
-
+                                    <input type="text" name="Surat Perjanjian" class="form-control">
+                                    <p class="help-block">Dipilih jika terdapat perjanjian kerjasama</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Jenis Iklan</label>
                                     <div class="input-group" id="jenisIklan">
-                                        <input type="text" readonly name="jenisIklan" class="form-control" placeholder="Jenis Iklan">
+                                        <input type="text" readonly name="jenisIklan" class="form-control">
                                         <input type="hidden" name="specification" id="specification" >
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -115,21 +122,22 @@
                                 <div class="form-group">
                                     <label for="">Emiten</label>
                                     <div class="input-group" id="emiten">
-                                        <input type="text" readonly name="emiten" class="form-control" placeholder="Emiten">
-                                        <input type="hidden" id="cat1" name="cat1">
+                                        <input type="text" readonly name="emiten" class="form-control">
+                                        <input type="hidden" id="category1" name="category1">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Nomor PIC</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Nomor PIC">
+                                    <label for="">Nama PIC</label>
+                                    <div class="input-group" id="pic">
+                                        <input type="text" name="pic" class="form-control">
+                                        <input type="hidden" id="accountExecutive" name="accountExecutive">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -138,10 +146,10 @@
                                 <div class="form-group">
                                     <label for="">Tipe Iklan</label>
                                     <div class="input-group" id="tipeIklan">
-                                        <input type="text" readonly name="tipeIklan" class="form-control" placeholder="Tipe Iklan">
+                                        <input type="text" readonly name="tipeIklan" class="form-control">
                                         <input type="hidden" name="type" id="type" >
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -150,10 +158,10 @@
                                 <div class="form-group">
                                     <label for="">Pasang Di</label>
                                     <div class="input-group" id="mediaIklan">
-                                        <input type="text" name="mediaIklan" class="form-control" placeholder="Pasang Di">
+                                        <input type="text" name="mediaIklan" class="form-control">
                                         <input type="hidden" id="media" name="media">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -161,10 +169,11 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Sektor</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Sektor">
+                                    <div class="input-group" id="sektor">
+                                        <input type="text" name="sektor" class="form-control">
+                                        <input type="hidden" id="category2" name="category2">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -172,10 +181,11 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Sub Sektor</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Sub Sektor">
+                                    <div class="input-group" id="sub-sektor">
+                                        <input type="text" name="sub-sektor" class="form-control">
+                                        <input type="hidden" id="category3" name="category3">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -193,42 +203,116 @@
                                 <div class="form-group">
                                     <label for="">Ukuran</label>
                                     <div class="row">
-                                        <div class="col-xs-2">
-                                            <input type="text" class="form-control">
+                                        <div class="col-xs-3">
+                                            <div class="input-group">
+                                                <input type="number" class="form-control">
+                                                <div class="input-group-addon">kolom</div>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-2">
-                                            <input type="text" class="form-control">
+                                        <div class="col-xs-1">
+                                            <div class="text-bold" style="margin-left: 13px;font-size: 16px;margin-top: 5px;">X</div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="input-group">
+                                                <input type="number" class="form-control">
+                                                <div class="input-group-addon">mm/baris</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Terbit</label>
                                     <div class="row">
-                                        <div class="col-xs-2">
-                                            <input type="text" class="form-control">
+                                        <div class="col-xs-3">
+                                            <label for="">Terbit</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control">
+                                                <div class="input-group-addon">kali</div>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-2">
-                                            <input type="text" class="form-control">
+                                        <div class="col-xs-3">
+                                            <label for="">Kontrak</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control">
+                                                <div class="input-group-addon">bulan</div>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-2">
-                                            <button class="btn btn-default btn-flat">Edisi Terbit</button>
+                                        <div class="col-xs-3">
+                                            <label for="" style="visibility: hidden;">Edisi Terbit</label>
+                                            <button class="btn btn-default btn-block btn-flat">Pilih Edisi Terbit</button>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-12">
+                                <hr>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Tarif Iklan</label>
                                     <div class="row">
-                                        <div class="col-xs-2">
+                                        <div class="col-xs-4">
                                             <input type="text" class="form-control">
                                         </div>
-                                        <div class="col-xs-2">
-                                            <button class="btn btn-default btn-flat">Rincian Diskon %</button>
+                                        <div class="col-xs-4">
+                                            <button class="btn btn-default btn-block btn-flat">Tetapkan Rincian Diskon %</button>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Jumlah Bayar</label>
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Jumlah Bayar Final</label>
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <button class="btn btn-default btn-block btn-flat">Hitung</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Sisipan</label>
+                                    <div class="input-group" id="sisipan">
+                                        <input type="text" readonly name="sisipan" class="form-control">
+                                        <input type="hidden" id="sirculationArea" name="sirculationArea">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Order Perwakilan</label>
+                                    <input type="text" name="" class="form-control">
+                                    <p class="help-block">Harus diisi jika order dari perwakilan non-jaringan pusat</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Keterangan Materi</label>
+                                    <input type="text" name="" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Keterangan Order</label>
+                                    <input type="text" name="" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -251,10 +335,10 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Pilih Pemasang Iklan</h4>
-                    <small class="text-success">Dobel klik pemasang iklan untuk memilihnya</small>
+                    <small class="text-success">Dobel klik Pemasang Iklan untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA PEMASANG">
+                    <input type="text" class="form-control" id="serachList">
                     <div id="data-list" style="margin-top: 10px"></div>
                 </div>
                 <div class="modal-footer">
@@ -275,7 +359,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Pilih Klien</h4>
-                    <small class="text-success">Dobel klik klien untuk memilihnya</small>
+                    <small class="text-success">Dobel klik Klien untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
                     <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA KLIEN">
@@ -299,7 +383,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Pilih Jenis Iklan</h4>
-                    <small class="text-success">Dobel klik jenis iklan untuk memilihnya</small>
+                    <small class="text-success">Dobel klik Jenis Iklan untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
                     <input type="text" class="form-control" id="serachList" placeholder="CARI JENIS IKLAN">
@@ -323,7 +407,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Pilih Tipe Iklan</h4>
-                    <small class="text-success">Dobel klik tipe iklan untuk memilihnya</small>
+                    <small class="text-success">Dobel klik Tipe Iklan untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
                     <input type="text" class="form-control" id="serachList" placeholder="CARI TIPE IKLAN">
@@ -347,7 +431,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Pilih Media Iklan</h4>
-                    <small class="text-success">Dobel klik media iklan untuk memilihnya</small>
+                    <small class="text-success">Dobel klik Media Iklan untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
                     <input type="text" class="form-control" id="serachList" placeholder="CARI MEDIA IKLAN">
@@ -371,7 +455,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Pilih Emiten</h4>
-                    <small class="text-success">Dobel klik emiten untuk memilihnya</small>
+                    <small class="text-success">Dobel klik Emiten untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
                     <input type="text" class="form-control" id="serachEmiten" placeholder="CARI EMITEN">
@@ -385,4 +469,100 @@
         </div>
     </div>
     {#End Emiten#}
+
+    {#Sektor#}
+    <div id="sektorModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Sektor</h4>
+                    <small class="text-success">Dobel klik Sektor untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachList" placeholder="CARI SEKTOR">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Sektor#}
+
+    {#Sektor#}
+    <div id="subSektorModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Sub Sektor</h4>
+                    <small class="text-success">Dobel klik Sub Sektor untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachList" placeholder="CARI SUB SEKTOR">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Sektor#}
+
+    {#PIC / Account Executive#}
+    <div id="PICModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Nama PIC</h4>
+                    <small class="text-success">Dobel klik Nama PIC untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA PIC">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#PIC / Account Executive#}
+
+    {#Sisipan#}
+    <div id="sisipanModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Nama Kota</h4>
+                    <small class="text-success">Dobel klik Nama Kota untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA KOTA">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#Sisipan#}
 {%- endblock -%}

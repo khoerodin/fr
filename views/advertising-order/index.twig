@@ -1,0 +1,388 @@
+{% extends 'layout.twig' %}
+
+{% block js %}
+    <script src="/assets/scripts/adv-order.js"></script>
+{% endblock %}
+
+{%- block content -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <form class="row">
+                        <div class="col-md-6 row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Order Dari</label>
+                                    <select name="orderFrom" id="orderFrom" class="form-control">
+                                        <option selected disabled>PILIH PERWAKILAN</option>
+                                        {% for rep in representatives %}
+                                            <option value="/api/representatives/{{ rep.id }}">{{ rep.code }} - {{ rep.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Nomor Order</label>
+                                    <input type="text" name="orderNumber" id="orderNumber" class="form-control" placeholder="Nomor Order - otomatis">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Tanggal Booking</label>
+                                    <div class='input-group date' id='dtBookedAt'>
+                                        <input type='text' name="bookedAt" id="bookedAt" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Nomor Surat Order</label>
+                                    <input type="text" name="orderLetter" id="orderLetter" class="form-control" placeholder="Nomor Surat Order - free text">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Tanggal Faktur</label>
+                                    <div class='input-group date' id='dtInvoicedAt'>
+                                        <input type='text' name="invoicedAt" id="invoicedAt" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Pemasang</label>
+                                    <div class="input-group" id="pemasang">
+                                        <input type="text" readonly name="pemasang" class="form-control" placeholder="Silakan Pilih Pemasang">
+                                        <input type="hidden" name="customer" id="customer" >
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Alamat</label>
+                                    <input readonly id="customerAddress" type="text" class="form-control" placeholder="Silakan Pilih Pemasang">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Klien</label>
+                                    <div class="input-group" id="klien">
+                                        <input type="text" readonly name="klien" class="form-control" placeholder="Klien">
+                                        <input type="hidden" name="client" id="client">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Cetak Di Faktur</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Surat Perjanjian</label>
+                                    <input type="text" name="Surat Perjanjian" class="form-control" placeholder="Surat Perjanjian">
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Jenis Iklan</label>
+                                    <div class="input-group" id="jenisIklan">
+                                        <input type="text" readonly name="jenisIklan" class="form-control" placeholder="Jenis Iklan">
+                                        <input type="hidden" name="specification" id="specification" >
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Emiten</label>
+                                    <div class="input-group" id="emiten">
+                                        <input type="text" readonly name="emiten" class="form-control" placeholder="Emiten">
+                                        <input type="hidden" id="cat1" name="cat1">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Nomor PIC</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Nomor PIC">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Tipe Iklan</label>
+                                    <div class="input-group" id="tipeIklan">
+                                        <input type="text" readonly name="tipeIklan" class="form-control" placeholder="Tipe Iklan">
+                                        <input type="hidden" name="type" id="type" >
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Pasang Di</label>
+                                    <div class="input-group" id="mediaIklan">
+                                        <input type="text" name="mediaIklan" class="form-control" placeholder="Pasang Di">
+                                        <input type="hidden" id="media" name="media">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Sektor</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Sektor">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Sub Sektor</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Sub Sektor">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button">Pilih</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Judul Iklan</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Ukuran</label>
+                                    <div class="row">
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Terbit</label>
+                                    <div class="row">
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <button class="btn btn-default btn-flat">Edisi Terbit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Tarif Iklan</label>
+                                    <div class="row">
+                                        <div class="col-xs-2">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <button class="btn btn-default btn-flat">Rincian Diskon %</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="box-footer clearfix">
+                    {#Footer content here#}
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+
+    {#Pemasang Modal#}
+    <div id="pemasangModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Pemasang Iklan</h4>
+                    <small class="text-success">Dobel klik pemasang iklan untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA PEMASANG">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Pemasang Modal#}
+
+    {#Klien Modal#}
+    <div id="klienModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Klien</h4>
+                    <small class="text-success">Dobel klik klien untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA KLIEN">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Klien Modal#}
+
+    {#Jenis Iklan#}
+    <div id="jenisIklanModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Jenis Iklan</h4>
+                    <small class="text-success">Dobel klik jenis iklan untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachList" placeholder="CARI JENIS IKLAN">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Jenis Iklan#}
+
+    {#Tipe Iklan#}
+    <div id="tipeIklanModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Tipe Iklan</h4>
+                    <small class="text-success">Dobel klik tipe iklan untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachList" placeholder="CARI TIPE IKLAN">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Tipe Iklan#}
+
+    {#Media Iklan#}
+    <div id="mediaIklanModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Media Iklan</h4>
+                    <small class="text-success">Dobel klik media iklan untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachList" placeholder="CARI MEDIA IKLAN">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Media Iklan#}
+
+    {#Emiten#}
+    <div id="emitenModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Emiten</h4>
+                    <small class="text-success">Dobel klik emiten untuk memilihnya</small>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="serachEmiten" placeholder="CARI EMITEN">
+                    <div id="data-list" style="margin-top: 10px"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Emiten#}
+{%- endblock -%}

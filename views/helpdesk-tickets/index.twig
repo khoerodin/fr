@@ -58,7 +58,7 @@
 
                     {#MODAL DETAIL PRIORITAS DAN STATUS TIKET#}
                     <div class="modal" id="tiketModal" role="dialog" >
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -122,7 +122,7 @@
                                                                             <!-- /.direct-chat-info -->
                                                                             <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
                                                                             <!-- /.direct-chat-img -->
-                                                                            <div class="direct-chat-text">
+                                                                            <div class="direct-chat-text bg-blue">
                                                                                 Hai.. Apa Kabar?
                                                                             </div>
                                                                             <!-- /.direct-chat-text -->
@@ -155,19 +155,19 @@
                                                                     <!-- /.direct-chat-pane -->
                                                                 </div>
                                                                 <!-- /.box-body -->
+                                                                <div id="typing_on"></div>
                                                                 <div class="box-footer">
                                                                     <div class="input-group">
-                                                                        <input type="text" name="message" placeholder="Type Message ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200">
+                                                                        <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200">
                                                                         <span class="input-group-btn">
                                                                         <button type="button" class="btn btn-primary btn-flat" id="send">Send</button>
                                                                         </span>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                        <!-- /.box-footer-->
-                                                                                                                    </div>
-                                                                                                                    <!--/.direct-chat -->
-
-                                                                                                                </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /.box-footer-->
+                                                            </div>
+                                                            <!--/.direct-chat -->
+                                                        </div>
 
                                                     <input type="hidden" name="id" id="id">
                                                 </div>

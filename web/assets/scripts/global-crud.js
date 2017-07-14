@@ -163,7 +163,7 @@ function getAll(module, columns = [], tbody = 'data-list') {
                             }
 
                             if (module === 'helpdesk/tickets') {
-                                tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="STATUS DAN PRIORITAS TIKET"><i class="fa fa-file-text-o"></i></button>';
+                                tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TIKET LIVE CHAT"><i class="fa fa-file-text-o"></i></button>';
                             }
 
                             tr += '</span></td>';

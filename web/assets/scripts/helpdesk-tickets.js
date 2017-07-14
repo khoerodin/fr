@@ -3,11 +3,11 @@
  */
 
 $(document).on('click', '.detail-tic', function (e) {
+    var ticketId = $(this).closest('tr').attr('id');
+    getTicketData(ticketId);
     $('#tiketModal').modal({show: true, backdrop: 'static'});
 
 });
-
-
 
 $(document).on('click', '#send', function (e) {
     var waktu = moment().format("ddd, D MMM YYYY, h:mm A");
@@ -16,7 +16,6 @@ $(document).on('click', '#send', function (e) {
     $(document).find('#chatHistory').append(html);
     $('#chatMessage').val('');
 });
-
 
 $('.ticket-status').select2({
     theme: "bootstrap",
@@ -62,3 +61,53 @@ function updateLastTypedTime() {
 setInterval(refreshTypingStatus, 100);
 textarea.keypress(updateLastTypedTime);
 textarea.blur(refreshTypingStatus);
+
+var currentDay = moment().format("D MMM YYYY");
+var html = '<div><span class="current-date">'+currentDay+'</span></div>';
+$(document).find('.current-date').append(html);
+
+var currentTime = moment().format("kk.mm a");
+var html = '<span class="current-time pull">&nbsp;'+currentTime+'</span>';
+$(document).find('.current-time').append(html);
+
+var postingTime = moment().format("kk.mm a");
+var html = '<div><span class="post-time">'+postingTime+'</span></div>';
+$(document).find('.current-post-time').append(html);
+
+
+
+function getTicketData(param) {
+
+    var title = $('tbody[data-list="helpdesk/tickets"] tr#'+param+' td:nth-child(5)').text();
+    var client = $('tbody[data-list="helpdesk/tickets"] tr#'+param+' td:nth-child(2)').text();
+    var message = $('tbody[data-list="helpdesk/tickets"] tr#'+param+' td:nth-child(6)').text();
+    var category = $('tbody[data-list="helpdesk/tickets"] tr#'+param+' td:nth-child(4)').text();
+
+    $('#tiketModal .timeline-header-title').text(title);
+    $('#tiketModal .media-heading-client-name').text(client);
+    $('#tiketModal .posted-message').text(message);
+    $('#tiketModal .timeline-header-category').text(category);
+
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/ticket-responses',
+            method: 'get',
+            params: [
+                {
+                    'ticket.id': param
+                }
+            ]
+        },
+        success: function (data) {
+            var data = JSON.parse(data);
+            var finalData = data['hydra:member'];
+            //console.log(finalData);
+
+            $.each(finalData, function (index, value) {
+               // console.log(value.client.user.fullname);
+            });
+        }
+    });
+}

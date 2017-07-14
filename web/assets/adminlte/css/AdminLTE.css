@@ -5027,3 +5027,15 @@ tr.active {
 .form-control[readonly] {
   background-color: inherit;
 }
+
+.btn-bisnis {
+  color: #ffffff;
+  background-color: #145293;
+  border-color: #11457d;
+}
+
+.btn-bisnis:hover {
+  color: #ffffff;
+  background-color: #145293;
+  border-color: #145293;
+}

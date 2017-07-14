@@ -1,5 +1,7 @@
 $("#orderFrom").select2({theme: 'bootstrap'});
 $("#cetakDiFaktur").select2({theme: 'bootstrap'});
+$("#paymentMethod").select2({theme: 'bootstrap'});
+
 $('#dtBookedAt').datetimepicker({
     locale: 'id'
 });
@@ -689,3 +691,84 @@ $(document).ajaxComplete(function() {
     });
 });
 // end Sisipan
+
+function getBiaya() {
+    var kolom = $('#columnSize').val();
+    var mmBaris = $('#milimeterSize').val();
+    var terbit = $('#totalPost').val();
+    var tarif = $('#basePrice').val();
+
+    if ($('#columnSize').val() && $('#milimeterSize').val() && $('#totalPost').val() && $('#basePrice').val() ) {
+        if (
+            $('#paymentMethod').val() === 'kuping' ||
+            $('#paymentMethod').val() === 'banner' ||
+            $('#paymentMethod').val() === 'stapel' ||
+            $('#paymentMethod').val() === 'eksposisi' ||
+            $('#paymentMethod').val() === 'tarif_khusus'
+        ) {
+            return tarif;
+        } else {
+            return (kolom * mmBaris) * terbit * tarif;
+        }
+    }
+}
+
+function getJumlahBayar() {
+    if(getBiaya() && $('#discountValue').val() && $('#taxValue').val()) {
+        var diskon = $('#discountValue').val();
+        var ppn = $('#taxValue').val();
+
+        var jumlahBayar;
+        if ($('#material').val()) {
+            var materai = $('#material').val();
+            jumlahBayar = getBiaya() - diskon - ppn - materai;
+        } else {
+            jumlahBayar = getBiaya() - diskon - ppn;
+        }
+
+        $('#totalAmount').val(accounting.formatMoney(jumlahBayar, "Rp ", 2, ".", ","));
+
+        return jumlahBayar;
+    }
+}
+
+function getNetto() {
+    if(getBiaya() && $('#quantity').val()) {
+        var quantity = $('#quantity').val();
+        var netto = getJumlahBayar() * quantity;
+        $('#netto').text(accounting.formatMoney(netto, "Rp ", 2, ".", ","));
+    }
+}
+
+$(document).on('keyup mouseup', '#columnSize', function () {
+    getJumlahBayar();
+    getNetto();
+});
+$(document).on('keyup mouseup', '#milimeterSize', function () {
+    getJumlahBayar();
+    getNetto();
+});
+$(document).on('keyup mouseup', '#totalPost', function () {
+    getJumlahBayar();
+    getNetto();
+});
+$(document).on('keyup mouseup', '#basePrice', function () {
+    getJumlahBayar();
+    getNetto();
+});
+$(document).on('keyup mouseup', '#discountValue', function () {
+    getJumlahBayar();
+    getNetto();
+});
+$(document).on('keyup mouseup', '#taxValue', function () {
+    getJumlahBayar();
+    getNetto();
+});
+$(document).on('keyup mouseup', '#quantity', function () {
+    getJumlahBayar();
+    getNetto();
+});
+$(document).on('keyup mouseup', '#material', function () {
+    getJumlahBayar();
+    getNetto();
+});

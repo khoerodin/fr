@@ -253,35 +253,65 @@
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <label for="">Tarif Iklan</label>
-                                            <input type="text" class="form-control">
+                                            <input type="text" name="basePrice" id="basePrice" class="form-control">
                                         </div>
                                         <div class="col-xs-4">
-                                            <label for="">Diskon</label>
-                                            <button class="btn btn-default btn-block btn-flat"><i class="fa fa-pencil-square-o"></i> Set Rincian Diskon %</button>
+                                            <label for="">Diskon Rp</label>
+                                            <input type="number" name="discountValue" id="discountValue" min="0" class="form-control">
                                         </div>
-                                        <div class="col-xs-4">
-                                            <label for="">Jumlah Bayar</label>
-                                            <input type="text" readonly class="form-control">
+                                        <div class="col-xs-3">
+                                            <label for="">Diskon %</label>
+                                            <div class="input-group">
+                                                <input type="number" name="discountPercentage" id="discountPercentage" min="0" class="form-control">
+                                                <div class="input-group-addon">%</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <label for="">PPN Rp</label>
+                                            <input type="number" name="taxValue" id="taxValue" min="0" class="form-control">
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label for="">PPN %</label>
+                                            <div class="input-group">
+                                                <input type="number" name="taxPercentage" id="taxPercentage" min="0" class="form-control">
+                                                <div class="input-group-addon">%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <label for="">Jumlah Bayar</label>
+                                            <input type="text" name="totalAmount" id="totalAmount" readonly class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <label for="">Quantity</label>
                                             <div class="input-group">
-                                                <input type="number" min="1" class="form-control">
+                                                <input type="number" name="quantity" id="quantity" min="1" class="form-control">
                                                 <div class="input-group-addon">kali</div>
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
                                             <label for="">Materai</label>
-                                            <div class="input-group">
-                                                <div class="input-group-addon">Rp</div>
-                                                <input type="text" class="form-control">
-                                            </div>
+                                            <input type="text" name="material" id="material" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -289,14 +319,21 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Netto</label>
-                                    <div class="bg-aqua" style="padding: 10px;">
-                                        <div style="font-size: 40px;font-weight: bold;">
-                                            Rp 55.555.000,-
-                                        </div>
-                                        <div style="font-size: 21px; font-style: italic;">
-                                            Lima Puluh Lima Juta Lima Ratus Lima Puluh Lima Ribu Rupiah
-                                        </div>
+                                    <div class="bg-aqua" style="padding: 10px; height: 133px;">
+                                        <div style="font-size: 40px;font-weight: bold;" id="netto"></div>
+                                        <div style="font-size: 21px; font-style: italic;"></div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Jenis Bayar</label>
+                                    <select name="paymentMethod" id="paymentMethod" class="form-control" style="width: 100%">
+                                        <option selected disabled>PILIH JENIS BAYAR</option>
+                                        {% for jb in paymentMethod %}
+                                            <option value="/api/billing/payment-methods/{{ jb.id }}">{{ rep.name }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -313,21 +350,14 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Order Perwakilan</label>
-                                    <input type="text" name="" class="form-control">
-                                    <p class="help-block">Harus diisi jika order dari perwakilan non-jaringan pusat</p>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
                                     <label for="">Keterangan Materi</label>
-                                    <input type="text" name="" class="form-control">
+                                    <input type="text" name="materialDescription" id="materialDescription" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Keterangan Order</label>
-                                    <input type="text" name="" class="form-control">
+                                    <input type="text" name="orderDescription" id="orderDescription" class="form-control">
                                 </div>
                             </div>
                         </div>

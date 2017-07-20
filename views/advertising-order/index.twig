@@ -1,7 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/adv-order.js"></script>
+    <script src="/assets/terbilangjs/terbilang.min.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -321,7 +321,8 @@
                                     <label for="">Netto</label>
                                     <div class="bg-aqua" style="padding: 10px; height: 133px;">
                                         <div style="font-size: 40px;font-weight: bold;" id="netto"></div>
-                                        <div style="font-size: 21px; font-style: italic;"></div>
+                                        <input type="hidden" id="nettoRp">
+                                        <div style="font-size: 21px; font-style: italic;" id="terbilangNetto"></div>
                                     </div>
                                 </div>
                             </div>

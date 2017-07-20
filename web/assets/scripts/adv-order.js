@@ -2,8 +2,18 @@ $("#orderFrom, #cetakDiFaktur, #paymentMethod").select2({
     theme: 'bootstrap'
 });
 
-$('#dtBookedAt, #bookedAt, #dtInvoicedAt, #invoicedAt').datetimepicker({
+$('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
     locale: 'id'
+}).on('dp.change', function(e){
+    var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+    $('#invoicedAt').val(tgl);
+});
+
+$('#dtBookedAt, #inputBookedAt').datetimepicker({
+    locale: 'id'
+}).on('dp.change', function(e){
+    var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+    $('#bookedAt').val(tgl);
 });
 
 $(document).on('click', '#pemasang button', function () {
@@ -79,7 +89,7 @@ $(document).on('keyup', '#klienModal #serachList', function () {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#pemasangModalData tr', function () {
         var customerId = $(this).data('id');
-        $('#customer').val(customerId);
+        $('#customer').val('/api/advertising/customers/'+customerId);
         $('input[name="pemasang"]').val($(this).find('td:eq(1)').text());
         $('#pemasangModal').modal('hide');
         $('#customerAddress').val($(this).data('address'));
@@ -87,7 +97,7 @@ $(document).ajaxComplete(function() {
 
     $(document).on('dblclick', '#klienModalData tr', function () {
         var klienId = $(this).data('id');
-        $('#client').val(klienId);
+        $('#client').val('/api/advertising/customers/'+klienId);
         $('input[name="klien"]').val($(this).find('td:eq(1)').text()+' - '+$(this).find('td:eq(2)').text());
         $('#klienModal').modal('hide');
     });
@@ -154,7 +164,7 @@ function getSpecifications(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#jenisIklanModalData tr', function () {
         var specificationId = $(this).data('id');
-        $('#specification').val(specificationId);
+        $('#specification').val('/api/advertising/specifications/'+specificationId);
         $('input[name="jenisIklan"]').val($(this).find('td:eq(0)').text());
         $('#jenisIklanModal').modal('hide');
 
@@ -293,7 +303,7 @@ function getMedia(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#mediaIklanModalData tr', function () {
         var mediaId = $(this).data('id');
-        $('#type').val(mediaId);
+        $('#media').val(mediaId);
         $('input[name="mediaIklan"]').val($(this).find('td:eq(0)').text());
         $('#mediaIklanModal').modal('hide');
     });
@@ -548,7 +558,7 @@ function getSubSektor(params, parentId) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#subSektorModalData tr', function () {
         var sektorId = $(this).data('id');
-        $('#category3').val(sektorId);
+        $('#category').val('/api/advertising/category/'+sektorId);
         $('input[name="sub-sektor"]').val($(this).find('td:eq(0)').text());
         $('#subSektorModal').modal('hide');
     });
@@ -617,7 +627,7 @@ function getPIC(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#PICModalData tr', function () {
         var accountExecutiveId = $(this).data('id');
-        $('#accountExecutive').val(accountExecutiveId);
+        $('#accountExecutive').val('/api/advertising/account-executives/'+accountExecutiveId);
         $('input[name="pic"]').val($(this).find('td:eq(1)').text());
         $('#PICModal').modal('hide');
     });
@@ -685,7 +695,7 @@ function getSisipan(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#sisipanModalData tr', function () {
         var cityId = $(this).data('id');
-        $('#sirculationArea').val(cityId);
+        $('#sirculationArea').val('/api/cities/'+cityId);
         $('input[name="sisipan"]').val($(this).find('td:eq(0)').text());
         $('#sisipanModal').modal('hide');
     });
@@ -739,6 +749,9 @@ function getNetto() {
         }
 
         $('#netto').text(accounting.formatMoney(netto, "Rp ", 2, ".", ","));
+        $('#nettoRp').val(netto);
+
+        terbilang('nettoRp', 'terbilangNetto');
     }
 }
 
@@ -748,4 +761,99 @@ $(document).on('' +
     function () {
     getJumlahBayar();
     getNetto();
+});
+
+function terbilang(input, output){
+    var bilangan=document.getElementById(input).value;
+    var kalimat="";
+    var angka   = new Array('0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0');
+    var kata    = new Array('','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan');
+    var tingkat = new Array('','Ribu','Juta','Milyar','Triliun');
+    var panjang_bilangan = bilangan.length;
+
+    /* pengujian panjang bilangan */
+    if(panjang_bilangan > 15){
+        kalimat = "Diluar Batas";
+    }else{
+        /* mengambil angka-angka yang ada dalam bilangan, dimasukkan ke dalam array */
+        for(i = 1; i <= panjang_bilangan; i++) {
+            angka[i] = bilangan.substr(-(i),1);
+        }
+
+        var i = 1;
+        var j = 0;
+
+        /* mulai proses iterasi terhadap array angka */
+        while(i <= panjang_bilangan){
+            subkalimat = "";
+            kata1 = "";
+            kata2 = "";
+            kata3 = "";
+
+            /* untuk Ratusan */
+            if(angka[i+2] != "0"){
+                if(angka[i+2] == "1"){
+                    kata1 = "Seratus";
+                }else{
+                    kata1 = kata[angka[i+2]] + " Ratus";
+                }
+            }
+
+            /* untuk Puluhan atau Belasan */
+            if(angka[i+1] != "0"){
+                if(angka[i+1] == "1"){
+                    if(angka[i] == "0"){
+                        kata2 = "Sepuluh";
+                    }else if(angka[i] == "1"){
+                        kata2 = "Sebelas";
+                    }else{
+                        kata2 = kata[angka[i]] + " Belas";
+                    }
+                }else{
+                    kata2 = kata[angka[i+1]] + " Puluh";
+                }
+            }
+
+            /* untuk Satuan */
+            if (angka[i] != "0"){
+                if (angka[i+1] != "1"){
+                    kata3 = kata[angka[i]];
+                }
+            }
+
+            /* pengujian angka apakah tidak nol semua, lalu ditambahkan tingkat */
+            if ((angka[i] != "0") || (angka[i+1] != "0") || (angka[i+2] != "0")){
+                subkalimat = kata1+" "+kata2+" "+kata3+" "+tingkat[j]+" ";
+            }
+
+            /* gabungkan variabe sub kalimat (untuk Satu blok 3 angka) ke variabel kalimat */
+            kalimat = subkalimat + kalimat;
+            i = i + 3;
+            j = j + 1;
+        }
+
+        /* mengganti Satu Ribu jadi Seribu jika diperlukan */
+        if ((angka[5] == "0") && (angka[6] == "0")){
+            kalimat = kalimat.replace("Satu Ribu","Seribu");
+        }
+    }
+    document.getElementById(output).innerHTML=kalimat+' Rupiah';
+}
+
+$(document).on('click', '#btn-order', function () {
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'advertising/order',
+            method: 'POST',
+            params: $('#orderForm').serializeArray()
+        },
+        success: function () {
+
+        },
+        error: function () {
+
+        }
+    });
 });

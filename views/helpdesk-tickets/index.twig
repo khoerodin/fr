@@ -20,6 +20,7 @@
 {%- block content -%}
     <div class="row">
         <div class="col-md-12">
+            <button id="coba" class="btn btn-bisnis">COBA</button>
             <div class="box">
                 <div class="box-header row">
                     <div class="col-md-12 search-area transition">
@@ -43,10 +44,10 @@
                             <th>Staf</th>
                             <th>Kategori</th>
                             <th>Judul</th>
-                            <th>Pesan</th>
+                            <th width="30%">Pesan</th>
 
 
-                            <th width="10%"><span class="pull-right" >Aksi</span></th>
+                            <th width="8%"><span class="pull-right" >Aksi</span></th>
                         </tr>
                         </thead>
 
@@ -56,126 +57,68 @@
 
                     </table>
 
-                    {#MODAL DETAIL PRIORITAS DAN STATUS TIKET#}
+                    {#MODAL FORUM#}
                     <div class="modal" id="tiketModal" role="dialog" >
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Status dan Prioritas Tiket</h4>
+                                    <h4 class="modal-title">Forum Helpdesk</h4>
                                 </div>
                                 <div class="modal-body">
+
                                     <div class="row">
                                         <div class="col-md-12">
 
                                             <div class="box-body">
-                                                <div class="row">
-                                                    {#Prioritas#}
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label for="Priority">PRIORITAS</label>
-                                                            <select class="form-control ticket-priority" style="width: 100%" >
-                                                                <option value="#" disabled selected aria-hidden="true">Pilih salah satu..</option>
-                                                                <option value="#">&#xf0fb; &nbsp; KRITIKAL</option>
-                                                                <option value="#">&#xf071; &nbsp; SANGAT PENTING</option>
-                                                                <option value="#">&#xf06a; &nbsp; PENTING</option>
-                                                                <option value="#">&#xf1d8; &nbsp; BIASA</option>
-                                                                <option value="#">&#xf197; &nbsp; KURANG PENTING</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    {#Status#}
-                                                    <div class="col-md-6">
-                                                        <label for="Priority">STATUS</label>
-                                                        <select class="form-control ticket-status" style="width: 100%" >
-                                                            <option value="#" disabled selected>Pilih salah satu..</option>
-                                                            <option value="#">&#xf024; &nbsp; SELESAI</option>
-                                                            <option value="#">&#xf1b9; &nbsp; DALAM PROGRESS</option>
-                                                            <option value="#">&#xf017; &nbsp; TUNDA</option>
-                                                            <option value="#">&#xf06e; &nbsp; REVISI</option>
-                                                            <option value="#">&#xf1f8; &nbsp; DIHAPUS</option>
-                                                        </select>
-                                                    </div>
 
-                                                    <div class="row">
-                                                        <div class="col-md-12" >
+                                                <ul class="timeline">
 
-                                                            <div class="box box-primary direct-chat direct-chat-primary">
-                                                                <div class="box-header with-border">
-                                                                    <h3 class="box-title">Helpdesk Live Chat</h3>
-                                                                    <div class="box-tools pull-right">
-                                                                        <span data-toggle="tooltip" title="2 New Messages" class="badge bg-blue">2</span>
-                                                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                                                        <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
-                                                                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                                                                    </div>
-                                                                </div>
-                                                                    <div class="box-body">
-                                                                    <!-- Conversations are loaded here -->
-                                                                    <div class="direct-chat-messages" id="chatHistory">
-                                                                        <!-- Message. Default to the left -->
-                                                                        <div class="direct-chat-msg">
-                                                                            <div class="direct-chat-info clearfix">
-                                                                                <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
-                                                                                <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
-                                                                            </div>
-                                                                            <!-- /.direct-chat-info -->
-                                                                            <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
-                                                                            <!-- /.direct-chat-img -->
-                                                                            <div class="direct-chat-text bg-blue">
-                                                                                Hai.. Apa Kabar?
-                                                                            </div>
-                                                                            <!-- /.direct-chat-text -->
+                                                    <li class="list-group-item bg-light-blue">
+                                                        <span class="current-date"></span>
+                                                    </li>
+                                                        <!-- timeline item -->
+                                                        <li>
+
+                                                            <!-- timeline icon -->
+                                                            <i class="fa fa-envelope bg-blue"></i>
+
+                                                            <div class="timeline-item">
+                                                                <span class="current-time pull-right"><i class="fa fa-clock-o"></i></span>
+
+                                                                <h3 class="timeline-header-title">Judul</h3><span class="timeline-header-category text-muted font-light">&nbsp; Kategori</span>
+
+                                                                <div class="timeline-body">
+
+                                                                    <div class="media">
+                                                                        <div class="media-left media-middle">
+                                                                            <img class="direct-chat-img img-md" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
                                                                         </div>
-                                                                        <!-- /.direct-chat-msg -->
-
+                                                                        <div class="media-body">
+                                                                            <h4 class="media-heading-client-name">Nama Klien</h4>
+                                                                            <p class="posted-message">Isi pesan disini.....................................</p>
+                                                                        </div>
                                                                     </div>
 
-                                                                    <!--/.direct-chat-messages-->
-                                                                    <!-- Contacts are loaded here -->
-                                                                    <div class="direct-chat-contacts">
-                                                                        <ul class="contacts-list">
-                                                                            <li>
-                                                                                <a href="#">
-                                                                                    <img class="contacts-list-img" src="/img/user1-128x128.jpg" alt="Contact Avatar">
-                                                                                    <div class="contacts-list-info">
-                                                                                        <span class="contacts-list-name">
-                                                                                        Count Dracula
-                                                                                        <small class="contacts-list-date pull-right">2/28/2015</small>
-                                                                                        </span>
-                                                                                        <span class="contacts-list-msg">Cilukba...</span>
-                                                                                    </div>
-                                                                                    <!-- /.contacts-list-info -->
-                                                                                </a>
-                                                                            </li>
-                                                                            <!-- End Contact Item -->
-                                                                        </ul>
-                                                                        <!-- /.contacts-list -->
-                                                                    </div>
-                                                                    <!-- /.direct-chat-pane -->
                                                                 </div>
-                                                                <!-- /.box-body -->
-                                                                <div id="typing_on"></div>
-                                                                <div class="box-footer">
-                                                                    <div class="input-group">
-                                                                        <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200">
-                                                                        <span class="input-group-btn">
-                                                                        <button type="button" class="btn btn-primary btn-flat" id="send">Send</button>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <!-- /.box-footer-->
+
                                                             </div>
-                                                            <!--/.direct-chat -->
-                                                        </div>
 
-                                                    <input type="hidden" name="id" id="id">
-                                                </div>
+
+                                                        </li>
+                                                    <div class="timeline-footer">
+                                                    </div>
+
+
+                                                        <!-- END timeline item -->
+                                                </ul>
+
                                             </div>
 
                                             <!-- /.box-body -->
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

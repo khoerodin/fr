@@ -52,6 +52,7 @@ app:
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }
         - { path: '/billing/groups', controller: 'Bisnis:BillingGroups@index', methods: ['GET'] }
         - { path: '/billing/identities', controller: 'Bisnis:BillingIdentities@index', methods: ['GET'] }
+        - { path: '/billing/payment-methods', controller: 'Bisnis:BillingPaymentMethods@index', methods: ['GET'] }
 
          #Helpdesk
         - { path: '/helpdesk/categories', controller: 'Bisnis:HelpdeskCategories@index', methods: ['GET'] }

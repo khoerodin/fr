@@ -1,11 +1,8 @@
-$("#orderFrom").select2({theme: 'bootstrap'});
-$("#cetakDiFaktur").select2({theme: 'bootstrap'});
-$("#paymentMethod").select2({theme: 'bootstrap'});
-
-$('#dtBookedAt').datetimepicker({
-    locale: 'id'
+$("#orderFrom, #cetakDiFaktur, #paymentMethod").select2({
+    theme: 'bootstrap'
 });
-$('#dtInvoicedAt').datetimepicker({
+
+$('#dtBookedAt, #bookedAt, #dtInvoicedAt, #invoicedAt').datetimepicker({
     locale: 'id'
 });
 

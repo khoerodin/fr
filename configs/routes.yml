@@ -46,6 +46,7 @@ app:
         - { path: '/advertising/prices', controller: 'Bisnis:AdvertisingPrices@index', methods: ['GET'] }
         - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
         - { path: '/advertising/order', controller: 'Bisnis:AdvertisingOrder@index', methods: ['GET'] }
+        - { path: '/advertising/media', controller: 'Bisnis:AdvertisingMedia@index', methods: ['GET'] }
 
         #Billing
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }

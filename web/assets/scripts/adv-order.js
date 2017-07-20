@@ -157,6 +157,9 @@ $(document).ajaxComplete(function() {
         $('#specification').val(specificationId);
         $('input[name="jenisIklan"]').val($(this).find('td:eq(0)').text());
         $('#jenisIklanModal').modal('hide');
+
+        getJumlahBayar();
+        getNetto();
     });
 });
 // end Jenis Iklan
@@ -697,11 +700,12 @@ function getBiaya() {
 
     if ($('#columnSize').val() && $('#milimeterSize').val() && $('#totalPost').val() && $('#basePrice').val() ) {
         if (
-            $('#paymentMethod').val() === 'kuping' ||
-            $('#paymentMethod').val() === 'banner' ||
-            $('#paymentMethod').val() === 'stapel' ||
-            $('#paymentMethod').val() === 'eksposisi' ||
-            $('#paymentMethod').val() === 'tarif_khusus'
+            $('input[name="jenisIklan"]').val().toLowerCase() === 'kuping' ||
+            $('input[name="jenisIklan"]').val().toLowerCase() === 'banner' ||
+            $('input[name="jenisIklan"]').val().toLowerCase() === 'stapel' ||
+            $('input[name="jenisIklan"]').val().toLowerCase() === 'eksposisi' ||
+            $('input[name="jenisIklan"]').val().toLowerCase() === 'tarif khusus' ||
+            $('input[name="jenisIklan"]').val().toLowerCase().startsWith('paket')
         ) {
             return tarif;
         } else {
@@ -711,18 +715,11 @@ function getBiaya() {
 }
 
 function getJumlahBayar() {
-    if(getBiaya() && $('#discountValue').val() && $('#taxValue').val()) {
+    if($('#discountValue').val() && $('#taxValue').val()) {
         var diskon = $('#discountValue').val();
         var ppn = $('#taxValue').val();
 
-        var jumlahBayar;
-        if ($('#material').val()) {
-            var materai = $('#material').val();
-            jumlahBayar = getBiaya() - diskon - ppn - materai;
-        } else {
-            jumlahBayar = getBiaya() - diskon - ppn;
-        }
-
+        jumlahBayar = getBiaya() - diskon - ppn;
         $('#totalAmount').val(accounting.formatMoney(jumlahBayar, "Rp ", 2, ".", ","));
 
         return jumlahBayar;
@@ -730,42 +727,25 @@ function getJumlahBayar() {
 }
 
 function getNetto() {
-    if(getBiaya() && $('#quantity').val()) {
+    if($('#quantity').val()) {
         var quantity = $('#quantity').val();
-        var netto = getJumlahBayar() * quantity;
+        var netto;
+
+        if ($('#material').val()) {
+            var materai = $('#material').val();
+            netto = (getJumlahBayar() * quantity) - materai;
+        } else {
+            netto = getJumlahBayar() * quantity;
+        }
+
         $('#netto').text(accounting.formatMoney(netto, "Rp ", 2, ".", ","));
     }
 }
 
-$(document).on('keyup mouseup', '#columnSize', function () {
-    getJumlahBayar();
-    getNetto();
-});
-$(document).on('keyup mouseup', '#milimeterSize', function () {
-    getJumlahBayar();
-    getNetto();
-});
-$(document).on('keyup mouseup', '#totalPost', function () {
-    getJumlahBayar();
-    getNetto();
-});
-$(document).on('keyup mouseup', '#basePrice', function () {
-    getJumlahBayar();
-    getNetto();
-});
-$(document).on('keyup mouseup', '#discountValue', function () {
-    getJumlahBayar();
-    getNetto();
-});
-$(document).on('keyup mouseup', '#taxValue', function () {
-    getJumlahBayar();
-    getNetto();
-});
-$(document).on('keyup mouseup', '#quantity', function () {
-    getJumlahBayar();
-    getNetto();
-});
-$(document).on('keyup mouseup', '#material', function () {
+$(document).on('' +
+    'keyup mouseup',
+    '#columnSize, #milimeterSize, #totalPost, #basePrice, #discountValue, #taxValue, #quantity, #material',
+    function () {
     getJumlahBayar();
     getNetto();
 });

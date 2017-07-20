@@ -170,7 +170,7 @@
                                 <div class="form-group">
                                     <label for="">Sektor</label>
                                     <div class="input-group" id="sektor">
-                                        <input type="text" name="sektor" class="form-control">
+                                        <input type="text" readonly name="sektor" class="form-control">
                                         <input type="hidden" id="category2" name="category2">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
@@ -182,7 +182,7 @@
                                 <div class="form-group">
                                     <label for="">Sub Sektor</label>
                                     <div class="input-group" id="sub-sektor">
-                                        <input type="text" name="sub-sektor" class="form-control">
+                                        <input type="text" readonly name="sub-sektor" class="form-control">
                                         <input type="hidden" id="category3" name="category3">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
@@ -331,7 +331,7 @@
                                     <select name="paymentMethod" id="paymentMethod" class="form-control" style="width: 100%">
                                         <option selected disabled>PILIH JENIS BAYAR</option>
                                         {% for jb in paymentMethod %}
-                                            <option value="/api/billing/payment-methods/{{ jb.id }}">{{ rep.name }}</option>
+                                            <option value="/api/billing/payment-methods/{{ jb.id }}">{{ jb.name }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

@@ -2,8 +2,18 @@ $("#orderFrom, #cetakDiFaktur, #paymentMethod").select2({
     theme: 'bootstrap'
 });
 
-$('#dtBookedAt, #bookedAt, #dtInvoicedAt, #invoicedAt').datetimepicker({
+$('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
     locale: 'id'
+}).on('dp.change', function(e){
+    var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+    $('#invoicedAt').val(tgl);
+});
+
+$('#dtBookedAt, #inputBookedAt').datetimepicker({
+    locale: 'id'
+}).on('dp.change', function(e){
+    var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+    $('#bookedAt').val(tgl);
 });
 
 $(document).on('click', '#pemasang button', function () {
@@ -79,7 +89,7 @@ $(document).on('keyup', '#klienModal #serachList', function () {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#pemasangModalData tr', function () {
         var customerId = $(this).data('id');
-        $('#customer').val(customerId);
+        $('#customer').val('/api/advertising/customers/'+customerId);
         $('input[name="pemasang"]').val($(this).find('td:eq(1)').text());
         $('#pemasangModal').modal('hide');
         $('#customerAddress').val($(this).data('address'));
@@ -87,7 +97,7 @@ $(document).ajaxComplete(function() {
 
     $(document).on('dblclick', '#klienModalData tr', function () {
         var klienId = $(this).data('id');
-        $('#client').val(klienId);
+        $('#client').val('/api/advertising/customers/'+klienId);
         $('input[name="klien"]').val($(this).find('td:eq(1)').text()+' - '+$(this).find('td:eq(2)').text());
         $('#klienModal').modal('hide');
     });
@@ -154,7 +164,7 @@ function getSpecifications(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#jenisIklanModalData tr', function () {
         var specificationId = $(this).data('id');
-        $('#specification').val(specificationId);
+        $('#specification').val('/api/advertising/specifications/'+specificationId);
         $('input[name="jenisIklan"]').val($(this).find('td:eq(0)').text());
         $('#jenisIklanModal').modal('hide');
 
@@ -293,7 +303,7 @@ function getMedia(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#mediaIklanModalData tr', function () {
         var mediaId = $(this).data('id');
-        $('#type').val(mediaId);
+        $('#media').val(mediaId);
         $('input[name="mediaIklan"]').val($(this).find('td:eq(0)').text());
         $('#mediaIklanModal').modal('hide');
     });
@@ -548,7 +558,7 @@ function getSubSektor(params, parentId) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#subSektorModalData tr', function () {
         var sektorId = $(this).data('id');
-        $('#category3').val(sektorId);
+        $('#category').val('/api/advertising/category/'+sektorId);
         $('input[name="sub-sektor"]').val($(this).find('td:eq(0)').text());
         $('#subSektorModal').modal('hide');
     });
@@ -617,7 +627,7 @@ function getPIC(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#PICModalData tr', function () {
         var accountExecutiveId = $(this).data('id');
-        $('#accountExecutive').val(accountExecutiveId);
+        $('#accountExecutive').val('/api/advertising/account-executives/'+accountExecutiveId);
         $('input[name="pic"]').val($(this).find('td:eq(1)').text());
         $('#PICModal').modal('hide');
     });
@@ -685,7 +695,7 @@ function getSisipan(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#sisipanModalData tr', function () {
         var cityId = $(this).data('id');
-        $('#sirculationArea').val(cityId);
+        $('#sirculationArea').val('/api/cities/'+cityId);
         $('input[name="sisipan"]').val($(this).find('td:eq(0)').text());
         $('#sisipanModal').modal('hide');
     });
@@ -829,3 +839,21 @@ function terbilang(input, output){
     }
     document.getElementById(output).innerHTML=kalimat+' Rupiah';
 }
+
+$(document).on('click', '#btn-order', function () {
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'advertising/order',
+            method: 'POST',
+            params: $('#orderForm').serializeArray()
+        },
+        success: function () {
+
+        },
+        error: function () {
+
+        }
+    });
+});

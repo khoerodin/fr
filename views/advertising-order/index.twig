@@ -1,7 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/terbilangjs/terbilang.min.js"></script>
+    <script src="/assets/scripts/adv-order.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-body">
-                    <form class="row">
+                    <form class="row" id="orderForm">
                         <div class="col-md-6 row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -38,7 +38,8 @@
                                 <div class="form-group">
                                     <label for="">Tanggal Booking</label>
                                     <div class='input-group date' id='dtBookedAt'>
-                                        <input type='text' name="bookedAt" id="bookedAt" class="form-control" />
+                                        <input type='text' id="inputBookedAt" class="form-control" />
+                                        <input type='hidden' name="bookedAt" id="bookedAt">
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </span>
@@ -49,7 +50,8 @@
                                 <div class="form-group">
                                     <label for="">Tanggal Faktur</label>
                                     <div class='input-group date' id='dtInvoicedAt'>
-                                        <input type='text' name="invoicedAt" id="invoicedAt" class="form-control" />
+                                        <input type='text' id="inputInvoicedAt" class="form-control" />
+                                        <input type='hidden' name="invoicedAt" id="invoicedAt"/>
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </span>
@@ -102,7 +104,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Surat Perjanjian</label>
-                                    <input type="text" name="Surat Perjanjian" class="form-control">
+                                    <input type="text" name="contractLetter" class="form-control">
                                     <p class="help-block">Dipilih jika terdapat perjanjian kerjasama</p>
                                 </div>
                             </div>
@@ -158,7 +160,7 @@
                                 <div class="form-group">
                                     <label for="">Pasang Di</label>
                                     <div class="input-group" id="mediaIklan">
-                                        <input type="text" name="mediaIklan" class="form-control">
+                                        <input type="text" readonly name="mediaIklan" class="form-control">
                                         <input type="hidden" id="media" name="media">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
@@ -183,7 +185,7 @@
                                     <label for="">Sub Sektor</label>
                                     <div class="input-group" id="sub-sektor">
                                         <input type="text" readonly name="sub-sektor" class="form-control">
-                                        <input type="hidden" id="category3" name="category3">
+                                        <input type="hidden" id="category" name="category">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -320,9 +322,13 @@
                                 <div class="form-group">
                                     <label for="">Netto</label>
                                     <div class="bg-aqua" style="padding: 10px; height: 133px;">
-                                        <div style="font-size: 40px;font-weight: bold;" id="netto"></div>
+                                        <div style="font-size: 40px;font-weight: bold;" id="netto">
+                                            Rp 0,00
+                                        </div>
                                         <input type="hidden" id="nettoRp">
-                                        <div style="font-size: 21px; font-style: italic;" id="terbilangNetto"></div>
+                                        <div style="font-size: 21px; font-style: italic;" id="terbilangNetto">
+                                            Nol Rupiah
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -365,7 +371,7 @@
                     </form>
                 </div>
                 <div class="box-footer clearfix">
-                    {#Footer content here#}
+                    <button class="btn btn-flat btn-danger pull-right" id="btn-order">ORDER SEKARANG</button>
                 </div>
             </div>
             <!-- /.box -->

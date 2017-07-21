@@ -235,7 +235,7 @@ function getTypes(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#tipeIklanModalData tr', function () {
         var typesId = $(this).data('id');
-        $('#type').val(typesId);
+        $('#type').val('/api/advertising/type/'+typesId);
         $('input[name="tipeIklan"]').val($(this).find('td:eq(0)').text());
         $('#tipeIklanModal').modal('hide');
     });
@@ -303,7 +303,7 @@ function getMedia(params) {
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#mediaIklanModalData tr', function () {
         var mediaId = $(this).data('id');
-        $('#media').val(mediaId);
+        $('#media').val('/api/advertising/media/'+mediaId);
         $('input[name="mediaIklan"]').val($(this).find('td:eq(0)').text());
         $('#mediaIklanModal').modal('hide');
     });
@@ -856,4 +856,9 @@ $(document).on('click', '#btn-order', function () {
 
         }
     });
+});
+
+$(document).on('click', '#edisiTerbitButton', function (e) {
+    e.preventDefault();
+    $('#edisiTerbitModal').modal({show: true, backdrop: 'static'});
 });

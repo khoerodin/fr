@@ -879,3 +879,20 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
     });
 });
 
+// https://www.sanwebe.com/2014/01/how-to-select-all-deselect-checkboxes-jquery
+//select all checkboxes
+$("#cekSemua").change(function(){  //"select all" change
+    $('#eHarian #hari input[type="checkbox"]').prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
+});
+
+//".checkbox" change
+$('#eHarian #hari input[type="checkbox"]').change(function(){
+    //uncheck "select all", if one of the listed checkbox item is unchecked
+    if(false == $(this).prop("checked")){ //if this item is unchecked
+        $("#cekSemua").prop('checked', false); //change "select all" checked status to false
+    }
+    //check "select all" if all checkbox items are checked
+    if ($('#eHarian #hari input[type="checkbox"]:checked').length == $('#eHarian #hari input[type="checkbox"]').length ){
+        $("#cekSemua").prop('checked', true);
+    }
+});

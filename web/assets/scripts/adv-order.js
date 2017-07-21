@@ -861,4 +861,13 @@ $(document).on('click', '#btn-order', function () {
 $(document).on('click', '#edisiTerbitButton', function (e) {
     e.preventDefault();
     $('#edisiTerbitModal').modal({show: true, backdrop: 'static'});
+
+    $('#edisiTanggal').datepicker({
+        todayBtn: "linked",
+        format: "dd/mm/yyyy",
+        clearBtn: true,
+        language: "id",
+        multidate: true
+    });
 });
+

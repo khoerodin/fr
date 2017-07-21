@@ -629,18 +629,38 @@
                     <h4 class="modal-title">Edisi Terbit</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="card">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">EDISI TANGGAl</a></li>
-                            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">EDISI HARI</a></li>
-                        </ul>
+                    <div class="panel with-nav-tabs panel-info">
+                        <div class="panel-heading">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">EDISI TANGGAL</a></li>
+                                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">EDISI HARI</a></li>
+                            </ul>
+                        </div>
 
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="home">
-                                <input type="text" class="form-control" id="edisiTanggal">
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="home">
+                                    <input type="text" class="form-control" id="edisiTanggal">
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane" id="profile">
+                                    <label class="checkbox-inline"><input type="checkbox" value="">Senin</label>
+                                    <label class="checkbox-inline"><input type="checkbox" value="">Selasa</label>
+                                    <label class="checkbox-inline"><input type="checkbox" value="">Rabu</label>
+                                    <label class="checkbox-inline"><input type="checkbox" value="">Kamis</label>
+                                    <label class="checkbox-inline"><input type="checkbox" value="">Jum'at</label>
+                                    <label class="checkbox-inline"><input type="checkbox" value="">Sabtu</label>
+                                    <label class="checkbox-inline"><input type="checkbox" value="">Minggu</label>
+                                    <label class="checkbox-inline pull-right"><input type="checkbox" value="">Semua</label>
+
+                                    <div class="input-daterange input-group" id="edisiHarian" style="margin-top: 20px;">
+                                        <input type="text" class="form-control" name="start" />
+                                        <span class="input-group-addon">sampai</span>
+                                        <input type="text" class="form-control" name="end" />
+                                    </div>
+                                </div>
+
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="profile">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</div>
                         </div>
                     </div>
                 </div>

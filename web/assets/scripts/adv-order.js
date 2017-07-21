@@ -867,7 +867,15 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
         format: "dd/mm/yyyy",
         clearBtn: true,
         language: "id",
-        multidate: true
+        multidate: true,
+        multidateSeparator: ", "
+    });
+
+    $('#edisiHarian').datepicker({
+        format: "dd/mm/yyyy",
+        todayBtn: "linked",
+        clearBtn: true,
+        language: "id"
     });
 });
 

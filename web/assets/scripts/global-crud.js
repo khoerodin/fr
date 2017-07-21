@@ -101,7 +101,13 @@ function getAll(module, columns = [], tbody = 'data-list') {
                             }
 
                             no = no;
-                            tr += '<tr id="' + val.id + '">';
+
+                            if (module === 'helpdesk/tickets'){
+                                tr += '<tr id="' + val.id + '" data-staff="'+ val.staff.id +'" data-client="'+ val.client.id +'">';
+                            } else {
+                                tr += '<tr id="' + val.id + '">';
+                            }
+
                             tr += '<td>' + no + '</td>'
                             $.each(columns, function (i, v) {
                                 var v1 = v.split(".")[0];
@@ -163,7 +169,8 @@ function getAll(module, columns = [], tbody = 'data-list') {
                             }
 
                             if (module === 'helpdesk/tickets') {
-                                tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TIKET LIVE CHAT"><i class="fa fa-file-text-o"></i></button>';
+                                // tr += '<input type="hidden" class="ticket-time" value="' + val.id + '">';
+                                tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-file-text-o"></i></button>';
                             }
 
                             tr += '</span></td>';

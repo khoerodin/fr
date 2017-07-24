@@ -294,6 +294,24 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-4">
+                                            <label for="">Cashback Rp</label>
+                                            <input type="number" name="cashBackValue" id="cashBackValue" min="0" class="form-control">
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label for="">Cashback %</label>
+                                            <div class="input-group">
+                                                <input type="number" name="cashBackPercentage" id="cashBackPercentage" min="0" class="form-control">
+                                                <div class="input-group-addon">%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-4">
                                             <label for="">Jumlah Bayar</label>
                                             <input type="text" name="totalAmount" id="totalAmount" readonly class="form-control">
                                         </div>
@@ -645,21 +663,21 @@
 
                                 <div role="tabpanel" class="tab-pane" id="eHarian">
                                     <span id="hari">
-                                        <label class="checkbox-inline"><input type="checkbox" value="">Senin</label>
-                                        <label class="checkbox-inline"><input type="checkbox" value="">Selasa</label>
-                                        <label class="checkbox-inline"><input type="checkbox" value="">Rabu</label>
-                                        <label class="checkbox-inline"><input type="checkbox" value="">Kamis</label>
-                                        <label class="checkbox-inline"><input type="checkbox" value="">Jum'at</label>
-                                        <label class="checkbox-inline"><input type="checkbox" value="">Sabtu</label>
-                                        <label class="checkbox-inline"><input type="checkbox" value="">Minggu</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="0" value="">Minggu</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="1" value="">Senin</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="2" value="">Selasa</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="3" value="">Rabu</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="4" value="">Kamis</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="5" value="">Jum'at</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="6" value="">Sabtu</label>
                                     </span>
 
                                     <label class="checkbox-inline pull-right"><input type="checkbox" id="cekSemua" value="">Semua</label>
 
                                     <div class="input-daterange input-group" id="edisiHarian" style="margin-top: 20px;">
-                                        <input type="text" readonly class="form-control" name="start" />
+                                        <input type="text" readonly class="form-control" id="startDate" name="start" />
                                         <span class="input-group-addon">sampai</span>
-                                        <input type="text" readonly class="form-control" name="end" />
+                                        <input type="text" readonly class="form-control" id="endDate" name="end" />
                                     </div>
                                 </div>
 
@@ -669,6 +687,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                    <button id="hore" type="button" class="btn btn-flat btn-danger">Save</button>
                 </div>
             </div>
 

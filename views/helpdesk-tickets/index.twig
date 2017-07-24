@@ -19,6 +19,9 @@
 {% endblock %}
 
 {%- block content -%}
+
+    <input type="hidden" id="currentUser" value="{{ me.id }}">
+
     <div class="row">
         <div class="col-md-12">
             <div class="box">
@@ -89,27 +92,44 @@
                     </table>
 
                     {#MODAL FORUM#}
-                    <div class="modal" id="tiketModal" role="dialog" >
+                    <div class="modal" id="tiketModal" role="dialog">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h4 class="modal-title">Forum Helpdesk</h4>
                                 </div>
-                                <div class="modal-body" data-ticketid="" data-clientid="" data-staffid="">
+                                <div class="modal-body" data-ticketid="" data-clientid="" data-staffid="" style="min-height: 500px;">
 
                                     <div class="row">
+
+                                        <div class="col-sm-3">
+                                            <div class="alert ticket-alert alert-info">
+                                                Prioritas : <strong>Normal</strong>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6" style="background-color:lavenderblush;">.col-sm-6</div>
+
+                                        <div class="col-sm-3">
+                                            <div class="alert ticket-alert alert-danger">
+                                                Status : <strong>Ditolak</strong>
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-12">
 
                                             <div class="box-body tableForum"></div>
                                             <!-- /.box-body -->
                                         </div>
+
                                     </div>
+
 
                                 </div>
                                 <div class="modal-footer">
                                     <div class="input-group">
-                                        <input type="text" name="message" placeholder="Ketik balasan Anda ..." class="form-control not-ucase" id="replyMessage" autocomplete="off" maxlength="4000">
+                                        <input type="text" name="message" placeholder="Ketik balasan Anda ..." class="form-control not-ucase" id="replyMessage" autocomplete="off" maxlength="15000">
                                         <span class="input-group-btn">
                                             <button type="button" class="btn btn-primary btn-flat btn-reply-tic">Send</button>
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

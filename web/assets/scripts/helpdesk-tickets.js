@@ -12,6 +12,9 @@ $(document).on('click', '.detail-tic', function () {
     var clientId = $(this).closest('tr').data('client');
     $('#tiketModal .modal-body').attr('data-clientid', clientId);
 
+    var staffUserId = $(this).closest('tr').data('staff-user');
+    $('#tiketModal .modal-body').attr('data-staff-userid', staffUserId);
+
     getTicketData(ticketId);
     $('#tiketModal').modal({show: true, backdrop: 'static'});
 
@@ -31,11 +34,13 @@ $(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
     var staff = $('.mediaForum:last').data('staff');
     var ticket = $('.mediaForum:last').data('ticket');
     var client = $('.mediaForum:last').data('client');
+    //var staffUser = $('.mediaForum:last').data('staff-user');
 
 
     var ticketId = $('#tiketModal .modal-body').data('ticketid');
     var staffId = $('#tiketModal .modal-body').data('staffid');
     var clientId = $('#tiketModal .modal-body').data('clientid');
+    var staffUserId = $('#tiketModal .modal-body').data('staff-userid');
 
     var trueTicketId;
     if(typeof ticket !== 'undefined'){
@@ -58,17 +63,25 @@ $(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
         trueClientId = '/api/clients/'+clientId
     }
 
-
-    //console.log(ticketId, ticket, trueTicketId);
-    // var waktu = moment().format("ddd, D MMM YYYY, h:mm A");
     var text = $('#replyMessage').val();
-    // var html2 = '<div class="media mediaForum"  style="margin-top: 20px; margin-bottom: 20px; border: #dedede solid 1px;padding: 26px" data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" >';
-    // html2 += '<div class="media-left media-middle">';
-    // html2 += '<div class="pull-right"></div><img class="direct-chat-img img-xs" src="../img/photo1.png"></div>';
-    // html2 += '<div class="media-body"><h4 class="media-heading"></h4><h5>'+value.message+'</h5></div></div>';
-    // $(document).find('.tableForum').append(html2);
 
-    postTicketData(responseId, trueStaffId, trueTicketId, trueClientId, text);
+    $('#replyMessage').focus(
+        function(){
+            $(this).val('');
+        });
+
+
+    var currentUser = $('#currentUser').val();
+    console.log(currentUser, staffUserId);
+
+    if (currentUser === staffUserId) {
+
+        postTicketData(responseId, trueStaffId, trueTicketId, trueClientId, text);
+
+    } else {
+        alert('anda tidak berhak');
+    }
+
 
 });
 
@@ -164,20 +177,37 @@ function getTicketData(ticketId) {
 
             var dataForum = '';
 
+            // <div class="panel-group">
+            //     <div class="panel panel-default">
+            //     <div class="panel-heading">
+            //     <h4 class="panel-title">
+            //     <a data-toggle="collapse" href="#collapse1">Collapsible panel</a>
+            // </h4>
+            // </div>
+            // <div id="collapse1" class="panel-collapse collapse">
+            //     <div class="panel-body">Panel Body</div>
+            // <div class="panel-footer">Panel Footer</div>
+            // </div>
+            // </div>
+            // </div>
+
+
             $.each(finalData, function (index, value) {
 
-                dataForum += '</div>';
-                dataForum += '<div class="media mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 20px; margin-bottom: 20px; border: #dedede solid 1px;padding: 26px">';
-                dataForum += '<div class="media-left media-middle">';
+                dataForum += '<div id="Forum" class="collapse in">';
+                dataForum += '<div class="media mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 10px; margin-bottom: 10px; border: #dedede solid 1px;padding: 12px">';
+                dataForum += '<div class="media-left media-top" style="">';
 
                 // dataForum += '<div class="pull-right">'+value.order.createdAt+'</div>';
-                dataForum += '<img class="direct-chat-img img-lg" src="../img/photo1.png">';
+                dataForum += '<img class="direct-chat-img img-bordered" src="../img/avatar04.png">';
                 dataForum += '</div>';
                 dataForum += '<div class="media-body">';
                 dataForum += '<h4 class="media-heading">'+value.client.user.fullname+'</h4>'; //clientName
-                dataForum += '<h5>Staff bertugas: '+value.staff.user.fullname+'</h5>'; //staffName
-                dataForum += '<div style="margin-top: 10px; margin-bottom: 2px; border: #dedede solid 1px;padding: 5px">'+value.message+'</div>'; //forumMessage
+                dataForum += '<h5 class="text-muted">'+value.staff.user.fullname+'</h5>'; //staffName
+                dataForum += '</div>';
+                dataForum += '<div class="" style="margin-left: 1px; margin-top: 10px; margin-bottom: 2px; border: #dedede solid 1px;padding: 5px">'+value.message+'</div>'; //forumMessage
 
+                dataForum += '</div>';
                 dataForum += '</div>';
                 dataForum += '</div>';
 

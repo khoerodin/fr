@@ -725,11 +725,12 @@ function getBiaya() {
 }
 
 function getJumlahBayar() {
-    if($('#discountValue').val() && $('#taxValue').val()) {
+    if($('#discountValue').val() && $('#taxValue').val() && $('#cashBackValue').val()) {
         var diskon = $('#discountValue').val();
         var ppn = $('#taxValue').val();
+        var cashBack = $('#cashBackValue').val();
 
-        jumlahBayar = getBiaya() - diskon - ppn;
+        jumlahBayar = getBiaya() - diskon - ppn - cashBack;
         $('#totalAmount').val(accounting.formatMoney(jumlahBayar, "Rp ", 2, ".", ","));
 
         return jumlahBayar;
@@ -894,5 +895,66 @@ $('#eHarian #hari input[type="checkbox"]').change(function(){
     //check "select all" if all checkbox items are checked
     if ($('#eHarian #hari input[type="checkbox"]:checked').length == $('#eHarian #hari input[type="checkbox"]').length ){
         $("#cekSemua").prop('checked', true);
+    }
+});
+
+
+function getDates(start, end, dayNum) {
+    var start = start,
+        end   = end,
+        day   = dayNum;
+
+    var result = [];
+    var current = start.clone();
+
+    while (current.day(7 + day).isBefore(end)) {
+        result.push(current.clone());
+    }
+
+    return result.map(m => m.format());
+}
+$(document).on('click', '#hore', function () {
+    if ($('#startDate').val() && $('#endDate').val()) {
+        var startDate = moment($('#startDate').val(), 'DD/MM/YYYY');
+        var endDate = moment($('#endDate').val(), 'DD/MM/YYYY');
+
+        var minggu = [];
+        var senin = [];
+        var selasa = [];
+        var rabu = [];
+        var kamis = [];
+        var jumat = [];
+        var sabtu = [];
+
+        if ($('input[type="checkbox"]#0').is(':checked')) {
+            minggu = getDates(startDate, endDate, 0);
+        }
+
+        if ($('input[type="checkbox"]#1').is(':checked')) {
+            senin = getDates(startDate, endDate, 1);
+        }
+
+        if ($('input[type="checkbox"]#2').is(':checked')) {
+            selasa = getDates(startDate, endDate, 2);
+        }
+
+        if ($('input[type="checkbox"]#3').is(':checked')) {
+            rabu = getDates(startDate, endDate, 3);
+        }
+
+        if ($('input[type="checkbox"]#4').is(':checked')) {
+            kamis = getDates(startDate, endDate, 4);
+        }
+
+        if ($('input[type="checkbox"]#5').is(':checked')) {
+            jumat = getDates(startDate, endDate, 5);
+        }
+
+        if ($('input[type="checkbox"]#6').is(':checked')) {
+            sabtu = getDates(startDate, endDate, 6);
+        }
+
+        console.log(minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu));
+        //console.log(sabtu);
     }
 });

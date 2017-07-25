@@ -2,13 +2,27 @@
 
 namespace Bisnis\Controller;
 
-class AdvertisingOrderController extends AdminController
+class AdvertisingOrdersController extends AdminController
 {
     public function indexAction()
     {
         $meta = [
             'parentMenu' => 'Iklan',
             'title' => 'Order Iklan',
+        ];
+
+        $data = [
+            'meta' => $meta
+        ];
+
+        return $this->view('advertising-orders/index.twig', $data);
+    }
+
+    public function newAction()
+    {
+        $meta = [
+            'parentMenu' => 'Iklan',
+            'title' => 'Buat Order Iklan Baru',
         ];
 
         $representatives = $this->request('representatives', 'get');
@@ -23,6 +37,6 @@ class AdvertisingOrderController extends AdminController
             'paymentMethod' => $paymentMethod
         ];
 
-        return $this->view('advertising-order/index.twig', $data);
+        return $this->view('advertising-orders/new.twig', $data);
     }
 }

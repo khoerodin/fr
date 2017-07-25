@@ -1,0 +1,24 @@
+{% extends 'layout.twig' %}
+
+{% block js %}
+    <script src="/assets/scripts/adv-order.js"></script>
+{% endblock %}
+
+{%- block content -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header row" id="searchArea" style="margin-bottom: 0px;">
+                    <div class="col-md-12">
+                        <input type="text" id="searchList" class="form-control">
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div id="dataList"></div>
+                </div>
+                <div class="box-footer clearfix"></div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{%- endblock -%}

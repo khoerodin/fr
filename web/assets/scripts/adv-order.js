@@ -20,7 +20,7 @@ function getOrders(param) {
                 var searchArea;
 
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                tableData += '<thead><tr><th width="5%">#</th><th width="30%">Order Dari</th><th width="30%">Pemasang</th><th width="30%">Netto</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
+                tableData += '<thead><tr><th width="5%">#</th><th width="30%">Order Dari</th><th width="30%">Pemasang</th><th width="30%">Jumalah Bayar</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
 
                 $.each(memberData, function (index, value) {
@@ -49,7 +49,7 @@ function getOrders(param) {
 
                 if (memberData.length < 1) {
                     tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                    tableData += '<thead><tr><th width="5%">#</th><th width="30%">Order Dari</th><th width="30%">Pemasang</th><th width="30%">Netto</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
+                    tableData += '<thead><tr><th width="5%">#</th><th width="30%">Order Dari</th><th width="30%">Pemasang</th><th width="30%">Jumalah Bayar</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
                     tableData += '<tbody>';
                     tableData += '<tr><td colspan="5" class="text-danger">TIDAK ADA DATA</td></tr>';
                     tableData += '</tbody>';
@@ -65,7 +65,7 @@ function getOrders(param) {
 
             } else {
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                tableData += '<thead><tr><th width="5%">#</th><th width="30%">Order Dari</th><th width="30%">Pemasang</th><th width="30%">Netto</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
+                tableData += '<thead><tr><th width="5%">#</th><th width="30%">Order Dari</th><th width="30%">Pemasang</th><th width="30%">Jumalah Bayar</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
                 tableData += '<tr><td colspan="5" class="text-danger">ERROR KETIKA MENGAMBIL DATA</td></tr>';
                 tableData += '</tbody>';
@@ -84,7 +84,7 @@ function getOrders(param) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             tableData  = '<table class="table table-bordered table-responsive table-hover">';
-            tableData += '<thead><tr><th width="5%">#</th><th width="30%">Order Dari</th><th width="30%">Pemasang</th><th width="30%">Netto</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
+            tableData += '<thead><tr><th width="5%">#</th><th width="30%">Order Dari</th><th width="30%">Pemasang</th><th width="30%">Jumalah Bayar</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
             tableData += '<tbody>';
             tableData += '<tr><td colspan="5" class="text-danger">ERROR KETIKA MENGAMBIL DATA</td></tr>';
             tableData += '</tbody>';
@@ -107,4 +107,9 @@ getOrders();
 
 $(document).on('click', '#newOrder', function () {
     window.location.href = '/advertising/orders/new';
+});
+
+$(document).on('click', '.detail-btn', function () {
+    var href = $(this).closest('span').data('id');
+    window.location.href = '/advertising/orders/' + href;
 });

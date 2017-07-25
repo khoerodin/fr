@@ -2,20 +2,6 @@ $("#orderFrom, #cetakDiFaktur, #paymentMethod").select2({
     theme: 'bootstrap'
 });
 
-$('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
-    locale: 'id'
-}).on('dp.change', function(e){
-    var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-    $('#invoicedAt').val(tgl);
-});
-
-$('#dtBookedAt, #inputBookedAt').datetimepicker({
-    locale: 'id'
-}).on('dp.change', function(e){
-    var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-    $('#bookedAt').val(tgl);
-});
-
 $(document).on('click', '#pemasang button', function () {
    getCustomers(null, 'pemasangModal');
    $('#pemasangModal').modal({show: true, backdrop: 'static'});
@@ -957,6 +943,5 @@ $(document).on('click', '#hore', function () {
         }
 
         console.log(minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu));
-        //console.log(sabtu);
     }
 });

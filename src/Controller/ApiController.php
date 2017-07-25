@@ -27,7 +27,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $params = $request->get('params');
         $fullname = null;
 
-        if ($method == 'post' || $method == 'put') {
+        if ($method == 'post' || $method == 'put' || $method == 'POST' || $method == 'PUT') {
             $temps = [];
             foreach ($params as $param) {
                 /** @var FilterFactory $filter */

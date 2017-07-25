@@ -63,28 +63,34 @@ $(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
         trueClientId = '/api/clients/'+clientId
     }
 
-    var text = $('#replyMessage').val();
+    var text = $('#replyMessage').val(); //clear text
 
     $('#replyMessage').focus(
         function(){
             $(this).val('');
         });
 
-
-    var currentUser = $('#currentUser').val();
-    console.log(currentUser, staffUserId);
-
-    if (currentUser === staffUserId) {
-
+    //
+    // var currentUser = $('#currentUser').val();
+    // console.log(currentUser, staffUserId);
+    //
+    // if (currentUser === staffUserId) {
+    //
+    //     postTicketData(responseId, trueStaffId, trueTicketId, trueClientId, text);
+    //
+    // } else {
+    //     // alert('anda tidak berhak');
+    // }
+    if(text !== ''){
         postTicketData(responseId, trueStaffId, trueTicketId, trueClientId, text);
-
-    } else {
-        alert('anda tidak berhak');
+    }else{
+            alert('Teks tidak boleh kosong bro..');
     }
-
-
 });
 
+function eraseText() {
+    document.getElementById("replyMessage").value = "";
+}
 
 
 $('.ticket-status').select2({
@@ -126,7 +132,7 @@ function refreshTypingStatus() {
 }
 function updateLastTypedTime() {
     lastTypedTime = new Date();
-};
+}
 
 setInterval(refreshTypingStatus, 100);
 textarea.keypress(updateLastTypedTime);
@@ -141,9 +147,10 @@ var currentTime = moment().format("kk.mm a");
 var html = '<span class="current-time">&nbsp;'+currentTime+'</span>';
 $(document).find('.current-time').append(html);
 
-var postingTime = moment({}.timeClicked,["kk.mm a"]).fromNow(true);
-var html = '<div><span class="post-time">'+postingTime+'</span></div>';
-$(document).find('.post-time').append(html);
+var postingTime = moment().format("D MMM YYYY, kk.mm a");
+var html = '<div><span class="date-post">'+postingTime+'</span></div>';
+$(document).find('.date-post').append(html);
+
 
 function getTicketData(ticketId) {
 
@@ -177,36 +184,22 @@ function getTicketData(ticketId) {
 
             var dataForum = '';
 
-            // <div class="panel-group">
-            //     <div class="panel panel-default">
-            //     <div class="panel-heading">
-            //     <h4 class="panel-title">
-            //     <a data-toggle="collapse" href="#collapse1">Collapsible panel</a>
-            // </h4>
-            // </div>
-            // <div id="collapse1" class="panel-collapse collapse">
-            //     <div class="panel-body">Panel Body</div>
-            // <div class="panel-footer">Panel Footer</div>
-            // </div>
-            // </div>
-            // </div>
-
-
             $.each(finalData, function (index, value) {
 
-                dataForum += '<div id="Forum" class="collapse in">';
-                dataForum += '<div class="media mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 10px; margin-bottom: 10px; border: #dedede solid 1px;padding: 12px">';
+                dataForum += '<div id="Forum" style="background-color: #efefef">';
+                dataForum += '<div class="media mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 10px; margin-bottom: 10px; border: #3e3b42 solid 1px;padding: 12px" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';
                 dataForum += '<div class="media-left media-top" style="">';
 
-                // dataForum += '<div class="pull-right">'+value.order.createdAt+'</div>';
-                dataForum += '<img class="direct-chat-img img-bordered" src="../img/avatar04.png">';
+                dataForum += '<img class="direct-chat-img img-lg" src="../img/user7-128x128.jpg">';
                 dataForum += '</div>';
-                dataForum += '<div class="media-body">';
+                dataForum += '<div class="media-body"><span class="date-post pull-right"><span class="glyphicon glyphicon-time"></span> diposting pada '+moment(value.createdAt).format("D MMM 'YY - HH:mm a")+'</span>';
                 dataForum += '<h4 class="media-heading">'+value.client.user.fullname+'</h4>'; //clientName
                 dataForum += '<h5 class="text-muted">'+value.staff.user.fullname+'</h5>'; //staffName
                 dataForum += '</div>';
-                dataForum += '<div class="" style="margin-left: 1px; margin-top: 10px; margin-bottom: 2px; border: #dedede solid 1px;padding: 5px">'+value.message+'</div>'; //forumMessage
 
+                dataForum += '<div style="background-color: white; margin-left: 1px; margin-top: 10px; margin-bottom: 2px; border: #3e3b42 solid 1px;padding: 5px">'+value.message+''; //forumMessage
+
+                dataForum += '</div>';
                 dataForum += '</div>';
                 dataForum += '</div>';
                 dataForum += '</div>';
@@ -216,11 +209,12 @@ function getTicketData(ticketId) {
 
             $('.tableForum').html(dataForum); //tbody userData contoh di Sublime
             console.log(finalData);
+
         }
     });
 }
 
-function postTicketData(responseFor, staff, ticket, client, message, ticketId) {
+function postTicketData(responseFor, staff, ticket, client, message, time) {
     var params;
     if (responseFor) {
         params = [
@@ -243,6 +237,10 @@ function postTicketData(responseFor, staff, ticket, client, message, ticketId) {
             {
                 name: 'message',
                 value: message
+            },
+            {
+                name: 'time',
+                value: responseFor
             }
         ];
     } else {
@@ -262,8 +260,12 @@ function postTicketData(responseFor, staff, ticket, client, message, ticketId) {
             {
                 name: 'message',
                 value: message
+            },
+            {
+                name: 'time',
+                value: createdAt
             }
-        ];;
+        ];
     }
 
     $.ajax({
@@ -281,6 +283,7 @@ function postTicketData(responseFor, staff, ticket, client, message, ticketId) {
 
             } else {
                 // if (ticket) {
+                    $("#replyMessage").val('');
                     var ticketId =  ticket.split("/").pop();
                     getTicketData(ticketId)
                 // }
@@ -288,4 +291,13 @@ function postTicketData(responseFor, staff, ticket, client, message, ticketId) {
         }
     });
 }
+
+// $('#dtDeadline, #inputDeadline').datetimepicker({
+//     locale: 'id',
+//     minDate: moment()
+// }).on('dp.change', function(e){
+//     var tgl = e.date.format('DD/MM/YYYY HH:mm:ss');
+//     $('#deadline').val(tgl);
+
+
 

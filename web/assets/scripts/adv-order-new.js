@@ -837,12 +837,6 @@ $(document).on('click', '#btn-order', function () {
             module: 'advertising/orders',
             method: 'POST',
             params: $('#orderForm').serializeArray()
-        },
-        success: function () {
-
-        },
-        error: function () {
-
         }
     });
 });

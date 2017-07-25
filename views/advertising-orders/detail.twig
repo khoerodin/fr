@@ -10,6 +10,8 @@
             var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
             $('#invoicedAt').val(tgl);
         });
+        idFormatInputInvoicedAt = $('#inputInvoicedAt').val();
+        $('#invoicedAt').val(moment(idFormatInputInvoicedAt, 'DD/MM/YYYY HH.mm').format('YYYY-MM-DD HH:mm:ss'));
 
         $('#dtBookedAt, #inputBookedAt').datetimepicker({
             locale: 'id',
@@ -18,9 +20,24 @@
             var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
             $('#bookedAt').val(tgl);
         });
+        idFormatInputBookedAt = $('#inputInvoicedAt').val();
+        $('#bookedAt').val(moment(idFormatInputBookedAt, 'DD/MM/YYYY HH.mm').format('YYYY-MM-DD HH:mm:ss'));
 
         getJumlahBayar();
         getNetto();
+
+        $(document).on('click', '#btn-order-update', function () {
+            var id = $('input[name="id"]').val();
+            $.ajax({
+                url: '/api',
+                type: 'POST',
+                data: {
+                    module: 'advertising/orders/' + id,
+                    method: 'PUT',
+                    params: $('#orderForm').serializeArray()
+                }
+            });
+        });
     </script>
 {% endblock %}
 
@@ -30,6 +47,7 @@
             <div class="box">
                 <div class="box-body">
                     <form class="row" id="orderForm">
+                        <input type="hidden" name="id" value="{{ order.id }}">
                         <div class="col-md-6 row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -90,7 +108,7 @@
                                     <label for="">Pemasang</label>
                                     <div class="input-group" id="pemasang">
                                         <input type="text" readonly value="{{ order.customer.name }}" name="pemasang" class="form-control">
-                                        <input type="hidden" name="customer" id="customer" value="{{ order.customer.id }}" >
+                                        <input type="hidden" name="customer" id="customer" value="/api/advertising/customers/{{ order.customer.id }}" >
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -108,7 +126,7 @@
                                     <label for="">Klien</label>
                                     <div class="input-group" id="klien">
                                         <input type="text" readonly name="klien" value="{{ order.client.name }}" class="form-control">
-                                        <input type="hidden" name="client" id="client" value="{{ order.client.id }}">
+                                        <input type="hidden" name="client" id="client" value="/api/advertising/customers/{{ order.client.id }}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -137,7 +155,7 @@
                                     <label for="">Jenis Iklan</label>
                                     <div class="input-group" id="jenisIklan">
                                         <input type="text" readonly name="jenisIklan" value="{{ order.specification.name }}" class="form-control">
-                                        <input type="hidden" name="specification" value="{{ order.specification.id }}" id="specification" >
+                                        <input type="hidden" name="specification" value="/api/advertising/specifications/{{ order.specification.id }}" id="specification" >
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -161,7 +179,7 @@
                                     <label for="">Nama PIC</label>
                                     <div class="input-group" id="pic">
                                         <input type="text" name="pic" value="{{ order.accountExecutive.name }}" readonly class="form-control">
-                                        <input type="hidden" id="accountExecutive" value="{{ order.accountExecutive.id }}" name="accountExecutive">
+                                        <input type="hidden" id="accountExecutive" value="/api/advertising/account-executives/{{ order.accountExecutive.id }}" name="accountExecutive">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -173,7 +191,7 @@
                                     <label for="">Tipe Iklan</label>
                                     <div class="input-group" id="tipeIklan">
                                         <input type="text" readonly name="tipeIklan" value="{{ order.type.name }}" class="form-control">
-                                        <input type="hidden" name="type" value="{{ order.type.id }}" id="type" >
+                                        <input type="hidden" name="type" value="/api/advertising/types/{{ order.type.id }}" id="type" >
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -185,7 +203,7 @@
                                     <label for="">Pasang Di</label>
                                     <div class="input-group" id="mediaIklan">
                                         <input type="text" readonly name="mediaIklan" value="{{ order.media.name }}" class="form-control">
-                                        <input type="hidden" id="media" name="media" value="{{ order.type.id }}">
+                                        <input type="hidden" id="media" name="media" value="/api/advertising/media/{{ order.type.id }}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -209,7 +227,7 @@
                                     <label for="">Sub Sektor</label>
                                     <div class="input-group" id="sub-sektor">
                                         <input type="text" readonly name="sub-sektor" value="{{ order.category.name }}" class="form-control">
-                                        <input type="hidden" id="category" value="{{ order.category.id }}" name="category">
+                                        <input type="hidden" id="category" value="/api/advertising/categories/{{ order.category.id }}" name="category">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -394,7 +412,7 @@
                                     <label for="">Sisipan</label>
                                     <div class="input-group" id="sisipan">
                                         <input type="text" readonly name="sisipan" value="{{ order.sirculationArea.name }}" class="form-control">
-                                        <input type="hidden" id="sirculationArea" value="{{ order.sirculationArea.id }}" name="sirculationArea">
+                                        <input type="hidden" id="sirculationArea" value="/api/cities/{{ order.sirculationArea.id }}" name="sirculationArea">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -417,7 +435,7 @@
                     </form>
                 </div>
                 <div class="box-footer clearfix">
-                    <button class="btn btn-flat btn-danger pull-right" id="btn-order">PERBARUI</button>
+                    <button class="btn btn-flat btn-danger pull-right" id="btn-order-update">PERBARUI</button>
                 </div>
             </div>
             <!-- /.box -->

@@ -38,14 +38,40 @@
                 },
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.status === 200) {
-                        alert('Order berhasil diperbaharui');
-                        window.location.href = '/advertising/orders';
+                        bootbox.alert({
+                            message: "SUKSES MEMPERBARUI ORDER",
+                            animate: false,
+                            buttons: {
+                                ok: {
+                                    className: 'btn-danger btn-flat'
+                                }
+                            },
+                            callback: function (result) {
+                                window.location.href = '/advertising/orders';
+                            }
+                        });
                     } else {
-                        alert('Order gagal diperbaharui');
+                        bootbox.alert({
+                            message: "GAGAL MEMPERBARUI ORDER",
+                            animate: false,
+                            buttons: {
+                                ok: {
+                                    className: 'btn-danger btn-flat'
+                                }
+                            }
+                        });
                     }
                 },
-                error: function (data, textStatus, jqXHR) {
-                    alert('Order gagal diperbaharui');
+                error: function (jqXHR, textStatus, errorThrown) {
+                    bootbox.alert({
+                        message: "GAGAL MEMPERBARUI ORDER",
+                        animate: false,
+                        buttons: {
+                            ok: {
+                                className: 'btn-danger btn-flat'
+                            }
+                        }
+                    });
                 }
             });
         });

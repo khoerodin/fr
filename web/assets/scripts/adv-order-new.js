@@ -837,6 +837,45 @@ $(document).on('click', '#btn-order', function () {
             module: 'advertising/orders',
             method: 'POST',
             params: $('#orderForm').serializeArray()
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            if ( jqXHR.status === 200 ) {
+                bootbox.alert({
+                    message: "SUKSES MENYIMPAN ORDER",
+                    animate: false,
+                    buttons: {
+                        ok: {
+                            className: 'btn-danger btn-flat'
+                        }
+                    },
+                    callback: function (result) {
+                        window.location.href = '/advertising/orders';
+                    }
+                });
+            } else {
+                bootbox.alert({
+                    message: "GAGAL MENYIMPAN ORDER",
+                    animate: false,
+                    buttons: {
+                        ok: {
+                            className: 'btn-danger btn-flat'
+                        }
+                    }
+                });
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            bootbox.alert({
+                message: "GAGAL MENYIMPAN ORDER",
+                animate: false,
+                buttons: {
+                    ok: {
+                        className: 'btn-danger btn-flat'
+                    }
+                }
+            });
         }
     });
 });

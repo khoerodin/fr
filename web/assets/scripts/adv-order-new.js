@@ -379,6 +379,12 @@ $(document).ajaxComplete(function() {
         $('#category1').val(emitenId);
         $('input[name="emiten"]').val($(this).find('td:eq(0)').text());
         $('#emitenModal').modal('hide');
+
+        $('#category2').val('');
+        $('input[name="sektor"]').val('');
+
+        $('#category').val('');
+        $('input[name="sub-sektor"]').val('');
     });
 });
 // end Emiten
@@ -463,6 +469,9 @@ $(document).ajaxComplete(function() {
         $('#category2').val(sektorId);
         $('input[name="sektor"]').val($(this).find('td:eq(0)').text());
         $('#sektorModal').modal('hide');
+
+        $('#category').val('');
+        $('input[name="sub-sektor"]').val('');
     });
 });
 // end Sektor

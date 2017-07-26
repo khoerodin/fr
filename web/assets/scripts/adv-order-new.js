@@ -379,6 +379,12 @@ $(document).ajaxComplete(function() {
         $('#category1').val(emitenId);
         $('input[name="emiten"]').val($(this).find('td:eq(0)').text());
         $('#emitenModal').modal('hide');
+
+        $('#category2').val('');
+        $('input[name="sektor"]').val('');
+
+        $('#category').val('');
+        $('input[name="sub-sektor"]').val('');
     });
 });
 // end Emiten
@@ -404,7 +410,7 @@ $(document).on('click', '#sektor button', function () {
     }
 });
 
-$(document).on('keyup', '#sektorModal #serachList', function () {
+$(document).on('keyupup', '#sektorModal #serachList', function () {
     var params = $(this).val();
     var parentId = $('#category1').val();
     getSektor(params, parentId);
@@ -463,6 +469,9 @@ $(document).ajaxComplete(function() {
         $('#category2').val(sektorId);
         $('input[name="sektor"]').val($(this).find('td:eq(0)').text());
         $('#sektorModal').modal('hide');
+
+        $('#category').val('');
+        $('input[name="sub-sektor"]').val('');
     });
 });
 // end Sektor
@@ -743,7 +752,7 @@ function getNetto() {
 }
 
 $(document).on('' +
-    'keyup mouseup',
+    'keyup keydown change mouseup',
     '#columnSize, #milimeterSize, #totalPost, ' +
     '#basePrice, #discountValue, #taxValue, ' +
     '#quantity, #material, #cashBackValue',
@@ -828,6 +837,54 @@ function terbilang(input, output){
     }
     document.getElementById(output).innerHTML=kalimat+' Rupiah';
 }
+
+$(document).on('keyup keydown change mouseup', '#discountValue', function () {
+    var tarifIklan = $('#basePrice').val();
+    var diskonRp = $(this).val();
+
+    var diskonPersen = ( diskonRp / tarifIklan ) * 100;
+    $('#discountPercentage').val(diskonPersen);
+});
+
+$(document).on('keyup keydown change mouseup', '#discountPercentage', function () {
+    var tarifIklan = $('#basePrice').val();
+    var diskonPersen = $(this).val();
+
+    var diskonRp = (tarifIklan * diskonPersen) / 100;
+    $('#discountValue').val(diskonRp);
+});
+
+$(document).on('keyup keydown change mouseup', '#taxValue', function () {
+    var tarifIklan = $('#basePrice').val();
+    var ppnRp = $(this).val();
+
+    var ppnPersen = ( ppnRp / tarifIklan ) * 100;
+    $('#taxPercentage').val(ppnPersen);
+});
+
+$(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
+    var tarifIklan = $('#basePrice').val();
+    var ppnPersen = $(this).val();
+
+    var taxValue = (tarifIklan * ppnPersen) / 100;
+    $('#taxValue').val(taxValue);
+});
+
+$(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
+    var tarifIklan = $('#basePrice').val();
+    var cashBackRp = $(this).val();
+
+    var cashBackPersen = ( cashBackRp / tarifIklan ) * 100;
+    $('#cashBackPercentage').val(cashBackPersen);
+});
+
+$(document).on('keyup keydown change mouseup', '#cashBackPercentage', function () {
+    var tarifIklan = $('#basePrice').val();
+    var cashBackPersen = $(this).val();
+
+    var cashBackRp = (tarifIklan * cashBackPersen) / 100;
+    $('#cashBackValue').val(cashBackRp);
+});
 
 $(document).on('click', '#btn-order', function () {
     $.ajax({

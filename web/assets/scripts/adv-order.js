@@ -20,7 +20,9 @@ function getOrders(param) {
                 var searchArea;
 
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th><th width="25%">Order Dari</th><th width="25%">Pemasang</th><th width="25%">Jumalah Bayar</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
+                tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th>';
+                tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
+                tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
 
                 $.each(memberData, function (index, value) {
@@ -29,7 +31,6 @@ function getOrders(param) {
                     tableData += '<td>'+value.title+'</td>';
                     tableData += '<td>'+value.orderFrom.name+'</td>';
                     tableData += '<td>'+value.customer.name+'</td>';
-                    tableData += '<td>'+value.totalAmount+'</td>';
                     tableData += '<td>';
                     tableData += '<span class="pull-right" data-id="'+value.id+'">';
                     tableData += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
@@ -50,9 +51,12 @@ function getOrders(param) {
 
                 if (memberData.length < 1) {
                     tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                    tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th><th width="25%">Order Dari</th><th width="25%">Pemasang</th><th width="25%">Jumalah Bayar</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
+                    tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th>';
+                    tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
+                    tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
                     tableData += '<tbody>';
-                    tableData += '<tr><td colspan="6" class="text-danger">TIDAK ADA DATA</td></tr>';
+
+                    tableData += '<tr><td colspan="5" class="text-danger">TIDAK ADA DATA</td></tr>';
                     tableData += '</tbody>';
                     tableData += '<tbody>';
 
@@ -66,9 +70,12 @@ function getOrders(param) {
 
             } else {
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th><th width="25%">Order Dari</th><th width="25%">Pemasang</th><th width="25%">Jumalah Bayar</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
+                tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th>';
+                tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
+                tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
-                tableData += '<tr><td colspan="6" class="text-danger">ERROR KETIKA MENGAMBIL DATA</td></tr>';
+
+                tableData += '<tr><td colspan="5" class="text-danger">ERROR KETIKA MENGAMBIL DATA</td></tr>';
                 tableData += '</tbody>';
                 tableData += '<tbody>';
 
@@ -85,9 +92,12 @@ function getOrders(param) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             tableData  = '<table class="table table-bordered table-responsive table-hover">';
-            tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th><th width="25%">Order Dari</th><th width="25%">Pemasang</th><th width="25%">Jumalah Bayar</th><th><span class="pull-right">Aksi</span></th></tr></thead>';
+            tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th>';
+            tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
+            tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
             tableData += '<tbody>';
-            tableData += '<tr><td colspan="6" class="text-danger">ERROR KETIKA MENGAMBIL DATA</td></tr>';
+
+            tableData += '<tr><td colspan="5" class="text-danger">ERROR KETIKA MENGAMBIL DATA</td></tr>';
             tableData += '</tbody>';
             tableData += '<tbody>';
 

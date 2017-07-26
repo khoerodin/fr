@@ -2,6 +2,7 @@
 
 {% block js %}
     <script src="/assets/scripts/adv-order-sheet.js"></script>
+    <script src="/assets/listjs/list.min.js"></script>
     <script>
         $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
             locale: 'id'
@@ -356,7 +357,7 @@
                                             <label for="">Quantity</label>
                                             <div class="input-group">
                                                 <input type="number" name="quantity" id="quantity" min="1" class="form-control">
-                                                <div class="input-group-addon">kali</div>
+                                                <div class="input-group-addon">buah</div>
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
@@ -561,7 +562,7 @@
                     <small class="text-success">Dobel klik Emiten untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" id="serachEmiten" placeholder="CARI EMITEN">
+                    <input type="text" class="form-control search" id="serachEmiten" placeholder="CARI EMITEN">
                     <div id="data-list" style="margin-top: 10px"></div>
                 </div>
                 <div class="modal-footer">

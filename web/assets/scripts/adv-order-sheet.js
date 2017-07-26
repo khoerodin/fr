@@ -303,12 +303,12 @@ $(document).on('click', '#emiten button', function () {
     $('#emitenModal input#serachList').focus();
 });
 
-$(document).on('keyup', '#serachEmiten', function () {
-    searchEmiten();
-    if($('#emitenData').children(':visible').length == 0) {
-        $('#emitenData').append('<tr id="warn-nodata"><td class="text-danger">TIDAK ADA DATA</td></tr>');
-    }
-});
+// $(document).on('keyup', '#serachEmiten', function () {
+//     searchEmiten();
+//     if($('#emitenData').children(':visible').length == 0) {
+//         $('#emitenData').append('<tr id="warn-nodata"><td class="text-danger">TIDAK ADA DATA</td></tr>');
+//     }
+// });
 
 function searchEmiten() {
     var input, filter, table, tr, td, i;
@@ -343,18 +343,18 @@ function getEmiten() {
             var memberData = JSON.parse(data)['hydra:member'];
             localStorage.setItem("emitenList", JSON.stringify(memberData));
 
-            tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Emiten</th></tr></thead>';
-            tableData += '<tbody id="emitenData">';
+            tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th class="sort" data-sort="name" style="cursor: pointer;">Emiten</th></tr></thead>';
+            tableData += '<tbody id="emitenData" class="list">';
 
             $.each(memberData, function (index, value) {
                 tableData += '<tr style="cursor: pointer" data-id="'+value.id+'">';
-                tableData += '<td>'+value.name+'</td>';
+                tableData += '<td class="name">'+value.name+'</td>';
                 tableData += '</tr>';
             });
 
             tableData += '</tbody>';
             tableData += '<table>';
-            tableData += '';
+            tableData += '<ul class="pagination pagination-sm"></ul>';
 
             if (memberData.length > 0) {
                 tableData = tableData;
@@ -366,6 +366,19 @@ function getEmiten() {
                 tableData += '<tbody>';
             }
             $('#emitenModal .modal-body #data-list').html(tableData);
+
+            var emitenTableOptions = {
+                valueNames: [ 'name' ],
+                page: 11,
+                pagination: true
+            };
+
+            var emitenList = new List('emitenModal', emitenTableOptions);
+            emitenList.on('updated', function(list) {
+                if (list.matchingItems.length < 1) {
+                    $('#emitenData').html('<tr class="no-result"><td class="text-danger">TIDAK ADA DATA</td></tr>');
+                }
+            });
         },
         error: function (jqXHR, textStatus, errorThrown) {
 

@@ -35,6 +35,17 @@
                     module: 'advertising/orders/' + id,
                     method: 'PUT',
                     params: $('#orderForm').serializeArray()
+                },
+                success: function (data, textStatus, jqXHR) {
+                    if (jqXHR.status === 200) {
+                        alert('Order berhasil diperbaharui');
+                        window.location.href = '/advertising/orders';
+                    } else {
+                        alert('Order gagal diperbaharui');
+                    }
+                },
+                error: function (data, textStatus, jqXHR) {
+                    alert('Order gagal diperbaharui');
                 }
             });
         });
@@ -203,7 +214,7 @@
                                     <label for="">Pasang Di</label>
                                     <div class="input-group" id="mediaIklan">
                                         <input type="text" readonly name="mediaIklan" value="{{ order.media.name }}" class="form-control">
-                                        <input type="hidden" id="media" name="media" value="/api/advertising/media/{{ order.type.id }}">
+                                        <input type="hidden" id="media" name="media" value="/api/advertising/media/{{ order.media.id }}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>

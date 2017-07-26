@@ -334,11 +334,17 @@
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <label for="">Tarif Iklan</label>
-                                            <input type="text" name="basePrice" value="{{ order.basePrice }}" id="basePrice" class="form-control">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="text" name="basePrice" value="{{ order.basePrice }}" id="basePrice" class="form-control">
+                                            </div>
                                         </div>
                                         <div class="col-xs-4">
                                             <label for="">Diskon Rp</label>
-                                            <input type="number" name="discountValue" value="{{ order.discountValue }}" id="discountValue" min="0" class="form-control">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="number" name="discountValue" value="{{ order.discountValue }}" id="discountValue" min="0" class="form-control">
+                                            </div>
                                         </div>
                                         <div class="col-xs-3">
                                             <label for="">Diskon %</label>
@@ -356,7 +362,10 @@
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <label for="">PPN Rp</label>
-                                            <input type="number" name="taxValue" value="{{ order.taxValue }}" id="taxValue" min="0" class="form-control">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="number" name="taxValue" value="{{ order.taxValue }}" id="taxValue" min="0" class="form-control">
+                                            </div>
                                         </div>
                                         <div class="col-xs-4">
                                             <label for="">PPN %</label>
@@ -374,7 +383,10 @@
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <label for="">Cashback Rp</label>
-                                            <input type="number" name="cashBackValue" value="{{ order.cashBackValue }}" id="cashBackValue" min="0" class="form-control">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="number" name="cashBackValue" value="{{ order.cashBackValue }}" id="cashBackValue" min="0" class="form-control">
+                                            </div>
                                         </div>
                                         <div class="col-xs-4">
                                             <label for="">Cashback %</label>
@@ -392,7 +404,10 @@
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <label for="">Jumlah Bayar</label>
-                                            <input type="text" name="totalAmount" value="{{ order.totalAmount }}" id="totalAmount" readonly class="form-control">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="text" name="totalAmount" value="{{ order.totalAmount }}" id="totalAmount" readonly class="form-control">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -410,7 +425,10 @@
                                         </div>
                                         <div class="col-xs-4">
                                             <label for="">Materai</label>
-                                            <input type="text" name="material" value="{{ order.material }}" id="material" class="form-control">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="text" name="material" value="{{ order.material }}" id="material" class="form-control">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

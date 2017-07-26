@@ -336,7 +336,7 @@
                                             <label for="">Tarif Iklan</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" name="basePrice" value="{{ order.basePrice }}" id="basePrice" class="form-control">
+                                                <input type="number" min="0" name="basePrice" value="{{ order.basePrice }}" id="basePrice" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
@@ -427,7 +427,7 @@
                                             <label for="">Materai</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" name="material" value="{{ order.material }}" id="material" class="form-control">
+                                                <input type="number" min="0" name="material" value="{{ order.material }}" id="material" class="form-control">
                                             </div>
                                         </div>
                                     </div>

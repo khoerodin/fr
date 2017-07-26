@@ -751,11 +751,12 @@ function getNetto() {
     }
 }
 
-$(document).on('' +
+$(document).on(
     'keyup keydown change mouseup',
     '#columnSize, #milimeterSize, #totalPost, ' +
-    '#basePrice, #discountValue, #taxValue, ' +
-    '#quantity, #material, #cashBackValue',
+    '#basePrice, #discountValue, #discountPercentage, ' +
+    '#taxValue, #taxPercentage, #quantity, #material, ' +
+    '#cashBackValue, #cashBackPercentage',
     function () {
     getJumlahBayar();
     getNetto();

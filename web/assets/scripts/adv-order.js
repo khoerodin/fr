@@ -46,7 +46,7 @@ function getOrders(param) {
                 tableData += '';
 
                 searchArea  = '<div class="col-md-12">';
-                searchArea += '<input type="text" id="searchList" class="form-control">';
+                searchArea += '<input type="text" id="searchList" placeholder="CARI..." class="form-control">';
                 searchArea += '</div>';
 
                 if (memberData.length < 1) {
@@ -61,7 +61,7 @@ function getOrders(param) {
                     tableData += '<tbody>';
 
                     searchArea  = '<div class="col-md-10">';
-                    searchArea += '<input type="text" readonly id="searchList" class="form-control">';
+                    searchArea += '<input type="text" readonly id="searchList"  placeholder="CARI..." class="form-control">';
                     searchArea += '</div>';
                     searchArea += '<div class="col-md-2">';
                     searchArea += '<button class="btn btn-danger btn-flat btn-block" id="newOrder">ADD</button>';
@@ -80,7 +80,7 @@ function getOrders(param) {
                 tableData += '<tbody>';
 
                 searchArea  = '<div class="col-md-10">';
-                searchArea += '<input type="text" readonly id="searchList" class="form-control">';
+                searchArea += '<input type="text" readonly id="searchList"  placeholder="CARI..." class="form-control">';
                 searchArea += '</div>';
                 searchArea += '<div class="col-md-2">';
                 searchArea += '<button class="btn btn-danger btn-flat btn-block" id="newOrder">ADD</button>';
@@ -102,7 +102,7 @@ function getOrders(param) {
             tableData += '<tbody>';
 
             searchArea  = '<div class="col-md-10">';
-            searchArea += '<input type="text" readonly id="searchList" class="form-control">';
+            searchArea += '<input type="text" readonly id="searchList"  placeholder="CARI..." class="form-control">';
             searchArea += '</div>';
             searchArea += '<div class="col-md-2">';
             searchArea += '<button class="btn btn-danger btn-flat btn-block" id="newOrder">ADD</button>';

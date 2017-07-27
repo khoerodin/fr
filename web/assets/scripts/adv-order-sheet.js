@@ -388,6 +388,8 @@ function getEmiten() {
 
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#emitenData tr', function () {
+        alert('ajskas')
+
         var emitenId = $(this).data('id');
         $('#category1').val(emitenId);
         $('input[name="emiten"]').val($(this).find('td:eq(0)').text());
@@ -900,68 +902,47 @@ $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function (
     $('#cashBackValue').val(cashBackRp);
 });
 
-$(document).on('click', '#btn-order', function () {
-    $.ajax({
-        url: '/api',
-        type: 'POST',
-        data: {
-            module: 'advertising/orders',
-            method: 'POST',
-            params: $('#orderForm').serializeArray()
-        },
-        success: function (data, textStatus, jqXHR) {
-
-            if ( jqXHR.status === 200 ) {
-                bootbox.alert({
-                    message: "SUKSES MENYIMPAN ORDER",
-                    animate: false,
-                    buttons: {
-                        ok: {
-                            className: 'btn-danger btn-flat'
-                        }
-                    },
-                    callback: function (result) {
-                        window.location.href = '/advertising/orders';
-                    }
-                });
-            } else {
-                bootbox.alert({
-                    message: "GAGAL MENYIMPAN ORDER",
-                    animate: false,
-                    buttons: {
-                        ok: {
-                            className: 'btn-danger btn-flat'
-                        }
-                    }
-                });
-            }
-
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            bootbox.alert({
-                message: "GAGAL MENYIMPAN ORDER",
-                animate: false,
-                buttons: {
-                    ok: {
-                        className: 'btn-danger btn-flat'
-                    }
-                }
-            });
+function newBlankDate() {
+    $('.pilih-tanggal').datetimepicker({
+        locale: 'id',
+        format: 'dddd, DD MMMM YYYY',
+        ignoreReadonly: true
+    }).on('dp.hide', function(e){
+        var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+        $(this).next().val(tgl);
+    }).on('dp.hide', function(e){
+        if($(this).closest('tr').is(':last-child') && !$(this).closest('tr').children('input.pilih-tanggal').val()) {
+            $('<tr><td style="position: relative;"><input readonly type="text" class="pilih-tanggal form-control"><input type="hidden" name="tanggal[]"><button class="btn-hapus-tanggal btn btn-danger btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button></td></tr>')
+                .insertAfter($('#eTanggal tr').last());
+            newBlankDate();
         }
     });
-});
+}
 
 $(document).on('click', '#edisiTerbitButton', function (e) {
     e.preventDefault();
     $('#edisiTerbitModal').modal({show: true, backdrop: 'static'});
 
-    $('#edisiTanggal').datepicker({
-        todayBtn: "linked",
-        format: "dd/mm/yyyy",
-        clearBtn: true,
-        language: "id",
-        multidate: true,
-        multidateSeparator: ", "
+    $('.pilih-tanggal').datetimepicker({
+        locale: 'id',
+        format: 'dddd, DD MMMM YYYY',
+        ignoreReadonly: true
+    }).on('dp.hide', function(e){
+        var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+        $(this).next().val(tgl);
+    }).on('dp.hide', function(e){
+        if($(this).closest('tr').is(':last-child') && !$(this).closest('tr').children('input.pilih-tanggal').val()) {
+            $('<tr><td style="position: relative;"><input readonly type="text" class="pilih-tanggal form-control"><input type="hidden" name="tanggal[]"><button class="btn-hapus-tanggal btn btn-danger btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button></td></tr>')
+                .insertAfter($('#eTanggal tr').last());
+            newBlankDate();
+        }
+    });
+
+    $(document).on('click', '.btn-hapus-tanggal', function (e) {
+        e.preventDefault();
+        if($(this).closest('td').children('input').val()) {
+            $(this).closest('tr').remove();
+        }
     });
 
     $('#edisiHarian').datepicker({
@@ -1005,47 +986,60 @@ function getDates(start, end, dayNum) {
 
     return result.map(m => m.format());
 }
-$(document).on('click', '#hore', function () {
-    if ($('#startDate').val() && $('#endDate').val()) {
-        var startDate = moment($('#startDate').val(), 'DD/MM/YYYY');
-        var endDate = moment($('#endDate').val(), 'DD/MM/YYYY');
+$(document).on('click', '#save-edisi-terbit', function () {
+    // if ($('#startDate').val() && $('#endDate').val()) {
+    //     var startDate = moment($('#startDate').val(), 'DD/MM/YYYY');
+    //     var endDate = moment($('#endDate').val(), 'DD/MM/YYYY');
+    //
+    //     var minggu = [];
+    //     var senin = [];
+    //     var selasa = [];
+    //     var rabu = [];
+    //     var kamis = [];
+    //     var jumat = [];
+    //     var sabtu = [];
+    //
+    //     if ($('input[type="checkbox"]#0').is(':checked')) {
+    //         minggu = getDates(startDate, endDate, 0);
+    //     }
+    //
+    //     if ($('input[type="checkbox"]#1').is(':checked')) {
+    //         senin = getDates(startDate, endDate, 1);
+    //     }
+    //
+    //     if ($('input[type="checkbox"]#2').is(':checked')) {
+    //         selasa = getDates(startDate, endDate, 2);
+    //     }
+    //
+    //     if ($('input[type="checkbox"]#3').is(':checked')) {
+    //         rabu = getDates(startDate, endDate, 3);
+    //     }
+    //
+    //     if ($('input[type="checkbox"]#4').is(':checked')) {
+    //         kamis = getDates(startDate, endDate, 4);
+    //     }
+    //
+    //     if ($('input[type="checkbox"]#5').is(':checked')) {
+    //         jumat = getDates(startDate, endDate, 5);
+    //     }
+    //
+    //     if ($('input[type="checkbox"]#6').is(':checked')) {
+    //         sabtu = getDates(startDate, endDate, 6);
+    //     }
+    //
+    //     console.log(minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu));
+    // }
 
-        var minggu = [];
-        var senin = [];
-        var selasa = [];
-        var rabu = [];
-        var kamis = [];
-        var jumat = [];
-        var sabtu = [];
+    var data = $('#perTgl').serializeArray();
+    $.ajax({
+        url: '/advertising/orders/publish-ads',
+        type: 'POST',
+        data: data,
+        success: function (data, textStatus, jqXHR) {
 
-        if ($('input[type="checkbox"]#0').is(':checked')) {
-            minggu = getDates(startDate, endDate, 0);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
         }
-
-        if ($('input[type="checkbox"]#1').is(':checked')) {
-            senin = getDates(startDate, endDate, 1);
-        }
-
-        if ($('input[type="checkbox"]#2').is(':checked')) {
-            selasa = getDates(startDate, endDate, 2);
-        }
-
-        if ($('input[type="checkbox"]#3').is(':checked')) {
-            rabu = getDates(startDate, endDate, 3);
-        }
-
-        if ($('input[type="checkbox"]#4').is(':checked')) {
-            kamis = getDates(startDate, endDate, 4);
-        }
-
-        if ($('input[type="checkbox"]#5').is(':checked')) {
-            jumat = getDates(startDate, endDate, 5);
-        }
-
-        if ($('input[type="checkbox"]#6').is(':checked')) {
-            sabtu = getDates(startDate, endDate, 6);
-        }
-
-        console.log(minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu));
-    }
+    });
 });

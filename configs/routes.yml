@@ -50,6 +50,7 @@ app:
         - { path: '/advertising/orders', controller: 'Bisnis:AdvertisingOrders@index', methods: ['GET'] }
         - { path: '/advertising/orders/new', controller: 'Bisnis:AdvertisingOrders@new', methods: ['GET'] }
         - { path: '/advertising/orders/{id}', controller: 'Bisnis:AdvertisingOrders@detail', methods: ['GET'] }
+        - { path: '/advertising/orders/publish-ads', controller: 'Bisnis:AdvertisingOrders@publishAds', methods: ['POST'] }
 
         #Billing
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }

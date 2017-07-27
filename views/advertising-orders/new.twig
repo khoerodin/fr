@@ -684,15 +684,33 @@
                     <div class="panel with-nav-tabs panel-info">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#eTanggal" aria-controls="home" role="tab" data-toggle="tab">EDISI TANGGAL</a></li>
-                                <li role="presentation"><a href="#eHarian" aria-controls="profile" role="tab" data-toggle="tab">EDISI HARI</a></li>
+                                <li role="presentation" class="active"><a href="#eTanggal" aria-controls="home" role="tab" data-toggle="tab">BERDASARKAN TANGGAL</a></li>
+                                <li role="presentation"><a href="#eHarian" aria-controls="profile" role="tab" data-toggle="tab">BERDASARKAN HARI</a></li>
                             </ul>
                         </div>
 
                         <div class="panel-body">
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="eTanggal">
-                                    <input type="text" readonly class="form-control" id="edisiTanggal">
+                                    <form id="perTgl">
+                                        <table class="table table-responsive table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>HARI/TANGGAL</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td style="position: relative;">
+                                                        <input readonly type="text" class="pilih-tanggal form-control">
+                                                        <input type="hidden" name="tanggal[]">
+                                                        <button class="btn-hapus-tanggal btn btn-danger btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </form>
                                 </div>
 
                                 <div role="tabpanel" class="tab-pane" id="eHarian">
@@ -721,7 +739,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                    <button id="hore" type="button" class="btn btn-flat btn-danger">Save</button>
+                    <button id="save-edisi-terbit" type="button" class="btn btn-flat btn-danger">Save</button>
                 </div>
             </div>
 

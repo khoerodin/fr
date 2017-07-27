@@ -2,6 +2,9 @@
 
 namespace Bisnis\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 class AdvertisingOrdersController extends AdminController
 {
     public function indexAction()
@@ -66,5 +69,19 @@ class AdvertisingOrdersController extends AdminController
         ];
 
         return $this->view('advertising-orders/detail.twig', $data);
+    }
+
+    function publishAdsAction(Request $request)
+    {
+        $url = 'advertising/publish-ads';
+        $method = 'post';
+        $data = $request->get('tanggal');
+
+        echo "<pre>";
+        var_dump($data);
+        echo "</pre>";die();
+
+        $response = $this->request($url, $method, $data);
+        return new Response($response->getContent());
     }
 }

@@ -15,6 +15,10 @@ $(document).on('click', '.detail-tic', function () {
     var staffUserId = $(this).closest('tr').data('staff-user');
     $('#tiketModal .modal-body').attr('data-staff-userid', staffUserId);
 
+    var timeId = $(this).closest('tr').data('waktu');
+    $('.list-post-date').html(moment(timeId).format("D MMM 'YY - HH:mm a"));
+
+
     getTicketData(ticketId);
     $('#tiketModal').modal({show: true, backdrop: 'static'});
 
@@ -86,11 +90,11 @@ $(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
     }else{
             alert('Teks tidak boleh kosong bro..');
     }
+
+    $( this ).replaceWith( "<div class='btn btn-reply-tic' disabled='true'>" + $( this ).text() + "</div>" );
 });
 
-function eraseText() {
-    document.getElementById("replyMessage").value = "";
-}
+
 
 
 $('.ticket-status').select2({
@@ -125,13 +129,20 @@ var typingDelayMillis = 4000;
 
 function refreshTypingStatus() {
     if (!textarea.is(':focus') || textarea.val() == '' || new Date().getTime() - lastTypedTime.getTime() > typingDelayMillis) {
-        typingStatus.html('');
+        typingStatus.html('<span style="visibility: hidden">.</span>');
     } else {
         typingStatus.html('someone is typing...');
     }
 }
 function updateLastTypedTime() {
     lastTypedTime = new Date();
+}
+
+function readNotif() {
+    if(!textarea.is(':click')){
+
+    }
+
 }
 
 setInterval(refreshTypingStatus, 100);
@@ -154,16 +165,16 @@ $(document).find('.date-post').append(html);
 
 function getTicketData(ticketId) {
 
-    // var title = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(5)').text();
-    // var client = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(2)').text();
+    var title = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(5)').text();
+    var client = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(2)').text();
     // var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
-    // var category = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(4)').text();
-    // // var time = $('tbody[data-list="helpdesk/tickets"] tr#'+param+' td:nth-child(4)').text();
-    //
-    // $('#tiketModal .timeline-header-title').text(title);
-    // $('#tiketModal .media-heading-client-name').text(client);
-    // $('#tiketModal .posted-message').text(message);
-    // $('#tiketModal .timeline-header-category').text(category);
+    var category = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(4)').text();
+    // var momentPost = moment('value.createdAt').format("D MMM 'YY - HH:mm a");
+
+    $('#tiketModal .list-judul').text(title);
+    $('#tiketModal .list-client').text(client);
+    // $('#tiketModal .list-tgl-post').text(momentPost);
+    $('#tiketModal .list-cat').text(category);
 
     $.ajax({
         url: '/api',
@@ -186,11 +197,13 @@ function getTicketData(ticketId) {
 
             $.each(finalData, function (index, value) {
 
+
                 dataForum += '<div id="Forum" style="background-color: #efefef">';
                 dataForum += '<div class="media mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 10px; margin-bottom: 10px; border: #3e3b42 solid 1px;padding: 12px" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';
                 dataForum += '<div class="media-left media-top" style="">';
 
-                dataForum += '<img class="direct-chat-img img-lg" src="../img/user7-128x128.jpg">';
+                dataForum += '<img class="direct-chat-img img-lg" src="../img/user4-128x128.jpg">';
+                // dataForum += '<img class="direct-chat-img img-lg" src="../img/user7-128x128.jpg">';
                 dataForum += '</div>';
                 dataForum += '<div class="media-body"><span class="date-post pull-right"><span class="glyphicon glyphicon-time"></span> diposting pada '+moment(value.createdAt).format("D MMM 'YY - HH:mm a")+'</span>';
                 dataForum += '<h4 class="media-heading">'+value.client.user.fullname+'</h4>'; //clientName
@@ -263,7 +276,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
             },
             {
                 name: 'time',
-                value: createdAt
+                value: responseFor
             }
         ];
     }
@@ -292,12 +305,195 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
     });
 }
 
-// $('#dtDeadline, #inputDeadline').datetimepicker({
-//     locale: 'id',
-//     minDate: moment()
-// }).on('dp.change', function(e){
-//     var tgl = e.date.format('DD/MM/YYYY HH:mm:ss');
-//     $('#deadline').val(tgl);
+// --------------------------------- 28 JULI 2017 ---- GOOGLE PIE CHART
+
+$(function () {
+    // Get the context of the canvas element we want to select
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myLineChart = new Chart(ctx).Line(data, option); //'Line' defines type of the chart.
+});
+
+$(function () {
+    var option = {
+        responsive: true,
+    };
+
+    // Get the context of the canvas element we want to select
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myLineChart = new Chart(ctx).Line(data, option); //'Line' defines type of the chart.
+});
+
+$(function () {
+    var data = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: [65, 59, 80, 81, 56, 55, 40]
+            },
+            {
+                label: "My Second dataset",
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(151,187,205,1)",
+                data: [28, 48, 40, 19, 86, 27, 90]
+            }
+        ]
+    };
+
+var option = {
+    responsive: true,
+};
+
+// Get the context of the canvas element we want to select
+var ctx = document.getElementById("myChart").getContext('2d');
+var myLineChart = new Chart(ctx).Line(data, option); //'Line' defines type of the chart.
+});
+
+
+Chart.defaults.global = {
+    // Boolean - Whether to animate the chart
+    animation: true,
+
+    // Number - Number of animation steps
+    animationSteps: 60,
+
+    // String - Animation easing effect
+    // Possible effects are:
+    // [easeInOutQuart, linear, easeOutBounce, easeInBack, easeInOutQuad,
+    //  easeOutQuart, easeOutQuad, easeInOutBounce, easeOutSine, easeInOutCubic,
+    //  easeInExpo, easeInOutBack, easeInCirc, easeInOutElastic, easeOutBack,
+    //  easeInQuad, easeInOutExpo, easeInQuart, easeOutQuint, easeInOutCirc,
+    //  easeInSine, easeOutExpo, easeOutCirc, easeOutCubic, easeInQuint,
+    //  easeInElastic, easeInOutSine, easeInOutQuint, easeInBounce,
+    //  easeOutElastic, easeInCubic]
+    animationEasing: "easeOutQuart",
+
+    // Boolean - If we should show the scale at all
+    showScale: true,
+
+    // Boolean - If we want to override with a hard coded scale
+    scaleOverride: false,
+
+    // ** Required if scaleOverride is true **
+    // Number - The number of steps in a hard coded scale
+    scaleSteps: null,
+    // Number - The value jump in the hard coded scale
+    scaleStepWidth: null,
+    // Number - The scale starting value
+    scaleStartValue: null,
+
+    // String - Colour of the scale line
+    scaleLineColor: "rgba(0,0,0,.1)",
+
+    // Number - Pixel width of the scale line
+    scaleLineWidth: 1,
+
+    // Boolean - Whether to show labels on the scale
+    scaleShowLabels: true,
+
+    // Interpolated JS string - can access value
+    scaleLabel: "<%=value%>",
+
+    // Boolean - Whether the scale should stick to integers, not floats even if drawing space is there
+    scaleIntegersOnly: true,
+
+    // Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+    scaleBeginAtZero: false,
+
+    // String - Scale label font declaration for the scale label
+    scaleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+
+    // Number - Scale label font size in pixels
+    scaleFontSize: 12,
+
+    // String - Scale label font weight style
+    scaleFontStyle: "normal",
+
+    // String - Scale label font colour
+    scaleFontColor: "#666",
+
+    // Boolean - whether or not the chart should be responsive and resize when the browser does.
+    responsive: false,
+
+    // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+    maintainAspectRatio: true,
+
+    // Boolean - Determines whether to draw tooltips on the canvas or not
+    showTooltips: true,
+
+    // Function - Determines whether to execute the customTooltips function instead of drawing the built in tooltips (See [Advanced - External Tooltips](#advanced-usage-custom-tooltips))
+    customTooltips: false,
+
+    // Array - Array of string names to attach tooltip events
+    tooltipEvents: ["mousemove", "touchstart", "touchmove"],
+
+    // String - Tooltip background colour
+    tooltipFillColor: "rgba(0,0,0,0.8)",
+
+    // String - Tooltip label font declaration for the scale label
+    tooltipFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+
+    // Number - Tooltip label font size in pixels
+    tooltipFontSize: 14,
+
+    // String - Tooltip font weight style
+    tooltipFontStyle: "normal",
+
+    // String - Tooltip label font colour
+    tooltipFontColor: "#fff",
+
+    // String - Tooltip title font declaration for the scale label
+    tooltipTitleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+
+    // Number - Tooltip title font size in pixels
+    tooltipTitleFontSize: 14,
+
+    // String - Tooltip title font weight style
+    tooltipTitleFontStyle: "bold",
+
+    // String - Tooltip title font colour
+    tooltipTitleFontColor: "#fff",
+
+    // Number - pixel width of padding around tooltip text
+    tooltipYPadding: 6,
+
+    // Number - pixel width of padding around tooltip text
+    tooltipXPadding: 6,
+
+    // Number - Size of the caret on the tooltip
+    tooltipCaretSize: 8,
+
+    // Number - Pixel radius of the tooltip border
+    tooltipCornerRadius: 6,
+
+    // Number - Pixel offset from point x to tooltip edge
+    tooltipXOffset: 10,
+
+    // String - Template string for single tooltips
+    tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
+
+    // String - Template string for multiple tooltips
+    multiTooltipTemplate: "<%= value %>",
+
+    // Function - Will fire on animation progression.
+    onAnimationProgress: function(){},
+
+    // Function - Will fire on animation completion.
+    onAnimationComplete: function(){}
+}
+
+
+
 
 
 

@@ -2460,6 +2460,25 @@ a:focus {
 .nav-pills > li.active > a {
   font-weight: 600;
 }
+/* MODIFIED TIKET NAV PILLS */
+.nav-pills-tic > li > a {
+  border-radius: 0;
+  border-top: 3px solid transparent;
+  color: #444;
+}
+.nav-pills-tic > li > a > .fa,
+.nav-pills-tic > li > a > .glyphicon,
+.nav-pills-tic > li > a > .ion {
+  margin-right: 5px;
+}
+.nav-pills-tic > li.active > a,
+.nav-pills-tic > li.active > a:hover,
+.nav-pills-tic > li.active > a:focus {
+  border-top-color: #3c8dbc;
+}
+.nav-pills-tic > li.active > a {
+  font-weight: 900;
+}
 /* NAV STACKED */
 .nav-stacked > li > a {
   border-radius: 0;

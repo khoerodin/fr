@@ -103,7 +103,7 @@ function getAll(module, columns = [], tbody = 'data-list') {
                             no = no;
 
                             if (module === 'helpdesk/tickets'){
-                                tr += '<tr id="' + val.id + '" data-staff="'+ val.staff.id +'" data-client="'+ val.client.id +'" data-staff-user="'+ val.staff.user.id +'">';
+                                tr += '<tr id="' + val.id + '" data-staff="'+ val.staff.id +'" data-client="'+ val.client.id +'" data-staff-user="'+ val.staff.user.id +'" data-waktu="'+ val.createdAt +'">';
                             } else {
                                 tr += '<tr id="' + val.id + '">';
                             }

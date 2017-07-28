@@ -122,6 +122,12 @@ function createForm(formType, attributes) {
 
 console.log(createForm('select', {class: 'bismillah a', options: {ddd: 'abcdef'}, value: 'halooo'}));
 
+function getDescendantProp (obj, desc) {
+    var arr = desc.split('.');
+    while (arr.length && (obj = obj[arr.shift()]));
+    return obj;
+}
+
 function getGrid(element, settings) {
     var $this = element;
     var module = settings.module;
@@ -180,13 +186,7 @@ function getGrid(element, settings) {
 
                 $.each(gridTable, function (fIndex, fValue) {
 
-                    var column1 = fValue.field.split(".")[0];
-                    var column2 = fValue.field.split(".")[1];
-                    if(column2) {
-                        table += '<td>'+mValue[column1][column2]+'</td>';
-                    } else {
-                        table += '<td>'+mValue[column1]+'</td>';
-                    }
+                    table += '<td>'+getDescendantProp(mValue, fValue.field)+'</td>';
 
                 });
 

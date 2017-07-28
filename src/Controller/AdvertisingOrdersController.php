@@ -64,8 +64,6 @@ class AdvertisingOrdersController extends AdminController
             'order' => $order,
             'representatives' => $representatives,
             'paymentMethod' => $paymentMethod,
-            'emiten' => $emiten,
-            'sektor' => $sektor
         ];
 
         return $this->view('advertising-orders/detail.twig', $data);

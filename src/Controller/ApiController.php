@@ -24,6 +24,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
     {
         $url = $request->get('module');
         $method = $request->get('method');
+        $method = strtolower($method);
         $params = $request->get('params');
         $fullname = null;
 

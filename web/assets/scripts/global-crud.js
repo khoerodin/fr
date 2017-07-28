@@ -64,6 +64,12 @@ function changeUrlParam (param, value) {
     }
 }
 
+function getDescendantProp (obj, desc) {
+    var arr = desc.split('.');
+    while (arr.length && (obj = obj[arr.shift()]));
+    return obj;
+}
+
 // get all data
 function getAll(module, columns = [], tbody = 'data-list') {
 
@@ -115,11 +121,9 @@ function getAll(module, columns = [], tbody = 'data-list') {
                                 var v3 = v.split(".")[2];
 
                                 if (val[v1] instanceof Object) {
-                                    if (val[v1][v2] instanceof Object) {
-                                        tr += '<td>' + val[v1][v2][v3] + '</td>';
-                                    } else {
-                                        tr += '<td>' + val[v1][v2] + '</td>';
-                                    }
+
+                                    tr += '<td>' + getDescendantProp(val, v) + '</td>';
+
                                 } else {
                                     tr += '<td>';
 

@@ -130,6 +130,7 @@ function getDescendantProp (obj, desc) {
 
 function getGrid(element, settings) {
     var $this = element;
+    var gridName = settings.gridName;
     var module = settings.module;
     var gridTable = settings.gridTable;
 
@@ -192,7 +193,7 @@ function getGrid(element, settings) {
 
                 table += '<td><span class="pull-right">';
                 table += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                table += '<button class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+                table += '<button class="delete-nn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
                 table += '</span></td>';
 
                 table += '</tr>';
@@ -201,12 +202,12 @@ function getGrid(element, settings) {
             table += '</tbody>';
             table += '</table>';
 
-            var modal  = '<div id="'+module+'DetailModal" class="modal" role="dialog">';
+            var modal  = '<div data-modal="'+module+'DetailModal" class="modal" role="dialog">';
             modal += '  <div class="modal-dialog modal-lg">';
             modal += '      <div class="modal-content">';
             modal += '          <div class="modal-header">';
             modal += '              <button type="button" class="close" data-dismiss="modal">&times;</button>';
-            modal += '              <h4 class="modal-title">Detail '+module+'</h4>';
+            modal += '              <h4 class="modal-title">Detail '+gridName+'</h4>';
             modal += '          </div>';
             modal += '          <div class="modal-body">';
             modal += '          <input type="hidden" name="id">';
@@ -228,10 +229,10 @@ function getGrid(element, settings) {
 function getDetail(module) {
     $(document).on('click', 'tbody[sc-id="'+module+'"] .detail-btn', function () {
         var id = $(this).closest('tr').attr('id');
-        $('div#'+module+'DetailModal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
-        $('div#'+module+'DetailModal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
-        $('div#'+module+'DetailModal input[name="id"]').val(id);
-        $('div#'+module+'DetailModal').modal({show: true, backdrop: 'static'});
+        $('div[data-modal="'+module+'DetailModal"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
+        $('div[data-modal="'+module+'DetailModal"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
+        $('div[data-modal="'+module+'DetailModal"] input[name="id"]').val(id);
+        $('div[data-modal="'+module+'DetailModal"]').modal({show: true, backdrop: 'static'});
     });
 }
 
@@ -240,6 +241,7 @@ function getDetail(module) {
     $.fn.simpleCrud = function(options) {
 
         var settings = $.extend({
+            gridName     : null,
             module       : null,
             gridTable    : null,
             detailForm   : null

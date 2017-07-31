@@ -85,7 +85,7 @@ function createForm(formType, attributes) {
     if (attributes instanceof Object) {
         $.each(attributes, function (index, value) {
             if (value instanceof Object) {
-                choices['value'] = index;
+                choices['value'] = value;
             } else {
                 if (index === 'value') {
                     inputValue = value;
@@ -101,26 +101,29 @@ function createForm(formType, attributes) {
     var form = '';
     switch (formType) {
         case 'inputText':
-            form = '<input type="text" '+attr+'value="'+value+'">';
+            form = '<input type="text" '+attr+' value="'+value+'">';
             break;
 
         case 'textArea':
             form = '<textarea '+attr+'>'+value+'</textarea>';
             break;
+
         case 'select':
             form += '<select '+attr+'>';
+            console.log(choices);
             $.each(choices, function (cIndex, cValue) {
                 form += '<option value="'+cValue+'">'+cIndex+'</option>';
             });
             form += '</select>';
             break;
+
         default:
             form = '';
     }
     return form;
 }
 
-console.log(createForm('select', {class: 'bismillah a', options: {ddd: 'abcdef'}, value: 'halooo'}));
+console.log(createForm('select', {class: 'bismillah a', options: {aaa: 'aaa', bbb: 'bbb'}, value: 'halooo'}));
 
 function getDescendantProp (obj, desc) {
     var arr = desc.split('.');
@@ -232,6 +235,9 @@ function getDetail(module) {
         $('div[data-modal="'+module+'DetailModal"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
         $('div[data-modal="'+module+'DetailModal"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
         $('div[data-modal="'+module+'DetailModal"] input[name="id"]').val(id);
+
+
+
         $('div[data-modal="'+module+'DetailModal"]').modal({show: true, backdrop: 'static'});
     });
 }

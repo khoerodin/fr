@@ -5,7 +5,7 @@
     <script src="/assets/scripts/helpdesk-tickets.js"></script>
 
     <script>
-        window.module = 'helpdesk/tickets';
+        window.module = 'helpdesk/new-tickets';
         window.field = 'name';
         var columns = [
             'client.name',
@@ -29,13 +29,13 @@
 
                     {#<div class="col-md-12 search-area transition">#}
 
-                        {#<select data-placeholder="CARI NAMA KLIEN" class="search-name form-control select2" style="width: 100%;" width="100%">#}
-                            {#<option></option>#}
-                        {#</select>#}
+                    {#<select data-placeholder="CARI NAMA KLIEN" class="search-name form-control select2" style="width: 100%;" width="100%">#}
+                    {#<option></option>#}
+                    {#</select>#}
                     {#</div>#}
 
                     {#<div class="button-area transition">#}
-                        {#<a href="JavaScript:Void(0);" data-btn-add="helpdesk/tickets" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>#}
+                    {#<a href="JavaScript:Void(0);" data-btn-add="helpdesk/tickets" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>#}
                     {#</div>#}
                     &nbsp;&nbsp;&nbsp;
                 </div>
@@ -51,13 +51,13 @@
                             <a data-toggle="tab" class="nav-link bg-warning" href="#myTicket"><h3>My Tickets &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-flag" aria-hidden="true"></i></h3></a>
                         </li>
                         {#<li class="nav-item">#}
-                            {#<a data-toggle="tab" class="nav-link bg-danger" href="#statusPrioritasTiket"><h3>Status & Priority &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-users" aria-hidden="true"></i></h3></a>#}
+                        {#<a data-toggle="tab" class="nav-link bg-danger" href="#statusPrioritasTiket"><h3>Status & Priority &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-users" aria-hidden="true"></i></h3></a>#}
                         {#</li>#}
                         {#<li class="nav-item">#}
-                            {#<a data-toggle="tab" class="nav-link bg-info" href="#statistikTiket"><h3>Statistics &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-bar-chart" aria-hidden="true"></i></h3></a>#}
+                        {#<a data-toggle="tab" class="nav-link bg-info" href="#statistikTiket"><h3>Statistics &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-bar-chart" aria-hidden="true"></i></h3></a>#}
                         {#</li>#}
                         {#<li class="nav-item">#}
-                            {#<a data-toggle="tab" class="nav-link bg-red-gradient" href="/helpdesk/ticket-responses" target="_blank" style="text-align: center"><h3><span class="glyphicon glyphicon-hand-right pull-left"></span>LIVE CHAT HELPDESK<span class="glyphicon glyphicon-hand-left pull-right"></span></h3></a>#}
+                        {#<a data-toggle="tab" class="nav-link bg-red-gradient" href="/helpdesk/ticket-responses" target="_blank" style="text-align: center"><h3><span class="glyphicon glyphicon-hand-right pull-left"></span>LIVE CHAT HELPDESK<span class="glyphicon glyphicon-hand-left pull-right"></span></h3></a>#}
                         {#</li>#}
                     </ul>
 
@@ -231,25 +231,25 @@
 
                                         <div class="col-sm-4">
                                             <div class="row">
-                                            <ul class="list-group">
-                                                <li class="list-group-item">Nama Client <span class="pull-right">: </span></li>
-                                                <li class="list-group-item">Judul <span class="pull-right">: </span> </li>
-                                                <li class="list-group-item">Kategori <span class="pull-right">: </span> </li>
-                                                <li class="list-group-item">Diposting tanggal <span class="pull-right">: </span> </li>
-                                                {#<a href="/helpdesk/ticket-responses" class="list-group-item list-group-item-info" target="_blank"><span class="glyphicon glyphicon-hand-right pull-left"></span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CLICK TO CHAT WITH US</span><span class="glyphicon glyphicon-hand-left pull-right"></span></a>#}
-                                            </ul>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">Nama Client <span class="pull-right">: </span></li>
+                                                    <li class="list-group-item">Judul <span class="pull-right">: </span> </li>
+                                                    <li class="list-group-item">Kategori <span class="pull-right">: </span> </li>
+                                                    <li class="list-group-item">Diposting tanggal <span class="pull-right">: </span> </li>
+                                                    {#<a href="/helpdesk/ticket-responses" class="list-group-item list-group-item-info" target="_blank"><span class="glyphicon glyphicon-hand-right pull-left"></span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CLICK TO CHAT WITH US</span><span class="glyphicon glyphicon-hand-left pull-right"></span></a>#}
+                                                </ul>
                                             </div>
                                         </div>
 
                                         <div class="col-sm-8">
                                             <div class="row">
-                                            <ul class="list-group listDetail">
+                                                <ul class="list-group listDetail">
 
-                                                <li class="list-group-item list-client"></li>
-                                                <li class="list-group-item list-judul"></li>
-                                                <li class="list-group-item list-cat"></li>
-                                                <li class="list-group-item list-post-date"></li>
-                                            </ul>
+                                                    <li class="list-group-item list-client"></li>
+                                                    <li class="list-group-item list-judul"></li>
+                                                    <li class="list-group-item list-cat"></li>
+                                                    <li class="list-group-item list-post-date"></li>
+                                                </ul>
                                             </div>
                                         </div>
 
@@ -265,18 +265,18 @@
                                 </div>
                                 <div class="modal-footer">
 
-                                        <div class="input-group">
+                                    <div class="input-group">
 
-                                                <textarea name="message" placeholder="Ketik balasan Anda ..." class="form-control not-ucase" id="replyMessage" autocomplete="off" maxlength="15000" cols="150" rows="4"></textarea>
+                                        <textarea name="message" placeholder="Ketik balasan Anda ..." class="form-control not-ucase" id="replyMessage" autocomplete="off" maxlength="15000" cols="150" rows="4"></textarea>
 
-                                        </div>
+                                    </div>
 
                                     <br>
                                     <div class="input-group-btn">
                                         <button type="button" class="btn btn-primary btn-flat btn-reply-tic">Send</button>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     </div>
-                                    </div>
+                                </div>
                             </div>
 
                         </div>

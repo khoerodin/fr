@@ -110,8 +110,7 @@ function createForm(formType, attributes) {
 
         case 'select':
             form += '<select '+attr+'>';
-            console.log(choices);
-            $.each(choices, function (cIndex, cValue) {
+            $.each(choices['value'], function (cIndex, cValue) {
                 form += '<option value="'+cValue+'">'+cIndex+'</option>';
             });
             form += '</select>';
@@ -123,7 +122,7 @@ function createForm(formType, attributes) {
     return form;
 }
 
-console.log(createForm('select', {class: 'bismillah a', options: {aaa: 'aaa', bbb: 'bbb'}, value: 'halooo'}));
+// console.log(createForm('select', {class: 'bismillah a', name: 'akuu', options: {aaa: 'aaa', bbb: 'bbb'}, value: 'halooo'}));
 
 function getDescendantProp (obj, desc) {
     var arr = desc.split('.');
@@ -136,6 +135,7 @@ function getGrid(element, settings) {
     var gridName = settings.gridName;
     var module = settings.module;
     var gridTable = settings.gridTable;
+    var detailForm = settings.detailForm;
 
     var data = {
         module : module,
@@ -189,14 +189,12 @@ function getGrid(element, settings) {
                 table += '<td>'+no+'</td>';
 
                 $.each(gridTable, function (fIndex, fValue) {
-
                     table += '<td>'+getDescendantProp(mValue, fValue.field)+'</td>';
-
                 });
 
                 table += '<td><span class="pull-right">';
                 table += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                table += '<button class="delete-nn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+                table += '<button class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
                 table += '</span></td>';
 
                 table += '</tr>';
@@ -204,6 +202,16 @@ function getGrid(element, settings) {
 
             table += '</tbody>';
             table += '</table>';
+
+            var forms = '';
+            $.each(detailForm, function (index, value) {
+
+                forms += '<div class="form-group">';
+                forms += '<label for="">'+value.label+'</label>';
+                forms += createForm('inputText', {class: 'form-control', name: value.field, value: ''});
+                forms += '</div>';
+
+            });
 
             var modal  = '<div data-modal="'+module+'DetailModal" class="modal" role="dialog">';
             modal += '  <div class="modal-dialog modal-lg">';
@@ -213,32 +221,68 @@ function getGrid(element, settings) {
             modal += '              <h4 class="modal-title">Detail '+gridName+'</h4>';
             modal += '          </div>';
             modal += '          <div class="modal-body">';
-            modal += '          <input type="hidden" name="id">';
+            modal += '              <form role="form">';
+            modal += '                  <input type="hidden" name="id">';
+            modal += '                  <div class="box-body">';
+            modal +=                        forms;
+            modal += '                  </div>';
+            modal += '              </form>';
             modal += '          <div>';
             modal += '          <div class="modal-footer">';
             modal += '              <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>';
-            modal += '              <button type="button" class="btn btn-flat btn-danger">Close</button>';
+            modal += '              <button type="button" class="btn btn-flat btn-danger">Update</button>';
             modal += '          <div>';
             modal += '       </div>';
             modal += '   </div>';
             modal += '</div>';
 
             $this.html(table+modal);
-            getDetail(module);
+            getDetail(module, detailForm);
         }
     });
 }
 
-function getDetail(module) {
+function getDetail(module, detailForm) {
+    var id;
     $(document).on('click', 'tbody[sc-id="'+module+'"] .detail-btn', function () {
-        var id = $(this).closest('tr').attr('id');
+        id = $(this).closest('tr').attr('id');
         $('div[data-modal="'+module+'DetailModal"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
         $('div[data-modal="'+module+'DetailModal"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
         $('div[data-modal="'+module+'DetailModal"] input[name="id"]').val(id);
-
-
-
         $('div[data-modal="'+module+'DetailModal"]').modal({show: true, backdrop: 'static'});
+    });
+
+    $('div[data-modal="'+module+'DetailModal"]').on('show.bs.modal', function (e) {
+        var data = {
+            module : module+'/'+id,
+            method: 'GET'
+        };
+
+        $.ajax({
+            url: '/api',
+            type: 'POST',
+            data: data,
+            success: function (data, textStatus, jqXHR) {
+
+                if (jqXHR.status === 200) {
+                    var data = JSON.parse(data);
+                    $.each(detailForm, function (index, value) {
+                        if (value.form.startsWith('input') || value.form.startsWith('textArea')) {
+                            $('input[name="'+value.field+'"]').val(getDescendantProp(data, value.field));
+                        }
+                    });
+
+                    $('div[data-modal="'+module+'DetailModal"] input').removeClass('loading').prop('readonly', false).attr('placeholder','');
+                    $('div[data-modal="'+module+'DetailModal"] input[type="checkbox"]').prop('disabled', false);
+                } else {
+
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
     });
 }
 

@@ -104,6 +104,10 @@ function createForm(formType, attributes) {
             form = '<input type="text" '+attr+' value="'+value+'">';
             break;
 
+        case 'inputEmail':
+            form = '<input type="email" '+attr+' value="'+value+'">';
+            break;
+
         case 'textArea':
             form = '<textarea '+attr+'>'+value+'</textarea>';
             break;
@@ -208,7 +212,7 @@ function getGrid(element, settings) {
 
                 forms += '<div class="form-group">';
                 forms += '<label for="">'+value.label+'</label>';
-                forms += createForm('inputText', {class: 'form-control', name: value.field, value: ''});
+                forms += createForm(value.form, {class: 'form-control', name: value.field, value: ''});
                 forms += '</div>';
 
             });
@@ -268,7 +272,7 @@ function getDetail(module, detailForm) {
                     var data = JSON.parse(data);
                     $.each(detailForm, function (index, value) {
                         if (value.form.startsWith('input') || value.form.startsWith('textArea')) {
-                            $('input[name="'+value.field+'"]').val(getDescendantProp(data, value.field));
+                            $('[name="'+value.field+'"]').val(getDescendantProp(data, value.field));
                         }
                     });
 

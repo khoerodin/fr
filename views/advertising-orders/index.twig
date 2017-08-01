@@ -9,8 +9,12 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header row" id="searchArea" style="margin-bottom: 0px;">
-                    <div class="col-md-12">
-                        <input type="text" id="searchList" class="form-control" placeholder="CARI...">
+                    <div class="col-md-12 search-area">
+                        <select class="form-control" id="searchOrder"></select>
+                    </div>
+
+                    <div id="searchOrderBtnArea" class="button-area transition">
+                        <a id="addOrder" href="/advertising/orders/new" style="visibility: hidden;" class="add-btn btn h btn-flat btn-block btn-danger">Add</a>
                     </div>
                 </div>
                 <div class="box-body">

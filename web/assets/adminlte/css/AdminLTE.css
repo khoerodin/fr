@@ -4976,7 +4976,7 @@ table.text-center th {
   margin-bottom: -20px;
 }
 
-table th, .modal-title, .form-group label, .modal label, button, .btn {
+table th, .modal-title, .form-group label, .modal label, button, .btn, input {
   text-transform: uppercase;
 }
 

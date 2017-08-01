@@ -303,34 +303,6 @@ $(document).on('click', '#emiten button', function () {
     $('#emitenModal input#serachList').focus();
 });
 
-// $(document).on('keyup', '#serachEmiten', function () {
-//     searchEmiten();
-//     if($('#emitenData').children(':visible').length == 0) {
-//         $('#emitenData').append('<tr id="warn-nodata"><td class="text-danger">TIDAK ADA DATA</td></tr>');
-//     }
-// });
-
-function searchEmiten() {
-    var input, filter, table, tr, td, i;
-    input = document.getElementById("serachEmiten");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("emitenData");
-    tr = table.getElementsByTagName("tr");
-
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-            $('#warn-nodata').remove();
-            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}
-
 function getEmiten() {
     $.ajax({
         url: '/api',
@@ -424,7 +396,7 @@ $(document).on('click', '#sektor button', function () {
     }
 });
 
-$(document).on('keyupup', '#sektorModal #serachList', function () {
+$(document).on('keyup', '#sektorModal #serachList', function () {
     var params = $(this).val();
     var parentId = $('#category1').val();
     getSektor(params, parentId);

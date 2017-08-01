@@ -388,7 +388,6 @@ function getEmiten() {
 
 $(document).ajaxComplete(function() {
     $(document).on('dblclick', '#emitenData tr', function () {
-        alert('ajskas')
 
         var emitenId = $(this).data('id');
         $('#category1').val(emitenId);

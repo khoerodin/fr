@@ -684,10 +684,10 @@ $(document).ajaxComplete(function() {
 // end Sisipan
 
 function getBiaya() {
-    var kolom = $('#columnSize').val();
-    var mmBaris = $('#milimeterSize').val();
-    var terbit = $('#totalPost').val();
-    var tarif = $('#basePrice').val();
+    var kolom = parseInt($('#columnSize').val());
+    var mmBaris = parseInt($('#milimeterSize').val());
+    var terbit = parseInt($('#totalPost').val());
+    var tarif = parseInt($('#basePrice').val());
 
     if ($('#columnSize').val() && $('#milimeterSize').val() && $('#totalPost').val() && $('#basePrice').val() ) {
         if (
@@ -698,20 +698,20 @@ function getBiaya() {
             $('input[name="jenisIklan"]').val().toLowerCase() === 'tarif khusus' ||
             $('input[name="jenisIklan"]').val().toLowerCase().startsWith('paket')
         ) {
-            return tarif;
+            return parseInt(tarif);
         } else {
-            return (kolom * mmBaris) * terbit * tarif;
+            return parseInt((kolom * mmBaris) * terbit * tarif);
         }
     }
 }
 
 function getJumlahBayar() {
     if($('#discountValue').val() && $('#taxValue').val() && $('#cashBackValue').val()) {
-        var diskon = $('#discountValue').val();
-        var ppn = $('#taxValue').val();
-        var cashBack = $('#cashBackValue').val();
+        var diskon = parseInt($('#discountValue').val());
+        var ppn = parseInt($('#taxValue').val());
+        var cashBack = parseInt($('#cashBackValue').val());
 
-        jumlahBayar = getBiaya() - diskon - ppn - cashBack;
+        jumlahBayar = parseInt(getBiaya() - diskon + ppn - cashBack);
         $('#totalAmount').val(jumlahBayar);
 
         return jumlahBayar;
@@ -720,11 +720,11 @@ function getJumlahBayar() {
 
 function getNetto() {
     if($('#quantity').val()) {
-        var quantity = $('#quantity').val();
+        var quantity = parseInt($('#quantity').val());
         var netto;
 
         if ($('#material').val()) {
-            var materai = $('#material').val();
+            var materai = parseInt($('#material').val());
             netto = (getJumlahBayar() * quantity) - materai;
         } else {
             netto = getJumlahBayar() * quantity;
@@ -826,50 +826,53 @@ function terbilang(input, output){
 }
 
 $(document).on('keyup keydown change mouseup', '#discountValue', function () {
-    var tarifIklan = $('#basePrice').val();
-    var diskonRp = $(this).val();
+    var ppnRp = parseInt($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var diskonRp = parseInt($(this).val());
 
-    var diskonPersen = ( diskonRp / tarifIklan ) * 100;
+    var diskonPersen = ( diskonRp / biaya ) * 100;
     $('#discountPercentage').val(diskonPersen);
 });
 
 $(document).on('keyup keydown change mouseup', '#discountPercentage', function () {
-    var tarifIklan = $('#basePrice').val();
-    var diskonPersen = $(this).val();
-
-    var diskonRp = (tarifIklan * diskonPersen) / 100;
+    var ppnRp = parseInt($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var diskonPersen = parseInt($(this).val());
+    var diskonRp = (biaya * diskonPersen) / 100;
     $('#discountValue').val(diskonRp);
 });
 
 $(document).on('keyup keydown change mouseup', '#taxValue', function () {
-    var tarifIklan = $('#basePrice').val();
     var ppnRp = $(this).val();
 
-    var ppnPersen = ( ppnRp / tarifIklan ) * 100;
+    var ppnPersen = ( parseInt(ppnRp) / getBiaya() ) * 100;
     $('#taxPercentage').val(ppnPersen);
 });
 
 $(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
-    var tarifIklan = $('#basePrice').val();
-    var ppnPersen = $(this).val();
+    var ppnPersen = parseInt($(this).val());
 
-    var taxValue = (tarifIklan * ppnPersen) / 100;
+    var taxValue = (getBiaya() * ppnPersen) / 100;
     $('#taxValue').val(taxValue);
 });
 
 $(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
-    var tarifIklan = $('#basePrice').val();
-    var cashBackRp = $(this).val();
+    var diskon = parseInt($('#discountValue').val());
+    var ppn = parseInt($('#taxValue').val());
+    var biaya = getBiaya() - diskon + ppn;
+    var cashBackRp = parseInt($(this).val());
 
-    var cashBackPersen = ( cashBackRp / tarifIklan ) * 100;
+    var cashBackPersen = ( cashBackRp / biaya ) * 100;
     $('#cashBackPercentage').val(cashBackPersen);
 });
 
 $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function () {
-    var tarifIklan = $('#basePrice').val();
-    var cashBackPersen = $(this).val();
+    var diskon = parseInt($('#discountValue').val());
+    var ppn = parseInt($('#taxValue').val());
+    var biaya = getBiaya() - diskon + ppn;
+    var cashBackPersen = parseInt($(this).val());
 
-    var cashBackRp = (tarifIklan * cashBackPersen) / 100;
+    var cashBackRp = (biaya * cashBackPersen) / 100;
     $('#cashBackValue').val(cashBackRp);
 });
 

@@ -20,7 +20,8 @@ function getOrders(param) {
                 var searchArea;
 
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th>';
+                tableData += '<thead><tr><th width="5%">#</th><th width="10%">NOMOR ORDER</th>';
+                tableData += '<th width="15%">Judul</th>';
                 tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
                 tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
@@ -28,6 +29,7 @@ function getOrders(param) {
                 $.each(memberData, function (index, value) {
                     tableData += '<tr>';
                     tableData += '<td>'+no+'</td>';
+                    tableData += '<td>'+value.orderNumber+'</td>';
                     tableData += '<td>'+value.title+'</td>';
                     tableData += '<td>'+value.orderFrom.name+'</td>';
                     tableData += '<td>'+value.customer.name+'</td>';
@@ -55,7 +57,8 @@ function getOrders(param) {
 
                 if (memberData.length < 1) {
                     tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                    tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th>';
+                    tableData += '<thead><tr><th width="5%">#</th><th width="10%">NOMOR ORDER</th>';
+                    tableData += '<th width="15%">Judul</th>';
                     tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
                     tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
                     tableData += '<tbody>';
@@ -75,7 +78,8 @@ function getOrders(param) {
 
             } else {
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                tableData += '<thead><tr><th width="5%">#</th><th width="25%">Judul</th>';
+                tableData += '<thead><tr><th width="5%">#</th><th width="10%">NOMOR ORDER</th>';
+                tableData += '<th width="15%">Judul</th>';
                 tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
                 tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
@@ -99,7 +103,7 @@ function getOrders(param) {
             $("#searchOrder").select2({
                 theme: "bootstrap",
                 allowClear: true,
-                placeholder: "CARI PEMASANG",
+                placeholder: "CARI NOMOR ORDER",
                 ajax: {
                     url: "/api/search",
                     dataType: 'json',
@@ -109,16 +113,16 @@ function getOrders(param) {
                         return {
                             q: params.term,
                             page: params.page,
-                            module: 'advertising/customers',
+                            module: 'advertising/orders',
                             method: 'GET',
-                            field: 'name'.split('#')
+                            field: 'orderNumber'.split('#')
                         };
                     },
                     processResults: function (data) {
                         if(data.length > 0) {
                             return {
                                 results: $.map(data, function(obj) {
-                                    return { id: obj.id, text: obj['name'.split('#')[0]] };
+                                    return { id: obj.id, text: obj['orderNumber'.split('#')[0]] };
                                 })
                             }
                         } else {
@@ -138,7 +142,8 @@ function getOrders(param) {
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
                 minimumInputLength: 2,
             }).on("select2:select", function () {
-                console.log('1');
+                var id = $("#searchOrder").val();
+                window.location.href = '/advertising/orders/'+id;
             }).on("select2:unselect", function () {
                 console.log('2');
             }).on("select2:open", function () {
@@ -180,4 +185,11 @@ $(document).on('click', '#newOrder', function () {
 $(document).on('click', '.detail-btn', function () {
     var href = $(this).closest('span').data('id');
     window.location.href = '/advertising/orders/' + href;
+});
+
+$(document).on('keyup', '.select2-search__field', function (e) {
+    if (e.which === 13) {
+        window.location.href = '/advertising/orders/new';
+        return false;
+    }
 });

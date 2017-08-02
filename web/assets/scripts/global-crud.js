@@ -108,11 +108,13 @@ function getAll(module, columns = [], tbody = 'data-list') {
 
                             no = no;
 
-                            if (module === 'helpdesk/tickets'){
-                                tr += '<tr id="' + val.id + '" data-staff="'+ val.staff.id +'" data-client="'+ val.client.id +'" data-staff-user="'+ val.staff.user.id +'" data-waktu="'+ val.createdAt +'">';
-                            } else {
-                                tr += '<tr id="' + val.id + '">';
-                            }
+                            // if (module === 'helpdesk/tickets'){
+                            //     tr += '<tr id="' + val.id + '" data-staff="'+ val.staff.id +'" data-client="'+ val.client.id +'" data-staff-user="'+ val.staff.user.id +'" data-waktu="'+ val.createdAt +'">';
+                            // } else {
+                            //     tr += '<tr id="' + val.id + '">';
+                            // }
+
+                            tr += '<tr id="' + val.id + '">';
 
                             tr += '<td>' + no + '</td>'
                             $.each(columns, function (i, v) {
@@ -172,10 +174,10 @@ function getAll(module, columns = [], tbody = 'data-list') {
                                 tr += '<button data-id="' + val.id + '" class="detail-adv btn btn-default btn-xs btn-flat" title="DETAIL JENIS IKLAN"><i class="fa fa-file-text-o"></i></button>';
                             }
 
-                            if (module === 'helpdesk/tickets') {
-                                // tr += '<input type="hidden" class="ticket-time" value="' + val.id + '">';
-                                tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-file-text-o"></i></button>';
-                            }
+                            // if (module === 'helpdesk/tickets') {
+                            //     // tr += '<input type="hidden" class="ticket-time" value="' + val.id + '">';
+                            //     tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-file-text-o"></i></button>';
+                            // }
 
                             tr += '</span></td>';
                             tr += '</tr>';
@@ -341,7 +343,7 @@ function detail(module,id) {
                             var field = dataObject.split("#")[1];
                             var data = {
                                 module: object,
-                                method: 'get',
+                                method: 'get'
                             };
 
                             jQuery('select[data-object="' + dataObject + '"]').select2({
@@ -396,7 +398,9 @@ function detail(module,id) {
 
                                             $.each(velyu, function (ind, valu) {
 
-                                                if (value == null) {
+                                                //console.log(value.id);
+
+                                                if (value.id == null) {
                                                     select += '<option value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
                                                 } else {
                                                     if (value['id'] === valu.id && (objectSelected === index || index === 'parent')) {
@@ -721,6 +725,8 @@ jQuery(function($) {
     // detail form
     $(document).on('click', 'tbody[data-list="'+window.module+'"] .detail-btn', function () {
         var id = $(this).attr('data-id');
+
+        console.log('jjjjjjj');
 
         jQuery('div[data-modal-detail="'+window.module+'"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
         jQuery('div[data-modal-detail="'+window.module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);

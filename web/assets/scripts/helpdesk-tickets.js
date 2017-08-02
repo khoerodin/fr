@@ -138,12 +138,6 @@ function updateLastTypedTime() {
     lastTypedTime = new Date();
 }
 
-function readNotif() {
-    if(!textarea.is(':click')){
-
-    }
-
-}
 
 setInterval(refreshTypingStatus, 100);
 textarea.keypress(updateLastTypedTime);
@@ -197,9 +191,8 @@ function getTicketData(ticketId) {
 
             $.each(finalData, function (index, value) {
 
-
                 dataForum += '<div id="Forum" style="background-color: #efefef">';
-                dataForum += '<div class="media mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 10px; margin-bottom: 10px; border: #3e3b42 solid 1px;padding: 12px" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';
+                dataForum += '<div class="media mediaForum"  data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 10px; margin-bottom: 10px; border: #3e3b42 solid 1px;padding: 12px" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';
                 dataForum += '<div class="media-left media-top" style="">';
 
                 dataForum += '<img class="direct-chat-img img-lg" src="../img/user4-128x128.jpg">';
@@ -305,21 +298,118 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
     });
 }
 
-// --------------------------------- 28 JULI 2017 ---- GOOGLE PIE CHART
+// --------------------------------- 01 Agustus 2017 ------------------------------------------
 
-// $(function () {
-//     var chart = new CanvasJS.Chart("chartContainer", {
-//         theme: "theme2",
-//         animationEnabled: true,
-//         title: {
-//             text: "Basic Column Chart using CanvasJS"
-//         },
-//         data: [
-//             {
-//                 type: "column",
-//                 dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-// }
-// ]
-// });
-//     chart.render();
-// });
+getTicketList();
+
+function getTicketList() {
+
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/tickets',
+            method: 'get',
+            params: [
+                {
+                    'client.id' : $('#currentUser').val()
+                }
+            ]
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            var data = JSON.parse(data);
+            var memberData = data['hydra:member'];
+
+            var tr = '';
+            if (memberData.length > 0) {
+                var no = 1;
+                $.each(memberData, function (index, value) {
+
+                    tr += '<tr>';
+                    tr += '<td>'+no+'</td>'
+                    tr += '<td>'+value.category.name+'</td>'
+                    tr += '<td>'+value.title+'</td>'
+                    tr += '<td>'+value.message+'</td>'
+                    tr += '<td>'+value.status+'</td>'
+                    tr += '<td>'+value.priority+'</td>'
+                    tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>'
+                    tr += '<td>'
+                    tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
+                    tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
+                    tr += '</td>';
+                    tr += '</tr>';
+
+                    no++;
+                });
+
+            } else {
+
+                tr += '<tr><td colspan="6">TIDAK ADA DATA</td></tr>'
+
+            }
+
+            $('#ticketList').html(tr);
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+
+}
+
+
+$("#category").select2({
+    theme: "bootstrap"
+});
+
+$(document).on('click', '#btnSave', function () {
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/tickets',
+            method: 'POST',
+            params: $('#formTiket').serializeArray()
+        },
+        beforeSend: function () {
+            jQuery('div .has-error').removeClass('has-error');
+            jQuery('p.help-block').remove();
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            if ( jqXHR.status === 200 ) {
+
+                var data = JSON.parse(data);
+
+                if ("violations" in data) {
+
+                    $.each(data, function (index, value) {
+                        if(index === 'violations'){
+                            $.each(value, function (idx, val) {
+                                $('div#newTicketModal form #'+val.propertyPath).parent('div').addClass('has-error');
+                                $( '<p class="help-block">'+val.message+'</p>' ).insertAfter( 'div#newTicketModal form #'+val.propertyPath);
+                            });
+                        }
+                    });
+
+                    toastr.error('Error mengirim tiket');
+
+                } else {
+                    getTicketList();
+                    toastr.success('Sukses mengirim tiket');
+                    $('#newTicketModal').modal('hide');
+
+                }
+
+            } else {
+                toastr.error('Error mengirim tiket');
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            toastr.error('Error mengirim tiket');
+        }
+    });
+});

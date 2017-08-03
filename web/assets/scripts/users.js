@@ -228,7 +228,6 @@ $(document).on('change', '.check-role', function () {
             $this.closest('tr').attr('data-role', data.id);
             toastr.success('Role successfully changed');
         },
-        error: function (jqXHR, textStatus, errorThrown) {}
     });
 });
 

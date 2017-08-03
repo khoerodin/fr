@@ -145,11 +145,11 @@ function getOrders(param) {
                 var id = $("#searchOrder").val();
                 window.location.href = '/advertising/orders/'+id;
             }).on("select2:unselect", function () {
-                console.log('2');
+                //
             }).on("select2:open", function () {
-                console.log('3');
+                //
             }).on("select2:closing", function () {
-                console.log('4');
+                //
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {

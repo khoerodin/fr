@@ -1,7 +1,7 @@
 // --------------------------------- 01 Agustus 2017 ------------------------------------------
 
 getTicketList();
-
+//get data tiket
 function getTicketList() {
 
     $.ajax({
@@ -59,11 +59,16 @@ function getTicketList() {
 
 }
 
+resetDropDown();
 
-$("#category").select2({
-    theme: "bootstrap"
-});
+function resetDropDown() {
+    $("#newTicketModal #category").select2({
+        theme: "bootstrap"
+    });
+}
 
+
+//save ticket
 $(document).on('click', '#btnSave', function () {
     $.ajax({
         url: '/api',
@@ -98,6 +103,12 @@ $(document).on('click', '#btnSave', function () {
 
                 } else {
                     getTicketList();
+                    $("#newTicketModal #message").val('');
+                    $("#newTicketModal #title").val('');
+
+                    $("#newTicketModal #category #pilih").prop('selected', true);
+
+                    resetDropDown();
                     toastr.success('Sukses mengirim tiket');
                     $('#newTicketModal').modal('hide');
 
@@ -106,6 +117,7 @@ $(document).on('click', '#btnSave', function () {
             } else {
                 toastr.error('Error mengirim tiket');
             }
+
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -116,26 +128,47 @@ $(document).on('click', '#btnSave', function () {
 
 $(document).on('click', '.detail-tic', function () {
     var id = $(this).data('id');
-    var title = $('#ticketList tr#'+id+' td:nth-child(3)').text();
-    var message = $('#ticketList tr#'+id+' td:nth-child(4)').text();
 
-    $('#formTiket #title').val(title);
-    $('#formTiket #message').val(message);
-
+    //3 Agustus 2017 - Detail tiket
     // ajax ticket by id
     $.ajax({
-        url: '',
-        type: '',
-        data: {},
-        success: function () {
+        url: '/api',
+        type: 'POST',
+        data:  {
+            'module' : 'helpdesk/tickets/' + id,
+            'method' : 'get'
+        },
+        success: function (ticketData, textStatus, jqXHR) {
+
+            var ticketData = JSON.parse(ticketData);
+
+            $('#detailNewTicketModal #formTiket #title').val(ticketData.title);
+            $('#detailNewTicketModal #formTiket #message').val(ticketData.message);
+            $('#detailNewTicketModal #formTiket #id').val(ticketData.id);
+
 
             // ajax helpdesk categories
             $.ajax({
-                url: '',
-                type: '',
-                data: {},
-                success: function () {
+                url: '/api',
+                type: 'POST',
+                data: {
+                    module: 'helpdesk/categories',
+                    method: 'get'
+                },
+                success: function (data, textStatus, jqXHR) {
+                    var data = JSON.parse(data)['hydra:member'];
+                    var category = '';
+                    $.each(data, function (index, value) {
 
+                        if ( value.id === ticketData.category.id ) {
+                            category += '<option selected value="/api/helpdesk/categories/'+value.id+'">'+value.name+'</option>';
+                        } else {
+                            category += '<option value="/api/helpdesk/categories/'+value.id+'">'+value.name+'</option>';
+                        }
+
+                    });
+
+                    $('#detailNewTicketModal #formTiket #category').html(category);
                 }
             });
 
@@ -144,6 +177,95 @@ $(document).on('click', '.detail-tic', function () {
     });
 
 
+    $("#formTiket #category").select2({
+        theme: "bootstrap"
+    });
+
     $('#detailNewTicketModal').modal({show: true, backdrop: 'static'});
 
+});
+
+//update / edit
+$(document).on('click', '#btnUpdate', function () {
+    var id = $('#detailNewTicketModal #formTiket #id').val();
+
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/tickets/' + id,
+            method: 'put',
+            params : $('#detailNewTicketModal #formTiket').serializeArray()
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            if ( jqXHR.status === 200 ) {
+
+                var data = JSON.parse(data);
+
+                if ("violations" in data) {
+
+                    $.each(data, function (index, value) {
+                        if(index === 'violations'){
+                            $.each(value, function (idx, val) {
+                                $('div#detailNewTicketModal form #'+val.propertyPath).parent('div').addClass('has-error');
+                                $( '<p class="help-block">'+val.message+'</p>' ).insertAfter( 'div#detailNewTicketModal form #'+val.propertyPath);
+                            });
+                        }
+                    });
+
+                    toastr.error('Error memperbarui tiket');
+
+                } else {
+                    getTicketList();
+                    toastr.success('Sukses memperbarui tiket');
+                    $('#detailNewTicketModal').modal('hide');
+
+                }
+
+            } else {
+                toastr.error('Error memperbarui tiket');
+            }
+
+        }
+    });
+
+});
+
+// Delete action
+$(document).on('click', '.delete-tic', function () {
+    var module = window.module;
+    var id = $(this).attr('data-id');
+    var elm = jQuery('tbody[data-list="'+module+'"] tr#'+id);
+    elm.addClass('bg-red');
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/tickets/' + id,
+            method: 'delete'
+        },
+        success: setTimeout(function(){
+            bootbox.confirm({
+                message: "ARE YOU SURE YOU WANT TO DELETE THIS DATA?",
+                animate: false,
+                buttons: {
+                    confirm: {
+                        className: 'btn-danger btn-flat'
+                    },
+                    cancel: {
+                        className: 'btn-default btn-flat'
+                    }
+                },
+                callback: function (result) {
+                    if (result === false) {
+                        elm.removeClass('bg-red');
+                    } else {
+                        getTicketList();
+                    }
+                }
+            });
+        }, 20)
+
+    })
 });

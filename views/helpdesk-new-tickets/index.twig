@@ -42,9 +42,9 @@
                                 <th width="3%">#<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
                                 <th width="5%">Kategori<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
                                 <th width="10%">Judul<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                <th width="40%">Pesan</th>
-                                <th>Status<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                <th>Prioritas<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                                <th width="20%">Pesan</th>
+                                <th width="10%">Status<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                                <th width="10%">Prioritas<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
                                 <th width="20%">Tanggal Tambah Tiket<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
                                 <th width="5%">Aksi<span class="pull-right"></span></th>
                             </tr>
@@ -75,7 +75,7 @@
                                                 <div class="form-group">
                                                     <label for="judul">Kategori</label>
                                                     <select name="category" class="form-control" id="category" style="width: 100%">
-                                                        <option selected disabled>PILIH KATEGORI</option>
+                                                        <option selected disabled id="pilih">PILIH KATEGORI</option>
                                                         {% for category in helpdeskCategories %}
 
                                                             <option value="/api/helpdesk/categories/{{ category.id }}">{{ category.name }}</option>
@@ -114,7 +114,7 @@
                                                 <div class="row">
                                                     <div class="input-group-btn">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-primary btn-flat" id="btnSave">Tambah Tiket</button>
+                                                        <button type="button" class="btn btn-danger btn-flat" id="btnSave">save</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -137,6 +137,8 @@
 
                                     <form id="formTiket">
 
+                                        <input type="hidden" name="id" id="id">
+
                                         <div class="form-group">
                                             <label for="name">Nama</label>
                                             <input type="text" class="form-control" readonly id="name" value="{{ me.fullname }}">
@@ -145,20 +147,12 @@
 
                                         <div class="form-group">
                                             <label for="judul">Kategori</label>
-                                            <select name="category" class="form-control" id="category" style="width: 100%">
-                                                <option selected disabled>PILIH KATEGORI</option>
-                                                {% for category in helpdeskCategories %}
-
-                                                    <option value="/api/helpdesk/categories/{{ category.id }}">{{ category.name }}</option>
-
-                                                {% endfor %}
-                                            </select>
+                                            <select name="category" class="form-control" id="category" style="width: 100%"></select>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="judul">Judul</label>
-                                            <input type="text" class="form-control" id="title" name="title" value="{{ title }}">
-                                            <input type="hidden" value="/api/helpdesk/tickets/{{ title }}" name="title">
+                                            <input type="text" class="form-control" id="title" name="title">
 
                                         </div>
 
@@ -175,7 +169,6 @@
                                         <div class="input-group">
                                             <label for="berkas">Berkas</label>
                                             <input type="file" id="berkas">
-
                                         </div>
                                     </form>
 
@@ -187,7 +180,7 @@
                                         <div class="row">
                                             <div class="input-group-btn">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary btn-flat" id="btnSave">Simpan Tiket</button>
+                                                <button type="button" class="btn btn-danger btn-flat" id="btnUpdate">save</button>
                                             </div>
                                         </div>
                                     </div>

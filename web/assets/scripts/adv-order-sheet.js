@@ -688,6 +688,7 @@ function getBiaya() {
     var mmBaris = parseInt($('#milimeterSize').val());
     var terbit = parseInt($('#totalPost').val());
     var tarif = parseInt($('#basePrice').val());
+    var final;
 
     if ($('#columnSize').val() && $('#milimeterSize').val() && $('#totalPost').val() && $('#basePrice').val() ) {
         if (
@@ -698,15 +699,98 @@ function getBiaya() {
             $('input[name="jenisIklan"]').val().toLowerCase() === 'tarif khusus' ||
             $('input[name="jenisIklan"]').val().toLowerCase().startsWith('paket')
         ) {
-            return parseInt(tarif);
+            final = parseInt(tarif);
+            return final;
         } else {
-            return parseInt((kolom * mmBaris) * terbit * tarif);
+            final = parseInt((kolom * mmBaris) * terbit * tarif);
+            return final;
         }
     }
 }
 
+function getDiscountValue() {
+    var ppnRp = parseInt($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var diskonRp = parseInt($('#discountValue').val());
+
+    var diskonPersen = ( diskonRp / biaya ) * 100;
+    $('#discountPercentage').val(diskonPersen);
+}
+
+function getDiscountPercentage() {
+    var ppnRp = parseInt($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var diskonPersen = parseInt($('#discountPercentage').val());
+    var diskonRp = (biaya * diskonPersen) / 100;
+    $('#discountValue').val(diskonRp);
+}
+$(document).on('keyup keydown change mouseup', '#discountValue', function () {
+    getDiscountValue();
+    getJumlahBayar();
+});
+
+$(document).on('keyup keydown change mouseup', '#discountPercentage', function () {
+    getDiscountPercentage();
+    getJumlahBayar();
+});
+
+function getTaxValue(){
+    var ppnRp = $('#taxValue').val();
+
+    var ppnPersen = ( parseInt(ppnRp) / getBiaya() ) * 100;
+    $('#taxPercentage').val(ppnPersen);
+}
+
+function getTaxPercentage() {
+    var ppnPersen = parseInt($('#taxPercentage').val());
+
+    var taxValue = (getBiaya() * ppnPersen) / 100;
+    $('#taxValue').val(taxValue);
+}
+
+$(document).on('keyup keydown change mouseup', '#taxValue', function () {
+    getTaxValue();
+    getJumlahBayar();
+});
+
+$(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
+    getTaxPercentage();
+    getJumlahBayar();
+});
+
+function getCashBackValue() {
+    var diskon = parseInt($('#discountValue').val());
+    var ppn = parseInt($('#taxValue').val());
+    var biaya = getBiaya() - diskon + ppn;
+    var cashBackRp = parseInt($('#cashBackValue').val());
+
+    var cashBackPersen = ( cashBackRp / biaya ) * 100;
+    $('#cashBackPercentage').val(cashBackPersen);
+}
+
+function getCashBackPercentage() {
+    var diskon = parseInt($('#discountValue').val());
+    var ppn = parseInt($('#taxValue').val());
+    var biaya = getBiaya() - diskon + ppn;
+    var cashBackPersen = parseInt($('#cashBackPercentage').val());
+
+    var cashBackRp = (biaya * cashBackPersen) / 100;
+    $('#cashBackValue').val(cashBackRp);
+}
+
+$(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
+    getCashBackValue();
+    getJumlahBayar();
+});
+
+$(document).on('keyup keydown change mouseup', '#cashBackPercentage', function () {
+    getCashBackPercentage();
+    getJumlahBayar();
+});
+
 function getJumlahBayar() {
     if($('#discountValue').val() && $('#taxValue').val() && $('#cashBackValue').val()) {
+
         var diskon = parseInt($('#discountValue').val());
         var ppn = parseInt($('#taxValue').val());
         var cashBack = parseInt($('#cashBackValue').val());
@@ -738,15 +822,29 @@ function getNetto() {
 }
 
 $(document).on(
+    'click', '#hitung',
+    function (e) {
+        e.preventDefault();
+        getTaxPercentage();
+        getDiscountPercentage();
+        getCashBackPercentage();
+        getNetto();
+        $('#btn-order').prop('disabled', false);
+        $('#btn-order-update').prop('disabled', false);
+});
+
+$(document).on(
     'keyup keydown change mouseup',
     '#columnSize, #milimeterSize, #totalPost, ' +
     '#basePrice, #discountValue, #discountPercentage, ' +
     '#taxValue, #taxPercentage, #quantity, #material, ' +
     '#cashBackValue, #cashBackPercentage',
     function () {
-    getJumlahBayar();
-    getNetto();
-});
+        $('#netto').text(accounting.formatMoney(0, "Rp ", 2, ".", ","));
+        $('#nettoRp').val(0);
+        $('#btn-order').prop('disabled', true);
+        $('#btn-order-update').prop('disabled', true);
+    });
 
 function terbilang(input, output){
     var bilangan=document.getElementById(input).value;
@@ -821,60 +919,16 @@ function terbilang(input, output){
         if ((angka[5] == "0") && (angka[6] == "0")){
             kalimat = kalimat.replace("Satu Ribu","Seribu");
         }
+
+        kalimat = kalimat+' Rupiah';
     }
-    document.getElementById(output).innerHTML=kalimat+' Rupiah';
+
+    if (bilangan === 'NaN' || bilangan === '0' || bilangan === 'undefined') {
+        document.getElementById(output).innerHTML='Nol Rupiah';
+    } else {
+        document.getElementById(output).innerHTML=kalimat;
+    }
 }
-
-$(document).on('keyup keydown change mouseup', '#discountValue', function () {
-    var ppnRp = parseInt($('#taxValue').val());
-    var biaya = getBiaya() + ppnRp;
-    var diskonRp = parseInt($(this).val());
-
-    var diskonPersen = ( diskonRp / biaya ) * 100;
-    $('#discountPercentage').val(diskonPersen);
-});
-
-$(document).on('keyup keydown change mouseup', '#discountPercentage', function () {
-    var ppnRp = parseInt($('#taxValue').val());
-    var biaya = getBiaya() + ppnRp;
-    var diskonPersen = parseInt($(this).val());
-    var diskonRp = (biaya * diskonPersen) / 100;
-    $('#discountValue').val(diskonRp);
-});
-
-$(document).on('keyup keydown change mouseup', '#taxValue', function () {
-    var ppnRp = $(this).val();
-
-    var ppnPersen = ( parseInt(ppnRp) / getBiaya() ) * 100;
-    $('#taxPercentage').val(ppnPersen);
-});
-
-$(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
-    var ppnPersen = parseInt($(this).val());
-
-    var taxValue = (getBiaya() * ppnPersen) / 100;
-    $('#taxValue').val(taxValue);
-});
-
-$(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
-    var diskon = parseInt($('#discountValue').val());
-    var ppn = parseInt($('#taxValue').val());
-    var biaya = getBiaya() - diskon + ppn;
-    var cashBackRp = parseInt($(this).val());
-
-    var cashBackPersen = ( cashBackRp / biaya ) * 100;
-    $('#cashBackPercentage').val(cashBackPersen);
-});
-
-$(document).on('keyup keydown change mouseup', '#cashBackPercentage', function () {
-    var diskon = parseInt($('#discountValue').val());
-    var ppn = parseInt($('#taxValue').val());
-    var biaya = getBiaya() - diskon + ppn;
-    var cashBackPersen = parseInt($(this).val());
-
-    var cashBackRp = (biaya * cashBackPersen) / 100;
-    $('#cashBackValue').val(cashBackRp);
-});
 
 function newBlankDate() {
     $('.pilih-tanggal').datetimepicker({

@@ -163,8 +163,18 @@ function getAll(module, columns = [], tbody = 'data-list') {
                             });
 
                             tr += '<td><span class="pull-right">';
-                            tr += '<button data-id="' + val.id + '" class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                            tr += '<button data-id="' + val.id + '" class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+
+                            if (module === 'helpdesk/tickets') {
+
+                                tr += '<button data-id="' + val.id + '" class="detail-btn btn btn-default btn-xs btn-flat hidden" title="DETAIL"><i class="fa fa-eye"></i></button>';
+                                tr += '<button data-id="' + val.id + '" class="delete-btn btn btn-default btn-xs btn-flat hidden" title="DELETE"><i class="fa fa-times"></i></button>';
+
+                            } else {
+
+                                tr += '<button data-id="' + val.id + '" class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
+                                tr += '<button data-id="' + val.id + '" class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+
+                            }
 
                             if (module === 'users') {
                                 tr += '<button data-user-fullname="' + val.fullname + '" data-id="' + val.id + '" class="roles-btn btn btn-default btn-xs btn-flat" title="ROLES"><i class="fa fa-lock"></i></button>';
@@ -173,11 +183,6 @@ function getAll(module, columns = [], tbody = 'data-list') {
                             if (module === 'advertising/specifications') {
                                 tr += '<button data-id="' + val.id + '" class="detail-adv btn btn-default btn-xs btn-flat" title="DETAIL JENIS IKLAN"><i class="fa fa-file-text-o"></i></button>';
                             }
-
-                            // if (module === 'helpdesk/tickets') {
-                            //     // tr += '<input type="hidden" class="ticket-time" value="' + val.id + '">';
-                            //     tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-file-text-o"></i></button>';
-                            // }
 
                             tr += '</span></td>';
                             tr += '</tr>';

@@ -14,37 +14,155 @@
             </div>#}
 
             <ul class="sidebar-menu">
-                {% for key, category in menus %}
-                    <li class="treeview active hidden">
-                        <a href="javascript:void(0)" title="{{ key|upper }}">
-                            <i class="fa fa-file-image-o"></i>
-                            <span>{{ key|upper }}</span>
-                        </a>
+                {#{% for key, category in menus %}#}
+                    {#<li class="treeview active hidden">#}
+                        {#<a href="javascript:void(0)" title="{{ key|upper }}">#}
+                            {#<i class="fa fa-file-image-o"></i>#}
+                            {#<span>{{ key|upper }}</span>#}
+                        {#</a>#}
 
-                        <ul class="treeview-menu hidden">
-                            {% for moduleKey, module in category %}
-                            <li class="treeview active">
-                                <a href="javascript:void(0)" title="{{ moduleKey|upper }}">
-                                    <i class="fa fa-circle-o"></i> {{ moduleKey|upper }}
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </span>
-                                </a>
-                                <ul class="treeview-menu">
-                                    {% for menuKey, menu in module %}
-                                    <li>
-                                        <a href="/{{ menu.path }}" title="{{ menu.name|upper }}">
-                                            <i class="fa fa-circle-o"></i>
-                                            {{ menu.name|upper }}
-                                        </a>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                {% endfor %}
+                        {#<ul class="treeview-menu hidden">#}
+                            {#{% for moduleKey, module in category %}#}
+                            {#<li class="treeview active">#}
+                                {#<a href="javascript:void(0)" title="{{ moduleKey|upper }}">#}
+                                    {#<i class="fa fa-circle-o"></i> {{ moduleKey|upper }}#}
+                                    {#<span class="pull-right-container">#}
+                                        {#<i class="fa fa-angle-left pull-right"></i>#}
+                                    {#</span>#}
+                                {#</a>#}
+                                {#<ul class="treeview-menu">#}
+                                    {#{% for menuKey, menu in module %}#}
+                                    {#<li>#}
+                                        {#<a href="/{{ menu.path }}" title="{{ menu.name|upper }}">#}
+                                            {#<i class="fa fa-circle-o"></i>#}
+                                            {#{{ menu.name|upper }}#}
+                                        {#</a>#}
+                                    {#</li>#}
+                                    {#{% endfor %}#}
+                                {#</ul>#}
+                            {#</li>#}
+                            {#{% endfor %}#}
+                        {#</ul>#}
+                    {#</li>#}
+                {#{% endfor %}#}
+
+                <li class="treeview active hidden"><a href="javascript:void(0)" title="MASTER"><i class="fa fa-file-image-o"></i><span>MASTER</span></a>
+                    <ul class="treeview-menu hidden">
+                        <li class="treeview active"><a href="javascript:void(0)" title="IKLAN"><i class="fa fa-circle-o"></i> IKLAN
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                            <ul class="treeview-menu">
+                                <li><a href="/advertising/account-executives" title="ACCOUNT EXECUTIVE"><i class="fa fa-circle-o"></i>
+                                        ACCOUNT EXECUTIVE
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/customers" title="PELANGGAN IKLAN"><i class="fa fa-circle-o"></i>
+                                        PELANGGAN
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/layouts" title="LAYOUT IKLAN"><i class="fa fa-circle-o"></i>
+                                        LAYOUT
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/media" title="MEDIA IKLAN"><i class="fa fa-circle-o"></i>
+                                        MEDIA
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/positions" title="POSISI IKLAN"><i class="fa fa-circle-o"></i>
+                                        POSISI
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/prices" title="HARGA IKLAN"><i class="fa fa-circle-o"></i>
+                                        HARGA
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/specifications" title="JENIS IKLAN"><i class="fa fa-circle-o"></i>
+                                        JENIS
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/specification-details" title="JENIS DETAIL IKLAN"><i class="fa fa-circle-o"></i>
+                                        JENIS DETAIL
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/types" title="TYPE IKLAN"><i class="fa fa-circle-o"></i>
+                                        TYPE
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/emiten" title="EMITEN IKLAN"><i class="fa fa-circle-o"></i>
+                                        EMITEN
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/sektor" title="SEKTOR IKLAN"><i class="fa fa-circle-o"></i>
+                                        SEKTOR
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/sub-sektor" title="SUB SEKTOR IKLAN"><i class="fa fa-circle-o"></i>
+                                        SUB SEKTOR
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="treeview"><a href="javascript:void(0)" title="HELPDESK"><i class="fa fa-circle-o"></i> HELPDESK
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                            <ul class="treeview-menu">
+                                <li><a href="/helpdesk/ticket-responses" title="RESPON TIKET HELPDESK"><i class="fa fa-circle-o"></i>
+                                        RESPON TIKET HELPDESK
+                                    </a>
+                                </li>
+                                <li><a href="/helpdesk/tickets" title="TIKET HELPDESK"><i class="fa fa-circle-o"></i>
+                                        TIKET HELPDESK
+                                    </a>
+                                </li>
+                                <li><a href="/helpdesk/staffs" title="STAF HELPDESK"><i class="fa fa-circle-o"></i>
+                                        STAF HELPDESK
+                                    </a>
+                                </li>
+                                <li><a href="/helpdesk/categories" title="KATEGORI HELPDESK"><i class="fa fa-circle-o"></i>
+                                        KATEGORI HELPDESK
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="treeview"><a href="javascript:void(0)" title="BILLING"><i class="fa fa-circle-o"></i> BILLING
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                            <ul class="treeview-menu">
+                                <li><a href="/billing/groups" title="GRUP TAGIHAN"><i class="fa fa-circle-o"></i>
+                                        GRUP TAGIHAN
+                                    </a>
+                                </li>
+                                <li><a href="/billing/areas" title="AREA TAGIHAN"><i class="fa fa-circle-o"></i>
+                                        AREA TAGIHAN
+                                    </a>
+                                </li>
+                                <li><a href="/billing/identities" title="PENANDA TAGIH"><i class="fa fa-circle-o"></i>
+                                        PENANDA TAGIH
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="treeview"><a href="javascript:void(0)" title="ADMIN"><i class="fa fa-circle-o"></i> ADMIN
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                            <ul class="treeview-menu">
+                                <li><a href="/banks" title="BANK"><i class="fa fa-circle-o"></i>
+                                        BANK
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview active hidden"><a href="javascript:void(0)" title="IKLAN"><i class="fa fa-file-image-o"></i><span>IKLAN</span></a>
+                    <ul class="treeview-menu hidden">
+                        <li class="treeview active"><a href="javascript:void(0)" title="ORDER"><i class="fa fa-circle-o"></i> ORDER
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                            <ul class="treeview-menu">
+                                <li><a href="/advertising/orders" title="ORDER IKLAN"><i class="fa fa-circle-o"></i>
+                                        ORDER
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
 
 
             </ul>

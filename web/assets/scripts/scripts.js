@@ -12,7 +12,10 @@ $(document).on('click', 'div.home-menu', function () {
     menusByCategory(title, category);
 });
 
-$(document).on('click', '#sign-in', function () {
+$(document).on('click', '#sign-in', function (e) {
+
+    e.preventDefault();
+
     var username = $('#login-form #username').val();
     var password = $('#login-form #password').val();
 

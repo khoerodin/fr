@@ -937,6 +937,7 @@ function terbilang(input, output){
 function newBlankDate() {
     $('.pilih-tanggal').datetimepicker({
         locale: 'id',
+        // disabledDates : ["2017-08-29","2017-08-22"],
         format: 'dddd, DD MMMM YYYY',
         ignoreReadonly: true
     }).on('dp.hide', function(e){
@@ -955,20 +956,7 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
     e.preventDefault();
     $('#edisiTerbitModal').modal({show: true, backdrop: 'static'});
 
-    $('.pilih-tanggal').datetimepicker({
-        locale: 'id',
-        format: 'dddd, DD MMMM YYYY',
-        ignoreReadonly: true
-    }).on('dp.hide', function(e){
-        var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-        $(this).next().val(tgl);
-    }).on('dp.hide', function(e){
-        if($(this).closest('tr').is(':last-child') && !$(this).closest('tr').children('input.pilih-tanggal').val()) {
-            $('<tr><td style="position: relative;"><input readonly type="text" class="pilih-tanggal form-control"><input type="hidden" name="tanggal[]"><button class="btn-hapus-tanggal btn btn-danger btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button></td></tr>')
-                .insertAfter($('#eTanggal tr').last());
-            newBlankDate();
-        }
-    });
+    newBlankDate();
 
     $(document).on('click', '.btn-hapus-tanggal', function (e) {
         e.preventDefault();
@@ -1018,60 +1006,87 @@ function getDates(start, end, dayNum) {
 
     return result.map(m => m.format());
 }
-$(document).on('click', '#save-edisi-terbit', function () {
-    // if ($('#startDate').val() && $('#endDate').val()) {
-    //     var startDate = moment($('#startDate').val(), 'DD/MM/YYYY');
-    //     var endDate = moment($('#endDate').val(), 'DD/MM/YYYY');
-    //
-    //     var minggu = [];
-    //     var senin = [];
-    //     var selasa = [];
-    //     var rabu = [];
-    //     var kamis = [];
-    //     var jumat = [];
-    //     var sabtu = [];
-    //
-    //     if ($('input[type="checkbox"]#0').is(':checked')) {
-    //         minggu = getDates(startDate, endDate, 0);
-    //     }
-    //
-    //     if ($('input[type="checkbox"]#1').is(':checked')) {
-    //         senin = getDates(startDate, endDate, 1);
-    //     }
-    //
-    //     if ($('input[type="checkbox"]#2').is(':checked')) {
-    //         selasa = getDates(startDate, endDate, 2);
-    //     }
-    //
-    //     if ($('input[type="checkbox"]#3').is(':checked')) {
-    //         rabu = getDates(startDate, endDate, 3);
-    //     }
-    //
-    //     if ($('input[type="checkbox"]#4').is(':checked')) {
-    //         kamis = getDates(startDate, endDate, 4);
-    //     }
-    //
-    //     if ($('input[type="checkbox"]#5').is(':checked')) {
-    //         jumat = getDates(startDate, endDate, 5);
-    //     }
-    //
-    //     if ($('input[type="checkbox"]#6').is(':checked')) {
-    //         sabtu = getDates(startDate, endDate, 6);
-    //     }
-    //
-    //     console.log(minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu));
-    // }
 
+function saveByDates() {
     var data = $('#perTgl').serializeArray();
-    $.ajax({
-        url: '/advertising/orders/publish-ads',
-        type: 'POST',
-        data: data,
-        success: function (data, textStatus, jqXHR) {
 
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-
-        }
+    var tanggal = [];
+    $.each(data, function (index, value) {
+        tanggal.push(value.value);
     });
+
+    console.log(tanggal.filter(Boolean));
+    // $.ajax({
+    //     url: '/advertising/orders/publish-ads',
+    //     type: 'POST',
+    //     data: data,
+    //     success: function (data, textStatus, jqXHR) {
+    //
+    //     },
+    //     error: function (jqXHR, textStatus, errorThrown) {
+    //
+    //     }
+    // });
+}
+
+function saveByDays() {
+    if ($('#startDate').val() && $('#endDate').val()) {
+        var startDate = moment($('#startDate').val(), 'DD/MM/YYYY');
+        var endDate = moment($('#endDate').val(), 'DD/MM/YYYY');
+
+        var minggu = [];
+        var senin = [];
+        var selasa = [];
+        var rabu = [];
+        var kamis = [];
+        var jumat = [];
+        var sabtu = [];
+
+        if ($('input[type="checkbox"]#0').is(':checked')) {
+            minggu = getDates(startDate, endDate, 0);
+        }
+
+        if ($('input[type="checkbox"]#1').is(':checked')) {
+            senin = getDates(startDate, endDate, 1);
+        }
+
+        if ($('input[type="checkbox"]#2').is(':checked')) {
+            selasa = getDates(startDate, endDate, 2);
+        }
+
+        if ($('input[type="checkbox"]#3').is(':checked')) {
+            rabu = getDates(startDate, endDate, 3);
+        }
+
+        if ($('input[type="checkbox"]#4').is(':checked')) {
+            kamis = getDates(startDate, endDate, 4);
+        }
+
+        if ($('input[type="checkbox"]#5').is(':checked')) {
+            jumat = getDates(startDate, endDate, 5);
+        }
+
+        if ($('input[type="checkbox"]#6').is(':checked')) {
+            sabtu = getDates(startDate, endDate, 6);
+        }
+
+        console.log(minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu));
+    }
+}
+
+localStorage.setItem('jenisEdisi', 'DATES');
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    var data = $(e.target).data('id');
+    localStorage.setItem('jenisEdisi', data);
+    $('#save-edisi-terbit').attr('data-save', data).text('SAVE BY '+data);
+});
+
+$(document).on('click', '#save-edisi-terbit', function () {
+    var data = localStorage.getItem('jenisEdisi');
+    console.log(data);
+    if (data === 'DATES') {
+        saveByDates();
+    } else if (data === 'DAYS') {
+        saveByDays();
+    }
 });

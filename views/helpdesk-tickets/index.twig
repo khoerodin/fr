@@ -2,7 +2,7 @@
 
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
-    {#<script src="/assets/scripts/helpdesk-tickets.js"></script>#}
+    <script src="/assets/scripts/helpdesk-tickets.js"></script>
     <script>
         window.module = 'helpdesk/tickets';
         window.field = 'name';
@@ -48,7 +48,7 @@
                             <th>Priority</th>
                             <th>Status</th>
                             <th width="15%">Created At</th>
-                            {#<th width="7%"><span class="pull-right">Action</span></th>#}
+                            <th width="7%"><span class="pull-right">Action</span></th>
                         </tr>
                         </thead>
 
@@ -57,6 +57,79 @@
                         </tbody>
 
                     </table>
+
+                    <div class="modal fade" id="tiketModal" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">HELPDESK LIVE CHAT</h4>
+                                </div>
+                                <div class="modal-body"> <!-- start modal -->
+
+                                    <div class="row">
+                                        <div class="col-md-12" >
+
+                                            <div class="box direct-chat">
+                                                {#<div class="box-header with-border">#}
+                                                    {#<h3 class="box-title">Helpdesk Live Chat</h3>#}
+                                                    {#<div class="box-tools pull-right">#}
+                                                        {#<span data-toggle="tooltip" title="2 New Messages" class="badge badge-notif bg-blue">2</span>#}
+                                                        {#<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+                                                        {#<button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>#}
+                                                        {#<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>#}
+                                                    {#</div>#}
+                                                {#</div>#}
+                                                <div class="box-body">
+                                                    <!-- Conversations are loaded here -->
+                                                    <div class="direct-chat-messages" id="chatHistory">
+                                                        <!-- Message. Default to the left -->
+                                                        <div class="direct-chat-msg">
+                                                            <div class="direct-chat-info clearfix">
+                                                                <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
+                                                                <span class="wkt direct-chat-timestamp pull-right"></span>
+                                                            </div>
+                                                            <!-- /.direct-chat-info -->
+                                                            <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
+                                                            <!-- /.direct-chat-img -->
+                                                            <div class="direct-chat-text">
+                                                                Selamat datang di Helpdesk Si JAGO. Jika ada hal yang ingin ditanyakan terkait layanan kami, jangan sungkan untuk bertanya melalui live chat kami :)
+                                                            </div>
+                                                            <!-- /.direct-chat-text -->
+                                                        </div>
+                                                        <!-- /.direct-chat-msg -->
+
+                                                    </div>
+
+                                                    <!--/.direct-chat-messages-->
+
+                                                </div>
+                                                <!-- /.box-body -->
+                                                <div class="col-sm-12">
+                                                    <div id="typing_on" class="clearfix text-muted visible-lg"></div>
+                                                </div>
+                                                <div class="box-footer">
+                                                    <div class="input-group">
+                                                        <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200">
+                                                        <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-primary btn-flat" id="send">Send</button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- /.box-footer-->
+                                            </div>
+                                            <!--/.direct-chat -->
+                                        </div>
+
+                                        <input type="hidden" name="id" id="id">
+                                    </div>
+
+                                </div> <!-- end modal -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     {#ADD MODAL#}
                     {#<div data-modal-add="helpdesk/tickets" class="clients add-modal modal" role="dialog">#}

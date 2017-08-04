@@ -1,21 +1,21 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/global-crud.js"></script>
-    <script src="/assets/scripts/helpdesk-tickets.js"></script>
-
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    {#<script src="/assets/scripts/global-crud.js"></script>#}
+    <script src="/assets/scripts/helpdesk-my-tickets.js"></script>
 
     <script>
         window.module = 'helpdesk/tickets';
-        window.field = 'name';
+        //        window.field = 'name';
         var columns = [
-            'client.name',
-            'staff.user.fullname',
             'category.name',
             'title',
-            'message'
+            'message',
+            'status',
+            'priority',
+            'createdAt'
         ];
+
     </script>
 
 {% endblock %}
@@ -29,210 +29,166 @@
             <div class="box">
                 <div class="box-header row">
 
-                    <div class="button-area transition">
-                        <a href="JavaScript:Void(0);" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
-                    </div>
-
-
 
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
 
+                    <button type="button" data-modal-add="helpdesk/tickets" class="btn btn-danger pull-right add-modal btn-flat" data-toggle="modal" data-target="#newTicketModal" role="dialog" style="width: 150px">Tiket Baru</button>
 
+                    <table class="table table-striped table-bordered table-hover tableTicket">
+                        <thead>
+                        <tr>
+                            <th width="3%">#<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                            <th width="5%">Kategori<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                            <th width="10%">Judul<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                            <th width="20%">Pesan</th>
+                            <th width="10%">Status<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                            <th width="10%">Prioritas<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                            <th width="20%">Tanggal Tambah Tiket<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                            <th width="5%">Aksi<span class="pull-right"></span></th>
+                        </tr>
+                        </thead >
 
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th>Nama Klien</th>
-                                    <th>Staf</th>
-                                    <th>Kategori</th>
-                                    <th>Judul</th>
-                                    <th width="30%">Pesan</th>
+                        <tbody id="ticketList"></tbody>
+                    </table>
 
-
-                                    <th width="8%"><span class="pull-right" >Aksi</span></th>
-                                </tr>
-                                </thead>
-
-                                <tbody data-list="helpdesk/tickets">
-                                <tr><td colspan="9">LOADING DATA...</td></tr>
-                                </tbody>
-
-                            </table>
-
-                </div>
-
-
-                    {#MODAL FORUM#}
-                    <div class="modal" id="tiketModal" role="dialog">
+                    {#ADD MODAL TIKET BARU#}
+                    <div class="modal fade" id="newTicketModal" role="dialog">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Forum Helpdesk</h4>
+                                    <h4 class="modal-title">Tambah Tiket</h4>
                                 </div>
-                                <div class="modal-body" data-ticketid="" data-clientid="" data-staffid="" style="min-height: 500px;">
 
-                                    <div class="row">
+                                <div class="modal-body">
 
-                                        <div class="col-sm-4">
-                                            <div class="row">
-                                                <ul class="list-group">
-                                                    <li class="list-group-item">Nama Client <span class="pull-right">: </span></li>
-                                                    <li class="list-group-item">Judul <span class="pull-right">: </span> </li>
-                                                    <li class="list-group-item">Kategori <span class="pull-right">: </span> </li>
-                                                    <li class="list-group-item">Diposting tanggal <span class="pull-right">: </span> </li>
-                                                    {#<a href="/helpdesk/ticket-responses" class="list-group-item list-group-item-info" target="_blank"><span class="glyphicon glyphicon-hand-right pull-left"></span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CLICK TO CHAT WITH US</span><span class="glyphicon glyphicon-hand-left pull-right"></span></a>#}
-                                                </ul>
-                                            </div>
+                                    <form id="formTiket">
+
+                                        <div class="form-group">
+                                            <label for="name">Nama</label>
+                                            <input type="text" class="form-control" readonly id="name" value="{{ me.fullname }}">
+                                            <input type="hidden" value="/api/users/{{ me.id }}" name="client">
                                         </div>
 
-                                        <div class="col-sm-8">
-                                            <div class="row">
-                                                <ul class="list-group listDetail">
+                                        <div class="form-group">
+                                            <label for="judul">Kategori</label>
+                                            <select name="category" class="form-control" id="category" style="width: 100%">
+                                                <option selected disabled id="pilih">PILIH KATEGORI</option>
+                                                {% for category in helpdeskCategories %}
 
-                                                    <li class="list-group-item list-client"></li>
-                                                    <li class="list-group-item list-judul"></li>
-                                                    <li class="list-group-item list-cat"></li>
-                                                    <li class="list-group-item list-post-date"></li>
-                                                </ul>
-                                            </div>
+                                                    <option value="/api/helpdesk/categories/{{ category.id }}">{{ category.name }}</option>
+
+                                                {% endfor %}
+                                            </select>
                                         </div>
 
-                                        <div class="col-md-12">
-
-                                            <div class="box-body tableForum"></div>
-                                            <!-- /.box-body -->
+                                        <div class="form-group">
+                                            <label for="judul">Judul</label>
+                                            <input type="text" class="form-control" id="title" name="title">
                                         </div>
 
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" readonly value="{{ me.email }}">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="name">Pesan</label>
+                                            <textarea name="message" placeholder="Masukkan Pesan Anda ..." class="form-control not-ucase" id="message" autocomplete="off" maxlength="20000" cols="150" rows="10"></textarea>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="berkas">Berkas</label>
+                                            <input type="file" id="berkas">
+
+                                        </div>
+                                    </form>
 
 
                                 </div>
+
                                 <div class="modal-footer">
-
-                                    <div class="input-group">
-
-                                        <textarea name="message" placeholder="Ketik balasan Anda ..." class="form-control not-ucase" id="replyMessage" autocomplete="off" maxlength="15000" cols="150" rows="4"></textarea>
-
-                                    </div>
-
-                                    <br>
-                                    <div class="input-group-btn">
-                                        <button type="button" class="btn btn-primary btn-flat btn-reply-tic">Send</button>
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-danger btn-flat" id="btnSave">save</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
+                    <!-- /.modal -->
 
-                    {#ADD MODAL#}
-                    <div data-modal-add="helpdesk/tickets" class="clients add-modal modal" role="dialog">
-                        <div class="modal-dialog modal-lg" role="document">
+                    {#DETAIL MODAL TIKET BARU#}
+                    <div class="modal fade" id="detailNewTicketModal" role="dialog">
+                        <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Tambah Tiket</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form role="form" class="clients add form">
-                                        <div class="box-body">
-                                            <div class="form-group">
-                                                <label>Nama Klien</label>
-                                                <select name="client" data-object="clients#name" class="form-control select-add-modal">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Nama Staf</label>
-                                                <select name="staff" data-object="helpdesk/staffs#fullname" class="form-control select-add-modal">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Kategori</label>
-                                                <select name="category" data-object="helpdesk/categories#name" class="form-control select-add-modal">
-                                                    <option selected></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="title">Judul</label>
-                                                <input type="text" name="title" class="form-control" id="title" placeholder="Judul">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="message">Pesan</label>
-                                                <textarea name="message" class="form-control" id="message" placeholder="Pesan"></textarea>
-                                            </div>
-
-                                        </div>
-                                        <!-- /.box-body -->
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="save btn btn-flat btn-danger">Save</button>
-                                </div>
-                            </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
-                    {#END ADD MODAL#}
-
-                    {#DETAIL MODAL#}
-                    <div data-modal-detail="helpdesk/tickets" class="clients detail-modal modal" role="dialog">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail Tiket</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Edit Tiket</h4>
                                 </div>
 
                                 <div class="modal-body">
-                                    <form role="form" class="clients detail form">
-                                        <div class="box-body">
-                                            <div class="form-group">
-                                                <label>Nama Klien</label>
-                                                <select name="name" data-object="clients#name" data-selected="client#name" class="form-control select-edit-modal">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Nama Staf</label>
-                                                <select name="name" data-object="staffs#name" data-selected="staff#name" class="form-control select-edit-modal">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Kategori</label>
-                                                <select name="category" data-object="helpdesk/categories#name" data-selected="parent#name" class="form-control select-edit-modal">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="title">Judul</label>
-                                                <input type="text" name="title" class="form-control" id="title" placeholder="Judul">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="message">Pesan</label>
-                                                <textarea name="message" class="form-control" id="message" placeholder="Pesan"></textarea>
-                                            </div>
 
-                                        </div>
+                                    <form id="formTiket">
+
                                         <input type="hidden" name="id" id="id">
-                                        <!-- /.box-body -->
+
+                                        <div class="form-group">
+                                            <label for="name">Nama</label>
+                                            <input type="text" class="form-control" readonly id="name" value="{{ me.fullname }}">
+                                            <input type="hidden" value="/api/users/{{ me.id }}" name="client">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="judul">Kategori</label>
+                                            <select name="category" class="form-control" id="category" style="width: 100%"></select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="judul">Judul</label>
+                                            <input type="text" class="form-control" id="title" name="title">
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" readonly value="{{ me.email }}">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="name">Pesan</label>
+                                            <textarea name="message" placeholder="Masukkan Pesan Anda ..." class="form-control not-ucase" id="message" autocomplete="off" maxlength="20000" cols="150" rows="10"></textarea>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="berkas">Berkas</label>
+                                            <input type="file" id="berkas">
+                                        </div>
                                     </form>
+
+
                                 </div>
+
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-danger btn-flat" id="btnUpdate">save</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
-                    {#END DETAIL MODAL#}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.modal -->
 
                 </div>
                 <!-- /.box-body -->

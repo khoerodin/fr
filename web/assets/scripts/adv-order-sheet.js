@@ -154,8 +154,11 @@ $(document).ajaxComplete(function() {
         $('input[name="jenisIklan"]').val($(this).find('td:eq(0)').text());
         $('#jenisIklanModal').modal('hide');
 
-        getJumlahBayar();
-        getNetto();
+        // ubah netto
+        $('#netto').text(accounting.formatMoney(0, "Rp ", 2, ".", ","));
+        $('#nettoRp').val(0);
+        $('#btn-order').prop('disabled', true);
+        $('#btn-order-update').prop('disabled', true);
     });
 });
 // end Jenis Iklan
@@ -838,7 +841,8 @@ $(document).on(
     '#columnSize, #milimeterSize, #totalPost, ' +
     '#basePrice, #discountValue, #discountPercentage, ' +
     '#taxValue, #taxPercentage, #quantity, #material, ' +
-    '#cashBackValue, #cashBackPercentage',
+    '#cashBackValue, #cashBackPercentage, ' +
+    'input[name="jenisIklan"], #specification',
     function () {
         $('#netto').text(accounting.formatMoney(0, "Rp ", 2, ".", ","));
         $('#nettoRp').val(0);

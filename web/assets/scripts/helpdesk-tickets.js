@@ -1,6 +1,8 @@
 /**
  * Created by mispc3 on 10/07/17.
  */
+$('.wkt')
+
 
 $(document).on('click', '.detail-tic', function () {
     var ticketId = $(this).closest('tr').attr('id');
@@ -28,9 +30,44 @@ $(document).on('click', '.detail-tic', function () {
 $(document).on('click', '#send', function () { //CHAT klik send button
     var waktu = moment().format("ddd, D MMM YYYY, h:mm A");
     var text = $('#chatMessage').val();
-    var html = '<div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">Test</span><span class="direct-chat-timestamp pull-right">'+waktu+'</span></div><div class="direct-chat-msg right"><div class="direct-chat-text">'+text+'</div></div>';
+    var html = '<div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">Nama</span><span class="direct-chat-timestamp pull-right">'+waktu+'</span></div><div class="direct-chat-msg right"><div class="direct-chat-text">'+text+'</div></div>';
     $(document).find('#chatHistory').append(html);
-    $('#chatMessage').val('');
+    var responseId = $('#chatHistory:last').data('id');
+    var staff = $('#chatHistory:last').data('staff');
+    var ticket = $('#chatHistory:last').data('ticket');
+    var client = $('#chatHistory:last').data('client');
+
+    var ticketId = $('#tiketModal .modal-body').data('ticketid');
+    var staffId = $('#tiketModal .modal-body').data('staffid');
+    var clientId = $('#tiketModal .modal-body').data('clientid');
+
+    var trueTicketId;
+    if(typeof ticket !== 'undefined'){
+        trueTicketId = ticket;
+    } else {
+        trueTicketId = '/api/helpdesk/tickets/'+ticketId
+    }
+
+    var trueStaffId;
+    if(typeof staff !== 'undefined'){
+        trueStaffId = staff;
+    } else {
+        trueStaffId = '/api/helpdesk/staffs/'+staffId
+    }
+
+    var trueClientId;
+    if(typeof client !== 'undefined'){
+        trueClientId = client;
+    } else {
+        trueClientId = '/api/users/'+clientId
+    }
+
+    if(text !== ''){
+        postTicketData(responseId, trueStaffId, trueTicketId, trueClientId, text);
+    }else{
+        alert('Teks tidak boleh kosong bro..');
+    }
+
 });
 
 $(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
@@ -94,25 +131,6 @@ $(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
     $( this ).replaceWith( "<div class='btn btn-reply-tic' disabled='true'>" + $( this ).text() + "</div>" );
 });
 
-
-
-
-$('.ticket-status').select2({
-    theme: "bootstrap",
-    minimumResultsForSearch: -1,
-    placeholder: "Status tiket",
-    allowClear: true
-
-});
-
-$('.ticket-priority').select2({
-    theme: "bootstrap",
-    minimumResultsForSearch: -1,
-    placeholder: "Pilih prioritas tiket",
-    allowClear: true
-
-});
-
 $(document).find('#chatMessage').on('keypress', function(e){
 
     if ( e.which == 13 ) {
@@ -152,9 +170,9 @@ var currentTime = moment().format("kk.mm a");
 var html = '<span class="current-time">&nbsp;'+currentTime+'</span>';
 $(document).find('.current-time').append(html);
 
-var postingTime = moment().format("D MMM YYYY, kk.mm a");
-var html = '<div><span class="date-post">'+postingTime+'</span></div>';
-$(document).find('.date-post').append(html);
+var liveChat = moment().format('LLLL');
+var html = '<span class="wkt direct-chat-timestamp pull-right">'+liveChat+'</span>';
+$(document).find('.wkt').append(html);
 
 
 function getTicketData(ticketId) {

@@ -15,7 +15,7 @@
             'status',
             'createdAt'
         ];
-//        <td>'+moment(value.createdAt).format('LLLL')+'</td>
+//        tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>'
     </script>
 {% endblock %}
 
@@ -24,15 +24,15 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header row">
-                    <div class="col-md-12 search-area transition">
-                        <select data-placeholder="CARI NAMA CLIENT" class="search-name form-control select2" style="width: 100%;">
-                            <option></option>
-                        </select>
-                    </div>
+                    {#<div class="col-md-12 search-area transition">#}
+                        {#<select data-placeholder="CARI NAMA CLIENT" class="search-name form-control select2" style="width: 100%;">#}
+                            {#<option></option>#}
+                        {#</select>#}
+                    {#</div>#}
 
-                    <div class="button-area transition">
-                        <a href="JavaScript:Void(0);" data-btn-add="clients" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
-                    </div>
+                    {#<div class="button-area transition">#}
+                        {#<a href="JavaScript:Void(0);" data-btn-add="clients" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>#}
+                    {#</div>#}
                     &nbsp;&nbsp;&nbsp;
                 </div>
                 <!-- /.box-header -->
@@ -48,7 +48,7 @@
                             <th>Priority</th>
                             <th>Status</th>
                             <th width="15%">Created At</th>
-                            <th width="7%"><span class="pull-right">Action</span></th>
+                            {#<th width="7%"><span class="pull-right">Action</span></th>#}
                         </tr>
                         </thead>
 
@@ -59,70 +59,70 @@
                     </table>
 
                     {#ADD MODAL#}
-                    <div data-modal-add="helpdesk/tickets" class="clients add-modal modal" role="dialog">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Add a Client</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form role="form" class="clients add form">
-                                        <div class="box-body">
-                                            <div class="form-group">
-                                                <label for="client">Client</label>
-                                                <input type="text" data-object="users#fullname" class="form-control select-add-modal" id="client" name="client" placeholder="Client">
-                                                <input type="hidden" value="/api/users/{{ me.id }}" name="client">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="staff">Staff</label>
-                                                <input type="text" data-object="helpdesk/staffs#fullname" class="form-control select-add-modal" id="staff" name="staff" placeholder="Staff">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="title">Title</label>
-                                                <input type="text" data-object="helpdesk/tickets#title" class="form-control select-add-modal" id="title" name="title" placeholder="Title">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="message">Message</label>
-                                                <input type="text" data-object="helpdesk/tickets#message" class="form-control select-add-modal" id="message" name="message" placeholder="Message">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="priority">Priority</label>
-                                                <input type="text" data-object="helpdesk/tickets#priority" class="form-control select-add-modal" id="priority" name="priority" placeholder="Priority">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="status">Status</label>
-                                                <input type="text" data-object="helpdesk/tickets#status" class="form-control select-add-modal" id="status" name="status" placeholder="Status">
-                                            </div>
+                    {#<div data-modal-add="helpdesk/tickets" class="clients add-modal modal" role="dialog">#}
+                        {#<div class="modal-dialog modal-lg" role="document">#}
+                            {#<div class="modal-content">#}
+                                {#<div class="modal-header">#}
+                                    {#<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>#}
+                                    {#<h4 class="modal-title">Add a Client</h4>#}
+                                {#</div>#}
+                                {#<div class="modal-body">#}
+                                    {#<form role="form" class="clients add form">#}
+                                        {#<div class="box-body">#}
+                                            {#<div class="form-group">#}
+                                                {#<label for="client">Client</label>#}
+                                                {#<input type="text" data-object="users#fullname" class="form-control select-add-modal" id="client" name="client" placeholder="Client">#}
+                                                {#<input type="hidden" value="/api/users/{{ me.id }}" name="client">#}
+                                            {#</div>#}
+                                            {#<div class="form-group">#}
+                                                {#<label for="staff">Staff</label>#}
+                                                {#<input type="text" data-object="helpdesk/staffs#fullname" class="form-control select-add-modal" id="staff" name="staff" placeholder="Staff">#}
+                                            {#</div>#}
+                                            {#<div class="form-group">#}
+                                                {#<label for="title">Title</label>#}
+                                                {#<input type="text" data-object="helpdesk/tickets#title" class="form-control select-add-modal" id="title" name="title" placeholder="Title">#}
+                                            {#</div>#}
+                                            {#<div class="form-group">#}
+                                                {#<label for="message">Message</label>#}
+                                                {#<input type="text" data-object="helpdesk/tickets#message" class="form-control select-add-modal" id="message" name="message" placeholder="Message">#}
+                                            {#</div>#}
+                                            {#<div class="form-group">#}
+                                                {#<label for="priority">Priority</label>#}
+                                                {#<input type="text" data-object="helpdesk/tickets#priority" class="form-control select-add-modal" id="priority" name="priority" placeholder="Priority">#}
+                                            {#</div>#}
+                                            {#<div class="form-group">#}
+                                                {#<label for="status">Status</label>#}
+                                                {#<input type="text" data-object="helpdesk/tickets#status" class="form-control select-add-modal" id="status" name="status" placeholder="Status">#}
+                                            {#</div>#}
 
-                                        </div>
-                                        <!-- /.box-body -->
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="clients save btn btn-flat btn-danger">Save</button>
-                                </div>
-                            </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
+                                        {#</div>#}
+                                        {#<!-- /.box-body -->#}
+                                    {#</form>#}
+                                {#</div>#}
+                                {#<div class="modal-footer">#}
+                                    {#<button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>#}
+                                    {#<button type="button" class="clients save btn btn-flat btn-danger">Save</button>#}
+                                {#</div>#}
+                            {#</div><!-- /.modal-content -->#}
+                        {#</div><!-- /.modal-dialog -->#}
+                    {#</div><!-- /.modal -->#}
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div data-modal-detail="helpdesk/tickets" class="detail-modal modal" role="dialog">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Detail of Ticket</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form role="form" class="detail form">
-                                        <div class="box-body">
-                                            <div class="form-group">
-                                                <label for="client">Client</label>
-                                                <select data-object="users#fullname" data-selected="client#fullname" class="form-control select-edit-modal" id="client" name="client"></select>
-                                            </div>
+                    {#<div data-modal-detail="helpdesk/tickets" class="detail-modal modal" role="dialog">#}
+                        {#<div class="modal-dialog modal-lg" role="document">#}
+                            {#<div class="modal-content">#}
+                                {#<div class="modal-header">#}
+                                    {#<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>#}
+                                    {#<h4 class="modal-title">Detail of Ticket</h4>#}
+                                {#</div>#}
+                                {#<div class="modal-body">#}
+                                    {#<form role="form" class="detail form">#}
+                                        {#<div class="box-body">#}
+                                            {#<div class="form-group">#}
+                                                {#<label for="client">Client</label>#}
+                                                {#<select data-object="users#fullname" data-selected="client#fullname" class="form-control select-edit-modal" id="client" name="client"></select>#}
+                                            {#</div>#}
                                             {#<div class="form-group">#}
                                                 {#<label for="staff">Staff</label>#}
                                                 {#<select data-object="helpdesk/staffs#fullname" data-selected="staff#fullname" class="form-control select-edit-modal" id="staff" name="staff"></select>#}
@@ -148,13 +148,13 @@
                                         <!-- /.box-body -->
                                     </form>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
-                                </div>
-                            </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
+                                {#<div class="modal-footer">#}
+                                    {#<button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>#}
+                                    {#<button type="button" class="edit btn btn-flat btn-danger">Update</button>#}
+                                {#</div>#}
+                            {#</div><!-- /.modal-content -->#}
+                        {#</div><!-- /.modal-dialog -->#}
+                    {#</div><!-- /.modal -->#}
                     {#END DETAIL MODAL#}
 
                 </div>

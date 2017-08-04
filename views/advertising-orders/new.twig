@@ -746,8 +746,8 @@
                     <div class="panel with-nav-tabs panel-info">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li class="active"><a href="#eTanggal" aria-controls="home" role="tab" data-toggle="tab">BERDASARKAN TANGGAL</a></li>
-                                <li ><a href="#eHarian" aria-controls="profile" role="tab" data-toggle="tab">BERDASARKAN HARI</a></li>
+                                <li class="active"><a data-id="DATES" href="#eTanggal" aria-controls="home" role="tab" data-toggle="tab">BERDASARKAN TANGGAL</a></li>
+                                <li><a data-id="DAYS" href="#eHarian" aria-controls="profile" role="tab" data-toggle="tab">BERDASARKAN HARI</a></li>
                             </ul>
                         </div>
 
@@ -762,16 +762,17 @@
                                                 </tr>
                                             </thead>
 
-                                            <tbody>
+                                            <tbody class="list">
                                                 <tr>
                                                     <td style="position: relative;">
-                                                        <input readonly type="text" class="pilih-tanggal form-control">
+                                                        <input readonly type="text" class="pilih-tanggal form-control tanggal">
                                                         <input type="hidden" name="tanggal[]">
                                                         <button class="btn-hapus-tanggal btn btn-danger btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <ul class="pagination"></ul>
                                     </form>
                                 </div>
 
@@ -801,7 +802,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                    {#<button id="save-edisi-terbit" type="button" class="btn btn-flat btn-danger">Save</button>#}
+                    <button id="save-edisi-terbit" type="button" class="btn btn-flat btn-danger">Save By Dates</button>
                 </div>
             </div>
 

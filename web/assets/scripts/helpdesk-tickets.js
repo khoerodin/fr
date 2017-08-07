@@ -211,20 +211,6 @@ function getTicketData(ticketId) {
 
             var dataForum = '';
 
-        // <div class="direct-chat-msg">
-        //         <div class="direct-chat-info clearfix">
-        //         <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
-        //     <span class="wkt direct-chat-timestamp pull-right"></span>
-        //         </div>
-        //         <!-- /.direct-chat-info -->
-        //         <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
-        //         <!-- /.direct-chat-img -->
-        //         <div class="direct-chat-text">
-        //         Selamat datang di Helpdesk Si JAGO. Jika ada hal yang ingin ditanyakan terkait layanan kami, jangan sungkan untuk bertanya melalui live chat kami :)
-        // </div>
-        //     <!-- /.direct-chat-text -->
-        //     </div>
-
             $.each(finalData, function (index, value) {
 
                 dataForum += '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+value.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/users/'+value.users.fullname+'" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';
@@ -426,6 +412,141 @@ $(document).on('click', '#btnSave', function () {
                     getTicketList();
                     toastr.success('Sukses mengirim tiket');
                     $('#newTicketModal').modal('hide');
+
+                }
+
+            } else {
+                toastr.error('Error mengirim tiket');
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            toastr.error('Error mengirim tiket');
+        }
+    });
+});
+
+//konfirmasi tiket
+$(document).on('click', 'button.confirm-tic', function () {
+    var id = $(this).data('id');
+
+    // 7 Agustus 2017 - Detail tiket
+    // ajax ticket by id
+     $.ajax({
+        url: '/api',
+        type: 'POST',
+        data:  {
+            'module' : 'helpdesk/tickets/' + id,
+            'method' : 'get'
+        },
+        success: function (ticketData, textStatus, jqXHR) {
+
+            var ticketData = JSON.parse(ticketData);
+
+            // ajax helpdesk staffs
+            $.ajax({
+                url: '/api',
+                type: 'POST',
+                data: {
+                    module: 'helpdesk/staffs',
+                    method: 'get'
+                },
+                success: function (data, textStatus, jqXHR) {
+                    var data = JSON.parse(data)['hydra:member'];
+                    var staff = '<option selected disabled>PILIH</option>';
+                    $.each(data, function (index, value) {
+
+                        //console.log(value.id, ticketData.staff.id);
+
+                        if (ticketData.staff) {
+
+                            if ( value.id === ticketData.staff.id ) {
+                                staff += '<option selected value="/api/helpdesk/staffs/'+value.id+'">'+value.user.fullname+'</option>';
+                            } else {
+                                staff += '<option value="/api/helpdesk/staffs/'+value.id+'">'+value.user.fullname+'</option>';
+                            }
+
+                        } else {
+                            staff += '<option value="/api/helpdesk/staffs/'+value.id+'">'+value.user.fullname+'</option>';
+                        }
+
+
+
+                    });
+
+
+                    $('#confirm-tic #formKonfirmasiTiket #id').val(id);
+                    $('#confirm-tic #formKonfirmasiTiket #staff').html(staff);
+                }
+            });
+
+
+        }
+    });
+
+
+    $("#formKonfirmasiTiket #staff").select2({
+        theme: "bootstrap"
+    });
+
+    $('#confirm-tic').modal({show: true, backdrop: 'static'});
+
+});
+
+//ASSIGN TICKET
+$(document).on('click', '#assign-tic', function () {
+
+    var params = [
+        {
+            name: 'staff',
+            value: $('#formKonfirmasiTiket select#staff').val()
+        }
+    ];
+
+    var id = $('#formKonfirmasiTiket input#id').val();
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/tickets/'+ id,
+            method: 'put', //put berarti update
+            params: params
+        },
+        beforeSend: function () {
+            jQuery('div .has-error').removeClass('has-error');
+            jQuery('p.help-block').remove();
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            if ( jqXHR.status === 200 ) {
+
+                var data = JSON.parse(data);
+
+                if ("violations" in data) {
+
+                    $.each(data, function (index, value) {
+                        if(index === 'violations'){
+                            $.each(value, function (idx, val) {
+                                $('div#confirm-tic form #'+val.propertyPath).parent('div').addClass('has-error');
+                                $( '<p class="help-block">'+val.message+'</p>' ).insertAfter( 'div#confirm-tic form #'+val.propertyPath);
+                            });
+                        }
+                    });
+
+                    toastr.error('Error mengambil tiket');
+
+                } else {
+                    getAll('helpdesk/tickets',[
+                        'client.fullname',
+                        'staff.user.fullname',
+                        'title',
+                        'message',
+                        'priority',
+                        'status',
+                        'createdAt'
+                    ]);
+                    toastr.success('Sukses mengambil tiket');
+                    $('#confirm-tic').modal('hide');
 
                 }
 

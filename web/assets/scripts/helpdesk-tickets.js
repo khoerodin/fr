@@ -306,7 +306,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
         data: {
             module: 'helpdesk/ticket-responses',
             method: 'post',
-            params: params
+            params: parameter
         },
         success: function (data) {
             var data = JSON.parse(data);

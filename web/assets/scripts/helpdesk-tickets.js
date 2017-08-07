@@ -207,20 +207,6 @@ function getTicketData(ticketId) {
 
             var dataForum = '';
 
-        // <div class="direct-chat-msg">
-        //         <div class="direct-chat-info clearfix">
-        //         <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
-        //     <span class="wkt direct-chat-timestamp pull-right"></span>
-        //         </div>
-        //         <!-- /.direct-chat-info -->
-        //         <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
-        //         <!-- /.direct-chat-img -->
-        //         <div class="direct-chat-text">
-        //         Selamat datang di Helpdesk Si JAGO. Jika ada hal yang ingin ditanyakan terkait layanan kami, jangan sungkan untuk bertanya melalui live chat kami :)
-        // </div>
-        //     <!-- /.direct-chat-text -->
-        //     </div>
-
             $.each(finalData, function (index, value) {
 
                 dataForum += '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+value.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/users/'+value.users.fullname+'" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';

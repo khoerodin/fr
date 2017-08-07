@@ -198,7 +198,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Cetak Di Faktur</label>
-                                    <select type="text" class="form-control" name="printAs" id="cetakDiFaktur" style="width: 100%">
+                                    <select type="text" class="form-control" name="printAs" id="printAs" style="width: 100%">
                                         <option selected disabled>PILIH</option>
                                         <option {% if order.printAs == 'client' %} selected {% endif %} value="client">KLIEN</option>
                                         <option {% if order.printAs == 'customer' %} selected {% endif %} value="customer">PEMASANG</option>

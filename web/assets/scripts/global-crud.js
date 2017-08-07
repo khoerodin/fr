@@ -108,13 +108,22 @@ function getAll(module, columns = [], tbody = 'data-list') {
 
                             no = no;
 
-                            // if (module === 'helpdesk/tickets'){
-                            //     tr += '<tr id="' + val.id + '" data-staff="'+ val.staff.id +'" data-client="'+ val.client.id +'" data-staff-user="'+ val.staff.user.id +'" data-waktu="'+ val.createdAt +'">';
-                            // } else {
-                            //     tr += '<tr id="' + val.id + '">';
-                            // }
+                            if (module === 'helpdesk/tickets'){
+                                // tr += '<tr id="' + val.id + '" data-staff="'+ val.staff.id +'" data-client="'+ val.client.id +'" data-staff-user="'+ val.staff.user.id +'" data-waktu="'+ val.createdAt +'">';
 
-                            tr += '<tr id="' + val.id + '">';
+                                var staff;
+                                if (val.staff) {
+                                    staff = val.staff.id;
+                                } else {
+                                    staff = null;
+                                }
+
+                                tr += '<tr id="' + val.id + '" data-staff="'+ staff +'" data-client="'+ val.client.id +'" data-waktu="'+ val.createdAt +'">';
+                            } else {
+                                tr += '<tr id="' + val.id + '">';
+                            }
+
+                            // tr += '<tr id="' + val.id + '">';
 
                             tr += '<td>' + no + '</td>'
                             $.each(columns, function (i, v) {

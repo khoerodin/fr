@@ -1,4 +1,4 @@
-$("#orderFrom, #cetakDiFaktur, #paymentMethod").select2({
+$("#orderFrom, #printAs, #paymentMethod").select2({
     theme: 'bootstrap'
 });
 

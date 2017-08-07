@@ -30,8 +30,7 @@ $(document).on('click', '.detail-tic', function () {
 $(document).on('click', '#send', function () { //CHAT klik send button
     var waktu = moment().format("ddd, D MMM YYYY, h:mm A");
     var text = $('#chatMessage').val();
-    var html = '<div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">Nama</span><span class="direct-chat-timestamp pull-right">'+waktu+'</span></div><div class="direct-chat-msg right"><div class="direct-chat-text">'+text+'</div></div>';
-    $(document).find('#chatHistory').append(html);
+
     var responseId = $('#chatHistory:last').data('id');
     var staff = $('#chatHistory:last').data('staff');
     var ticket = $('#chatHistory:last').data('ticket');
@@ -52,7 +51,12 @@ $(document).on('click', '#send', function () { //CHAT klik send button
     if(typeof staff !== 'undefined'){
         trueStaffId = staff;
     } else {
-        trueStaffId = '/api/helpdesk/staffs/'+staffId
+
+        if(typeof staffId === 'undefined') {
+            trueStaffId = null;
+        } else {
+            trueStaffId = '/api/helpdesk/staffs/'+staffId;
+        }
     }
 
     var trueClientId;
@@ -292,11 +296,13 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
         ];
     }
 
+    console.log(params.filter());
+
     $.ajax({
         url: '/api',
         type: 'POST',
         data: {
-            module: 'helpdesk/ticket-responses',
+            module: 'helpdesk/ticket-responsesaa',
             method: 'post',
             params: params
         },
@@ -378,7 +384,7 @@ function getTicketList() {
 }
 
 
-$("#category").select2({
+$("#category1").select2({
     theme: "bootstrap"
 });
 

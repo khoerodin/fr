@@ -177,7 +177,12 @@ function getAll(module, columns = [], tbody = 'data-list') {
 
                                 tr += '<button data-id="' + val.id + '" class="detail-btn btn btn-default btn-xs btn-flat hidden" title="DETAIL"><i class="fa fa-eye"></i></button>';
                                 tr += '<button data-id="' + val.id + '" class="delete-btn btn btn-default btn-xs btn-flat hidden" title="DELETE"><i class="fa fa-times"></i></button>';
-                                tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button>';
+                                tr += '<button data-id="' + val.id + '" class="confirm-tic btn btn-default btn-xs btn-flat" title="AMBIL TIKET"><i class="fa fa-check"></i></button>';
+
+                                if(staff){
+                                    tr += '<button data-id="' + val.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button>';
+                                }
+
 
                             } else {
 

@@ -45,14 +45,19 @@ $(document).on('click', '#send', function () { //CHAT klik send button
     if(typeof ticket !== 'undefined'){
         trueTicketId = ticket;
     } else {
-        trueTicketId = '/api/helpdesk/tickets/'+ticketId
+        trueTicketId = '/api/helpdesk/tickets/'+ticketId;
     }
 
     var trueStaffId;
     if(typeof staff !== 'undefined'){
         trueStaffId = staff;
     } else {
-        trueStaffId = '/api/helpdesk/staffs/'+staffId
+        if (typeof staffId === 'undefined') {
+            trueStaffId = null;
+        } else {
+            trueStaffId = '/api/helpdesk/staffs/'+staffId;
+        }
+
     }
 
     var trueClientId;
@@ -87,14 +92,14 @@ $(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
     if(typeof ticket !== 'undefined'){
         trueTicketId = ticket;
     } else {
-        trueTicketId = '/api/helpdesk/tickets/'+ticketId
+        trueTicketId = '/api/helpdesk/tickets/'+ticketId;
     }
 
     var trueStaffId;
     if(typeof staff !== 'undefined'){
         trueStaffId = staff;
     } else {
-        trueStaffId = '/api/helpdesk/staffs/'+staffId
+        trueStaffId = '/api/helpdesk/staffs/'+staffId;
     }
 
     var trueClientId;
@@ -203,7 +208,6 @@ function getTicketData(ticketId) {
         success: function (data) {
             var data = JSON.parse(data);
             var finalData = data['hydra:member'];
-            console.log(finalData);
 
             var dataForum = '';
 
@@ -256,65 +260,45 @@ function getTicketData(ticketId) {
 
 
             $('.tableForum').html(dataForum); //tbody result
-            console.log(finalData);
 
         }
     });
 }
 
 function postTicketData(responseFor, staff, ticket, client, message, time) {
-    var params;
-    if (responseFor) {
-        params = [
-            {
-                name: 'responseFor',
-                value: responseFor
-            },
-            // {
-            //     name: 'staff',
-            //     value: staff
-            // },
-            {
-                name: 'ticket',
-                value: ticket
-            },
-            {
-                name: 'client',
-                value: client
-            },
-            {
-                name: 'message',
-                value: message
-            },
-            {
-                name: 'time',
-                value: ''
-            }
-        ];
-    } else {
-        params = [
-            // {
-            //     name: 'staff',
-            //     value: staff
-            // },
-            {
-                name: 'ticket',
-                value: ticket
-            },
-            {
-                name: 'client',
-                value: client
-            },
-            {
-                name: 'message',
-                value: message
-            },
-            {
-                name: 'time',
-                value: ''
-            }
-        ];
-    }
+    var params = [
+        {
+            name: 'responseFor',
+            value: responseFor
+        },
+        {
+            name: 'staff',
+            value: staff
+        },
+        {
+            name: 'ticket',
+            value: ticket
+        },
+        {
+            name: 'client',
+            value: client
+        },
+        {
+            name: 'message',
+            value: message
+        },
+        {
+            name: 'time',
+            value: ''
+        }
+    ];
+
+    var parameter = [];
+    $.each(params, function (index, value) {
+        if (value.value) {
+            parameter.push(value);
+        }
+    });
 
     $.ajax({
         url: '/api',

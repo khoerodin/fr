@@ -70,15 +70,14 @@
                                         <div class="col-md-12" >
 
                                             <div class="box direct-chat">
-                                                {#<div class="box-header with-border">#}
-                                                    {#<h3 class="box-title">Helpdesk Live Chat</h3>#}
+
                                                     {#<div class="box-tools pull-right">#}
                                                         {#<span data-toggle="tooltip" title="2 New Messages" class="badge badge-notif bg-blue">2</span>#}
                                                         {#<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
                                                         {#<button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>#}
                                                         {#<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>#}
                                                     {#</div>#}
-                                                {#</div>#}
+
                                                 <div class="box-body">
                                                     <!-- Conversations are loaded here -->
                                                     <div class="direct-chat-messages" id="chatHistory">
@@ -109,9 +108,9 @@
                                                 </div>
                                                 <div class="box-footer">
                                                     <div class="input-group">
-                                                        <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200">
+                                                        <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200" style="width: 99%">
                                                         <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-primary btn-flat" id="send">Send</button>
+                                                        &nbsp;<button type="button" class="btn btn-primary btn-flat" id="send">Send</button>
                                                         </span>
                                                     </div>
                                                 </div>

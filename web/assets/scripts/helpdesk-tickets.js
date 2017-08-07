@@ -30,7 +30,8 @@ $(document).on('click', '.detail-tic', function () {
 $(document).on('click', '#send', function () { //CHAT klik send button
     var waktu = moment().format("ddd, D MMM YYYY, h:mm A");
     var text = $('#chatMessage').val();
-
+    //var html = '<div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">Nama</span><span class="direct-chat-timestamp pull-right">'+waktu+'</span></div><div class="direct-chat-msg right"><div class="direct-chat-text">'+text+'</div></div>';
+    //$(document).find('#chatHistory').append(html);
     var responseId = $('#chatHistory:last').data('id');
     var staff = $('#chatHistory:last').data('staff');
     var ticket = $('#chatHistory:last').data('ticket');
@@ -44,19 +45,19 @@ $(document).on('click', '#send', function () { //CHAT klik send button
     if(typeof ticket !== 'undefined'){
         trueTicketId = ticket;
     } else {
-        trueTicketId = '/api/helpdesk/tickets/'+ticketId
+        trueTicketId = '/api/helpdesk/tickets/'+ticketId;
     }
 
     var trueStaffId;
     if(typeof staff !== 'undefined'){
         trueStaffId = staff;
     } else {
-
-        if(typeof staffId === 'undefined') {
+        if (typeof staffId === 'undefined') {
             trueStaffId = null;
         } else {
             trueStaffId = '/api/helpdesk/staffs/'+staffId;
         }
+
     }
 
     var trueClientId;
@@ -91,14 +92,14 @@ $(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
     if(typeof ticket !== 'undefined'){
         trueTicketId = ticket;
     } else {
-        trueTicketId = '/api/helpdesk/tickets/'+ticketId
+        trueTicketId = '/api/helpdesk/tickets/'+ticketId;
     }
 
     var trueStaffId;
     if(typeof staff !== 'undefined'){
         trueStaffId = staff;
     } else {
-        trueStaffId = '/api/helpdesk/staffs/'+staffId
+        trueStaffId = '/api/helpdesk/staffs/'+staffId;
     }
 
     var trueClientId;
@@ -183,7 +184,7 @@ function getTicketData(ticketId) {
 
     var title = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(5)').text();
     var client = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(2)').text();
-    // var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
+    var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
     var category = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(4)').text();
     // var momentPost = moment('value.createdAt').format("D MMM 'YY - HH:mm a");
 
@@ -207,102 +208,103 @@ function getTicketData(ticketId) {
         success: function (data) {
             var data = JSON.parse(data);
             var finalData = data['hydra:member'];
-            console.log(finalData);
 
             var dataForum = '';
 
+        // <div class="direct-chat-msg">
+        //         <div class="direct-chat-info clearfix">
+        //         <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
+        //     <span class="wkt direct-chat-timestamp pull-right"></span>
+        //         </div>
+        //         <!-- /.direct-chat-info -->
+        //         <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
+        //         <!-- /.direct-chat-img -->
+        //         <div class="direct-chat-text">
+        //         Selamat datang di Helpdesk Si JAGO. Jika ada hal yang ingin ditanyakan terkait layanan kami, jangan sungkan untuk bertanya melalui live chat kami :)
+        // </div>
+        //     <!-- /.direct-chat-text -->
+        //     </div>
+
             $.each(finalData, function (index, value) {
 
-                dataForum += '<div id="Forum" style="background-color: #efefef">';
-                dataForum += '<div class="media mediaForum"  data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 10px; margin-bottom: 10px; border: #3e3b42 solid 1px;padding: 12px" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';
-                dataForum += '<div class="media-left media-top" style="">';
-
-                dataForum += '<img class="direct-chat-img img-lg" src="../img/user4-128x128.jpg">';
-                // dataForum += '<img class="direct-chat-img img-lg" src="../img/user7-128x128.jpg">';
+                dataForum += '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+value.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/users/'+value.users.fullname+'" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';
+                dataForum += '<div class="direct-chat-info clearfix">';
+                dataForum += '<span class="direct-chat-name pull-left">'+value.users.fullname+'</span>';
+                dataForum += '<span class="wkt direct-chat-timestamp pull-right">'+moment(value.createdAt).format('LLLL')+'</span>';
                 dataForum += '</div>';
-                dataForum += '<div class="media-body"><span class="date-post pull-right"><span class="glyphicon glyphicon-time"></span> diposting pada '+moment(value.createdAt).format("D MMM 'YY - HH:mm a")+'</span>';
-                dataForum += '<h4 class="media-heading">'+value.client.user.fullname+'</h4>'; //clientName
-                dataForum += '<h5 class="text-muted">'+value.staff.user.fullname+'</h5>'; //staffName
+                dataForum += '<img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">';
+                dataForum += '<div class="direct-chat-text">'+value.message+'</div>';
                 dataForum += '</div>';
 
-                dataForum += '<div style="background-color: white; margin-left: 1px; margin-top: 10px; margin-bottom: 2px; border: #3e3b42 solid 1px;padding: 5px">'+value.message+''; //forumMessage
 
-                dataForum += '</div>';
-                dataForum += '</div>';
-                dataForum += '</div>';
-                dataForum += '</div>';
+                // dataForum += '<div id="Forum" style="background-color: #efefef">';
+                // dataForum += '<div class="media mediaForum"  data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 10px; margin-bottom: 10px; border: #3e3b42 solid 1px;padding: 12px" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';
+                // dataForum += '<div class="media-left media-top" style="">';
+                //
+                // dataForum += '<img class="direct-chat-img img-lg" src="../img/user4-128x128.jpg">';
+                // // dataForum += '<img class="direct-chat-img img-lg" src="../img/user7-128x128.jpg">';
+                // dataForum += '</div>';
+                // dataForum += '<div class="media-body"><span class="date-post pull-right"><span class="glyphicon glyphicon-time"></span> diposting pada '+moment(value.createdAt).format("D MMM 'YY - HH:mm a")+'</span>';
+                // dataForum += '<h4 class="media-heading">'+value.client.user.fullname+'</h4>'; //clientName
+                // dataForum += '<h5 class="text-muted">'+value.staff.user.fullname+'</h5>'; //staffName
+                // dataForum += '</div>';
+                //
+                // dataForum += '<div style="background-color: white; margin-left: 1px; margin-top: 10px; margin-bottom: 2px; border: #3e3b42 solid 1px;padding: 5px">'+value.message+''; //forumMessage
+                //
+                // dataForum += '</div>';
+                // dataForum += '</div>';
+                // dataForum += '</div>';
+                // dataForum += '</div>';
 
             });
 
 
-            $('.tableForum').html(dataForum); //tbody userData contoh di Sublime
-            console.log(finalData);
+            $('.tableForum').html(dataForum); //tbody result
 
         }
     });
 }
 
 function postTicketData(responseFor, staff, ticket, client, message, time) {
-    var params;
-    if (responseFor) {
-        params = [
-            {
-                name: 'responseFor',
-                value: responseFor
-            },
-            {
-                name: 'staff',
-                value: staff
-            },
-            {
-                name: 'ticket',
-                value: ticket
-            },
-            {
-                name: 'client',
-                value: client
-            },
-            {
-                name: 'message',
-                value: message
-            },
-            {
-                name: 'time',
-                value: responseFor
-            }
-        ];
-    } else {
-        params = [
-            {
-                name: 'staff',
-                value: staff
-            },
-            {
-                name: 'ticket',
-                value: ticket
-            },
-            {
-                name: 'client',
-                value: client
-            },
-            {
-                name: 'message',
-                value: message
-            },
-            {
-                name: 'time',
-                value: responseFor
-            }
-        ];
-    }
+    var params = [
+        {
+            name: 'responseFor',
+            value: responseFor
+        },
+        {
+            name: 'staff',
+            value: staff
+        },
+        {
+            name: 'ticket',
+            value: ticket
+        },
+        {
+            name: 'client',
+            value: client
+        },
+        {
+            name: 'message',
+            value: message
+        },
+        {
+            name: 'time',
+            value: ''
+        }
+    ];
 
-    console.log(params.filter());
+    var parameter = [];
+    $.each(params, function (index, value) {
+        if (value.value) {
+            parameter.push(value);
+        }
+    });
 
     $.ajax({
         url: '/api',
         type: 'POST',
         data: {
-            module: 'helpdesk/ticket-responsesaa',
+            module: 'helpdesk/ticket-responses',
             method: 'post',
             params: params
         },
@@ -384,7 +386,7 @@ function getTicketList() {
 }
 
 
-$("#category1").select2({
+$("#category").select2({
     theme: "bootstrap"
 });
 

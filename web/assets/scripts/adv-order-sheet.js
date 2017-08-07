@@ -1042,31 +1042,31 @@ function saveByDays() {
         var jumat = [];
         var sabtu = [];
 
-        if ($('input[type="checkbox"]#0').is(':checked')) {
+        if ($('#hari input[type="checkbox"]#0').is(':checked')) {
             minggu = getDates(startDate, endDate, 0);
         }
 
-        if ($('input[type="checkbox"]#1').is(':checked')) {
+        if ($('#hari input[type="checkbox"]#1').is(':checked')) {
             senin = getDates(startDate, endDate, 1);
         }
 
-        if ($('input[type="checkbox"]#2').is(':checked')) {
+        if ($('#hari input[type="checkbox"]#2').is(':checked')) {
             selasa = getDates(startDate, endDate, 2);
         }
 
-        if ($('input[type="checkbox"]#3').is(':checked')) {
+        if ($('#hari input[type="checkbox"]#3').is(':checked')) {
             rabu = getDates(startDate, endDate, 3);
         }
 
-        if ($('input[type="checkbox"]#4').is(':checked')) {
+        if ($('#hari input[type="checkbox"]#4').is(':checked')) {
             kamis = getDates(startDate, endDate, 4);
         }
 
-        if ($('input[type="checkbox"]#5').is(':checked')) {
+        if ($('#hari input[type="checkbox"]#5').is(':checked')) {
             jumat = getDates(startDate, endDate, 5);
         }
 
-        if ($('input[type="checkbox"]#6').is(':checked')) {
+        if ($('#hari input[type="checkbox"]#6').is(':checked')) {
             sabtu = getDates(startDate, endDate, 6);
         }
 
@@ -1083,7 +1083,6 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
 $(document).on('click', '#save-edisi-terbit', function () {
     var data = localStorage.getItem('jenisEdisi');
-    console.log(data);
     if (data === 'DATES') {
         saveByDates();
     } else if (data === 'DAYS') {

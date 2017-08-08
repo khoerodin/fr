@@ -184,9 +184,6 @@ $(document).on('click', '.detail-tic', function () {
     $('#detailNewTicketModal').modal({show: true, backdrop: 'static'});
 
 });
-
-//ambil tiket staff
-
 //update / edit
 $(document).on('click', '#btnUpdate', function () {
     var id = $('#detailNewTicketModal #formTiket #id').val();

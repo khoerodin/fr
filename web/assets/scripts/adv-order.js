@@ -31,8 +31,19 @@ function getOrders(param) {
                     tableData += '<td>'+no+'</td>';
                     tableData += '<td>'+value.orderNumber+'</td>';
                     tableData += '<td>'+value.title+'</td>';
-                    tableData += '<td>'+value.orderFrom.name+'</td>';
-                    tableData += '<td>'+value.customer.name+'</td>';
+
+                    if (value.orderFrom) {
+                        tableData += '<td>'+value.orderFrom.name+'</td>';
+                    } else {
+                        tableData += '<td>-</td>';
+                    }
+
+                    if (value.customer) {
+                        tableData += '<td>'+value.customer.name+'</td>';
+                    } else {
+                        tableData += '<td>-</td>';
+                    }
+
                     tableData += '<td>';
                     tableData += '<span class="pull-right" data-id="'+value.id+'">';
                     tableData += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';

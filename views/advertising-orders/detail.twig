@@ -346,7 +346,7 @@
                                         </div>
                                         <div class="col-xs-3">
                                             <label for="">Edisi Terbit</label>
-                                            <button class="btn btn-default btn-block btn-flat" id="edisiTerbitButton"><i class="fa fa-pencil-square-o"></i> Set Edisi Terbit</button>
+                                            <button class="btn btn-default btn-block btn-flat" id="edisiTerbitButton">Edisi Terbit</button>
                                         </div>
                                     </div>
                                 </div>
@@ -784,11 +784,43 @@
                     <h4 class="modal-title">Edisi Terbit</h4>
                 </div>
                 <div class="modal-body">
+                    <table class="table table-bordered table-responsive table-hover">
+                        <thead>
+                        <tr>
+                            <th width="5%">No</th>
+                            <th>Tanggal</th>
+                        </tr>
+                        </thead>
+
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                    <button id="setEdisiTerbitButton" type="button" class="btn btn-flat btn-danger">Edit Edisi Terbit</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#Edisi Terbit#}
+
+    {#Edit Edisi Terbit#}
+    <div id="setEdisiTerbitModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edisi Terbit</h4>
+                </div>
+                <div class="modal-body">
                     <div class="panel with-nav-tabs panel-info">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li class="active"><a href="#eTanggal" aria-controls="home" role="tab" data-toggle="tab">BERDASARKAN TANGGAL</a></li>
-                                <li ><a href="#eHarian" aria-controls="profile" role="tab" data-toggle="tab">BERDASARKAN HARI</a></li>
+                                <li class="active"><a data-id="DATES" href="#eTanggal" aria-controls="home" role="tab" data-toggle="tab">BERDASARKAN TANGGAL</a></li>
+                                <li><a data-id="DAYS" href="#eHarian" aria-controls="profile" role="tab" data-toggle="tab">BERDASARKAN HARI</a></li>
                             </ul>
                         </div>
 
@@ -803,16 +835,17 @@
                                             </tr>
                                             </thead>
 
-                                            <tbody>
+                                            <tbody class="list">
                                             <tr>
                                                 <td style="position: relative;">
-                                                    <input readonly type="text" class="pilih-tanggal form-control">
+                                                    <input readonly type="text" class="pilih-tanggal form-control tanggal">
                                                     <input type="hidden" name="tanggal[]">
                                                     <button class="btn-hapus-tanggal btn btn-danger btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
+                                        <ul class="pagination"></ul>
                                     </form>
                                 </div>
 
@@ -842,11 +875,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                    {#<button id="save-edisi-terbit" type="button" class="btn btn-flat btn-danger">Save</button>#}
+                    <button data-dismiss="modal" type="button" class="btn btn-flat btn-danger">Save By Dates</button>
                 </div>
             </div>
 
         </div>
     </div>
-    {#Edisi Terbit#}
+    {#Edit Edisi Terbit#}
 {%- endblock -%}

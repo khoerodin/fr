@@ -954,7 +954,42 @@ function newBlankDate() {
 
 $(document).on('click', '#edisiTerbitButton', function (e) {
     e.preventDefault();
+    var orderId = $('#orderForm #id').val();
+    $.ajax({
+        url: '/api',
+        type: 'post',
+        data: {
+            module: 'advertising/publish-ads',
+            method: 'get',
+            params: [
+                {
+                    name: 'order.id',
+                    value: orderId
+                }
+            ]
+        },
+        success: function (data, textStatus, jqXHR) {
+            var data = JSON.parse(data)['hydra:member'];
+            var no = 1;
+            var tr ='';
+            $.each(data, function (index, value) {
+                tr += '<tr>';
+                tr += '<td>'+no+'</td>';
+                tr += '<td>'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'</td>';
+                tr += '</tr>';
+                no++;
+            });
+            $('#edisiTerbitModal tbody').html(tr);
+        }
+    });
+
     $('#edisiTerbitModal').modal({show: true, backdrop: 'static'});
+});
+
+$(document).on('click', '#setEdisiTerbitButton', function (e) {
+    e.preventDefault();
+    $('#setEdisiTerbitModal').modal({show: true, backdrop: 'static'});
+    $('#edisiTerbitModal').modal('hide');
 
     newBlankDate();
 
@@ -972,6 +1007,7 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
         language: "id"
     });
 });
+
 
 // https://www.sanwebe.com/2014/01/how-to-select-all-deselect-checkboxes-jquery
 //select all checkboxes
@@ -992,47 +1028,93 @@ $('#eHarian #hari input[type="checkbox"]').change(function(){
 });
 
 
-function getDates(start, end, dayNum) {
-    var start = start,
-        end   = end,
-        day   = dayNum;
-
-    var result = [];
-    var current = start.clone();
-
-    while (current.day(7 + day).isBefore(end)) {
-        result.push(current.clone());
-    }
-
-    return result.map(m => m.format());
+function parseDate(input) {
+    var parts = input.split('-');
+    return new Date(parts[0], parts[1]-1, parts[2]); // Note: months are 0-based
 }
 
-function saveByDates() {
+function getDatesOf( date1, date2, dayToSearch )
+{
+
+    var dateObj1 = parseDate(date1);
+    var dateObj2 = parseDate(date2);
+
+    var count = 0;
+
+    var week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    var dayIndex = week.indexOf( dayToSearch );
+
+    var dates = [];
+    while ( dateObj1.getTime() <= dateObj2.getTime() )
+    {
+        if (dateObj1.getDay() == dayIndex )
+        {
+            var time = dateObj1.getTime();
+            dates.push(toISODate(time));
+        }
+
+        dateObj1.setDate(dateObj1.getDate() + 1);
+    }
+
+    return dates;
+}
+
+function toISODate(milliseconds) {
+    var date = new Date(milliseconds);
+    var y = date.getFullYear()
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    m = (m < 10) ? '0' + m : m;
+    d = (d < 10) ? '0' + d : d;
+    return [y, m, d].join('-');
+}
+
+function saveByDates(orderId) {
     var data = $('#perTgl').serializeArray();
 
     var tanggal = [];
     $.each(data, function (index, value) {
-        tanggal.push(value.value);
+        tanggal.push({
+            order: orderId,
+            publishDate: value.value
+        });
     });
 
-    console.log(tanggal.filter(Boolean));
-    // $.ajax({
-    //     url: '/advertising/orders/publish-ads',
-    //     type: 'POST',
-    //     data: data,
-    //     success: function (data, textStatus, jqXHR) {
-    //
-    //     },
-    //     error: function (jqXHR, textStatus, errorThrown) {
-    //
-    //     }
-    // });
+    $.ajax({
+        url: '/advertising/orders/publish-ads',
+        type: 'POST',
+        data: {
+            tanggal: tanggal
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            if (data.length) {
+                bootbox.alert({
+                    message: "SUKSES MENYIMPAN ORDER",
+                    animate: false,
+                    buttons: {
+                        ok: {
+                            className: 'btn-danger btn-flat'
+                        }
+                    },
+                    callback: function (result) {
+                        window.location.href = '/advertising/orders';
+                    }
+                });
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
 }
 
-function saveByDays() {
+function saveByDays(orderId) {
     if ($('#startDate').val() && $('#endDate').val()) {
-        var startDate = moment($('#startDate').val(), 'DD/MM/YYYY');
-        var endDate = moment($('#endDate').val(), 'DD/MM/YYYY');
+        var startDate = moment($('#startDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+        var endDate = moment($('#endDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
 
         var minggu = [];
         var senin = [];
@@ -1043,34 +1125,71 @@ function saveByDays() {
         var sabtu = [];
 
         if ($('#hari input[type="checkbox"]#0').is(':checked')) {
-            minggu = getDates(startDate, endDate, 0);
+            minggu = getDatesOf(startDate, endDate, 'Sun');
         }
 
         if ($('#hari input[type="checkbox"]#1').is(':checked')) {
-            senin = getDates(startDate, endDate, 1);
+            senin = getDatesOf(startDate, endDate, 'Mon');
         }
 
         if ($('#hari input[type="checkbox"]#2').is(':checked')) {
-            selasa = getDates(startDate, endDate, 2);
+            selasa = getDatesOf(startDate, endDate, 'Tue');
         }
 
         if ($('#hari input[type="checkbox"]#3').is(':checked')) {
-            rabu = getDates(startDate, endDate, 3);
+            rabu = getDatesOf(startDate, endDate, 'Wed');
         }
 
         if ($('#hari input[type="checkbox"]#4').is(':checked')) {
-            kamis = getDates(startDate, endDate, 4);
+            kamis = getDatesOf(startDate, endDate, 'Thu');
         }
 
         if ($('#hari input[type="checkbox"]#5').is(':checked')) {
-            jumat = getDates(startDate, endDate, 5);
+            jumat = getDatesOf(startDate, endDate, 'Fri');
         }
 
         if ($('#hari input[type="checkbox"]#6').is(':checked')) {
-            sabtu = getDates(startDate, endDate, 6);
+            sabtu = getDatesOf(startDate, endDate, 'Sat');
         }
 
-        console.log(minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu));
+        var data = minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu);
+
+        var tanggal = [];
+        $.each(data, function (index, value) {
+            tanggal.push({
+                order: orderId,
+                publishDate: value
+            });
+        });
+
+        $.ajax({
+            url: '/advertising/orders/publish-ads',
+            type: 'POST',
+            data: {
+                tanggal: tanggal
+            },
+            success: function (data, textStatus, jqXHR) {
+
+                if (data.length) {
+                    bootbox.alert({
+                        message: "SUKSES MENYIMPAN ORDER",
+                        animate: false,
+                        buttons: {
+                            ok: {
+                                className: 'btn-danger btn-flat'
+                            }
+                        },
+                        callback: function (result) {
+                            window.location.href = '/advertising/orders';
+                        }
+                    });
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
     }
 }
 
@@ -1081,11 +1200,6 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $('#save-edisi-terbit').attr('data-save', data).text('SAVE BY '+data);
 });
 
-$(document).on('click', '#save-edisi-terbit', function () {
-    var data = localStorage.getItem('jenisEdisi');
-    if (data === 'DATES') {
-        saveByDates();
-    } else if (data === 'DAYS') {
-        saveByDays();
-    }
+$(document).on('click', '#setEdisiTerbitButtonClose', function () {
+    $('#edisiTerbitModal').modal('hide');
 });

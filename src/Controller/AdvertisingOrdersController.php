@@ -71,15 +71,16 @@ class AdvertisingOrdersController extends AdminController
 
     function publishAdsAction(Request $request)
     {
-        $url = 'advertising/publish-ads';
-        $method = 'post';
-        $data = $request->get('tanggal');
+        $tanggal = $request->get('tanggal');
 
-        echo "<pre>";
-        var_dump($data);
-        echo "</pre>";die();
+        $content = array();
+        foreach ($tanggal as $date) {
+            if (!empty($date['order']) AND $date['publishDate'] != '') {
+                $response = $this->request('advertising/publish-ads', 'post', [ 'order' => '/api/advertising/orders/' . $date['order'], 'publishDate' => $date['publishDate'] ]);
+                $content[] = $response->getContent();
+            }
+        }
 
-        $response = $this->request($url, $method, $data);
-        return new Response($response->getContent());
+        return new Response(json_encode($content));
     }
 }

@@ -30,11 +30,12 @@
                 beforeSend: function () {
                     $('div .has-error').removeClass('has-error');
                     $('p.help-block').remove();
+                    $('#btn-order').text('MENYIMPAN ORDER ...').prop('disabled', true);
                 },
                 success: function (data, textStatus, jqXHR) {
+                    var data = JSON.parse(data);
 
                     if ( jqXHR.status === 200 ) {
-                        var data = JSON.parse(data);
 
                         if ("violations" in data) {
 
@@ -48,26 +49,24 @@
                             });
 
                             toastr.error("Gagal Menyimpan Order");
+                            $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
 
                         } else {
 
-                            bootbox.alert({
-                                message: "SUKSES MENYIMPAN ORDER",
-                                animate: false,
-                                buttons: {
-                                    ok: {
-                                        className: 'btn-danger btn-flat'
-                                    }
-                                },
-                                callback: function (result) {
-                                    window.location.href = '/advertising/orders';
-                                }
-                            });
+                            var orderId = data.id;
+
+                            var data = localStorage.getItem('jenisEdisi');
+                            if (data === 'DATES') {
+                                saveByDates(orderId);
+                            } else if (data === 'DAYS') {
+                                saveByDays(orderId);
+                            }
 
                         }
 
                     } else {
                         toastr.error("Gagal Menyimpan Order");
+                        $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
                     }
 
                 },
@@ -81,6 +80,7 @@
                             }
                         }
                     });
+                    $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
                 }
             });
         });
@@ -325,7 +325,7 @@
                                         </div>
                                         <div class="col-xs-3">
                                             <label for="">Edisi Terbit</label>
-                                            <button class="btn btn-default btn-block btn-flat" id="edisiTerbitButton"><i class="fa fa-pencil-square-o"></i> Set Edisi Terbit</button>
+                                            <button class="btn btn-default btn-block btn-flat" id="setEdisiTerbitButton">Edisi Terbit</button>
                                         </div>
                                     </div>
                                 </div>
@@ -748,8 +748,8 @@
     </div>
     {#Sisipan#}
 
-    {#Edisi Terbit#}
-    <div id="edisiTerbitModal" class="modal" role="dialog">
+    {#Edit Edisi Terbit#}
+    <div id="setEdisiTerbitModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
@@ -773,19 +773,19 @@
                                     <form id="perTgl">
                                         <table class="table table-responsive table-hover">
                                             <thead>
-                                                <tr>
-                                                    <th>HARI/TANGGAL</th>
-                                                </tr>
+                                            <tr>
+                                                <th>HARI/TANGGAL</th>
+                                            </tr>
                                             </thead>
 
                                             <tbody class="list">
-                                                <tr>
-                                                    <td style="position: relative;">
-                                                        <input readonly type="text" class="pilih-tanggal form-control tanggal">
-                                                        <input type="hidden" name="tanggal[]">
-                                                        <button class="btn-hapus-tanggal btn btn-danger btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button>
-                                                    </td>
-                                                </tr>
+                                            <tr>
+                                                <td style="position: relative;">
+                                                    <input readonly type="text" class="pilih-tanggal form-control tanggal">
+                                                    <input type="hidden" name="tanggal[]">
+                                                    <button class="btn-hapus-tanggal btn btn-danger btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                         <ul class="pagination"></ul>
@@ -817,12 +817,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                    <button id="save-edisi-terbit" type="button" class="btn btn-flat btn-danger">Save By Dates</button>
+                    <button id="save-edisi-terbit" data-dismiss="modal" type="button" class="btn btn-flat btn-danger">Save By Dates</button>
                 </div>
             </div>
 
         </div>
     </div>
-    {#Edisi Terbit#}
+    {#Edit Edisi Terbit#}
 {%- endblock -%}

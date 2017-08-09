@@ -54,8 +54,8 @@
                         } else {
 
                             var orderId = data.id;
-
                             var data = localStorage.getItem('jenisEdisi');
+
                             if (data === 'DATES') {
                                 saveByDates(orderId);
                             } else if (data === 'DAYS') {
@@ -310,9 +310,13 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-3">
+                                            <label for="">Edisi Terbit</label>
+                                            <button class="btn btn-default btn-block btn-flat" id="setEdisiTerbitButton">Edisi Terbit</button>
+                                        </div>
+                                        <div class="col-xs-3">
                                             <label for="">Terbit</label>
                                             <div class="input-group">
-                                                <input type="number" name="totalPost" id="totalPost" min="1" class="form-control">
+                                                <input type="number" name="totalPost" id="totalPost" readonly min="1" class="form-control">
                                                 <div class="input-group-addon">kali</div>
                                             </div>
                                         </div>
@@ -322,10 +326,6 @@
                                                 <input type="number" name="contractDuration" id="contractDuration" min="0" class="form-control">
                                                 <div class="input-group-addon">bulan</div>
                                             </div>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <label for="">Edisi Terbit</label>
-                                            <button class="btn btn-default btn-block btn-flat" id="setEdisiTerbitButton">Edisi Terbit</button>
                                         </div>
                                     </div>
                                 </div>
@@ -723,30 +723,6 @@
         </div>
     </div>
     {#PIC / Account Executive#}
-
-    {#Sisipan#}
-    <div id="sisipanModal" class="modal" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Nama Kota</h4>
-                    <small class="text-success">Dobel klik Nama Kota untuk memilihnya</small>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA KOTA">
-                    <div id="data-list" style="margin-top: 10px"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    {#Sisipan#}
 
     {#Edit Edisi Terbit#}
     <div id="setEdisiTerbitModal" class="modal" role="dialog">

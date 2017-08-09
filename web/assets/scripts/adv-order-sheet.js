@@ -954,7 +954,8 @@ function newBlankDate() {
 
 $(document).on('click', '#edisiTerbitButton', function (e) {
     e.preventDefault();
-    var orderId = $('#orderForm #id').val();
+    var orderId = $('#orderForm input[name="id"]').val();
+
     $.ajax({
         url: '/api',
         type: 'post',
@@ -963,8 +964,7 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
             method: 'get',
             params: [
                 {
-                    name: 'order.id',
-                    value: orderId
+                    'order.id': orderId
                 }
             ]
         },
@@ -1056,7 +1056,6 @@ function getDatesOf( date1, date2, dayToSearch )
 
         dateObj1.setDate(dateObj1.getDate() + 1);
     }
-
     return dates;
 }
 
@@ -1070,22 +1069,39 @@ function toISODate(milliseconds) {
     return [y, m, d].join('-');
 }
 
-function saveByDates(orderId) {
+function getDatesByDates() {
     var data = $('#perTgl').serializeArray();
-
     var tanggal = [];
     $.each(data, function (index, value) {
+        if (value.value) {
+            tanggal.push(value.value);
+        }
+    });
+    return tanggal;
+}
+
+function saveByDates(orderId, update = true) {
+    var data = getDatesByDates();
+    var tanggal = [];
+
+    $.each(data, function (index, value) {
         tanggal.push({
-            order: orderId,
-            publishDate: value.value
+            publishDate: value
         });
     });
 
+    var type = 'PUT';
+    if (update) {
+        type = 'POST';
+    }
+
     $.ajax({
         url: '/advertising/orders/publish-ads',
-        type: 'POST',
+        type: 'post',
         data: {
-            tanggal: tanggal
+            tanggal: tanggal,
+            orderId: orderId,
+            type: type
         },
         success: function (data, textStatus, jqXHR) {
 
@@ -1111,7 +1127,7 @@ function saveByDates(orderId) {
     });
 }
 
-function saveByDays(orderId) {
+function getDatesByDays() {
     if ($('#startDate').val() && $('#endDate').val()) {
         var startDate = moment($('#startDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
         var endDate = moment($('#endDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
@@ -1152,21 +1168,34 @@ function saveByDays(orderId) {
             sabtu = getDatesOf(startDate, endDate, 'Sat');
         }
 
-        var data = minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu);
+        return minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu);
 
+    }
+}
+
+function saveByDays(orderId, update = true) {
+    if ($('#startDate').val() && $('#endDate').val()) {
+
+        var data = getDatesByDays();
         var tanggal = [];
         $.each(data, function (index, value) {
             tanggal.push({
-                order: orderId,
                 publishDate: value
             });
         });
 
+        var type = 'PUT';
+        if (update) {
+            type = 'POST';
+        }
+
         $.ajax({
             url: '/advertising/orders/publish-ads',
-            type: 'POST',
+            type: 'post',
             data: {
-                tanggal: tanggal
+                tanggal: tanggal,
+                orderId: orderId,
+                type: type
             },
             success: function (data, textStatus, jqXHR) {
 
@@ -1198,6 +1227,17 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var data = $(e.target).data('id');
     localStorage.setItem('jenisEdisi', data);
     $('#save-edisi-terbit').attr('data-save', data).text('SAVE BY '+data);
+});
+
+$(document).on('click', '#save-edisi-terbit', function () {
+    var jenisEdisi = localStorage.getItem('jenisEdisi');
+    if (jenisEdisi === 'DATES') {
+        var tgl = getDatesByDates();
+        $('input[name="totalPost"]').val(tgl.length);
+    } else if (jenisEdisi === 'DAYS') {
+        var tgl = getDatesByDays();
+        $('input[name="totalPost"]').val(tgl.length);
+    }
 });
 
 $(document).on('click', '#setEdisiTerbitButtonClose', function () {

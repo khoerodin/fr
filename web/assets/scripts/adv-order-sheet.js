@@ -975,11 +975,45 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
             $.each(data, function (index, value) {
                 tr += '<tr>';
                 tr += '<td>'+no+'</td>';
-                tr += '<td>'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'</td>';
+                tr += '<td>'+moment(value.publishDate).format("dddd, DD MMMM YYYY");
+                tr += '<input type="hidden" value="'+value.publishDate+'"></td>';
                 tr += '</tr>';
                 no++;
             });
+
+            tr += '<tr>';
+            tr += '<td>*</td>';
+            tr += '<td>';
+            tr += '<span class="col-md-5" style="padding: 0"><input id="addEditionDateInput" type="text" class="form-control input-sm" value="" style="width: 100%"></span>';
+            tr += '<span class="col-md-7"><button id="addEditionDateButton" class="btn btn-danger btn-flat btn-sm">Tambah</button></span>';
+            tr += '</td>';
+            tr += '</tr>';
+
             $('#edisiTerbitModal tbody').html(tr);
+
+            $('#addEditionDateInput').datetimepicker({
+                locale: 'id',
+                format: "dddd, DD MMMM YYYY"
+            }).on('dp.change', function(e){
+                localStorage.setItem('newDate', e.date.format('YYYY-MM-DD HH:mm:ss'));
+            });
+
+            $(document).on('click', '#addEditionDateButton', function () {
+                var tgl = localStorage.getItem('newDate');
+                var lastNo = $('#edisiTerbitModal tbody tr:last').prev().find('td:eq(0)').text();
+                lastNo = parseInt(lastNo) + 1;
+                if (tgl) {
+                    var newTr = '<tr>';
+                    newTr += '<td>'+lastNo+'</td>';
+                    newTr += '<td>' + moment(tgl).format("dddd, DD MMMM YYYY");
+                    newTr += '<input class="addDateEdition" type="hidden" value="' + tgl + '"></td>';
+                    newTr += '</tr>';
+
+                    $('#edisiTerbitModal tbody tr:last').prev().after(newTr);
+                }
+                $('#addEditionDateInput').val('');
+                localStorage.removeItem('newDate');
+            });
         }
     });
 
@@ -1051,7 +1085,8 @@ function getDatesOf( date1, date2, dayToSearch )
         if (dateObj1.getDay() == dayIndex )
         {
             var time = dateObj1.getTime();
-            dates.push(toISODate(time));
+            time = toISODate(time);
+            dates.push(moment(time).format("YYYY-MM-DD"));
         }
 
         dateObj1.setDate(dateObj1.getDate() + 1);
@@ -1069,18 +1104,25 @@ function toISODate(milliseconds) {
     return [y, m, d].join('-');
 }
 
+Array.prototype.removeDuplicates = function () {
+    return this.filter(function (item, index, self) {
+        return self.indexOf(item) == index;
+    });
+};
+
 function getDatesByDates() {
     var data = $('#perTgl').serializeArray();
     var tanggal = [];
     $.each(data, function (index, value) {
         if (value.value) {
-            tanggal.push(value.value);
+            tanggal.push(moment(value.value).format("YYYY-MMMM-DD"));
         }
     });
-    return tanggal;
+
+    return tanggal.removeDuplicates();
 }
 
-function saveByDates(orderId, update = true) {
+function saveByDates(orderId) {
     var data = getDatesByDates();
     var tanggal = [];
 
@@ -1090,18 +1132,12 @@ function saveByDates(orderId, update = true) {
         });
     });
 
-    var type = 'PUT';
-    if (update) {
-        type = 'POST';
-    }
-
     $.ajax({
         url: '/advertising/orders/publish-ads',
         type: 'post',
         data: {
             tanggal: tanggal,
-            orderId: orderId,
-            type: type
+            orderId: orderId
         },
         success: function (data, textStatus, jqXHR) {
 
@@ -1168,12 +1204,12 @@ function getDatesByDays() {
             sabtu = getDatesOf(startDate, endDate, 'Sat');
         }
 
-        return minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu);
+        return minggu.concat(senin, selasa, rabu, kamis, jumat, sabtu).removeDuplicates();
 
     }
 }
 
-function saveByDays(orderId, update = true) {
+function saveByDays(orderId) {
     if ($('#startDate').val() && $('#endDate').val()) {
 
         var data = getDatesByDays();
@@ -1184,18 +1220,12 @@ function saveByDays(orderId, update = true) {
             });
         });
 
-        var type = 'PUT';
-        if (update) {
-            type = 'POST';
-        }
-
         $.ajax({
             url: '/advertising/orders/publish-ads',
             type: 'post',
             data: {
                 tanggal: tanggal,
-                orderId: orderId,
-                type: type
+                orderId: orderId
             },
             success: function (data, textStatus, jqXHR) {
 

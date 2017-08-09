@@ -6,6 +6,7 @@
     <script>
         $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
             locale: 'id',
+            format: "dddd, DD MMMM YYYY",
             defaultDate: '{{ order.invoicedAt }}'
         }).on('dp.change', function(e){
             var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
@@ -16,6 +17,7 @@
 
         $('#dtBookedAt, #inputBookedAt').datetimepicker({
             locale: 'id',
+            format: "dddd, DD MMMM YYYY",
             defaultDate: '{{ order.bookedAt }}'
         }).on('dp.change', function(e){
             var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
@@ -61,9 +63,9 @@
                                    var data = localStorage.getItem('jenisEdisi');
 
                                    if (data === 'DATES') {
-                                       saveByDates(orderId, false);
+
                                    } else if (data === 'DAYS') {
-                                       saveByDays(orderId, false);
+
                                    }
 
                                } else {

@@ -35,8 +35,8 @@ function getTicketList() {
                     tr += '<td>'+value.priority+'</td>'
                     tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>'
                     tr += '<td>'
-                    tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="EDIT TIKET"><i class="fa fa-eye"></i></button>';
-                    tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="HAPUS TIKET"><i class="fa fa-times"></i></button>';
+                    // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="EDIT TIKET"><i class="fa fa-eye"></i></button>';
+                    // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="HAPUS TIKET"><i class="fa fa-times"></i></button>';
                     tr += '</td>';
                     tr += '</tr>';
 
@@ -184,9 +184,6 @@ $(document).on('click', '.detail-tic', function () {
     $('#detailNewTicketModal').modal({show: true, backdrop: 'static'});
 
 });
-
-//ambil tiket staff
-
 //update / edit
 $(document).on('click', '#btnUpdate', function () {
     var id = $('#detailNewTicketModal #formTiket #id').val();

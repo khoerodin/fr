@@ -18,9 +18,17 @@ class HelpdeskMyTicketsController extends AdminController
             'title' => 'TiketKu',
         ];
 
+        $helpdeskCategories = $this->request('helpdesk/categories', 'get');
+        $helpdeskCategories = json_decode($helpdeskCategories->getContent(), true)['hydra:member'];
+
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
+            'helpdeskCategories' => $helpdeskCategories
         ];
+
+        //        echo "<pre>";
+        //        print_r($helpdeskCategories);
+        //        echo "</pre>";die();
 
         return $this->view('helpdesk-my-tickets/index.twig', $data);
     }

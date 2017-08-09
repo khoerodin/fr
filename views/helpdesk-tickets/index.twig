@@ -9,6 +9,7 @@
         var columns = [
             'client.fullname',
             'staff.user.fullname',
+            'category.name',
             'title',
             'message',
             'priority',
@@ -23,26 +24,19 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box">
-                <div class="box-header row">
-                    {#<div class="col-md-12 search-area transition">#}
-                        {#<select data-placeholder="CARI NAMA CLIENT" class="search-name form-control select2" style="width: 100%;">#}
-                            {#<option></option>#}
-                        {#</select>#}
-                    {#</div>#}
-
-                    {#<div class="button-area transition">#}
-                        {#<a href="JavaScript:Void(0);" data-btn-add="clients" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>#}
-                    {#</div>#}
-                    &nbsp;&nbsp;&nbsp;
-                </div>
+                <div class="box-header row"></div>
                 <!-- /.box-header -->
                 <div class="box-body">
+
+                    <button type="button" class="btn btn-danger pull-right add-modal btn-flat" data-toggle="modal" data-target="#closedTicketModal" role="dialog" style="width: 150px">CLOSED TICKETS</button>
+
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
                             <th width="5%">#</th>
                             <th>Client</th>
                             <th>Staff</th>
+                            <th>Kategori</th>
                             <th>Title</th>
                             <th>Message</th>
                             <th>Priority</th>
@@ -53,7 +47,7 @@
                         </thead>
 
                         <tbody data-list="helpdesk/tickets">
-                        <tr><td colspan="9">LOADING DATA...</td></tr>
+                        <tr><td colspan="10">LOADING DATA...</td></tr>
                         </tbody>
 
                     </table>
@@ -69,14 +63,40 @@
                                     <div class="row">
                                         <div class="col-md-12" >
 
-                                            <div class="box direct-chat">
+                                            {#detail tic inside modal forum#}
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    <div class="row">
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item">Nama Klien<span class="pull-right">: </span></li>
+                                                            <li class="list-group-item">Kategori<span class="pull-right">: </span></li>
+                                                            <li class="list-group-item">Judul<span class="pull-right">: </span></li>
+                                                            <li class="list-group-item">Pesan<span class="pull-right">: </span></li>
+                                                            <li class="list-group-item">Tanggal Tiket<span class="pull-right">: </span></li>
 
-                                                    {#<div class="box-tools pull-right">#}
-                                                        {#<span data-toggle="tooltip" title="2 New Messages" class="badge badge-notif bg-blue">2</span>#}
-                                                        {#<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
-                                                        {#<button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>#}
-                                                        {#<button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>#}
-                                                    {#</div>#}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <div class="row">
+                                                        <ul class="list-group listDetail">
+
+                                                            <li class="list-group-item list-client">-</li>
+                                                            <li class="list-group-item list-cat">-</li>
+                                                            <li class="list-group-item list-title">-</li>
+                                                            <li class="list-group-item list-msg">-</li>
+                                                            <li class="list-group-item list-tgl-post">-</li>
+
+                                                            <input type="hidden" value="oijijijhijh">
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="well well-sm" align="center"><span class="fa fa-hand-o-down pull-left"></span><b>Selamat Datang di Forum Helpdesk!</b><span class="fa-hand-o-down pull-right"></span></div>
+
+                                            <div class="box direct-chat">
 
                                                 <div class="box-body">
                                                     <!-- Conversations are loaded here -->
@@ -163,6 +183,34 @@
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
                     {#END DETAIL MODAL#}
+
+                    {#DETAIL MODAL --- CLOSED TICKET#}
+                    <div class="modal fade" id="closedTicketModal" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Tambah Tiket</h4>
+                                </div>
+
+                                <div class="modal-body">
+
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-danger btn-flat" id="btnSave">save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <!-- /.box-body -->

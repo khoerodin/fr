@@ -24,6 +24,8 @@ $(document).on('click', '.detail-tic', function () {
     getTicketData(ticketId);
     $('#tiketModal').modal({show: true, backdrop: 'static'});
 
+
+
 });
 
 
@@ -182,15 +184,16 @@ $(document).find('.wkt').append(html);
 
 function getTicketData(ticketId) {
 
-    var title = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(5)').text();
-    var client = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(2)').text();
-    var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
-    var category = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(4)').text();
-    // var momentPost = moment('value.createdAt').format("D MMM 'YY - HH:mm a");
+    var client = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(2)').text(); //ok
+    var title = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(5)').text(); //ok
+    var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text(); //ok
+    var category = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(4)').text(); //ok
+    var momentPost = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(9)').text(); //ok
 
-    $('#tiketModal .list-judul').text(title);
+    $('#tiketModal .list-title').text(title);
     $('#tiketModal .list-client').text(client);
-    // $('#tiketModal .list-tgl-post').text(momentPost);
+    $('#tiketModal .list-tgl-post').text(momentPost);
+    $('#tiketModal .list-msg').text(message);
     $('#tiketModal .list-cat').text(category);
 
     $.ajax({
@@ -350,8 +353,8 @@ function getTicketList() {
                     tr += '<td>'+value.priority+'</td>'
                     tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>'
                     tr += '<td>'
-                    tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
-                    tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
+                    // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
+                    // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
                     tr += '</td>';
                     tr += '</tr>';
 
@@ -456,7 +459,7 @@ $(document).on('click', 'button.confirm-tic', function () {
                 },
                 success: function (data, textStatus, jqXHR) {
                     var data = JSON.parse(data)['hydra:member'];
-                    var staff = '<option selected disabled>PILIH</option>';
+                    var staff = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN.. </option>';
                     $.each(data, function (index, value) {
 
                         //console.log(value.id, ticketData.staff.id);
@@ -502,7 +505,12 @@ $(document).on('click', '#assign-tic', function () {
     var params = [
         {
             name: 'staff',
-            value: $('#formKonfirmasiTiket select#staff').val(),
+            value: $('#formKonfirmasiTiket select#staff').val()
+
+        },
+        {
+            name: 'status',
+            value: 'assignment'
 
         }
     ];

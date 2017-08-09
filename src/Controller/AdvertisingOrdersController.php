@@ -71,16 +71,42 @@ class AdvertisingOrdersController extends AdminController
 
     function publishAdsAction(Request $request)
     {
+        $orderId = $request->get('orderId');
         $tanggal = $request->get('tanggal');
+        if(strtolower($request->get('type')) == 'post') {
 
-        $content = array();
-        foreach ($tanggal as $date) {
-            if (!empty($date['order']) AND $date['publishDate'] != '') {
-                $response = $this->request('advertising/publish-ads', 'post', [ 'order' => '/api/advertising/orders/' . $date['order'], 'publishDate' => $date['publishDate'] ]);
-                $content[] = $response->getContent();
+            $content = array();
+            foreach ($tanggal as $date) {
+                if (!empty($orderId) AND $date['publishDate'] != '') {
+                    $response = $this->request('advertising/publish-ads', 'post', [ 'order' => '/api/advertising/orders/' . $orderId, 'publishDate' => $date['publishDate'] ]);
+                    $content[] = $response->getContent();
+                }
             }
+
+        } else {
+            $delete = $this->request('advertising/publish-ads', 'delete', [ 'order.id' => $orderId ]);
+            $content = $delete->getContent();
         }
 
         return new Response(json_encode($content));
+    }
+
+    function updatePublishAdsAction(Request $request)
+    {
+        $orderId = $request->get('orderId');
+        $tanggal = $request->get('tanggal');
+
+        $delete = $this->request('advertising/publish-ads', 'delete', [ 'order.id' => $orderId ]);
+        return new Response(json_encode($delete->getContent()));
+
+//        $content = array();
+//        foreach ($tanggal as $date) {
+//            if (!empty($orderId) AND $date['publishDate'] != '') {
+//                $response = $this->request('advertising/publish-ads', 'post', [ 'order' => '/api/advertising/orders/' . $orderId, 'publishDate' => $date['publishDate'] ]);
+//                $content[] = $response->getContent();
+//            }
+//        }
+//
+//        return new Response(json_encode($content));
     }
 }

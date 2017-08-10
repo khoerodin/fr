@@ -24,34 +24,86 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box">
-                <div class="box-header row"></div>
+                <div class="box-header row">
+
+                </div>
                 <!-- /.box-header -->
                 <div class="box-body">
 
-                    <button type="button" class="btn btn-danger pull-right add-modal btn-flat" data-toggle="modal" data-target="#closedTicketModal" role="dialog" style="width: 150px">CLOSED TICKETS</button>
+                    <div class="panel with-nav-tabs panel-info">
+                        <div class="panel-heading">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="active"><a href="#allTickets" aria-controls="home" role="tab" data-toggle="tab">ALL TIKET</a></li>
+                                <li><a href="#closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
+                            </ul>
+                        </div>
 
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th width="5%">#</th>
-                            <th>Client</th>
-                            <th>Staff</th>
-                            <th>Kategori</th>
-                            <th>Title</th>
-                            <th>Message</th>
-                            <th>Priority</th>
-                            <th>Status</th>
-                            <th width="15%">Created At</th>
-                            <th width="7%"><span class="pull-right">Action</span></th>
-                        </tr>
-                        </thead>
+                    <div class="tab-content">
+                        {#<-- semua tiket#}
+                        <div id="allTickets" class="tab-pane fade in active">
 
-                        <tbody data-list="helpdesk/tickets">
-                        <tr><td colspan="10">LOADING DATA...</td></tr>
-                        </tbody>
+                            <div class="row">
+                            <div class="col-md-12">
 
-                    </table>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th>Client</th>
+                                        <th>Staff</th>
+                                        <th>Kategori</th>
+                                        <th>Title</th>
+                                        <th>Message</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th width="15%">Created At</th>
+                                        <th width="7%"><span class="pull-right">Action</span></th>
+                                    </tr>
+                                    </thead>
 
+                                    <tbody data-list="helpdesk/tickets">
+                                    <tr><td colspan="10">LOADING DATA...</td></tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                            </div>
+                        {#<-- end semua tiket#}
+                        </div>
+                        {#closed tiket#}
+                        <div id="closedTickets" class="tab-pane fade">
+
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+
+                                            <th width="3%">#<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                                            <th width="5%">Kategori<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                                            <th width="10%">Judul<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                                            <th width="20%">Pesan</th>
+                                            <th width="10%">Status<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                                            <th width="10%">Prioritas<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                                            <th width="20%">Tanggal Tambah Tiket<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody id="closedTicketList">
+                                        <tr><td colspan="10">LOADING DATA...</td></tr>
+                                        </tbody>
+
+                                    </table>
+
+                        </div>
+                        {#end closed tiket#}
+                    </div>
+                    </div>
+
+                    {#modal forum#}
                     <div class="modal fade" id="tiketModal" role="dialog">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -87,12 +139,11 @@
                                                             <li class="list-group-item list-msg">-</li>
                                                             <li class="list-group-item list-tgl-post">-</li>
 
-                                                            <input type="hidden" value="oijijijhijh">
-
                                                         </ul>
                                                     </div>
                                                 </div>
                                             </div>
+                                            {#end detail tic inside modal forum#}
 
                                             <div class="well well-sm" align="center"><span class="fa fa-hand-o-down pull-left"></span><b>Selamat Datang di Forum Helpdesk!</b><span class="fa-hand-o-down pull-right"></span></div>
 
@@ -183,34 +234,6 @@
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
                     {#END DETAIL MODAL#}
-
-                    {#DETAIL MODAL --- CLOSED TICKET#}
-                    <div class="modal fade" id="closedTicketModal" role="dialog">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Tambah Tiket</h4>
-                                </div>
-
-                                <div class="modal-body">
-
-
-                                </div>
-
-                                <div class="modal-footer">
-                                    <div class="col-sm-12">
-                                        <div class="row">
-                                            <div class="input-group-btn">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-danger btn-flat" id="btnSave">save</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
                 <!-- /.box-body -->

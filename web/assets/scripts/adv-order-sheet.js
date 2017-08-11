@@ -1086,22 +1086,36 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                             $(document).on('click', '#addDateBtn', function () {
 
                                 var addDateInput = $('#addDate');
-                                var d = new Date();
-                                var id = d.getMilliseconds();
+                                var id = new Date().getTime();
 
-                                datesList.add({
-                                    id: id,
-                                    no: datesList.items.length + 1,
-                                    tgl: addDateInput.val()
-                                });
+                                if ($('input#addDate').val()) {
 
-                                var date = moment(addDateInput.val(), 'dddd, DD MMMM YYYY').format();
-                                var newDate = '<input type="hidden" id="'+id+'" value="'+date+'" class="post">'
-                                $('#dateForm').append(newDate);
+                                    var dateValue = addDateInput.val();
 
-                                addDateInput.val('');
+                                    var arrTgl = [];
+                                    $.each(datesList.items, function (index, value) {
+                                        arrTgl.push(value._values.tgl);
+                                    });
 
-                                console.log(datesList.items);
+                                    if ( !arrTgl.includes(dateValue) ) {
+                                        datesList.add({
+                                            id: id,
+                                            no: datesList.items.length + 1,
+                                            tgl: dateValue
+                                        });
+
+                                        var date = moment(addDateInput.val(), 'dddd, DD MMMM YYYY').format();
+                                        var newDate = '<input type="hidden" id="'+id+'" value="'+date+'" class="post">'
+                                        $('#dateForm').append(newDate);
+
+                                        addDateInput.val('');
+                                        $('p.help-block').remove();
+                                    } else {
+                                        var elm = $('input#addDate').closest('div.input-group');
+                                        $('<p class="help-block">Tanggal tersebut telah ditambahkan</p>').insertAfter(elm);
+                                    }
+
+                                }
                             });
 
                         }

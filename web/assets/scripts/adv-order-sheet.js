@@ -969,51 +969,130 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var data = JSON.parse(data)['hydra:member'];
-            var no = 1;
-            var tr ='';
-            $.each(data, function (index, value) {
-                tr += '<tr>';
-                tr += '<td>'+no+'</td>';
-                tr += '<td>'+moment(value.publishDate).format("dddd, DD MMMM YYYY");
-                tr += '<input type="hidden" value="'+value.publishDate+'"></td>';
-                tr += '</tr>';
-                no++;
-            });
+            var count = JSON.parse(data)['hydra:totalItems'];
+            count = Math.ceil(count / 366);
 
-            tr += '<tr>';
-            tr += '<td>*</td>';
-            tr += '<td>';
-            tr += '<span class="col-md-5" style="padding: 0"><input id="addEditionDateInput" type="text" class="form-control input-sm" value="" style="width: 100%"></span>';
-            tr += '<span class="col-md-7"><button id="addEditionDateButton" class="btn btn-danger btn-flat btn-sm">Tambah</button></span>';
-            tr += '</td>';
-            tr += '</tr>';
+            var dates = [];
+            for (var i = 1; i <= count; i++) {
 
-            $('#edisiTerbitModal tbody').html(tr);
+                $.ajax({
+                    url: '/api',
+                    type: 'post',
+                    data: {
+                        module: 'advertising/publish-ads',
+                        method: 'get',
+                        params: [
+                            {
+                                'order.id': orderId,
+                                'page': i
+                            }
+                        ]
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        var data = JSON.parse(data)['hydra:member'];
+                        $.each(data, function (index, value) {
+                            dates.push({id: value.id,publishDate: value.publishDate});
+                        });
 
-            $('#addEditionDateInput').datetimepicker({
-                locale: 'id',
-                format: "dddd, DD MMMM YYYY"
-            }).on('dp.change', function(e){
-                localStorage.setItem('newDate', e.date.format('YYYY-MM-DD HH:mm:ss'));
-            });
+                        if (Math.ceil(dates.length / 366) == count) {
+                            var no = 1;
+                            var tr ='';
+                            var dateList ='';
+                            $.each(dates, function (index, value) {
+                                tr += '<tr>';
+                                tr += '<td>'+no+'</td>';
+                                tr += '<td class="id" style="display: none">'+value.id+'</td>';
+                                tr += '<td class="tgl">'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'</td>';
+                                tr += '<td class="edit"><button class="btn btn-xs btn-flat btn-primary edit-item-btn">Edit</button></td>';
+                                tr += '<td class="remove"><button class="btn btn-xs btn-flat btn-danger remove-item-btn">Remove</button></td>';
+                                tr += '</tr>';
+                                dateList += '<input type="hidden" value="'+value.id+'#'+value.publishDate+'">';
+                                no++;
+                            });
 
-            $(document).on('click', '#addEditionDateButton', function () {
-                var tgl = localStorage.getItem('newDate');
-                var lastNo = $('#edisiTerbitModal tbody tr:last').prev().find('td:eq(0)').text();
-                lastNo = parseInt(lastNo) + 1;
-                if (tgl) {
-                    var newTr = '<tr>';
-                    newTr += '<td>'+lastNo+'</td>';
-                    newTr += '<td>' + moment(tgl).format("dddd, DD MMMM YYYY");
-                    newTr += '<input class="addDateEdition" type="hidden" value="' + tgl + '"></td>';
-                    newTr += '</tr>';
+                            var form = '<div class="input-group">' +
+                                '<span class="tgl">' +
+                                '<input type="hidden" id="id-field" />' +
+                                '<input type="text" class="form-control input-sm" id="tgl-field" />' +
+                                '</span>' +
+                                '<span class="input-group-btn" class="add">' +
+                                '<button id="add-btn" class="btn btn-danger btn-flat btn-sm">Add</button>' +
+                                '<button id="edit-btn" class="btn btn-primary btn-flat btn-sm">Edit</button>' +
+                                '</span>' +
+                                '</div>';
 
-                    $('#edisiTerbitModal tbody tr:last').prev().after(newTr);
-                }
-                $('#addEditionDateInput').val('');
-                localStorage.removeItem('newDate');
-            });
+                            $('#edisiTerbitModal tbody').html(tr);
+                            $('#edisiTerbitModal #hiddenDates').html(dateList);
+                            $('#edisiTerbitModal #dateForm').html(form);
+
+                            var datesList = new List('DatesList', {
+                                valueNames: [ 'id', 'tgl'],
+                                page: 7,
+                                pagination: true
+                            });
+
+                            var idField = $('#id-field'),
+                                tglField = $('#tgl-field'),
+                                addBtn = $('#add-btn'),
+                                editBtn = $('#edit-btn').hide(),
+                                removeBtns = $('.remove-item-btn'),
+                                editBtns = $('.edit-item-btn');
+
+                            refreshCallbacks();
+
+
+                            addBtn.click(function(e) {
+                                e.preventDefault();
+                                datesList.add({
+                                    id: Math.floor(Math.random()*110000),
+                                    name: tglField.val()
+                                });
+                                clearFields();
+                                refreshCallbacks();
+                            });
+
+                            editBtn.click(function(e) {
+                                e.preventDefault();
+                                var item = datesList.get('id', idField.val())[0];
+                                item.values({
+                                    id:idField.val(),
+                                    tgl: tglField.val()
+                                });
+                                clearFields();
+                                editBtn.hide();
+                                addBtn.show();
+                            });
+
+                            function refreshCallbacks() {
+                                // Needed to add new buttons to jQuery-extended object
+                                removeBtns = $(removeBtns.selector);
+                                editBtns = $(editBtns.selector);
+
+                                removeBtns.click(function() {
+                                    var itemId = $(this).closest('tr').find('.id').text();
+                                    datesList.remove('id', itemId);
+                                });
+
+                                editBtns.click(function() {
+                                    var itemId = $(this).closest('tr').find('.id').text();
+                                    var itemValues = datesList.get('id', itemId)[0].values();
+                                    idField.val(itemValues.id);
+                                    tglField.val(itemValues.tgl);
+
+                                    editBtn.show();
+                                    addBtn.hide();
+                                });
+                            }
+
+                            function clearFields() {
+                                tglField.val('');
+                            }
+                        }
+                    }
+                });
+
+            }
+
         }
     });
 

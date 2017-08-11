@@ -969,51 +969,138 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var data = JSON.parse(data)['hydra:member'];
-            var no = 1;
-            var tr ='';
-            $.each(data, function (index, value) {
-                tr += '<tr>';
-                tr += '<td>'+no+'</td>';
-                tr += '<td>'+moment(value.publishDate).format("dddd, DD MMMM YYYY");
-                tr += '<input type="hidden" value="'+value.publishDate+'"></td>';
-                tr += '</tr>';
-                no++;
-            });
+            var count = JSON.parse(data)['hydra:totalItems'];
+            count = Math.ceil(count / 366);
 
-            tr += '<tr>';
-            tr += '<td>*</td>';
-            tr += '<td>';
-            tr += '<span class="col-md-5" style="padding: 0"><input id="addEditionDateInput" type="text" class="form-control input-sm" value="" style="width: 100%"></span>';
-            tr += '<span class="col-md-7"><button id="addEditionDateButton" class="btn btn-danger btn-flat btn-sm">Tambah</button></span>';
-            tr += '</td>';
-            tr += '</tr>';
+            var dates = [];
+            for (var i = 1; i <= count; i++) {
 
-            $('#edisiTerbitModal tbody').html(tr);
+                $.ajax({
+                    url: '/api',
+                    type: 'post',
+                    data: {
+                        module: 'advertising/publish-ads',
+                        method: 'get',
+                        params: [
+                            {
+                                'order.id': orderId,
+                                'page': i
+                            }
+                        ]
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        var data = JSON.parse(data)['hydra:member'];
+                        $.each(data, function (index, value) {
+                            dates.push({id: value.id,publishDate: value.publishDate});
+                        });
 
-            $('#addEditionDateInput').datetimepicker({
-                locale: 'id',
-                format: "dddd, DD MMMM YYYY"
-            }).on('dp.change', function(e){
-                localStorage.setItem('newDate', e.date.format('YYYY-MM-DD HH:mm:ss'));
-            });
+                        if (Math.ceil(dates.length / 366) == count) {
+                            var no = 1;
+                            var tr ='';
+                            var dateList ='';
+                            $.each(dates, function (index, value) {
+                                tr += '<tr>';
+                                tr += '<td class="id" style="display: none">'+value.id+'</td>';
+                                tr += '<td>'+no+'</td>';
+                                tr += '<td><span class="tgl">'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'</span>';
+                                tr += '<input id="'+value.id+'" value="'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'" style="width: 50%;" type="hidden" class="form-control input-sm"></td>';
+                                tr += '<td class="edit"><button class="btn btn-xs btn-flat btn-primary edit-item-btn">Edit</button></td>';
+                                tr += '<td class="remove"><button class="btn btn-xs btn-flat btn-danger remove-item-btn">Remove</button></td>';
+                                tr += '</tr>';
+                                dateList += '<input type="hidden" class="ready" id="'+value.id+'" value="'+value.publishDate+'">';
+                                no++;
+                            });
 
-            $(document).on('click', '#addEditionDateButton', function () {
-                var tgl = localStorage.getItem('newDate');
-                var lastNo = $('#edisiTerbitModal tbody tr:last').prev().find('td:eq(0)').text();
-                lastNo = parseInt(lastNo) + 1;
-                if (tgl) {
-                    var newTr = '<tr>';
-                    newTr += '<td>'+lastNo+'</td>';
-                    newTr += '<td>' + moment(tgl).format("dddd, DD MMMM YYYY");
-                    newTr += '<input class="addDateEdition" type="hidden" value="' + tgl + '"></td>';
-                    newTr += '</tr>';
+                            $('#edisiTerbitModal tbody').html(tr);
+                            $('#edisiTerbitModal #hiddenDates').html(dateList);
 
-                    $('#edisiTerbitModal tbody tr:last').prev().after(newTr);
-                }
-                $('#addEditionDateInput').val('');
-                localStorage.removeItem('newDate');
-            });
+                            var datesList = new List('DatesList', {
+                                valueNames: [ 'id', 'tgl'],
+                                page: 7,
+                                pagination: true
+                            });
+
+                            var pageBtn = $('#edisiTerbitModal .pagination li');
+
+                            $(document).on('click', '.edit-item-btn', function () {
+                                var id = $(this).closest('tr').find('.id').text();
+                                var input = $(this).closest('tr').find('input#'+id);
+
+                                $(this).text('SAVE')
+                                    .removeClass('edit-item-btn')
+                                    .addClass('save-item-btn')
+                                    .removeClass('btn-primary')
+                                    .addClass('btn-warning');
+
+                                input.datetimepicker({
+                                    locale: 'id',
+                                    format: "dddd, DD MMMM YYYY"
+                                });
+
+                                input.attr('type', 'text');
+                                $(this).closest('tr').find('span.tgl').hide();
+                            });
+
+                            $(document).on('click', '.save-item-btn', function () {
+                                var id = $(this).closest('tr').find('.id').text();
+                                var item = datesList.get('id', id)[0];
+                                var input = $(this).closest('tr').find('input#'+id);
+
+                                item.values({
+                                    id: id,
+                                    tgl: input.val()
+                                });
+
+                                var tglReady = moment(input.val(), 'dddd, DD MMMM YYYY').format();
+                                $('input.ready#'+id).val(tglReady);
+
+                                console.info(tglReady);
+
+                                $(this).text('EDIT')
+                                    .removeClass('save-item-btn')
+                                    .addClass('edit-item-btn')
+                                    .removeClass('btn-warning')
+                                    .addClass('btn-primary');
+                                input.attr('type', 'hidden');
+                                $(this).closest('tr').find('span.tgl').show();
+                            });
+
+                            pageBtn.click(function () {
+
+                                $(document).on('click', '.edit-item-btn', function () {
+                                    $(this).text('SAVE')
+                                        .removeClass('edit-item-btn')
+                                        .addClass('save-item-btn');
+                                    var id = $(this).closest('tr').attr('id');
+                                    $(this).closest('tr').find('input#'+id).attr('type', 'text');
+                                    $(this).closest('tr').find('span.tgl').hide();
+                                });
+
+                                $(document).on('click', '.save-item-btn', function () {
+                                    var id = $(this).closest('tr').attr('id');
+                                    var item = datesList.get('id', id)[0];
+                                    var input = $(this).closest('tr').find('input#'+id);
+
+                                    item.values({
+                                        id: id,
+                                        tgl: input.val()
+                                    });
+
+                                    $(this).text('EDIT')
+                                        .removeClass('save-item-btn')
+                                        .addClass('edit-item-btn');
+                                    input.attr('type', 'hidden');
+                                    $(this).closest('tr').find('span.tgl').show();
+                                });
+
+                            });
+
+                        }
+                    }
+                });
+
+            }
+
         }
     });
 

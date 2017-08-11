@@ -783,17 +783,29 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Edisi Terbit</h4>
                 </div>
-                <div class="modal-body">
-                    <table class="table table-bordered table-responsive table-hover">
-                        <thead>
-                        <tr>
-                            <th width="5%">No</th>
-                            <th>Tanggal</th>
-                        </tr>
-                        </thead>
+                <div class="modal-body" id="DatesList">
+                    <div class="box-body">
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th width="5%">No</th>
+                                <th style="display: none">ID</th>
+                                <th width="80%">Tanggal</th>
+                                <th colspan="2">Action</th>
+                            </tr>
+                            </thead>
 
-                        <tbody></tbody>
-                    </table>
+                            <tbody class="list" style="text-transform: uppercase"></tbody>
+                        </table>
+                        <form id="hiddenDates"></form>
+                    </div>
+
+                    <div class="box-footer row" style="border-top: none">
+                        <div class="col-md-4" id="dateForm"></div>
+                        <div class="col-md-8">
+                            <ul class="pagination pagination-sm no-margin pull-right"></ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>

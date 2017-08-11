@@ -791,17 +791,24 @@
                                 <th width="5%">No</th>
                                 <th style="display: none">ID</th>
                                 <th width="80%">Tanggal</th>
-                                <th colspan="2">Action</th>
+                                <th width="5%"><span class="pull-right">Action</span></th>
                             </tr>
                             </thead>
 
                             <tbody class="list" style="text-transform: uppercase"></tbody>
                         </table>
-                        <form id="hiddenDates"></form>
+                        <form id="dateForm"></form>
                     </div>
 
                     <div class="box-footer row" style="border-top: none">
-                        <div class="col-md-4" id="dateForm"></div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="addDate" class="form-control input-sm">
+                                <span class="input-group-btn">
+                                    <button id="addDateBtn" class="btn btn-primary btn-sm btn-flat" type="button">TAMBAHKAN</button>
+                                </span>
+                            </div>
+                        </div>
                         <div class="col-md-8">
                             <ul class="pagination pagination-sm no-margin pull-right"></ul>
                         </div>

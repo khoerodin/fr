@@ -955,6 +955,7 @@ function newBlankDate() {
 $(document).on('click', '#edisiTerbitButton', function (e) {
     e.preventDefault();
     var orderId = $('#orderForm input[name="id"]').val();
+    $('#edisiTerbitModal tbody').html('<tr><td colspan="4">Getting data...</td></tr>');
 
     $.ajax({
         url: '/api',
@@ -1001,21 +1002,20 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                             $.each(dates, function (index, value) {
                                 tr += '<tr>';
                                 tr += '<td class="id" style="display: none">'+value.id+'</td>';
-                                tr += '<td>'+no+'</td>';
-                                tr += '<td><span class="tgl">'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'</span>';
-                                tr += '<input id="'+value.id+'" value="'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'" style="width: 50%;" type="hidden" class="form-control input-sm"></td>';
-                                tr += '<td class="edit"><button class="btn btn-xs btn-flat btn-primary edit-item-btn">Edit</button></td>';
-                                tr += '<td class="remove"><button class="btn btn-xs btn-flat btn-danger remove-item-btn">Remove</button></td>';
+                                tr += '<td class="no">'+no+'</td>';
+                                tr += '<td class="tgl">'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'</td>';
+                                tr += '<td><span class="pull-right"><button class="btn btn-xs btn-flat btn-default edit-item-btn"><i class="fa fa-pencil"></i></button>';
+                                tr += '<button class="btn btn-xs btn-flat btn-default remove-item-btn"><i class="fa fa-times"></i></button></span></td>';
                                 tr += '</tr>';
-                                dateList += '<input type="hidden" class="ready" id="'+value.id+'" value="'+value.publishDate+'">';
+                                dateList += '<input type="hidden" id="'+value.id+'" value="'+value.publishDate+'">';
                                 no++;
                             });
 
                             $('#edisiTerbitModal tbody').html(tr);
-                            $('#edisiTerbitModal #hiddenDates').html(dateList);
+                            $('#edisiTerbitModal #dateForm').html(dateList);
 
                             var datesList = new List('DatesList', {
-                                valueNames: [ 'id', 'tgl'],
+                                valueNames: [ 'id', 'no', 'tgl'],
                                 page: 7,
                                 pagination: true
                             });
@@ -1024,75 +1024,84 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
 
                             $(document).on('click', '.edit-item-btn', function () {
                                 var id = $(this).closest('tr').find('.id').text();
-                                var input = $(this).closest('tr').find('input#'+id);
+                                var tgl = $(this).closest('tr').find('.tgl');
+                                var tglText = tgl.text();
 
-                                $(this).text('SAVE')
+                                console.log(tglText);
+
+                                $(this)
                                     .removeClass('edit-item-btn')
                                     .addClass('save-item-btn')
-                                    .removeClass('btn-primary')
+                                    .removeClass('btn-default')
                                     .addClass('btn-warning');
 
-                                input.datetimepicker({
+                                tgl.html('<input type="text" value="'+tglText+'" class="form-control input-sm" style="width: 50%;">');
+
+                                $(this).closest('tr').find('input').datetimepicker({
                                     locale: 'id',
                                     format: "dddd, DD MMMM YYYY"
-                                });
-
-                                input.attr('type', 'text');
-                                $(this).closest('tr').find('span.tgl').hide();
+                                }).focus();
                             });
 
                             $(document).on('click', '.save-item-btn', function () {
                                 var id = $(this).closest('tr').find('.id').text();
                                 var item = datesList.get('id', id)[0];
-                                var input = $(this).closest('tr').find('input#'+id);
+                                var tgl = $(this).closest('tr').find('.tgl');
+                                var inputValue = $(this).closest('tr').find('input').val();
 
                                 item.values({
                                     id: id,
-                                    tgl: input.val()
+                                    tgl: inputValue
                                 });
 
-                                var tglReady = moment(input.val(), 'dddd, DD MMMM YYYY').format();
-                                $('input.ready#'+id).val(tglReady);
+                                tgl.text(inputValue);
 
-                                console.info(tglReady);
+                                var tglReady = moment(inputValue, 'dddd, DD MMMM YYYY').format();
+                                var readyForm = $('#dateForm input#'+id);
+                                readyForm.val(tglReady);
 
-                                $(this).text('EDIT')
+                                if (!readyForm.hasClass('post')) {
+                                    readyForm.addClass('put');
+                                }
+
+                                $(this)
                                     .removeClass('save-item-btn')
                                     .addClass('edit-item-btn')
                                     .removeClass('btn-warning')
-                                    .addClass('btn-primary');
-                                input.attr('type', 'hidden');
-                                $(this).closest('tr').find('span.tgl').show();
+                                    .addClass('btn-default');
                             });
 
-                            pageBtn.click(function () {
+                            $(document).on('click', '.remove-item-btn', function () {
+                                var id = $(this).closest('tr').find('.id').text();
+                                $('#dateForm input#'+id).remove();
+                                $(this).closest('tr').remove();
+                                datesList.remove('id', id);
+                            });
 
-                                $(document).on('click', '.edit-item-btn', function () {
-                                    $(this).text('SAVE')
-                                        .removeClass('edit-item-btn')
-                                        .addClass('save-item-btn');
-                                    var id = $(this).closest('tr').attr('id');
-                                    $(this).closest('tr').find('input#'+id).attr('type', 'text');
-                                    $(this).closest('tr').find('span.tgl').hide();
+                            $('input#addDate').datetimepicker({
+                                locale: 'id',
+                                format: "dddd, DD MMMM YYYY"
+                            });
+
+                            $(document).on('click', '#addDateBtn', function () {
+
+                                var addDateInput = $('#addDate');
+                                var d = new Date();
+                                var id = d.getMilliseconds();
+
+                                datesList.add({
+                                    id: id,
+                                    no: datesList.items.length + 1,
+                                    tgl: addDateInput.val()
                                 });
 
-                                $(document).on('click', '.save-item-btn', function () {
-                                    var id = $(this).closest('tr').attr('id');
-                                    var item = datesList.get('id', id)[0];
-                                    var input = $(this).closest('tr').find('input#'+id);
+                                var date = moment(addDateInput.val(), 'dddd, DD MMMM YYYY').format();
+                                var newDate = '<input type="hidden" id="'+id+'" value="'+date+'" class="post">'
+                                $('#dateForm').append(newDate);
 
-                                    item.values({
-                                        id: id,
-                                        tgl: input.val()
-                                    });
+                                addDateInput.val('');
 
-                                    $(this).text('EDIT')
-                                        .removeClass('save-item-btn')
-                                        .addClass('edit-item-btn');
-                                    input.attr('type', 'hidden');
-                                    $(this).closest('tr').find('span.tgl').show();
-                                });
-
+                                console.log(datesList.items);
                             });
 
                         }

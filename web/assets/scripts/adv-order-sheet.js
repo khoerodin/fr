@@ -1000,30 +1000,19 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                             var dateList ='';
                             $.each(dates, function (index, value) {
                                 tr += '<tr>';
-                                tr += '<td>'+no+'</td>';
                                 tr += '<td class="id" style="display: none">'+value.id+'</td>';
-                                tr += '<td class="tgl">'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'</td>';
+                                tr += '<td>'+no+'</td>';
+                                tr += '<td><span class="tgl">'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'</span>';
+                                tr += '<input id="'+value.id+'" value="'+moment(value.publishDate).format("dddd, DD MMMM YYYY")+'" style="width: 50%;" type="hidden" class="form-control input-sm"></td>';
                                 tr += '<td class="edit"><button class="btn btn-xs btn-flat btn-primary edit-item-btn">Edit</button></td>';
                                 tr += '<td class="remove"><button class="btn btn-xs btn-flat btn-danger remove-item-btn">Remove</button></td>';
                                 tr += '</tr>';
-                                dateList += '<input type="hidden" value="'+value.id+'#'+value.publishDate+'">';
+                                dateList += '<input type="hidden" class="ready" id="'+value.id+'" value="'+value.publishDate+'">';
                                 no++;
                             });
 
-                            var form = '<div class="input-group">' +
-                                '<span class="tgl">' +
-                                '<input type="hidden" id="id-field" />' +
-                                '<input type="text" class="form-control input-sm" id="tgl-field" />' +
-                                '</span>' +
-                                '<span class="input-group-btn" class="add">' +
-                                '<button id="add-btn" class="btn btn-danger btn-flat btn-sm">Add</button>' +
-                                '<button id="edit-btn" class="btn btn-primary btn-flat btn-sm">Edit</button>' +
-                                '</span>' +
-                                '</div>';
-
                             $('#edisiTerbitModal tbody').html(tr);
                             $('#edisiTerbitModal #hiddenDates').html(dateList);
-                            $('#edisiTerbitModal #dateForm').html(form);
 
                             var datesList = new List('DatesList', {
                                 valueNames: [ 'id', 'tgl'],
@@ -1031,62 +1020,81 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                                 pagination: true
                             });
 
-                            var idField = $('#id-field'),
-                                tglField = $('#tgl-field'),
-                                addBtn = $('#add-btn'),
-                                editBtn = $('#edit-btn').hide(),
-                                removeBtns = $('.remove-item-btn'),
-                                editBtns = $('.edit-item-btn');
+                            var pageBtn = $('#edisiTerbitModal .pagination li');
 
-                            refreshCallbacks();
+                            $(document).on('click', '.edit-item-btn', function () {
+                                var id = $(this).closest('tr').find('.id').text();
+                                var input = $(this).closest('tr').find('input#'+id);
 
+                                $(this).text('SAVE')
+                                    .removeClass('edit-item-btn')
+                                    .addClass('save-item-btn')
+                                    .removeClass('btn-primary')
+                                    .addClass('btn-warning');
 
-                            addBtn.click(function(e) {
-                                e.preventDefault();
-                                datesList.add({
-                                    id: Math.floor(Math.random()*110000),
-                                    name: tglField.val()
+                                input.datetimepicker({
+                                    locale: 'id',
+                                    format: "dddd, DD MMMM YYYY"
                                 });
-                                clearFields();
-                                refreshCallbacks();
+
+                                input.attr('type', 'text');
+                                $(this).closest('tr').find('span.tgl').hide();
                             });
 
-                            editBtn.click(function(e) {
-                                e.preventDefault();
-                                var item = datesList.get('id', idField.val())[0];
+                            $(document).on('click', '.save-item-btn', function () {
+                                var id = $(this).closest('tr').find('.id').text();
+                                var item = datesList.get('id', id)[0];
+                                var input = $(this).closest('tr').find('input#'+id);
+
                                 item.values({
-                                    id:idField.val(),
-                                    tgl: tglField.val()
+                                    id: id,
+                                    tgl: input.val()
                                 });
-                                clearFields();
-                                editBtn.hide();
-                                addBtn.show();
+
+                                var tglReady = moment(input.val(), 'dddd, DD MMMM YYYY').format();
+                                $('input.ready#'+id).val(tglReady);
+
+                                console.info(tglReady);
+
+                                $(this).text('EDIT')
+                                    .removeClass('save-item-btn')
+                                    .addClass('edit-item-btn')
+                                    .removeClass('btn-warning')
+                                    .addClass('btn-primary');
+                                input.attr('type', 'hidden');
+                                $(this).closest('tr').find('span.tgl').show();
                             });
 
-                            function refreshCallbacks() {
-                                // Needed to add new buttons to jQuery-extended object
-                                removeBtns = $(removeBtns.selector);
-                                editBtns = $(editBtns.selector);
+                            pageBtn.click(function () {
 
-                                removeBtns.click(function() {
-                                    var itemId = $(this).closest('tr').find('.id').text();
-                                    datesList.remove('id', itemId);
+                                $(document).on('click', '.edit-item-btn', function () {
+                                    $(this).text('SAVE')
+                                        .removeClass('edit-item-btn')
+                                        .addClass('save-item-btn');
+                                    var id = $(this).closest('tr').attr('id');
+                                    $(this).closest('tr').find('input#'+id).attr('type', 'text');
+                                    $(this).closest('tr').find('span.tgl').hide();
                                 });
 
-                                editBtns.click(function() {
-                                    var itemId = $(this).closest('tr').find('.id').text();
-                                    var itemValues = datesList.get('id', itemId)[0].values();
-                                    idField.val(itemValues.id);
-                                    tglField.val(itemValues.tgl);
+                                $(document).on('click', '.save-item-btn', function () {
+                                    var id = $(this).closest('tr').attr('id');
+                                    var item = datesList.get('id', id)[0];
+                                    var input = $(this).closest('tr').find('input#'+id);
 
-                                    editBtn.show();
-                                    addBtn.hide();
+                                    item.values({
+                                        id: id,
+                                        tgl: input.val()
+                                    });
+
+                                    $(this).text('EDIT')
+                                        .removeClass('save-item-btn')
+                                        .addClass('edit-item-btn');
+                                    input.attr('type', 'hidden');
+                                    $(this).closest('tr').find('span.tgl').show();
                                 });
-                            }
 
-                            function clearFields() {
-                                tglField.val('');
-                            }
+                            });
+
                         }
                     }
                 });

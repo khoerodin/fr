@@ -499,7 +499,7 @@ $(document).on('click', 'button.confirm-tic', function () {
 
 });
 
-//ASSIGN TICKET
+//ASSIGN TICKET + UPDATE STAFF
 $(document).on('click', '#assign-tic', function () {
 
     var params = [
@@ -572,3 +572,73 @@ $(document).on('click', '#assign-tic', function () {
         }
     });
 });
+
+//GET CLOSED TICKETS
+getClosedTicketList();
+function getClosedTicketList() {
+
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/tickets',
+            method: 'get',
+            params: [
+                {
+                    'client.id' : $('#currentUser').val()
+                },
+                {
+                    name: 'status',
+                    value: 'closed'
+
+                }
+            ]
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            var data = JSON.parse(data);
+            var memberData = data['hydra:member'];
+
+            var tr = '';
+            if (memberData.length > 0) {
+                var no = 1;
+                $.each(memberData, function (index, value) {
+
+                    if (value.status === 'closed') {
+
+                        tr += '<tr id="'+value.id+'" class="text-muted">';
+                        tr += '<td>'+no+'</td>';
+                        tr += '<td>'+value.category.name+'</td>';
+                        tr += '<td>'+value.title+'</td>';
+                        tr += '<td>'+value.message+'</td>';
+                        tr += '<td class="text-danger">'+value.status+'</td>';
+                        tr += '<td>'+value.priority+'</td>';
+                        tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>';
+                        tr += '<td>';
+                        tr += '</td>';
+                        tr += '</tr>';
+
+                        no++;
+
+                    }
+
+                });
+
+                if (no <= 1 ) {
+                    tr += '<tr><td colspan="10">TIDAK ADA DATA</td></tr>'
+                }
+
+            } else {
+
+                tr += '<tr><td colspan="10">TIDAK ADA DATA</td></tr>'
+
+            }
+            $('#closedTicketList').html(tr);
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+
+}

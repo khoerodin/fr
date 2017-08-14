@@ -6,7 +6,8 @@
     <script>
         $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
             locale: 'id',
-            format: "dddd, DD MMMM YYYY"
+            format: "dddd, DD MMMM YYYY",
+            ignoreReadonly: true
         }).on('dp.change', function(e){
             var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
             $('#invoicedAt').val(tgl);
@@ -14,7 +15,8 @@
 
         $('#dtBookedAt, #inputBookedAt').datetimepicker({
             locale: 'id',
-            format: "dddd, DD MMMM YYYY"
+            format: "dddd, DD MMMM YYYY",
+            ignoreReadonly: true
         }).on('dp.change', function(e){
             var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
             $('#bookedAt').val(tgl);
@@ -123,7 +125,7 @@
                                 <div class="form-group">
                                     <label for="">Tanggal Booking</label>
                                     <div class='input-group date' id='dtBookedAt'>
-                                        <input type='text' id="inputBookedAt" class="form-control" />
+                                        <input type='text' readonly id="inputBookedAt" class="form-control" />
                                         <input type='hidden' name="bookedAt" id="bookedAt">
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
@@ -135,7 +137,7 @@
                                 <div class="form-group">
                                     <label for="">Tanggal Faktur</label>
                                     <div class='input-group date' id='dtInvoicedAt'>
-                                        <input type='text' id="inputInvoicedAt" class="form-control" />
+                                        <input type='text' readonly id="inputInvoicedAt" class="form-control" />
                                         <input type='hidden' name="invoicedAt" id="invoicedAt"/>
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>

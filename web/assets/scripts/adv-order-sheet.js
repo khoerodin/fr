@@ -1,18 +1,22 @@
+// dropdown menggunakan select2
 $("#orderFrom, #printAs, #paymentMethod").select2({
     theme: 'bootstrap'
 });
 
+//ketika klik tombol browse/pilih pemasang iklan
 $(document).on('click', '#pemasang button', function () {
    getCustomers(null, 'pemasangModal');
    $('#pemasangModal').modal({show: true, backdrop: 'static'});
    $('#pemasangModal input#serachList').focus();
 });
 
+//mencari pemasang iklan
 $(document).on('keyup', '#pemasangModal #serachList', function () {
     var params = $(this).val();
     getCustomers(params, 'pemasangModal');
 });
 
+//ajax mengambil data pemasang
 function getCustomers(param, modalTag) {
     $.ajax({
         url: '/api',
@@ -61,18 +65,21 @@ function getCustomers(param, modalTag) {
     });
 }
 
+// ketika klik tombol pilih klien
 $(document).on('click', '#klien button', function () {
     getCustomers(null, 'klienModal');
     $('#klienModal').modal({show: true, backdrop: 'static'});
     $('#klienModal input#serachList').focus();
 });
 
+//cari klien
 $(document).on('keyup', '#klienModal #serachList', function () {
     var params = $(this).val();
     getCustomers(params, 'klienModal');
 });
 
 $(document).ajaxComplete(function() {
+    //pilih pemasang iklan dari list dg cara double klik
     $(document).on('dblclick', '#pemasangModalData tr', function () {
         var customerId = $(this).data('id');
         $('#customer').val('/api/advertising/customers/'+customerId);
@@ -81,6 +88,7 @@ $(document).ajaxComplete(function() {
         $('#customerAddress').val($(this).data('address'));
     });
 
+    //pilih klien dari list dg cara double klik
     $(document).on('dblclick', '#klienModalData tr', function () {
         var klienId = $(this).data('id');
         $('#client').val('/api/advertising/customers/'+klienId);
@@ -89,18 +97,20 @@ $(document).ajaxComplete(function() {
     });
 });
 
-// Jenis Iklan
+// klik tombol Jenis Iklan
 $(document).on('click', '#jenisIklan button', function () {
     getSpecifications();
     $('#jenisIklanModal').modal({show: true, backdrop: 'static'});
     $('#jenisIklanModal input#serachList').focus();
 });
 
+//pencarian jenis iklan
 $(document).on('keyup', '#jenisIklanModal #serachList', function () {
     var params = $(this).val();
     getSpecifications(params);
 });
 
+// mengambil data jenis iklan
 function getSpecifications(params) {
     $.ajax({
         url: '/api',
@@ -148,6 +158,7 @@ function getSpecifications(params) {
 }
 
 $(document).ajaxComplete(function() {
+    //ketika double klik list jenis iklan
     $(document).on('dblclick', '#jenisIklanModalData tr', function () {
         var specificationId = $(this).data('id');
         $('#specification').val('/api/advertising/specifications/'+specificationId);
@@ -163,18 +174,20 @@ $(document).ajaxComplete(function() {
 });
 // end Jenis Iklan
 
-// Tipe Iklan
+// klik pilih Tipe Iklan
 $(document).on('click', '#tipeIklan button', function () {
     getTypes();
     $('#tipeIklanModal').modal({show: true, backdrop: 'static'});
     $('#tipeIklanModal input#serachList').focus();
 });
 
+//pencarian tipe iklan
 $(document).on('keyup', '#tipeIklanModal #serachList', function () {
     var params = $(this).val();
     getTypes(params);
 });
 
+//mengambil data tipe iklan
 function getTypes(params) {
     $.ajax({
         url: '/api',
@@ -222,6 +235,7 @@ function getTypes(params) {
 }
 
 $(document).ajaxComplete(function() {
+    //ketika double klik list tipe iklan
     $(document).on('dblclick', '#tipeIklanModalData tr', function () {
         var typesId = $(this).data('id');
         $('#type').val('/api/advertising/types/'+typesId);
@@ -231,18 +245,20 @@ $(document).ajaxComplete(function() {
 });
 // end Tipe Iklan
 
-// Media Iklan
+// klik pilih Media Iklan
 $(document).on('click', '#mediaIklan button', function () {
     getMedia();
     $('#mediaIklanModal').modal({show: true, backdrop: 'static'});
     $('#mediaIklanModal input#serachList').focus();
 });
 
+//pencarian list media iklan
 $(document).on('keyup', '#mediaIklanModal #serachList', function () {
     var params = $(this).val();
     getMedia(params);
 });
 
+//ambil data media iklan
 function getMedia(params) {
     $.ajax({
         url: '/api',
@@ -290,6 +306,7 @@ function getMedia(params) {
 }
 
 $(document).ajaxComplete(function() {
+    //double klik media iklan
     $(document).on('dblclick', '#mediaIklanModalData tr', function () {
         var mediaId = $(this).data('id');
         $('#media').val('/api/advertising/media/'+mediaId);
@@ -299,13 +316,14 @@ $(document).ajaxComplete(function() {
 });
 // end Media Iklan
 
-// Emiten
+// klik pilih Emiten
 $(document).on('click', '#emiten button', function () {
     getEmiten();
     $('#emitenModal').modal({show: true, backdrop: 'static'});
     $('#emitenModal input#serachList').focus();
 });
 
+//ambil data emiten
 function getEmiten() {
     $.ajax({
         url: '/api',
@@ -362,6 +380,7 @@ function getEmiten() {
 }
 
 $(document).ajaxComplete(function() {
+    // double klik list emiten
     $(document).on('dblclick', '#emitenData tr', function () {
 
         var emitenId = $(this).data('id');
@@ -378,7 +397,7 @@ $(document).ajaxComplete(function() {
 });
 // end Emiten
 
-// Sektor
+// pilih Sektor
 $(document).on('click', '#sektor button', function () {
     if( $('#category1').val() ) {
         var parentId = $('#category1').val();
@@ -399,12 +418,14 @@ $(document).on('click', '#sektor button', function () {
     }
 });
 
+//cari list sektor
 $(document).on('keyup', '#sektorModal #serachList', function () {
     var params = $(this).val();
     var parentId = $('#category1').val();
     getSektor(params, parentId);
 });
 
+//ambil data sektor
 function getSektor(params, parentId) {
     $.ajax({
         url: '/api',
@@ -453,6 +474,7 @@ function getSektor(params, parentId) {
 }
 
 $(document).ajaxComplete(function() {
+    //double klik list sektor
     $(document).on('dblclick', '#sektorModalData tr', function () {
         var sektorId = $(this).data('id');
         $('#category2').val(sektorId);
@@ -465,7 +487,7 @@ $(document).ajaxComplete(function() {
 });
 // end Sektor
 
-// Sub-Sektor
+// pilioh Sub-Sektor
 $(document).on('click', '#sub-sektor button', function () {
     if( $('#category2').val() ) {
         var parentId = $('#category2').val();
@@ -486,12 +508,14 @@ $(document).on('click', '#sub-sektor button', function () {
     }
 });
 
+//cari list sub sektor
 $(document).on('keyup', '#subSektorModal #serachList', function () {
     var params = $(this).val();
     var parentId = $('#category2').val();
     getSubSektor(params, parentId);
 });
 
+//ambil sub sektor data
 function getSubSektor(params, parentId) {
     $.ajax({
         url: '/api',
@@ -540,6 +564,7 @@ function getSubSektor(params, parentId) {
 }
 
 $(document).ajaxComplete(function() {
+    // double klik list sub sektor
     $(document).on('dblclick', '#subSektorModalData tr', function () {
         var sektorId = $(this).data('id');
         $('#category').val('/api/advertising/categories/'+sektorId);
@@ -549,18 +574,20 @@ $(document).ajaxComplete(function() {
 });
 // end Sektor
 
-// PIC / accountExecutive
+// pilih PIC / accountExecutive
 $(document).on('click', '#pic button', function () {
     getPIC();
     $('#PICModal').modal({show: true, backdrop: 'static'});
     $('#PICModal input#serachList').focus();
 });
 
+//cari PIC
 $(document).on('keyup', '#PICModal #serachList', function () {
     var params = $(this).val();
     getPIC(params);
 });
 
+//ambil data PIC
 function getPIC(params) {
     $.ajax({
         url: '/api',
@@ -609,6 +636,7 @@ function getPIC(params) {
 }
 
 $(document).ajaxComplete(function() {
+    //double klik data PIC
     $(document).on('dblclick', '#PICModalData tr', function () {
         var accountExecutiveId = $(this).data('id');
         $('#accountExecutive').val('/api/advertising/account-executives/'+accountExecutiveId);
@@ -618,18 +646,20 @@ $(document).ajaxComplete(function() {
 });
 // end PIC / accountExecutive
 
-// Sisipan
+// pilih Sisipan
 $(document).on('click', '#sisipan button', function () {
     getSisipan();
     $('#sisipanModal').modal({show: true, backdrop: 'static'});
     $('#sisipanModal input#serachList').focus();
 });
 
+//cari list sisipan
 $(document).on('keyup', '#sisipanModal #serachList', function () {
     var params = $(this).val();
     getSisipan(params);
 });
 
+//ambil data sisipan
 function getSisipan(params) {
     $.ajax({
         url: '/api',
@@ -677,6 +707,7 @@ function getSisipan(params) {
 }
 
 $(document).ajaxComplete(function() {
+    // double klik data sisipan
     $(document).on('dblclick', '#sisipanModalData tr', function () {
         var cityId = $(this).data('id');
         $('#sirculationArea').val('/api/cities/'+cityId);
@@ -686,6 +717,7 @@ $(document).ajaxComplete(function() {
 });
 // end Sisipan
 
+//menghitung biaya
 function getBiaya() {
     var kolom = parseInt($('#columnSize').val());
     var mmBaris = parseInt($('#milimeterSize').val());
@@ -711,6 +743,7 @@ function getBiaya() {
     }
 }
 
+// menghitung diskon dalam %
 function getDiscountValue() {
     var ppnRp = parseInt($('#taxValue').val());
     var biaya = getBiaya() + ppnRp;
@@ -720,6 +753,7 @@ function getDiscountValue() {
     $('#discountPercentage').val(diskonPersen);
 }
 
+// menghitung diskon dalam rupiah
 function getDiscountPercentage() {
     var ppnRp = parseInt($('#taxValue').val());
     var biaya = getBiaya() + ppnRp;
@@ -727,6 +761,7 @@ function getDiscountPercentage() {
     var diskonRp = (biaya * diskonPersen) / 100;
     $('#discountValue').val(diskonRp);
 }
+
 $(document).on('keyup keydown change mouseup', '#discountValue', function () {
     getDiscountValue();
     getJumlahBayar();
@@ -737,6 +772,7 @@ $(document).on('keyup keydown change mouseup', '#discountPercentage', function (
     getJumlahBayar();
 });
 
+// hitung pajak %
 function getTaxValue(){
     var ppnRp = $('#taxValue').val();
 
@@ -744,6 +780,7 @@ function getTaxValue(){
     $('#taxPercentage').val(ppnPersen);
 }
 
+// hitung pajak rupiah
 function getTaxPercentage() {
     var ppnPersen = parseInt($('#taxPercentage').val());
 
@@ -761,6 +798,7 @@ $(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
     getJumlahBayar();
 });
 
+// hitung cahsback %
 function getCashBackValue() {
     var diskon = parseInt($('#discountValue').val());
     var ppn = parseInt($('#taxValue').val());
@@ -771,6 +809,7 @@ function getCashBackValue() {
     $('#cashBackPercentage').val(cashBackPersen);
 }
 
+// hitung cashback rupiah
 function getCashBackPercentage() {
     var diskon = parseInt($('#discountValue').val());
     var ppn = parseInt($('#taxValue').val());
@@ -791,6 +830,7 @@ $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function (
     getJumlahBayar();
 });
 
+// hitung jumlah bayar
 function getJumlahBayar() {
     if($('#discountValue').val() && $('#taxValue').val() && $('#cashBackValue').val()) {
 
@@ -805,6 +845,7 @@ function getJumlahBayar() {
     }
 }
 
+// hitung netto
 function getNetto() {
     if($('#quantity').val()) {
         var quantity = parseInt($('#quantity').val());
@@ -824,6 +865,7 @@ function getNetto() {
     }
 }
 
+// klik tombol hitung
 $(document).on(
     'click', '#hitung',
     function (e) {
@@ -850,6 +892,7 @@ $(document).on(
         $('#btn-order-update').prop('disabled', true);
     });
 
+// fungsi terbilang rupiah indonesia
 function terbilang(input, output){
     var bilangan=document.getElementById(input).value;
     var kalimat="";
@@ -952,14 +995,7 @@ function newBlankDate() {
     });
 }
 
-function countElm(arr, value) {
-    if (arr.length === 1)    {
-        return arr[0] === value ? 1 : 0;
-    } else {
-        return (arr.shift() === value ? 1 : 0) + countElm(arr, value);
-    }
-}
-
+// ambil data edisi terbit
 $(document).on('click', '#edisiTerbitButton', function (e) {
     e.preventDefault();
     var orderId = $('#orderForm input[name="id"]').val();
@@ -1415,6 +1451,12 @@ $(document).on('click', '#setEdisiTerbitButtonClose', function () {
 });
 
 $(document).on('click', '#update-edisi-terbit', function () {
-    $('input[name="totalPost"]').val(datesList.items.length);
+    var arrTgl = [];
+    $.each(datesList.items, function (index, value) {
+        arrTgl.push(moment(value._values.tgl, 'dddd, DD MMMM YYYY').format('YYYY-MM-DD'));
+    });
+
+    // $('input[name="totalPost"]').val(arrTgl.removeDuplicates().length);
+    $('input[name="totalPost"]').val(arrTgl.length);
     $('#edisiTerbitModal').modal('hide');
 });

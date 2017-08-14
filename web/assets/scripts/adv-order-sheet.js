@@ -952,10 +952,17 @@ function newBlankDate() {
     });
 }
 
+function countElm(arr, value) {
+    if (arr.length === 1)    {
+        return arr[0] === value ? 1 : 0;
+    } else {
+        return (arr.shift() === value ? 1 : 0) + countElm(arr, value);
+    }
+}
+
 $(document).on('click', '#edisiTerbitButton', function (e) {
     e.preventDefault();
     var orderId = $('#orderForm input[name="id"]').val();
-    $('#edisiTerbitModal tbody').html('<tr><td colspan="4">Getting data...</td></tr>');
 
     $.ajax({
         url: '/api',
@@ -1011,112 +1018,119 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                                 no++;
                             });
 
-                            $('#edisiTerbitModal tbody').html(tr);
-                            $('#edisiTerbitModal #dateForm').html(dateList);
+                            if ( $('#edisiTerbitModal tbody tr#gettingData').children().length > 0 ) {
 
-                            var datesList = new List('DatesList', {
-                                valueNames: [ 'id', 'no', 'tgl'],
-                                page: 7,
-                                pagination: true
-                            });
+                                $('#edisiTerbitModal tbody').html(tr);
+                                $('#edisiTerbitModal #dateForm').html(dateList);
 
-                            var pageBtn = $('#edisiTerbitModal .pagination li');
-
-                            $(document).on('click', '.edit-item-btn', function () {
-                                var id = $(this).closest('tr').find('.id').text();
-                                var tgl = $(this).closest('tr').find('.tgl');
-                                var tglText = tgl.text();
-
-                                console.log(tglText);
-
-                                $(this)
-                                    .removeClass('edit-item-btn')
-                                    .addClass('save-item-btn')
-                                    .removeClass('btn-default')
-                                    .addClass('btn-warning');
-
-                                tgl.html('<input type="text" value="'+tglText+'" class="form-control input-sm" style="width: 50%;">');
-
-                                $(this).closest('tr').find('input').datetimepicker({
-                                    locale: 'id',
-                                    format: "dddd, DD MMMM YYYY"
-                                }).focus();
-                            });
-
-                            $(document).on('click', '.save-item-btn', function () {
-                                var id = $(this).closest('tr').find('.id').text();
-                                var item = datesList.get('id', id)[0];
-                                var tgl = $(this).closest('tr').find('.tgl');
-                                var inputValue = $(this).closest('tr').find('input').val();
-
-                                item.values({
-                                    id: id,
-                                    tgl: inputValue
+                                datesList = new List('DatesList', {
+                                    valueNames: [ 'id', 'no', 'tgl'],
+                                    page: 7,
+                                    pagination: true
                                 });
 
-                                tgl.text(inputValue);
+                                $(document).on('click', '.edit-item-btn', function () {
+                                    var id = $(this).closest('tr').find('.id').text();
+                                    var tgl = $(this).closest('tr').find('.tgl');
+                                    var tglText = tgl.text();
 
-                                var tglReady = moment(inputValue, 'dddd, DD MMMM YYYY').format();
-                                var readyForm = $('#dateForm input#'+id);
-                                readyForm.val(tglReady);
+                                    localStorage.setItem('tglText', tglText);
 
-                                if (!readyForm.hasClass('post')) {
-                                    readyForm.addClass('put');
-                                }
+                                    $(this)
+                                        .removeClass('edit-item-btn')
+                                        .addClass('save-item-btn')
+                                        .removeClass('btn-default')
+                                        .addClass('btn-warning');
 
-                                $(this)
-                                    .removeClass('save-item-btn')
-                                    .addClass('edit-item-btn')
-                                    .removeClass('btn-warning')
-                                    .addClass('btn-default');
-                            });
+                                    tgl.html('<input type="text" value="'+tglText+'" class="form-control input-sm" style="width: 50%;">');
 
-                            $(document).on('click', '.remove-item-btn', function () {
-                                var id = $(this).closest('tr').find('.id').text();
-                                $('#dateForm input#'+id).remove();
-                                $(this).closest('tr').remove();
-                                datesList.remove('id', id);
-                            });
+                                    $(this).closest('tr').find('input').datetimepicker({
+                                        locale: 'id',
+                                        format: "dddd, DD MMMM YYYY"
+                                    }).focus();
+                                });
 
-                            $('input#addDate').datetimepicker({
-                                locale: 'id',
-                                format: "dddd, DD MMMM YYYY"
-                            });
+                                $(document).on('click', '.save-item-btn', function () {
+                                    var id = $(this).closest('tr').find('.id').text();
+                                    var item = datesList.get('id', id)[0];
+                                    var tgl = $(this).closest('tr').find('.tgl');
+                                    var inputValue = $(this).closest('tr').find('input').val();
 
-                            $(document).on('click', '#addDateBtn', function () {
-
-                                var addDateInput = $('#addDate');
-                                var id = new Date().getTime();
-
-                                if ($('input#addDate').val()) {
-
-                                    var dateValue = addDateInput.val();
-
-                                    var arrTgl = [];
-                                    $.each(datesList.items, function (index, value) {
-                                        arrTgl.push(value._values.tgl);
+                                    item.values({
+                                        id: id,
+                                        tgl: inputValue
                                     });
 
-                                    if ( !arrTgl.includes(dateValue) ) {
-                                        datesList.add({
-                                            id: id,
-                                            no: datesList.items.length + 1,
-                                            tgl: dateValue
-                                        });
+                                    tgl.text(inputValue);
 
-                                        var date = moment(addDateInput.val(), 'dddd, DD MMMM YYYY').format();
-                                        var newDate = '<input type="hidden" id="'+id+'" value="'+date+'" class="post">'
-                                        $('#dateForm').append(newDate);
+                                    var tglReady = moment(inputValue, 'dddd, DD MMMM YYYY').format();
+                                    var readyForm = $('#dateForm input#'+id);
+                                    readyForm.val(tglReady);
 
-                                        addDateInput.val('');
-                                        $('p.help-block').remove();
-                                    } else {
-                                        var elm = $('input#addDate').closest('div.input-group');
-                                        $('<p class="help-block">Tanggal tersebut telah ditambahkan</p>').insertAfter(elm);
+                                    if (!readyForm.hasClass('post')) {
+                                        readyForm.addClass('put');
                                     }
 
-                                }
-                            });
+                                    $(this)
+                                        .removeClass('save-item-btn')
+                                        .addClass('edit-item-btn')
+                                        .removeClass('btn-warning')
+                                        .addClass('btn-default');
+
+                                });
+
+                                $(document).on('click', '.remove-item-btn', function () {
+                                    var id = $(this).closest('tr').find('.id').text();
+                                    $(this).closest('tr').remove();
+                                    datesList.remove('id', id);
+
+                                    var readyForm = $('#dateForm input#'+id);
+                                    readyForm.addClass('delete');
+                                });
+
+                                $('input#addDate').datetimepicker({
+                                    locale: 'id',
+                                    format: "dddd, DD MMMM YYYY",
+                                    ignoreReadonly: true
+                                }).on('dp.change', function(e){
+                                    $('p.help-block').remove();
+                                });
+
+                                $(document).on('click', '#addDateBtn', function () {
+
+                                    var addDateInput = $('#addDate');
+                                    var id = new Date().getTime();
+                                    $('p.help-block').remove();
+
+                                    if ($('input#addDate').val()) {
+
+                                        var dateValue = addDateInput.val();
+
+                                        var arrTgl = [];
+                                        $.each(datesList.items, function (index, value) {
+                                            arrTgl.push(value._values.tgl);
+                                        });
+
+                                        if ( !arrTgl.includes(dateValue) ) {
+                                            datesList.add({
+                                                id: id,
+                                                no: datesList.items.length + 1,
+                                                tgl: dateValue
+                                            });
+
+                                            var date = moment(addDateInput.val(), 'dddd, DD MMMM YYYY').format();
+                                            var newDate = '<input type="hidden" id="'+id+'" value="'+date+'" class="post">'
+                                            $('#dateForm').append(newDate);
+
+                                            addDateInput.val('');
+                                        } else {
+                                            var elm = $('input#addDate').closest('div.input-group');
+                                            $('<p class="help-block">Tanggal tersebut telah ditambahkan</p>').insertAfter(elm);
+                                        }
+
+                                    }
+                                });
+                            }
 
                         }
                     }
@@ -1268,7 +1282,15 @@ function saveByDates(orderId) {
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
+            bootbox.alert({
+                message: "GAGAL MEMPERBARUI ORDER",
+                animate: false,
+                buttons: {
+                    ok: {
+                        className: 'btn-danger btn-flat'
+                    }
+                }
+            });
         }
     });
 }
@@ -1356,7 +1378,15 @@ function saveByDays(orderId) {
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
-
+                bootbox.alert({
+                    message: "GAGAL MEMPERBARUI ORDER",
+                    animate: false,
+                    buttons: {
+                        ok: {
+                            className: 'btn-danger btn-flat'
+                        }
+                    }
+                });
             }
         });
     }
@@ -1381,5 +1411,10 @@ $(document).on('click', '#save-edisi-terbit', function () {
 });
 
 $(document).on('click', '#setEdisiTerbitButtonClose', function () {
+    $('#edisiTerbitModal').modal('hide');
+});
+
+$(document).on('click', '#update-edisi-terbit', function () {
+    $('input[name="totalPost"]').val(datesList.items.length);
     $('#edisiTerbitModal').modal('hide');
 });

@@ -84,4 +84,23 @@ class AdvertisingOrdersController extends AdminController
 
         return new Response(json_encode($content));
     }
+
+    function updatePublishAdsAction(Request $request)
+    {
+        $datas = $request->get('data');
+
+        $content = array();
+        foreach ($datas as $data) {
+            if (strtolower($data['type']) == 'put') {
+                $response = $this->request('advertising/publish-ads/' . $data['id'], 'put', [ 'publishDate' => $data['publishDate'] ]);
+            } elseif (strtolower($data['type']) == 'post') {
+                $response = $this->request('advertising/publish-ads', 'post', [ 'order' => '/api/advertising/orders/' . $data['orderId'], 'publishDate' => $data['publishDate'] ]);
+            } elseif (strtolower($data['type']) == 'delete') {
+                $response = $this->request('advertising/publish-ads/' . $data['id'], 'delete');
+            }
+            $content[] = $response->getContent();
+        }
+
+        return new Response(json_encode($content));
+    }
 }

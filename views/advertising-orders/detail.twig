@@ -7,24 +7,26 @@
         $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
             locale: 'id',
             format: "dddd, DD MMMM YYYY",
-            defaultDate: '{{ order.invoicedAt }}'
+            defaultDate: '{{ order.invoicedAt }}',
+            ignoreReadonly: true
         }).on('dp.change', function(e){
             var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
             $('#invoicedAt').val(tgl);
         });
         idFormatInputInvoicedAt = $('#inputInvoicedAt').val();
-        $('#invoicedAt').val(moment(idFormatInputInvoicedAt, 'DD/MM/YYYY HH.mm').format('YYYY-MM-DD HH:mm:ss'));
+        $('#invoicedAt').val(moment(idFormatInputInvoicedAt, 'dddd, DD MMMM YYYY').format('YYYY-MM-DD HH:mm:ss'));
 
         $('#dtBookedAt, #inputBookedAt').datetimepicker({
             locale: 'id',
             format: "dddd, DD MMMM YYYY",
-            defaultDate: '{{ order.bookedAt }}'
+            defaultDate: '{{ order.bookedAt }}',
+            ignoreReadonly: true
         }).on('dp.change', function(e){
             var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
             $('#bookedAt').val(tgl);
         });
         idFormatInputBookedAt = $('#inputInvoicedAt').val();
-        $('#bookedAt').val(moment(idFormatInputBookedAt, 'DD/MM/YYYY HH.mm').format('YYYY-MM-DD HH:mm:ss'));
+        $('#bookedAt').val(moment(idFormatInputBookedAt, 'dddd, DD MMMM YYYY').format('YYYY-MM-DD HH:mm:ss'));
 
         getJumlahBayar();
         getNetto();
@@ -59,14 +61,56 @@
                            success: function (data, textStatus, jqXHR) {
                                if (jqXHR.status === 200) {
 
-                                   var orderId = data.id;
-                                   var data = localStorage.getItem('jenisEdisi');
+                                   var updateForm = $('#dateForm input.put');
+                                   var arrData = [];
+                                   $.each(updateForm, function (index, value) {
+                                       arrData.push({id: value.id, type: 'put', publishDate: value.value});
+                                   });
 
-                                   if (data === 'DATES') {
+                                   var postForm = $('#dateForm input.post');
+                                   $.each(postForm, function (index, value) {
+                                       arrData.push({id: value.id, orderId: id, type: 'post', publishDate: value.value});
+                                   });
 
-                                   } else if (data === 'DAYS') {
+                                   var deleteForm = $('#dateForm input.delete');
+                                   $.each(deleteForm, function (index, value) {
+                                       arrData.push({id: value.id, orderId: id, type: 'delete', publishDate: value.value});
+                                   });
 
-                                   }
+                                   $.ajax({
+                                       url: '/advertising/orders/publish-ads/update',
+                                       type: 'post',
+                                       data: {data: arrData},
+                                       success: function (data) {
+
+                                           if (data.length) {
+                                               bootbox.alert({
+                                                   message: "SUKSES MENYIMPAN ORDER",
+                                                   animate: false,
+                                                   buttons: {
+                                                       ok: {
+                                                           className: 'btn-danger btn-flat'
+                                                       }
+                                                   },
+                                                   callback: function (result) {
+                                                       window.location.href = '/advertising/orders';
+                                                   }
+                                               });
+                                           }
+
+                                       },
+                                       error: function () {
+                                           bootbox.alert({
+                                               message: "GAGAL MEMPERBARUI ORDER",
+                                               animate: false,
+                                               buttons: {
+                                                   ok: {
+                                                       className: 'btn-danger btn-flat'
+                                                   }
+                                               }
+                                           });
+                                       }
+                                   });
 
                                } else {
                                    bootbox.alert({
@@ -142,8 +186,8 @@
                                 <div class="form-group">
                                     <label for="">Tanggal Booking</label>
                                     <div class='input-group date' id='dtBookedAt'>
-                                        <input type='text' id="inputBookedAt" class="form-control" />
-                                        <input type='hidden' name="bookedAt" id="bookedAt">
+                                        <input type='text' readonly id="inputBookedAt" class="form-control" />
+                                        <input type='hidden' name="bookedAt" id="bookedAt" />
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </span>
@@ -154,8 +198,8 @@
                                 <div class="form-group">
                                     <label for="">Tanggal Faktur</label>
                                     <div class='input-group date' id='dtInvoicedAt'>
-                                        <input type='text' id="inputInvoicedAt" class="form-control" />
-                                        <input type='hidden' name="invoicedAt" id="invoicedAt"/>
+                                        <input type='text' readonly id="inputInvoicedAt" class="form-control" />
+                                        <input type='hidden' name="invoicedAt" id="invoicedAt" />
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </span>
@@ -795,7 +839,9 @@
                             </tr>
                             </thead>
 
-                            <tbody class="list" style="text-transform: uppercase"></tbody>
+                            <tbody class="list" style="text-transform: uppercase">
+                                <tr id="gettingData"><td colspan="4">Getting data...</td></tr>
+                            </tbody>
                         </table>
                         <form id="dateForm"></form>
                     </div>
@@ -803,7 +849,7 @@
                     <div class="box-footer row" style="border-top: none">
                         <div class="col-md-6">
                             <div class="input-group">
-                                <input type="text" id="addDate" class="form-control input-sm">
+                                <input type="text" id="addDate" readonly class="form-control input-sm">
                                 <span class="input-group-btn">
                                     <button id="addDateBtn" class="btn btn-primary btn-sm btn-flat" type="button">TAMBAHKAN</button>
                                 </span>
@@ -816,6 +862,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="update-edisi-terbit" class="btn btn-flat btn-danger">Save</button>
                 </div>
             </div>
 

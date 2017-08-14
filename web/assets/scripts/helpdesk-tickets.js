@@ -2,7 +2,7 @@
  * Created by mispc3 on 10/07/17.
  */
 
-
+//DETAIL TIKET (UNTUK ADMIN)
 $(document).on('click', '.detail-tic', function () {
     var ticketId = $(this).closest('tr').attr('id');
     $('#tiketModal .modal-body').attr('data-ticketid', ticketId);
@@ -27,8 +27,8 @@ $(document).on('click', '.detail-tic', function () {
 
 });
 
-
-$(document).on('click', '#send', function () { //CHAT klik send button
+//CHAT klik send button
+$(document).on('click', '#send', function () {
     var waktu = moment().format("ddd, D MMM YYYY, h:mm A");
     var text = $('#chatMessage').val();
     //var html = '<div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">Nama</span><span class="direct-chat-timestamp pull-right">'+waktu+'</span></div><div class="direct-chat-msg right"><div class="direct-chat-text">'+text+'</div></div>';
@@ -76,7 +76,8 @@ $(document).on('click', '#send', function () { //CHAT klik send button
 
 });
 
-$(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
+//FORUM klik send button - (BELUM DIPAKAI)
+$(document).on('click', '.btn-reply-tic', function () {
     var responseId = $('.mediaForum:last').data('id');
     var staff = $('.mediaForum:last').data('staff');
     var ticket = $('.mediaForum:last').data('ticket');
@@ -137,6 +138,7 @@ $(document).on('click', '.btn-reply-tic', function () { //FORUM klik send button
     $( this ).replaceWith( "<div class='btn btn-reply-tic' disabled='true'>" + $( this ).text() + "</div>" );
 });
 
+//SEND CHAT - KEYBOARD ENTER
 $(document).find('#chatMessage').on('keypress', function(e){
 
     if ( e.which == 13 ) {
@@ -146,10 +148,12 @@ $(document).find('#chatMessage').on('keypress', function(e){
 
 });
 
+//<----------------- IS TYPING A MESSAGE -------------->
 var textarea = $('#chatMessage');
 var typingStatus = $('#typing_on');
 var lastTypedTime = moment().format("ddd, D MMM YYYY, h:mm A");
 var typingDelayMillis = 4000;
+
 
 function refreshTypingStatus() {
     if (!textarea.is(':focus') || textarea.val() == '' || new Date().getTime() - lastTypedTime.getTime() > typingDelayMillis) {
@@ -162,11 +166,12 @@ function updateLastTypedTime() {
     lastTypedTime = new Date();
 }
 
-
 setInterval(refreshTypingStatus, 100);
 textarea.keypress(updateLastTypedTime);
 textarea.blur(refreshTypingStatus);
+//<----------------- END IS TYPING A MESSAGE -------------->
 
+//<----------------- DATE TIME MOMENT JS -------------->
 var currentDay = moment().format("D MMM YYYY");
 var html = '<div><span class="current-date">'+currentDay+'</span></div>';
 $(document).find('.current-date').append(html);
@@ -179,8 +184,9 @@ $(document).find('.current-time').append(html);
 var forumChat = moment().format('LLLL');
 var html = '<span class="wkt direct-chat-timestamp pull-right">'+forumChat+'</span>';
 $(document).find('.wkt').append(html);
+//<----------------- END DATE TIME MOMENT JS -------------->
 
-
+//<----------------- GET DETIL TIKET -------------->
 function getTicketData(ticketId) {
 
     var client = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(2)').text(); //ok
@@ -252,7 +258,9 @@ function getTicketData(ticketId) {
         }
     });
 }
+//<----------------- END DETIL TIKET -------------->
 
+//<----------------- POST TIKET DAN POST FORUM-------------->
 function postTicketData(responseFor, staff, ticket, client, message, time) {
     var params = [
         {
@@ -314,9 +322,11 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
         }
     });
 }
+//<----------------- END POST TIKET DAN POST FORUM-------------->
 
-// --------------------------------- 01 Agustus 2017 ------------------------------------------
+// --------------------------------- 01 Agustus 2017 ------------------------------------------ by: dpr
 
+//<----------------- GET LIST/DAFTAR TIKET -------------->
 getTicketList();
 
 function getTicketList() {
@@ -381,11 +391,14 @@ function getTicketList() {
     });
 
 }
+//<----------------- END GET LIST/DAFTAR TIKET -------------->
 
-
+//<----------------- KATEGORI DROPDOWN BOOTSTRAP -------------->
 $("#category").select2({
     theme: "bootstrap"
 });
+//<----------------- KATEGORI DROPDOWN BOOTSTRAP -------------->
+
 
 $(document).on('click', '#btnSave', function () {
     $.ajax({
@@ -437,7 +450,7 @@ $(document).on('click', '#btnSave', function () {
     });
 });
 
-//konfirmasi tiket
+//<----------------- KONFIRMASI TIKET UNTUK STAFF -------------->
 $(document).on('click', 'button.confirm-tic', function () {
     var id = $(this).data('id');
 
@@ -503,8 +516,9 @@ $(document).on('click', 'button.confirm-tic', function () {
     $('#confirm-tic').modal({show: true, backdrop: 'static'});
 
 });
+//<----------------- END KONFIRMASI TIKET UNTUK STAFF -------------->
 
-//ASSIGN TICKET + UPDATE STAFF
+//<----------------- ASSIGN TIKET UNTUK STAFF + UPDATE TABLE-------------->
 $(document).on('click', '#assign-tic', function () {
 
     var params = [
@@ -579,8 +593,9 @@ $(document).on('click', '#assign-tic', function () {
         }
     });
 });
+//<----------------- END ASSIGN TIKET UNTUK STAFF + UPDATE TABLE -------------->
 
-//GET CLOSED TICKETS
+//<----------------- GET LIST CLOSED TIKET-------------->
 getClosedTicketList();
 function getClosedTicketList() {
 
@@ -649,8 +664,9 @@ function getClosedTicketList() {
     });
 
 }
+//<----------------- END GET LIST CLOSED TIKET-------------->
 
-//Assigned To Me
+//<----------------- GET LIST ASSIGNMENT TIKET (LIST TIKET UNTUK STAFF) -------------->
 getMyAssignmentList();
 function getMyAssignmentList() {
 
@@ -715,8 +731,9 @@ function getMyAssignmentList() {
     });
 
 }
+//<----------------- END LIST ASSIGNMENT TIKET (LIST TIKET UNTUK STAFF) -------------->
 
-//TAMPIL SEMUA TIKET KECUALI STATUS CLOSED
+//<----------------- TAMPIL SEMUA TIKET KECUALI STATUS CLOSED -------------->
 getAllTicketList();
 
 function getAllTicketList() {
@@ -788,3 +805,4 @@ function getAllTicketList() {
     });
 
 }
+//<----------------- END TAMPIL SEMUA TIKET KECUALI STATUS CLOSED -------------->

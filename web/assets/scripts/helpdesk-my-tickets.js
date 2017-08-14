@@ -26,24 +26,7 @@ function getTicketList() {
                 var no = 1;
                 $.each(memberData, function (index, value) {
 
-                    if(value.status === 'closed') {
-
-                        tr += '<tr id="' + value.id + '" class="text-muted">';
-                        tr += '<td>' + no + '</td>'
-                        tr += '<td>' + value.category.name + '</td>'
-                        tr += '<td>' + value.title + '</td>'
-                        tr += '<td>' + value.message + '</td>'
-                        tr += '<td class="text-danger">' + value.status + '</td>'
-                        tr += '<td>' + value.priority + '</td>'
-                        tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>'
-                        tr += '<td>'
-                        // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="EDIT TIKET"><i class="fa fa-eye"></i></button>';
-                        // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="HAPUS TIKET"><i class="fa fa-times"></i></button>';
-                        tr += '</td>';
-                        tr += '</tr>';
-
-                        no++;
-                    } else {
+                    if(value.status !== 'closed') {
 
                         tr += '<tr id="'+value.id+'">';
                         tr += '<td>'+no+'</td>'

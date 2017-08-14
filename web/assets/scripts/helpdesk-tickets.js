@@ -215,6 +215,7 @@ function getTicketData(ticketId) {
         },
         success: function (data) {
             var data = JSON.parse(data);
+            console.log(data);
             var finalData = data['hydra:member'];
 
             var dataForum = '';
@@ -722,7 +723,6 @@ function getMyAssignmentList() {
 
             }
             $('#assignedToMe').html(tr);
-            getMyAssignmentList();
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -760,34 +760,40 @@ function getAllTicketList() {
                 var no = 1;
                 $.each(memberData, function (index, value) {
 
-                    tr += '<tr>';
-                    tr += '<td>' + no + '</td>';
+                    if(value.status !== 'closed'){
 
-                    if (value.client) {
-                        tr += '<td>' + value.client.fullname + '</td>'
-                    } else {
-                        tr += '<td>-</td>'
+                        tr += '<tr>';
+                        tr += '<td>' + no + '</td>';
+
+                        if (value.client) {
+                            tr += '<td>' + value.client.fullname + '</td>'
+                        } else {
+                            tr += '<td>-</td>'
+                        }
+
+                        if (value.staff) {
+                            tr += '<td>' + value.staff.user.fullname + '</td>'
+                        } else {
+                            tr += '<td>-</td>'
+                        }
+
+                        tr += '<td>' + value.category.name + '</td>';
+                        tr += '<td>' + value.title + '</td>';
+                        tr += '<td>' + value.message + '</td>';
+                        tr += '<td>' + value.status + '</td>';
+                        tr += '<td>' + value.priority + '</td>';
+                        tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>';
+                        tr += '<td>'
+                        // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
+                        // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
+                        tr += '</td>';
+                        tr += '</tr>';
+
+                        no++;
+
                     }
 
-                    if (value.staff) {
-                        tr += '<td>' + value.staff.user.fullname + '</td>'
-                    } else {
-                        tr += '<td>-</td>'
-                    }
 
-                    tr += '<td>' + value.category.name + '</td>';
-                    tr += '<td>' + value.title + '</td>';
-                    tr += '<td>' + value.message + '</td>';
-                    tr += '<td>' + value.status + '</td>';
-                    tr += '<td>' + value.priority + '</td>';
-                    tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>';
-                    tr += '<td>'
-                    // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
-                    // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
-                    tr += '</td>';
-                    tr += '</tr>';
-
-                    no++;
                 });
 
             } else {
@@ -805,4 +811,3 @@ function getAllTicketList() {
     });
 
 }
-//<----------------- END TAMPIL SEMUA TIKET KECUALI STATUS CLOSED -------------->

@@ -1,7 +1,6 @@
 /**
  * Created by mispc3 on 10/07/17.
  */
-$('.wkt')
 
 
 $(document).on('click', '.detail-tic', function () {
@@ -344,21 +343,27 @@ function getTicketList() {
                 var no = 1;
                 $.each(memberData, function (index, value) {
 
-                    tr += '<tr>';
-                    tr += '<td>'+no+'</td>'
-                    tr += '<td>'+value.category.name+'</td>'
-                    tr += '<td>'+value.title+'</td>'
-                    tr += '<td>'+value.message+'</td>'
-                    tr += '<td>'+value.status+'</td>'
-                    tr += '<td>'+value.priority+'</td>'
-                    tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>'
-                    tr += '<td>'
-                    // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
-                    // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
-                    tr += '</td>';
-                    tr += '</tr>';
+                    if (value.status === 'closed') {
 
-                    no++;
+                    } else if(value.status !== 'closed') {
+
+                        tr += '<tr>';
+                        tr += '<td>' + no + '</td>'
+                        tr += '<td>' + value.category.name + '</td>'
+                        tr += '<td>' + value.title + '</td>'
+                        tr += '<td>' + value.message + '</td>'
+                        tr += '<td>' + value.status + '</td>'
+                        tr += '<td>' + value.priority + '</td>'
+                        tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>'
+                        tr += '<td>'
+                        // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
+                        // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
+                        tr += '</td>';
+                        tr += '</tr>';
+
+                        no++;
+
+                    }
                 });
 
             } else {
@@ -548,9 +553,11 @@ $(document).on('click', '#assign-tic', function () {
                     toastr.error('Error mengambil tiket');
 
                 } else {
+                    getMyAssignmentList();
                     getAll('helpdesk/tickets',[
                         'client.fullname',
                         'staff.user.fullname',
+                        'category.name',
                         'title',
                         'message',
                         'priority',
@@ -634,6 +641,145 @@ function getClosedTicketList() {
 
             }
             $('#closedTicketList').html(tr);
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+
+}
+
+//Assigned To Me
+getMyAssignmentList();
+function getMyAssignmentList() {
+
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/tickets',
+            method: 'get',
+            params: [
+                // {
+                //     'client.id' : $('#currentUser').val()
+                // },
+                {
+                    'staff.user.id' : $('#currentUser').val()
+
+                }
+            ]
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            var data = JSON.parse(data);
+            var memberData = data['hydra:member'];
+
+            var tr = '';
+            if (memberData.length > 0) {
+                var no = 1;
+                $.each(memberData, function (index, value) {
+
+                        tr += '<tr id="'+value.id+'">';
+                        tr += '<td>'+no+'</td>';
+                        tr += '<td>'+value.category.name+'</td>';
+                        tr += '<td>'+value.title+'</td>';
+                        tr += '<td>'+value.message+'</td>';
+                        tr += '<td>'+value.status+'</td>';
+                        tr += '<td>'+value.priority+'</td>';
+                        tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>';
+                        tr += '<td>';
+                        tr += '</td>';
+                        tr += '</tr>';
+
+                        no++;
+
+                });
+
+                if (no <= 1 ) {
+                    tr += '<tr><td colspan="10">TIDAK ADA DATA</td></tr>'
+                }
+
+            } else {
+
+                tr += '<tr><td colspan="10">TIDAK ADA DATA</td></tr>'
+
+            }
+            $('#assignedToMe').html(tr);
+            getMyAssignmentList();
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+
+}
+
+//TAMPIL SEMUA TIKET KECUALI STATUS CLOSED
+getAllTicketList();
+
+function getAllTicketList() {
+
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/tickets',
+            method: 'get',
+            // params: [
+            //     // {
+            //     //     'client.id' : $('#currentUser').val()
+            //     // }
+            // ]
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            var data = JSON.parse(data);
+            var memberData = data['hydra:member'];
+
+            var tr = '';
+            if (memberData.length > 0) {
+                var no = 1;
+                $.each(memberData, function (index, value) {
+
+                    tr += '<tr>';
+                    tr += '<td>' + no + '</td>';
+
+                    if (value.client) {
+                        tr += '<td>' + value.client.fullname + '</td>'
+                    } else {
+                        tr += '<td>-</td>'
+                    }
+
+                    if (value.staff) {
+                        tr += '<td>' + value.staff.user.fullname + '</td>'
+                    } else {
+                        tr += '<td>-</td>'
+                    }
+
+                    tr += '<td>' + value.category.name + '</td>';
+                    tr += '<td>' + value.title + '</td>';
+                    tr += '<td>' + value.message + '</td>';
+                    tr += '<td>' + value.status + '</td>';
+                    tr += '<td>' + value.priority + '</td>';
+                    tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>';
+                    tr += '<td>'
+                    // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
+                    // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
+                    tr += '</td>';
+                    tr += '</tr>';
+
+                    no++;
+                });
+
+            } else {
+
+                tr += '<tr><td colspan="8">TIDAK ADA DATA</td></tr>'
+
+            }
+
+            $('#allTicketList').html(tr);
 
         },
         error: function (jqXHR, textStatus, errorThrown) {

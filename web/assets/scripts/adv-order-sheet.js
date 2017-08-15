@@ -1097,6 +1097,8 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                                         tgl: inputValue
                                     });
 
+                                    //console.log(datesList.items);
+
                                     tgl.text(inputValue);
 
                                     var tglReady = moment(inputValue, 'dddd, DD MMMM YYYY').format();
@@ -1456,7 +1458,7 @@ $(document).on('click', '#update-edisi-terbit', function () {
         arrTgl.push(moment(value._values.tgl, 'dddd, DD MMMM YYYY').format('YYYY-MM-DD'));
     });
 
-    // $('input[name="totalPost"]').val(arrTgl.removeDuplicates().length);
-    $('input[name="totalPost"]').val(arrTgl.length);
+    $('input[name="totalPost"]').val(arrTgl.removeDuplicates().length);
+    // $('input[name="totalPost"]').val(arrTgl.length);
     $('#edisiTerbitModal').modal('hide');
 });

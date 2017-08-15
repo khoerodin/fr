@@ -46,8 +46,8 @@
                     {#</li>#}
                 {#{% endfor %}#}
 
-                <li class="treeview active hidden"><a href="javascript:void(0)" title="MASTER"><i class="fa fa-file-image-o"></i><span>MASTER</span></a>
-                    <ul class="treeview-menu hidden">
+                <li class="treeview active"><a href="javascript:void(0)" title="MASTER"><i class="fa fa-files-o"></i><span>MASTER</span></a>
+                    <ul class="treeview-menu">
                         <li class="treeview active"><a href="javascript:void(0)" title="IKLAN"><i class="fa fa-circle-o"></i> IKLAN
                                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                             <ul class="treeview-menu">
@@ -101,28 +101,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="treeview"><a href="javascript:void(0)" title="HELPDESK"><i class="fa fa-circle-o"></i> HELPDESK
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
-                            <ul class="treeview-menu">
-                                <li><a href="/helpdesk/ticket-responses" title="RESPON TIKET HELPDESK"><i class="fa fa-circle-o"></i>
-                                        RESPON TIKET HELPDESK
-                                    </a>
-                                </li>
-                                <li><a href="/helpdesk/tickets" title="TIKET HELPDESK"><i class="fa fa-circle-o"></i>
-                                        TIKET HELPDESK
-                                    </a>
-                                </li>
-                                <li><a href="/helpdesk/staffs" title="STAF HELPDESK"><i class="fa fa-circle-o"></i>
-                                        STAF HELPDESK
-                                    </a>
-                                </li>
-                                <li><a href="/helpdesk/categories" title="KATEGORI HELPDESK"><i class="fa fa-circle-o"></i>
-                                        KATEGORI HELPDESK
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="treeview"><a href="javascript:void(0)" title="BILLING"><i class="fa fa-circle-o"></i> BILLING
+                        <li class="treeview"><a href="javascript:void(0)" title="TAGIHAN"><i class="fa fa-circle-o"></i> TAGIHAN
                                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                             <ul class="treeview-menu">
                                 <li><a href="/billing/groups" title="GRUP TAGIHAN"><i class="fa fa-circle-o"></i>
@@ -137,6 +116,10 @@
                                         PENANDA TAGIH
                                     </a>
                                 </li>
+                                <li><a href="/billing/payment-methods" title="METODE PEMBAYARAN"><i class="fa fa-circle-o"></i>
+                                        METODE PEMBAYARAN
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="treeview"><a href="javascript:void(0)" title="ADMIN"><i class="fa fa-circle-o"></i> ADMIN
@@ -146,21 +129,68 @@
                                         BANK
                                     </a>
                                 </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li class="treeview active hidden"><a href="javascript:void(0)" title="IKLAN"><i class="fa fa-file-image-o"></i><span>IKLAN</span></a>
-                    <ul class="treeview-menu hidden">
-                        <li class="treeview active"><a href="javascript:void(0)" title="ORDER"><i class="fa fa-circle-o"></i> ORDER
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
-                            <ul class="treeview-menu">
-                                <li><a href="/advertising/orders" title="ORDER IKLAN"><i class="fa fa-circle-o"></i>
-                                        ORDER
+                                <li><a href="/cities" title="KOTA"><i class="fa fa-circle-o"></i>
+                                        KOTA
+                                    </a>
+                                </li>
+                                <li><a href="/representatives" title="PERWAKILAN"><i class="fa fa-circle-o"></i>
+                                        PERWAKILAN
                                     </a>
                                 </li>
                             </ul>
                         </li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-user-circle-o"></i> <span>ADMIN</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="active"><a href="/users"><i class="fa fa-circle-o"></i> PENGGUNA</a></li>
+                        <li class="active"><a href="/modules"><i class="fa fa-circle-o"></i> MODUL</a></li>
+                        <li class="active"><a href="/services"><i class="fa fa-circle-o"></i> SERVICES</a></li>
+                        {#<li class="active"><a href="/roles"><i class="fa fa-circle-o"></i> ROLE</a></li>#}
+                        <li class="active"><a href="/user-activities"><i class="fa fa-circle-o"></i> AKTIVITAS PENGGUNA</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-question-circle-o"></i> <span>HELPDESK</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="/helpdesk/ticket-responses" title="RESPON TIKET HELPDESK"><i class="fa fa-circle-o"></i>
+                                RESPON TIKET HELPDESK
+                            </a>
+                        </li>
+                        <li><a href="/helpdesk/tickets" title="TIKET HELPDESK"><i class="fa fa-circle-o"></i>
+                                TIKET HELPDESK
+                            </a>
+                        </li>
+                        <li><a href="/helpdesk/staffs" title="STAF HELPDESK"><i class="fa fa-circle-o"></i>
+                                STAF HELPDESK
+                            </a>
+                        </li>
+                        <li><a href="/helpdesk/categories" title="KATEGORI HELPDESK"><i class="fa fa-circle-o"></i>
+                                KATEGORI HELPDESK
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-file-image-o"></i> <span>IKLAN</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="active"><a href="/advertising/orders"><i class="fa fa-circle-o"></i> ORDER</a></li>
                     </ul>
                 </li>
 

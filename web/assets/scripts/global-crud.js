@@ -420,7 +420,7 @@ function detail(module,id) {
 
                                                 //console.log(value.id);
 
-                                                if (value.id == null) {
+                                                if (value === null) {
                                                     select += '<option value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
                                                 } else {
                                                     if (value['id'] === valu.id && (objectSelected === index || index === 'parent')) {
@@ -435,9 +435,10 @@ function detail(module,id) {
                                         }
                                     });
 
-                                    if (value == null) {
+                                    if (value === null) {
                                         select += '<option selected></option>';
                                     }
+
                                     jQuery('select[data-object="' + dataObject + '"]').html(select).removeClass('loading').removeAttr('disabled');
                                     jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', false);
                                 },
@@ -745,8 +746,6 @@ jQuery(function($) {
     // detail form
     $(document).on('click', 'tbody[data-list="'+window.module+'"] .detail-btn', function () {
         var id = $(this).attr('data-id');
-
-        console.log('jjjjjjj');
 
         jQuery('div[data-modal-detail="'+window.module+'"] input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
         jQuery('div[data-modal-detail="'+window.module+'"] input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);

@@ -28,6 +28,7 @@ app:
         - { path: '/cities', controller: 'Bisnis:Cities@index', methods: ['GET'] }
         - { path: '/banks', controller: 'Bisnis:Banks@index', methods: ['GET'] }
         - { path: '/representatives', controller: 'Bisnis:Representatives@index', methods: ['GET'] }
+        - { path: '/services', controller: 'Bisnis:Services@index', methods: ['GET'] }
 
         #Advertising
         #Master

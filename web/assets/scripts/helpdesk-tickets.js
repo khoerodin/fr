@@ -189,16 +189,16 @@ $(document).find('.wkt').append(html);
 //<----------------- GET DETIL TIKET -------------->
 function getTicketData(ticketId) {
 
-    var client = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(2)').text(); //ok
-    var title = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(5)').text(); //ok
-    var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text(); //ok
-    var category = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(4)').text(); //ok
-    var momentPost = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(9)').text(); //ok
+    var client = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(2)').text();
+    var title = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(5)').text();
+    // var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
+    var category = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(4)').text();
+    var momentPost = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(9)').text();
 
     $('#tiketModal .list-title').text(title);
     $('#tiketModal .list-client').text(client);
     $('#tiketModal .list-tgl-post').text(momentPost);
-    $('#tiketModal .list-msg').text(message);
+    // $('#tiketModal .list-msg').text(message);
     $('#tiketModal .list-cat').text(category);
 
     $.ajax({
@@ -359,16 +359,19 @@ function getTicketList() {
                     } else if(value.status !== 'closed') {
 
                         tr += '<tr>';
-                        tr += '<td>' + no + '</td>'
-                        tr += '<td>' + value.category.name + '</td>'
-                        tr += '<td>' + value.title + '</td>'
-                        tr += '<td>' + value.message + '</td>'
-                        tr += '<td>' + value.status + '</td>'
-                        tr += '<td>' + value.priority + '</td>'
-                        tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>'
-                        tr += '<td>'
-                        // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
-                        // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
+                        tr += '<td>' + no + '</td>';
+                        tr += '<td>' + value.category.name + '</td>';
+                        tr += '<td>' + value.title + '</td>';
+                        // tr += '<td>' + value.message + '</td>';
+                        tr += '<td>' + value.status + '</td>';
+                        tr += '<td>' + value.priority + '</td>';
+                        tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>';
+                        tr += '<td>';
+
+                        if(value.staff){
+                            tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button>';
+                        }
+
                         tr += '</td>';
                         tr += '</tr>';
 
@@ -398,7 +401,7 @@ function getTicketList() {
 $("#category").select2({
     theme: "bootstrap"
 });
-//<----------------- KATEGORI DROPDOWN BOOTSTRAP -------------->
+//<----------------- END KATEGORI DROPDOWN BOOTSTRAP -------------->
 
 
 $(document).on('click', '#btnSave', function () {
@@ -495,10 +498,7 @@ $(document).on('click', 'button.confirm-tic', function () {
                             staff += '<option value="/api/helpdesk/staffs/'+value.id+'">'+value.user.fullname+'</option>';
                         }
 
-
-
                     });
-
 
                     $('#confirm-tic #formKonfirmasiTiket #id').val(id);
                     $('#confirm-tic #formKonfirmasiTiket #staff').html(staff);
@@ -574,7 +574,7 @@ $(document).on('click', '#assign-tic', function () {
                         'staff.user.fullname',
                         'category.name',
                         'title',
-                        'message',
+                        // 'message',
                         'priority',
                         'status',
                         'createdAt'
@@ -633,8 +633,9 @@ function getClosedTicketList() {
                         tr += '<td>'+no+'</td>';
                         tr += '<td>'+value.category.name+'</td>';
                         tr += '<td>'+value.title+'</td>';
-                        tr += '<td>'+value.message+'</td>';
-                        tr += '<td class="text-danger">'+value.status+'</td>';
+                        // tr += '<td>'+value.message+'</td>';
+                        // tr += '<td>'+value.status+'</td>';
+                        tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: #d84747"></div></td>';
                         tr += '<td>'+value.priority+'</td>';
                         tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>';
                         tr += '<td>';
@@ -701,12 +702,26 @@ function getMyAssignmentList() {
                         tr += '<td>'+no+'</td>';
                         tr += '<td>'+value.category.name+'</td>';
                         tr += '<td>'+value.title+'</td>';
-                        tr += '<td>'+value.message+'</td>';
-                        tr += '<td>'+value.status+'</td>';
+                        // tr += '<td>'+value.message+'</td>';
+                        // tr += '<td>'+value.status+'</td>';
+
+                        if(value.status === 'open') {
+
+                            tr += '<td align="center"><div class="fa fa-ticket fa-2x" data-toggle="tooltip" data-placement="bottom" title="Open" style="color: orange;"></div></td>'
+
+                        } else if (value.status === 'assignment') {
+
+                            tr += '<td align="center"><div class="fa fa-tag fa-2x" data-toggle="tooltip" data-placement="bottom" title="Assignment" style="color: cornflowerblue;"></div></td>'
+
+                        } else if (value.status === 'closed') {
+
+                            tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
+
+                        }
+
                         tr += '<td>'+value.priority+'</td>';
                         tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>';
-                        tr += '<td>';
-                        tr += '</td>';
+                        tr += '<td><button class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button></td>';
                         tr += '</tr>';
 
                         no++;
@@ -779,13 +794,58 @@ function getAllTicketList() {
 
                         tr += '<td>' + value.category.name + '</td>';
                         tr += '<td>' + value.title + '</td>';
-                        tr += '<td>' + value.message + '</td>';
-                        tr += '<td>' + value.status + '</td>';
-                        tr += '<td>' + value.priority + '</td>';
+                        // tr += '<td>' + value.message + '</td>';
+                        // tr += '<td>' + value.status + '</td>';
+
+                        if(value.status === 'open') {
+
+                            tr += '<td align="center"><div class="fa fa-ticket fa-2x" data-toggle="tooltip" data-placement="bottom" title="Open" style="color: orange;"></div></td>'
+
+                        } else if (value.status === 'assignment') {
+
+                            tr += '<td align="center"><div class="fa fa-tag fa-2x" data-toggle="tooltip" data-placement="bottom" title="Assignment" style="color: cornflowerblue;"></div></td>'
+
+                        } else if (value.status === 'closed') {
+
+                            tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
+
+                        } else if (value.status === 'onprogress') {
+
+                            tr += '<td align="center"><div class="fa fa-pencil fa-2x" data-toggle="tooltip" data-placement="bottom" title="On Progress" style="color: gold"></div></td>';
+
+                        } else if (value.status === 'resolved') {
+
+                            tr += '<td align="center"><div class="fa fa-check fa-2x" data-toggle="tooltip" data-placement="bottom" title="Resolved" style="color: lawngreen"></div></td>';
+
+                        }
+
+                        if(value.priority === 'very_urgent') {
+
+                            tr += '<td align="center"><div class="fa fa-fighter-jet fa-2x" data-toggle="tooltip" data-placement="bottom" title="Very Urgent" style="color: red;"></div></td>'
+
+                        } else if (value.priority === 'urgent') {
+
+                            tr += '<td align="center"><div class="fa fa-car fa-2x" data-toggle="tooltip" data-placement="bottom" title="Urgent" style="color: orangered;"></div></td>'
+
+                        } else if (value.priority === 'normal') {
+
+                            tr += '<td align="center"><div class="fa fa-motorcycle fa-2x" data-toggle="tooltip" data-placement="bottom" title="Normal" style="color: orange"></div></td>';
+
+                        } else if (value.priority === 'low') {
+
+                            tr += '<td align="center"><div class="fa fa-blind fa-2x" data-toggle="tooltip" data-placement="bottom" title="Low" style="color: darkorange"></div></td>';
+                        }
+
+
+
                         tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>';
-                        tr += '<td>'
-                        // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-eye"></i></button>';
-                        // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="TICKET ACTIONS"><i class="fa fa-times"></i></button>';
+                        tr += '<td>';
+
+                        if(value.staff){
+                            tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button>';
+                        }
+                        tr += '<button data-id="' + value.id + '" class="confirm-tic btn btn-default btn-xs btn-flat" title="AMBIL TIKET"><i class="fa fa-check"></i></button>';
+
                         tr += '</td>';
                         tr += '</tr>';
 

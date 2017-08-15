@@ -29,17 +29,31 @@ function getTicketList() {
                     if(value.status !== 'closed') {
 
                         tr += '<tr id="'+value.id+'">';
-                        tr += '<td>'+no+'</td>'
-                        tr += '<td>'+value.category.name+'</td>'
-                        tr += '<td>'+value.title+'</td>'
-                        tr += '<td>'+value.message+'</td>'
-                        tr += '<td>'+value.status+'</td>'
-                        tr += '<td>'+value.priority+'</td>'
-                        tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>'
-                        tr += '<td>'
-                        // tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="EDIT TIKET"><i class="fa fa-eye"></i></button>';
-                        // tr += '<button data-id="' + value.id + '" class="delete-tic btn btn-default btn-xs btn-flat" title="HAPUS TIKET"><i class="fa fa-times"></i></button>';
-                        tr += '</td>';
+                        tr += '<td>'+no+'</td>';
+                        tr += '<td>'+value.category.name+'</td>';
+                        tr += '<td>'+value.title+'</td>';
+                        // tr += '<td>'+value.message+'</td>'
+
+                        if(value.status === 'open') {
+
+                            tr += '<td align="center"><div class="fa fa-ticket fa-2x" data-toggle="tooltip" data-placement="bottom" title="Open" style="color: orange;"></div></td>'
+
+                        } else if (value.status === 'assignment') {
+
+                            tr += '<td align="center"><div class="fa fa-tag fa-2x" data-toggle="tooltip" data-placement="bottom" title="Assignment" style="color: cornflowerblue;"></div></td>'
+
+                        } else if (value.status === 'closed') {
+
+                            tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
+
+                        }
+                        tr += '<td>'+value.priority+'</td>';
+                        tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>';
+
+                        if(value.staff){
+                            tr += '<td><button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button></td>';
+                        }
+
                         tr += '</tr>';
 
                         no++;
@@ -48,7 +62,7 @@ function getTicketList() {
 
             } else {
 
-                tr += '<tr><td colspan="6">TIDAK ADA DATA</td></tr>'
+                tr += '<tr><td colspan="10">TIDAK ADA DATA</td></tr>'
 
             }
 
@@ -309,8 +323,9 @@ function getClosedTicketList() {
                         tr += '<td>'+no+'</td>';
                         tr += '<td>'+value.category.name+'</td>';
                         tr += '<td>'+value.title+'</td>';
-                        tr += '<td>'+value.message+'</td>';
-                        tr += '<td class="text-danger">'+value.status+'</td>';
+                        // tr += '<td>'+value.message+'</td>';
+                        // tr += '<td class="text-danger">'+value.status+'</td>';
+                        tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
                         tr += '<td>'+value.priority+'</td>';
                         tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>';
                         tr += '<td>';

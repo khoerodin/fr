@@ -36,9 +36,9 @@
                     <div class="panel with-nav-tabs panel-info">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li class="active"><a href="#assignedTo" aria-controls="home" role="tab" data-toggle="tab">ASSIGNED TICKET</a></li>
+                                <li class="active"><a href="#assignedTo" aria-controls="home" role="tab" data-toggle="tab">TIKET-KU</a></li>
                                 <li><a href="#closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
-                                <li><a href="#allTickets" aria-controls="profile" role="tab" data-toggle="tab">ALL TIKET (FOR ADMIN)</a></li>
+                                <li><a href="#allTickets" aria-controls="profile" role="tab" data-toggle="tab">SEMUA TIKET</a></li>
                             </ul>
                         </div>
 
@@ -54,19 +54,20 @@
                                             <thead>
                                             <tr>
 
-                                                <th width="3%">#<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="5%">Kategori<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="10%">Judul<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="20%">Pesan</th>
-                                                <th width="10%">Status<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="10%">Prioritas<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="20%">Tanggal Tambah Tiket<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                                                <th>#</th>
+                                                <th>Kategori</th>
+                                                <th>Judul</th>
+                                                {#<th width="20%">Pesan</th>#}
+                                                <th>Status</th>
+                                                <th>Prioritas</th>
+                                                <th>Tanggal Buat Tiket</th>
+                                                <th>AKSI</th>
 
                                             </tr>
                                             </thead>
 
                                             <tbody id="assignedToMe">
-                                            <tr><td colspan="10">LOADING DATA...</td></tr>
+                                            <tr><td colspan="9">LOADING DATA...</td></tr>
                                             </tbody>
 
                                         </table>
@@ -86,19 +87,19 @@
                                             <thead>
                                             <tr>
 
-                                                <th width="3%">#<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="5%">Kategori<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="10%">Judul<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="20%">Pesan</th>
-                                                <th width="10%">Status<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="10%">Prioritas<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
-                                                <th width="20%">Tanggal Tambah Tiket<span class="pull-right"><a href="#" class="fa fa-sort"></a></span></th>
+                                                <th>#</th>
+                                                <th>Kategori</th>
+                                                <th>Judul</th>
+                                                {#<th width="20%">Pesan</th>#}
+                                                <th>Status</th>
+                                                <th>Prioritas</th>
+                                                <th>Tanggal Buat Tiket</th>
 
                                             </tr>
                                             </thead>
 
                                             <tbody id="closedTicketList">
-                                            <tr><td colspan="10">LOADING DATA...</td></tr>
+                                            <tr><td colspan="9">LOADING DATA...</td></tr>
                                             </tbody>
 
                                         </table>
@@ -119,21 +120,21 @@
                                             <thead>
                                             <tr>
                                                 <th width="5%">#</th>
-                                                <th>Client</th>
+                                                <th>Klien</th>
                                                 <th>Staff</th>
                                                 <th>Kategori</th>
-                                                <th>Title</th>
-                                                <th>Message</th>
-                                                <th>Priority</th>
+                                                <th>Judul</th>
+                                                {#<th>Pesan</th>#}
                                                 <th>Status</th>
-                                                <th width="15%">Created At</th>
-                                                <th width="7%"><span class="pull-right">Action</span></th>
+                                                <th>Prioritas</th>
+                                                <th>Tanggal Buat Tiket</th>
+                                                <th><span class="pull-right">Aksi</span></th>
                                             </tr>
                                             </thead>
-
-                                            <tbody data-list="helpdesk/tickets">
-                                            {#<tbody id="allTicketList">#}
-                                            <tr><td colspan="10">LOADING DATA...</td></tr>
+                                            {#tbody helpdesk/tickets -- JANGAN DIHAPUS!#}
+                                            {#<tbody data-list="helpdesk/tickets">#}
+                                            <tbody id="allTicketList">
+                                            <tr><td colspan="9">LOADING DATA...</td></tr>
                                             </tbody>
 
                                         </table>
@@ -168,7 +169,7 @@
                                                             <li class="list-group-item">Nama Klien<span class="pull-right">: </span></li>
                                                             <li class="list-group-item">Kategori<span class="pull-right">: </span></li>
                                                             <li class="list-group-item">Judul<span class="pull-right">: </span></li>
-                                                            <li class="list-group-item">Pesan<span class="pull-right">: </span></li>
+                                                            {#<li class="list-group-item">Pesan<span class="pull-right">: </span></li>#}
                                                             <li class="list-group-item">Tanggal Tiket<span class="pull-right">: </span></li>
 
                                                         </ul>
@@ -181,7 +182,7 @@
                                                             <li class="list-group-item list-client">-</li>
                                                             <li class="list-group-item list-cat">-</li>
                                                             <li class="list-group-item list-title">-</li>
-                                                            <li class="list-group-item list-msg">-</li>
+                                                            {#<li class="list-group-item list-msg">-</li>#}
                                                             <li class="list-group-item list-tgl-post">-</li>
 
                                                         </ul>

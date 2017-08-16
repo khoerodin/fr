@@ -133,6 +133,8 @@ function getDetailModule(moduleId) {
                 $('#detail-modal form #menuDisplay').prop('checked', false);
             }
 
+            $('#detail-modal form #menuOrder').val(data.menuOrder);
+
             $('#detail-modal').modal({show: true, backdrop: 'static'});
         }
     });

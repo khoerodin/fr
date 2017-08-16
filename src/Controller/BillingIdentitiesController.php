@@ -8,7 +8,7 @@ class BillingIdentitiesController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Tagihan',
-            'title' => 'Identities Tagihan',
+            'title' => 'Penanda Tagih',
         ];
 
         $data = [

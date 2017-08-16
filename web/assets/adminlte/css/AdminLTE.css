@@ -5063,6 +5063,10 @@ tr.active {
   resize: vertical;
 }
 
+.panel, .panel-heading,.nav-tabs>li>a {
+  border-radius: 0px;
+}
+
 .panel.with-nav-tabs .panel-heading{
   padding: 5px 5px 0 5px;
 }

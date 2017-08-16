@@ -84,7 +84,13 @@ function getDetailModule(moduleId) {
         },
         success: function (data, textStatus, jqXHR) {
             var data = JSON.parse(data);
-            var serviceId = data.service.id;
+
+            var serviceId;
+            if (data.service) {
+                serviceId = data.service.id;
+            } else {
+                serviceId = null;
+            }
 
             $('#detail-modal form #id').val(data.id);
             $('#detail-modal form #name').val(data.name);
@@ -100,6 +106,10 @@ function getDetailModule(moduleId) {
                 success: function (optionData) {
                     var optionData = JSON.parse(optionData)['hydra:member'];
                     var option = '';
+
+                    if (!serviceId) {
+                        option += '<option selected disabled>PILIH</option>';
+                    }
                     $.each(optionData, function (index, value) {
                         if (value.id === serviceId) {
                             option += '<option selected value="/api/services/'+value.id+'">'+ value.name +'</option>';
@@ -107,6 +117,7 @@ function getDetailModule(moduleId) {
                             option += '<option value="/api/services/'+value.id+'">'+ value.name +'</option>';
                         }
                     });
+
                     $('#detail-modal form #service').html(option).select2({
                         theme: 'bootstrap'
                     });
@@ -121,6 +132,8 @@ function getDetailModule(moduleId) {
             } else {
                 $('#detail-modal form #menuDisplay').prop('checked', false);
             }
+
+            $('#detail-modal form #menuOrder').val(data.menuOrder);
 
             $('#detail-modal').modal({show: true, backdrop: 'static'});
         }
@@ -148,7 +161,6 @@ function updateModule(moduleId) {
         },
         success: function (data) {
             var data = JSON.parse(data);
-            console.log(data);
             if ("violations" in data) {
 
                 $.each(data, function (index, value) {
@@ -193,7 +205,7 @@ function deleteModule(moduleId) {
             getModules(activeId);
             toastr.success('Sukses menghapus data');
         },
-        error: function (errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             toastr.error('Gagal menghapus data');
         }
     });
@@ -226,4 +238,123 @@ $(document).on('click', 'tbody button.delete', function () {
             }
         });
     }, 20);
+});
+
+$('.search-area select').select2({
+    theme: 'bootstrap',
+    allowClear: true,
+    ajax: {
+        url: "/api/search",
+        dataType: 'json',
+        type: 'POST',
+        delay: 250,
+        data: function (params) {
+            return {
+                q: params.term,
+                page: params.page,
+                module: 'modules',
+                method: 'get',
+                field: 'name'.split('#')
+            };
+        },
+        processResults: function (data) {
+            if(data.length > 0) {
+                return {
+                    results: $.map(data, function(obj) {
+                        return {id: obj.id, text: obj['name']};
+                    })
+                }
+            } else {
+                var elms = $('.search-area').removeClass('col-md-12').addClass('col-md-10');
+                elms += $('.button-area').addClass('col-md-2');
+                elms += $('a.add-btn').css('visibility', 'visible');
+
+                return {
+                    results: elms
+                }
+            }
+        },
+        cache: true,
+    },
+    escapeMarkup: function (markup) {
+        return markup;
+    },
+    minimumInputLength: 2
+}).on("select2:select", function () {
+    var id = $(".search-name").val();
+    getDetailModule(id);
+}).on("select2:open", function () {
+    $('.add-btn').css('visibility', 'hidden');
+    $('.search-area').removeClass('col-md-10').addClass('col-md-12');
+    $('.button-area').removeClass('col-md-2');
+}).on("select2:closing", function () {
+    var searchTerms = $('span.select2-search.select2-search--dropdown input.select2-search__field').val();
+    localStorage.setItem("searchTerms", searchTerms);
+});
+
+$(document).on('keyup', '.select2-search__field', function (e) {
+    if (e.which === 13) {
+        if (!$('body').hasClass("modal-open")) {
+            $(".search-area select").select2("close");
+            $('a.add-btn').trigger('click');
+        }
+        return false;
+    }
+});
+
+$(document).on('click', '.add-btn', function () {
+    $('#add-modal #service').select2({
+        theme: 'bootstrap'
+    });
+    $('#add-modal').modal('show');
+});
+
+function addModule() {
+
+    $('#add-modal button.save').text('SAVING...').prop('disabled', true);
+    $('div .has-error').removeClass('has-error');
+    $('p.help-block').remove();
+
+    $.ajax({
+        url: '/api',
+        type: 'post',
+        data: {
+            module: 'modules',
+            method: 'post',
+            params: $('#add-modal form').serializeArray()
+        },
+        success: function (successData, textStatus, jqXHR) {
+            var successData = JSON.parse(successData);
+            if ("violations" in successData) {
+
+                $.each(successData, function (index, value) {
+                    if (index === 'violations') {
+                        $.each(value, function (idx, val) {
+                            $('#add-modal form #' + val.propertyPath).parent('div').addClass('has-error');
+                            $('<p class="help-block">' + val.message + '</p>').insertAfter('#add-modal form #' + val.propertyPath);
+                        });
+                    }
+                });
+                toastr.error('Gagal menyimpan data');
+
+            } else {
+                $('#add-modal').modal('hide');
+                var activeId = $('#serviceTab .active a').attr('aria-controls');
+                getModules(activeId);
+                toastr.success('Sukses menyimpan data');
+            }
+
+            $('#add-modal button.save').text('SAVE').prop('disabled', false);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            $('#add-modal').modal('hide');
+            toastr.error('Gagal menyimpan data');
+            $('#add-modal button.save').text('SAVE').prop('disabled', false);
+        }
+    });
+
+}
+
+$(document).on('click', '#add-modal .save', function () {
+    addModule();
 });

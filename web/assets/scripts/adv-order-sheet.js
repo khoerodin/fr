@@ -860,6 +860,8 @@ function getNetto() {
 
         $('#netto').text(accounting.formatMoney(netto, "Rp ", 2, ".", ","));
         $('#nettoRp').val(netto);
+        var RpText = $('#netto').text();
+        console.log(accounting.unformat(RpText, ','));
 
         terbilang('nettoRp', 'terbilangNetto');
     }

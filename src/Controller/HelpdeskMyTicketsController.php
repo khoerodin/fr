@@ -21,14 +21,21 @@ class HelpdeskMyTicketsController extends AdminController
         $helpdeskCategories = $this->request('helpdesk/categories', 'get');
         $helpdeskCategories = json_decode($helpdeskCategories->getContent(), true)['hydra:member'];
 
+        $admin = $this->request('users', 'get', ['username' => 'daniel']);
+        $admin = json_decode($admin->getContent(), true)['hydra:member'];
+
+//                echo "<pre>";
+//                print_r($admin);
+//                echo "</pre>";die();
+
+
         $data = [
             'meta' => $meta,
-            'helpdeskCategories' => $helpdeskCategories
+            'helpdeskCategories' => $helpdeskCategories,
+            'admin' => ['id' => $admin[0]['id'], 'username' => $admin[0]['username']]
         ];
 
-        //        echo "<pre>";
-        //        print_r($helpdeskCategories);
-        //        echo "</pre>";die();
+
 
         return $this->view('helpdesk-my-tickets/index.twig', $data);
     }

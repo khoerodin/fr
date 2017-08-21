@@ -29,6 +29,8 @@
                 <!-- /.box-header -->
     <div class="box-body">
     <input type="hidden" id="currentUser" value="{{ me.id }}">
+    <input type="hidden" id="admin" value="/api/users/{{ admin.id }}">
+
         <button type="button" data-modal-add="helpdesk/tickets" class="btn btn-danger pull-right add-modal btn-flat" data-toggle="modal" data-target="#newTicketModal" role="dialog" style="width: 150px">Tiket Baru</button>
 
     <div class="panel with-nav-tabs panel-info">
@@ -118,7 +120,7 @@
                                 <div class="modal-body">
 
                                     <form id="formTiket">
-
+                                        {#<-------- notifikasi read------------#}
                                         <input type="hidden" name="read" value="false">
 
                                         <div class="form-group">
@@ -245,6 +247,93 @@
                         </div>
                     </div>
                     <!-- /.modal -->
+
+
+                    {#modal forum#}
+                    <div class="modal fade" id="tiketModal" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">HELPDESK FORUM</h4>
+                                </div>
+                                <div class="modal-body"> <!-- start modal -->
+
+                                    <div class="row">
+                                        <div class="col-md-12" >
+
+                                            {#detail tic inside modal forum#}
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="row">
+                                                        <ul class="list-group listDetail">
+
+                                                            <li class="list-group-item"><span>Kategori : </span><span class="well-sm" id="list-cat">-</span></li>
+                                                            <li class="list-group-item"><span>Judul : </span><span class="well-sm" id="list-title">-</span></li>
+                                                            <li class="list-group-item"><span>Tanggal Tiket : </span><span class="well-sm" id="list-tgl-post">-</span></li>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            {#end detail tic inside modal forum#}
+
+                                            <div class="well well-sm" align="center"><span class="fa fa-hand-o-down pull-left"></span><b>Selamat Datang di Forum Helpdesk!</b><span class="fa-hand-o-down pull-right"></span></div>
+
+                                            <div class="box direct-chat">
+
+                                                <div class="box-body">
+                                                    <!-- Conversations are loaded here -->
+                                                    <div class="direct-chat-messages" id="chatHistory">
+                                                        <!-- Message. Default to the left -->
+                                                        <div class="direct-chat-msg">
+                                                            <div class="direct-chat-info clearfix">
+                                                                <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
+                                                                <span class="wkt direct-chat-timestamp pull-right"></span>
+                                                            </div>
+                                                            <!-- /.direct-chat-info -->
+                                                            <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
+                                                            <!-- /.direct-chat-img -->
+                                                            <div class="direct-chat-text">
+                                                                Selamat datang di Helpdesk Si JAGO. Jika ada hal yang ingin ditanyakan terkait layanan kami, jangan sungkan untuk bertanya melalui live chat kami :)
+                                                            </div>
+                                                            <!-- /.direct-chat-text -->
+                                                        </div>
+                                                        <!-- /.direct-chat-msg -->
+
+                                                    </div>
+
+                                                    <!--/.direct-chat-messages-->
+
+                                                </div>
+                                                <!-- /.box-body -->
+                                                <div class="col-sm-12">
+                                                    <div id="typing_on" class="clearfix text-muted visible-lg"></div>
+                                                </div>
+                                                <div class="box-footer">
+                                                    <div class="input-group">
+                                                        <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200" style="width: 99%">
+                                                        <span class="input-group-btn">
+                                                                    &nbsp;<button type="button" class="btn btn-primary btn-flat" id="send">Send</button>
+                                                                    </span>
+                                                    </div>
+                                                </div>
+                                                <!-- /.box-footer-->
+                                            </div>
+                                            <!--/.direct-chat -->
+                                        </div>
+
+                                        <input type="hidden" name="id" id="id">
+                                    </div>
+
+                                </div> <!-- end modal -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {#end modal forum#}
 
                 </div>
                 <!-- /.box-body -->

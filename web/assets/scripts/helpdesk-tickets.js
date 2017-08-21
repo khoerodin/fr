@@ -65,7 +65,7 @@ $(document).on('click', '#send', function () {
     if(typeof client !== 'undefined'){
         trueClientId = client;
     } else {
-        trueClientId = '/api/users/'+clientId
+        trueClientId = '/api/users/'+clientId;
     }
 
     if(text !== ''){
@@ -186,20 +186,21 @@ var html = '<span class="wkt direct-chat-timestamp pull-right">'+forumChat+'</sp
 $(document).find('.wkt').append(html);
 //<----------------- END DATE TIME MOMENT JS -------------->
 
-//<----------------- GET DETIL TIKET -------------->
+//<----------------- GET DETIL TIKET UNTUK TIKET RESPON-------------->
 function getTicketData(ticketId) {
 
-    var client = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(2)').text();
-    var title = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(5)').text();
+    var client = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(2)').text();
+    var title = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(5)').text();
+    var category = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(4)').text();
+    var momentPost = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(8)').text();
     // var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
-    var category = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(4)').text();
-    var momentPost = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(9)').text();
+    var message = $('#msg').text();
 
-    $('#tiketModal .list-title').text(title);
-    $('#tiketModal .list-client').text(client);
-    $('#tiketModal .list-tgl-post').text(momentPost);
-    // $('#tiketModal .list-msg').text(message);
-    $('#tiketModal .list-cat').text(category);
+    $('#tiketModal .listDetail #list-title').text(title);
+    $('#tiketModal .listDetail #list-client').text(client);
+    $('#tiketModal .listDetail #list-tgl-post').text(momentPost);
+    $('#tiketModal #chatHistory').text(message);
+    $('#tiketModal .listDetail #list-cat').text(category);
 
     $.ajax({
         url: '/api',
@@ -215,7 +216,7 @@ function getTicketData(ticketId) {
         },
         success: function (data) {
             var data = JSON.parse(data);
-            console.log(data);
+            // console.log(data);
             var finalData = data['hydra:member'];
 
             var dataForum = '';
@@ -259,7 +260,7 @@ function getTicketData(ticketId) {
         }
     });
 }
-//<----------------- END DETIL TIKET -------------->
+//<----------------- END DETIL TIKET UNTUK TIKET RESPON -------------->
 
 //<----------------- POST TIKET DAN POST FORUM-------------->
 function postTicketData(responseFor, staff, ticket, client, message, time) {
@@ -277,7 +278,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
             value: ticket
         },
         {
-            name: 'client',
+            name: 'user',
             value: client
         },
         {
@@ -308,7 +309,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
         success: function (data) {
             var data = JSON.parse(data);
 
-            if(data == 401) {
+            if(data === 401) {
 
             } else {
                 // if (ticket) {
@@ -316,7 +317,14 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
                     var ticketId =  ticket.split("/").pop();
                 // }
 
-                var result = '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+data.id+'"  data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'" data-client="/api/users/'+data.client.id+'" data-time="'+data.createdAt+'"><div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">'+data.client.fullname+'</span><span class="wkt direct-chat-timestamp pull-right">'+moment(data.createdAt).format('LLLL')+'</span></div><img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image"><div class="direct-chat-text">'+data.message+'</div></div>';
+                var result = '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+data.id+'"  ' +
+                    'data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'" ' +
+                    'data-client="/api/users/'+data.client.id+'" data-time="'+data.createdAt+'">' +
+                    '<div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">'+data.client.fullname+'</span>' +
+                    '<span class="wkt direct-chat-timestamp pull-right">'+moment(data.createdAt).format('LLLL')+'</span>' +
+                    '</div><img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">' +
+                    '<div class="direct-chat-text">'+data.message+'</div></div>';
+
                 $('#chatHistory').append(result);
                 $('#chatMessage').val('');
             }
@@ -325,9 +333,8 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
 }
 //<----------------- END POST TIKET DAN POST FORUM-------------->
 
-// --------------------------------- 01 Agustus 2017 ------------------------------------------ by: dpr
-
-//<----------------- GET LIST/DAFTAR TIKET -------------->
+// --------------------------------- 01 Agustus 2017 ------------------------------------------
+//<----------------- GET LIST/DAFTAR TIKET (MY TICKET)-------------->
 getTicketList();
 
 function getTicketList() {
@@ -354,17 +361,52 @@ function getTicketList() {
                 var no = 1;
                 $.each(memberData, function (index, value) {
 
-                    if (value.status === 'closed') {
-
-                    } else if(value.status !== 'closed') {
-
-                        tr += '<tr>';
+                        tr += '<tr id="'+ value.id + '">';
                         tr += '<td>' + no + '</td>';
                         tr += '<td>' + value.category.name + '</td>';
                         tr += '<td>' + value.title + '</td>';
                         // tr += '<td>' + value.message + '</td>';
-                        tr += '<td>' + value.status + '</td>';
-                        tr += '<td>' + value.priority + '</td>';
+
+                        if(value.status === 'open') {
+
+                            tr += '<td align="center"><div class="fa fa-ticket fa-2x" data-toggle="tooltip" data-placement="bottom" title="Open" style="color: orange;"></div></td>'
+
+                        } else if (value.status === 'assignment') {
+
+                            tr += '<td align="center"><div class="fa fa-tag fa-2x" data-toggle="tooltip" data-placement="bottom" title="Assignment" style="color: cornflowerblue;"></div></td>'
+
+                        } else if (value.status === 'closed') {
+
+                            tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
+
+                        } else if (value.status === 'onprogress') {
+
+                            tr += '<td align="center"><div class="fa fa-pencil fa-2x" data-toggle="tooltip" data-placement="bottom" title="On Progress" style="color: gold"></div></td>';
+
+                        } else if (value.status === 'resolved') {
+
+                            tr += '<td align="center"><div class="fa fa-check fa-2x" data-toggle="tooltip" data-placement="bottom" title="Resolved" style="color: lawngreen"></div></td>';
+
+                        }
+
+                        if(value.priority === 'very_urgent') {
+
+                            tr += '<td align="center"><div class="fa fa-fighter-jet fa-2x" data-toggle="tooltip" data-placement="bottom" title="Very Urgent" style="color: red;"></div></td>'
+
+                        } else if (value.priority === 'urgent') {
+
+                            tr += '<td align="center"><div class="fa fa-car fa-2x" data-toggle="tooltip" data-placement="bottom" title="Urgent" style="color: orangered;"></div></td>'
+
+                        } else if (value.priority === 'normal') {
+
+                            tr += '<td align="center"><div class="fa fa-motorcycle fa-2x" data-toggle="tooltip" data-placement="bottom" title="Normal" style="color: orange"></div></td>';
+
+                        } else if (value.priority === 'low') {
+
+                            tr += '<td align="center"><div class="fa fa-blind fa-2x" data-toggle="tooltip" data-placement="bottom" title="Low" style="color: darkorange"></div></td>';
+                        }
+
+
                         tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>';
                         tr += '<td>';
 
@@ -377,7 +419,7 @@ function getTicketList() {
 
                         no++;
 
-                    }
+
                 });
 
             } else {
@@ -395,7 +437,7 @@ function getTicketList() {
     });
 
 }
-//<----------------- END GET LIST/DAFTAR TIKET -------------->
+//<----------------- END GET LIST/DAFTAR TIKET (MY TICKET)-------------->
 
 //<----------------- KATEGORI DROPDOWN BOOTSTRAP -------------->
 $("#category").select2({
@@ -404,7 +446,9 @@ $("#category").select2({
 //<----------------- END KATEGORI DROPDOWN BOOTSTRAP -------------->
 
 
+//<------------------------- MY TICKET (DISINI GA KEPAKE) ------------------------>
 $(document).on('click', '#btnSave', function () {
+    alert('haloo');
     $.ajax({
         url: '/api',
         type: 'POST',
@@ -438,9 +482,9 @@ $(document).on('click', '#btnSave', function () {
 
                 } else {
                     getTicketList();
-                    toastr.success('Sukses mengirim tiket');
-                    $('#newTicketModal').modal('hide');
 
+                    $('#newTicketModal').modal('hide');
+                    toastr.success('Sukses mengirim tiket');
                 }
 
             } else {
@@ -453,6 +497,7 @@ $(document).on('click', '#btnSave', function () {
         }
     });
 });
+//<------------------------------------------------------------------------->
 
 //<----------------- KONFIRMASI TIKET UNTUK STAFF -------------->
 $(document).on('click', 'button.confirm-tic', function () {
@@ -574,14 +619,48 @@ $(document).on('click', '#assign-tic', function () {
                         'staff.user.fullname',
                         'category.name',
                         'title',
-                        // 'message',
+                        'message',
                         'priority',
                         'status',
                         'createdAt'
                     ]);
-                    toastr.success('Sukses mengambil tiket');
                     $('#confirm-tic').modal('hide');
 
+                    //---------------- send notifikasi ---------------
+
+                    $.ajax({
+                        url: '/api',
+                        type: 'POST',
+                        data: {
+                            module: 'notifications',
+                            method: 'POST',
+                            params: [
+                                {
+                                    name: 'domain',
+                                    value: 'helpdesk/tickets/' + data.id
+                                },
+                                {
+                                    name: 'receiver',
+                                    value: $('#currentUser').val()
+                                },
+                                {
+                                    name: 'sender',
+                                    value: $('#admin').val()
+                                },
+                                {
+                                    name: 'message',
+                                    value: data.message
+                                },
+                                {
+                                    name: 'read',
+                                    value: false
+                                }
+                            ],
+                            success: function (data, textStatus, jqXHR) {
+                                toastr.success('Sukses mengirim tiket');
+                            }
+                        }
+                    });
                 }
 
             } else {
@@ -636,7 +715,24 @@ function getClosedTicketList() {
                         // tr += '<td>'+value.message+'</td>';
                         // tr += '<td>'+value.status+'</td>';
                         tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: #d84747"></div></td>';
-                        tr += '<td>'+value.priority+'</td>';
+
+                        if(value.priority === 'very_urgent') {
+
+                            tr += '<td align="center"><div class="fa fa-fighter-jet fa-2x" data-toggle="tooltip" data-placement="bottom" title="Very Urgent" style="color: darkgray;"></div></td>';
+
+                        } else if (value.priority === 'urgent') {
+
+                            tr += '<td align="center"><div class="fa fa-car fa-2x" data-toggle="tooltip" data-placement="bottom" title="Urgent" style="color: darkgray;"></div></td>';
+
+                        } else if (value.priority === 'normal') {
+
+                            tr += '<td align="center"><div class="fa fa-motorcycle fa-2x" data-toggle="tooltip" data-placement="bottom" title="Normal" style="color: darkgray"></div></td>';
+
+                        } else if (value.priority === 'low') {
+
+                            tr += '<td align="center"><div class="fa fa-blind fa-2x" data-toggle="tooltip" data-placement="bottom" title="Low" style="color: darkgray"></div></td>';
+                        }
+
                         tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>';
                         tr += '<td>';
                         tr += '</td>';
@@ -717,9 +813,33 @@ function getMyAssignmentList() {
 
                             tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
 
+                        } else if (value.status === 'onprogress') {
+
+                            tr += '<td align="center"><div class="fa fa-pencil fa-2x" data-toggle="tooltip" data-placement="bottom" title="On Progress" style="color: gold"></div></td>';
+
+                        } else if (value.status === 'resolved') {
+
+                            tr += '<td align="center"><div class="fa fa-check fa-2x" data-toggle="tooltip" data-placement="bottom" title="Resolved" style="color: lawngreen"></div></td>';
+
                         }
 
-                        tr += '<td>'+value.priority+'</td>';
+                        if(value.priority === 'very_urgent') {
+
+                            tr += '<td align="center"><div class="fa fa-fighter-jet fa-2x" data-toggle="tooltip" data-placement="bottom" title="Very Urgent" style="color: red;"></div></td>'
+
+                        } else if (value.priority === 'urgent') {
+
+                            tr += '<td align="center"><div class="fa fa-car fa-2x" data-toggle="tooltip" data-placement="bottom" title="Urgent" style="color: orangered;"></div></td>'
+
+                        } else if (value.priority === 'normal') {
+
+                            tr += '<td align="center"><div class="fa fa-motorcycle fa-2x" data-toggle="tooltip" data-placement="bottom" title="Normal" style="color: orange"></div></td>';
+
+                        } else if (value.priority === 'low') {
+
+                            tr += '<td align="center"><div class="fa fa-blind fa-2x" data-toggle="tooltip" data-placement="bottom" title="Low" style="color: darkorange"></div></td>';
+                        }
+
                         tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>';
                         tr += '<td><button class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button></td>';
                         tr += '</tr>';
@@ -758,7 +878,7 @@ function getAllTicketList() {
         type: 'POST',
         data: {
             module: 'helpdesk/tickets',
-            method: 'get',
+            method: 'get'
             // params: [
             //     // {
             //     //     'client.id' : $('#currentUser').val()
@@ -771,13 +891,24 @@ function getAllTicketList() {
             var memberData = data['hydra:member'];
 
             var tr = '';
+            var msg = '';
             if (memberData.length > 0) {
                 var no = 1;
                 $.each(memberData, function (index, value) {
 
                     if(value.status !== 'closed'){
 
-                        tr += '<tr>';
+                        tr += '<tr id="'+value.id+'"';
+
+                        if (value.staff) {
+                            tr += 'staff="' + value.staff.id + '" staff-user="' + value.staff.user.id + '"';
+                        }
+
+                        if (value.client) {
+                            tr += 'client="' + value.client.id + '"';
+                        }
+
+                        tr += 'waktu="'+value.createdAt+'">';
                         tr += '<td>' + no + '</td>';
 
                         if (value.client) {
@@ -792,10 +923,18 @@ function getAllTicketList() {
                             tr += '<td>-</td>'
                         }
 
-                        tr += '<td>' + value.category.name + '</td>';
-                        tr += '<td>' + value.title + '</td>';
+                        tr += '<td>' + value.category.name +'</td>';
+                        tr += '<td>' + value.title + '<input type="hidden" value="'+value.message+'" id="msg" name="msg"></td>';
                         // tr += '<td>' + value.message + '</td>';
                         // tr += '<td>' + value.status + '</td>';
+                        // tr += '<div class="direct-chat-messages" id="chatHistory">'+ value.message +'</div>';
+                        msg += '<div class="direct-chat-msg"><div class="direct-chat-info clearfix">' +
+                            '<span class="direct-chat-name pull-left">'+value.client.fullname+'</span>' +
+                            '<span class="wkt direct-chat-timestamp pull-right">'+value.createdAt+'</span>' +
+                            '</div><img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">' +
+                            '<div class="direct-chat-text">'+value.message+'</div>' +
+                            '</div>';
+
 
                         if(value.status === 'open') {
 
@@ -845,6 +984,7 @@ function getAllTicketList() {
                             tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button>';
                         }
                         tr += '<button data-id="' + value.id + '" class="confirm-tic btn btn-default btn-xs btn-flat" title="AMBIL TIKET"><i class="fa fa-check"></i></button>';
+                        // tr += '<div class="badge badge-notify">1</div>';
 
                         tr += '</td>';
                         tr += '</tr>';
@@ -861,7 +1001,8 @@ function getAllTicketList() {
                 tr += '<tr><td colspan="8">TIDAK ADA DATA</td></tr>'
 
             }
-
+            $('#tiketModal #chatHistory #msg').html(msg);
+            // console.log(msg);
             $('#allTicketList').html(tr);
 
         },

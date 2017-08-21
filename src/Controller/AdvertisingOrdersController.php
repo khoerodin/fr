@@ -34,10 +34,14 @@ class AdvertisingOrdersController extends AdminController
         $paymentMethod = $this->request('billing/payment-methods', 'get');
         $paymentMethod = json_decode($paymentMethod->getContent(), true)['hydra:member'];
 
+        $media = $this->request('advertising/media', 'get', ['name' => 'BISNIS INDONESIA']);
+        $media = json_decode($media->getContent(), true)['hydra:member'];
+
         $data = [
             'meta' => $meta,
             'representatives' => $representatives,
-            'paymentMethod' => $paymentMethod
+            'paymentMethod' => $paymentMethod,
+            'media' => ['name' => $media[0]['name'], 'id' => $media[0]['id'] ]
         ];
 
         return $this->view('advertising-orders/new.twig', $data);

@@ -247,8 +247,8 @@
                                 <div class="form-group">
                                     <label for="">Pasang Di</label>
                                     <div class="input-group" id="mediaIklan">
-                                        <input type="text" readonly name="mediaIklan" class="form-control">
-                                        <input type="hidden" id="media" name="media">
+                                        <input type="text" readonly name="mediaIklan" class="form-control" value="{{ media.name }}">
+                                        <input type="hidden" id="media" name="media" value="{{ media.id }}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -292,7 +292,7 @@
                                 <div class="form-group">
                                     <label for="">Ukuran</label>
                                     <div class="row">
-                                        <div class="col-xs-3">
+                                        <div class="col-xs-4">
                                             <div class="input-group">
                                                 <input type="number" name="columnSize" id="columnSize" min="1" class="form-control">
                                                 <div class="input-group-addon">kolom</div>
@@ -301,7 +301,7 @@
                                         <div class="col-xs-1">
                                             <div class="text-bold" style="margin-left: 13px;font-size: 16px;margin-top: 5px;">X</div>
                                         </div>
-                                        <div class="col-xs-3">
+                                        <div class="col-xs-4">
                                             <div class="input-group">
                                                 <input type="number" name="milimeterSize" id="milimeterSize" min="1" class="form-control">
                                                 <div class="input-group-addon">mm/baris</div>
@@ -348,17 +348,17 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
-                                            <label for="">PPN Rp</label>
-                                            <div class="input-group">
-                                                <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="taxValue" id="taxValue" min="0" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
                                             <label for="">PPN %</label>
                                             <div class="input-group">
                                                 <input type="number" name="taxPercentage" id="taxPercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label for="">PPN Rp</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="number" name="taxValue" id="taxValue" min="0" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -368,13 +368,6 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-xs-4">
-                                            <label for="">Diskon Rp</label>
-                                            <div class="input-group">
-                                                <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="discountValue" id="discountValue" min="0" class="form-control">
-                                            </div>
-                                        </div>
                                         <div class="col-xs-4">
                                             <label for="">Diskon %</label>
                                             <div class="input-group">
@@ -382,6 +375,13 @@
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
+                                        <div class="col-xs-4">
+                                            <label for="">Diskon Rp</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="number" name="discountValue" id="discountValue" min="0" class="form-control">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -390,17 +390,17 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-4">
-                                            <label for="">Cashback Rp</label>
-                                            <div class="input-group">
-                                                <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="cashBackValue" id="cashBackValue" min="0" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
                                             <label for="">Cashback %</label>
                                             <div class="input-group">
                                                 <input type="number" name="cashBackPercentage" id="cashBackPercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label for="">Cashback Rp</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="number" name="cashBackValue" id="cashBackValue" min="0" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -480,7 +480,8 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Sisipan</label>
-                                    <div class="input-group" id="sisipan">
+                                    <div class="input-group" id="sisipan" style="position: relative;">
+                                        <button id="clearText" class="btn btn-xs btn-danger" style="position: absolute; right: 44px; top: 6px; z-index: 1041;">clear</button>
                                         <input type="text" readonly name="sisipan" class="form-control">
                                         <input type="hidden" id="sirculationArea" name="sirculationArea">
                                         <span class="input-group-btn">

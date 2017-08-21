@@ -5063,6 +5063,13 @@ tr.active {
   resize: vertical;
 }
 
+.badge-notify{
+  background:red;
+  position:relative;
+  top: -4px;
+  left: -6px;
+}
+
 .panel, .panel-heading,.nav-tabs>li>a {
   border-radius: 0px;
 }

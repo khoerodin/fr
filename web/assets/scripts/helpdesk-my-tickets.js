@@ -151,8 +151,43 @@ $(document).on('click', '#btnSave', function () {
                     $("#newTicketModal #category #pilih").prop('selected', true);
 
                     resetDropDown();
-                    toastr.success('Sukses mengirim tiket');
                     $('#newTicketModal').modal('hide');
+
+                    //---------------- send notifikasi ---------------
+
+                    $.ajax({
+                        url: '/api',
+                        type: 'POST',
+                        data: {
+                            module: 'notifications',
+                            method: 'POST',
+                            params: [
+                                {
+                                    name: 'domain',
+                                    value: 'helpdesk/tickets/' + data.id
+                                },
+                                {
+                                    name: 'receiver',
+                                    value: $('#admin').val()
+                                },
+                                {
+                                    name: 'sender',
+                                    value: $('#currentUser').val()
+                                },
+                                {
+                                    name: 'message',
+                                    value: data.message
+                                },
+                                {
+                                    name: 'read',
+                                    value: false
+                                }
+                            ],
+                            success: function (data, textStatus, jqXHR) {
+                                toastr.success('Sukses mengirim tiket');
+                            }
+                        }
+                    });
 
                 }
 

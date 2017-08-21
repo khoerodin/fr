@@ -29,6 +29,7 @@
                 <!-- /.box-header -->
     <div class="box-body">
     <input type="hidden" id="currentUser" value="{{ me.id }}">
+    <input type="hidden" id="admin" value="/api/users/{{ admin.id }}">
 
         <button type="button" data-modal-add="helpdesk/tickets" class="btn btn-danger pull-right add-modal btn-flat" data-toggle="modal" data-target="#newTicketModal" role="dialog" style="width: 150px">Tiket Baru</button>
 
@@ -119,7 +120,7 @@
                                 <div class="modal-body">
 
                                     <form id="formTiket">
-
+                                        {#<-------- notifikasi read------------#}
                                         <input type="hidden" name="read" value="false">
 
                                         <div class="form-group">

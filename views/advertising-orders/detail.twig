@@ -353,7 +353,7 @@
                                 <div class="form-group">
                                     <label for="">Ukuran</label>
                                     <div class="row">
-                                        <div class="col-xs-3">
+                                        <div class="col-xs-4">
                                             <div class="input-group">
                                                 <input type="number" value="{{ order.columnSize }}" name="columnSize" id="columnSize" min="1" class="form-control">
                                                 <div class="input-group-addon">kolom</div>
@@ -362,7 +362,7 @@
                                         <div class="col-xs-1">
                                             <div class="text-bold" style="margin-left: 13px;font-size: 16px;margin-top: 5px;">X</div>
                                         </div>
-                                        <div class="col-xs-3">
+                                        <div class="col-xs-4">
                                             <div class="input-group">
                                                 <input type="number" name="milimeterSize" value="{{ order.milimeterSize }}" id="milimeterSize" min="1" class="form-control">
                                                 <div class="input-group-addon">mm/baris</div>
@@ -408,13 +408,6 @@
                                                 <input type="number" min="0" name="basePrice" value="{{ order.basePrice }}" id="basePrice" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-xs-4">
-                                            <label for="">Diskon Rp</label>
-                                            <div class="input-group">
-                                                <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="discountValue" value="{{ order.discountValue }}" id="discountValue" min="0" class="form-control">
-                                            </div>
-                                        </div>
                                         <div class="col-xs-3">
                                             <label for="">Diskon %</label>
                                             <div class="input-group">
@@ -422,6 +415,13 @@
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
+                                        <div class="col-xs-4">
+                                            <label for="">Diskon Rp</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="number" name="discountValue" value="{{ order.discountValue }}" id="discountValue" min="0" class="form-control">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -429,13 +429,6 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-xs-4">
-                                            <label for="">PPN Rp</label>
-                                            <div class="input-group">
-                                                <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="taxValue" value="{{ order.taxValue }}" id="taxValue" min="0" class="form-control">
-                                            </div>
-                                        </div>
                                         <div class="col-xs-4">
                                             <label for="">PPN %</label>
                                             <div class="input-group">
@@ -443,6 +436,13 @@
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
+                                        <div class="col-xs-4">
+                                            <label for="">PPN Rp</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="number" name="taxValue" value="{{ order.taxValue }}" id="taxValue" min="0" class="form-control">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -451,17 +451,17 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-4">
-                                            <label for="">Cashback Rp</label>
-                                            <div class="input-group">
-                                                <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="cashBackValue" value="{{ order.cashBackValue }}" id="cashBackValue" min="0" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
                                             <label for="">Cashback %</label>
                                             <div class="input-group">
                                                 <input type="number" name="cashBackPercentage" value="{{ order.cashBackPercentage }}" id="cashBackPercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label for="">Cashback Rp</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="number" name="cashBackValue" value="{{ order.cashBackValue }}" id="cashBackValue" min="0" class="form-control">
                                             </div>
                                         </div>
                                     </div>

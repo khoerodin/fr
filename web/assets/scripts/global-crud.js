@@ -418,16 +418,10 @@ function detail(module,id) {
 
                                             $.each(velyu, function (ind, valu) {
 
-                                                //console.log(value.id);
-
-                                                if (value === null) {
-                                                    select += '<option value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
+                                                if (value['id'] === valu.id && (objectSelected === index || index === 'parent')) {
+                                                    select += '<option selected value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
                                                 } else {
-                                                    if (value['id'] === valu.id && (objectSelected === index || index === 'parent')) {
-                                                        select += '<option selected value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
-                                                    } else {
-                                                        select += '<option value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
-                                                    }
+                                                    select += '<option value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
                                                 }
 
                                             });
@@ -436,7 +430,7 @@ function detail(module,id) {
                                     });
 
                                     if (value === null) {
-                                        select += '<option selected></option>';
+                                        select += '<option selected disabled>PILIH</option>';
                                     }
 
                                     jQuery('select[data-object="' + dataObject + '"]').html(select).removeClass('loading').removeAttr('disabled');

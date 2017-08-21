@@ -647,7 +647,7 @@ $(document).ajaxComplete(function() {
 // end PIC / accountExecutive
 
 // pilih Sisipan
-$(document).on('click', '#sisipan button', function () {
+$(document).on('click', '#sisipan button:not(#clearText)', function () {
     getSisipan();
     $('#sisipanModal').modal({show: true, backdrop: 'static'});
     $('#sisipanModal input#serachList').focus();
@@ -1070,7 +1070,9 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                                     var tgl = $(this).closest('tr').find('.tgl');
                                     var tglText = tgl.text();
 
-                                    localStorage.setItem('tglText', tglText);
+                                    localS
+
+torage.setItem('tglText', tglText);
 
                                     $(this)
                                         .removeClass('edit-item-btn')
@@ -1461,4 +1463,10 @@ $(document).on('click', '#update-edisi-terbit', function () {
     $('input[name="totalPost"]').val(arrTgl.removeDuplicates().length);
     // $('input[name="totalPost"]').val(arrTgl.length);
     $('#edisiTerbitModal').modal('hide');
+});
+
+$(document).on('click', 'button#clearText', function (e) {
+    e.preventDefault();
+    $(this).closest('.input-group').find('input[type="hidden"]').val('');
+    $(this).closest('.input-group').find('input[type="text"]').val('');
 });

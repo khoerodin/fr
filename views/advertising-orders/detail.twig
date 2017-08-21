@@ -545,7 +545,8 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Sisipan</label>
-                                    <div class="input-group" id="sisipan">
+                                    <div class="input-group" id="sisipan" style="position: relative;">
+                                        <button id="clearText" class="btn btn-xs btn-danger" style="position: absolute; right: 44px; top: 6px; z-index: 1041;">clear</button>
                                         <input type="text" readonly name="sisipan" value="{{ order.sirculationArea.name }}" class="form-control">
                                         <input type="hidden" id="sirculationArea" value="/api/cities/{{ order.sirculationArea.id }}" name="sirculationArea">
                                         <span class="input-group-btn">

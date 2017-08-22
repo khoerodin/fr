@@ -28,7 +28,21 @@ function getTicketList() {
 
                     if(value.status !== 'closed') {
 
-                        tr += '<tr id="'+value.id+'">';
+                        tr += '<tr id="'+value.id+'"';
+                        if (value.staff) {
+                            tr += ' data-staff="/api/helpdesk/staffs/'+value.staff.id+'"';
+                        }
+
+                        if(value.client) {
+                            tr += ' data-client="/api/users/'+value.client.id+'"';
+                        }
+
+                        if(value.ticket) {
+                            tr += ' data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'"';
+                        }
+
+                        tr += '>';
+
                         tr += '<td>'+no+'</td>';
                         tr += '<td>'+value.category.name+'</td>';
                         tr += '<td>'+value.title+'</td>';
@@ -164,7 +178,7 @@ $(document).on('click', '#btnSave', function () {
                             params: [
                                 {
                                     name: 'domain',
-                                    value: 'helpdesk/tickets/' + data.id
+                                    value: 'Helpdesk'
                                 },
                                 {
                                     name: 'receiver',
@@ -546,9 +560,23 @@ function getTicketData(ticketId) {
 
             $.each(finalData, function (index, value) {
 
-                dataForum += '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+value.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/users/'+value.client.id+'" data-time="'+value.createdAt+'">';
+                dataForum += '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
+
+                if (value.ticket) {
+                    dataForum += 'data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'"';
+                }
+
+                if (value.client) {
+                    dataForum += 'data-client="/api/users/' + value.client.id + '"';
+                }
+
+                dataForum += ' data-time="'+value.createdAt+'">';
                 dataForum += '<div class="direct-chat-info clearfix">';
-                dataForum += '<span class="direct-chat-name pull-left">'+value.client.fullname+'</span>';
+
+                if (value.client) {
+                    dataForum += '<span class="direct-chat-name pull-left">' + value.client.fullname + '</span>';
+                }
+
                 dataForum += '<span class="wkt direct-chat-timestamp pull-right">'+moment(value.createdAt).format('LLLL')+'</span>';
                 dataForum += '</div>';
                 dataForum += '<img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">';
@@ -620,9 +648,24 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
                 var ticketId =  ticket.split("/").pop();
                 // }
 
-                var result = '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+data.id+'"  data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'" data-staff="/api/users/'+data.staff.user.id+'" data-time="'+data.createdAt+'"><div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">'+data.staff.user.fullname+'</span><span class="wkt direct-chat-timestamp pull-right">'+moment(data.createdAt).format('LLLL')+'</span></div><img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image"><div class="direct-chat-text">'+data.message+'</div></div>';
+                var result = '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+data.id+'"  ';
+                if(data.ticket) {
+                    result += 'data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'" ';
+                }
+                if(data.client) {
+                    result += 'data-client="/api/users/' + data.client.id + '" ';
+                }
+                result += 'data-time="'+data.createdAt+'"';
+                result += '>';
+                result += '<div class="direct-chat-info clearfix">';
+                // result += '<span class="direct-chat-name pull-left">'+data.client.fullname+'</span>';
+                result += '<span class="wkt direct-chat-timestamp pull-right">'+moment(data.createdAt).format('LLLL')+'</span>';
+                result += '</div><img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">';
+                result += '<div class="direct-chat-text">'+data.message+'</div></div>';
+
                 $('#chatHistory').append(result);
                 $('#chatMessage').val('');
+                console.log(result);
             }
         }
     });
@@ -658,7 +701,7 @@ $(document).on('click', '#send', function () {
         if (typeof staffId === 'undefined') {
             trueStaffId = null;
         } else {
-            trueStaffId = '/api/helpdesk/staffs/'+staffId;
+            trueStaffId = staffId;
         }
 
     }
@@ -667,7 +710,7 @@ $(document).on('click', '#send', function () {
     if(typeof client !== 'undefined'){
         trueClientId = client;
     } else {
-        trueClientId = '/api/users/'+clientId
+        trueClientId = clientId
     }
 
     if(text !== ''){

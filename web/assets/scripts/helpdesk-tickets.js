@@ -3,7 +3,7 @@
  */
 
 //DETAIL TIKET (UNTUK ADMIN)
-$(document).on('click', '.detail-tic', function () {
+$(document).on('click', '.detail-my-tic', function () {
     var ticketId = $(this).closest('tr').attr('id');
     $('#tiketModal .modal-body').attr('data-ticketid', ticketId);
 
@@ -223,34 +223,29 @@ function getTicketData(ticketId) {
 
             $.each(finalData, function (index, value) {
 
-                dataForum += '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+value.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/users/'+value.client.id+'" data-time="'+value.createdAt+'">';
+                dataForum += '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
+
+                if (value.ticket) {
+                    dataForum += 'data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'"';
+                }
+
+                if (value.client) {
+                    dataForum += 'data-client="/api/users/' + value.client.id + '"';
+                }
+
+                dataForum += ' data-time="'+value.createdAt+'">';
                 dataForum += '<div class="direct-chat-info clearfix">';
-                dataForum += '<span class="direct-chat-name pull-left">'+value.client.fullname+'</span>';
+
+                if (value.client) {
+                    dataForum += '<span class="direct-chat-name pull-left">' + value.client.fullname + '</span>';
+                }
+
                 dataForum += '<span class="wkt direct-chat-timestamp pull-right">'+moment(value.createdAt).format('LLLL')+'</span>';
                 dataForum += '</div>';
                 dataForum += '<img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">';
                 dataForum += '<div class="direct-chat-text">'+value.message+'</div>';
                 dataForum += '</div>';
 
-
-                // dataForum += '<div id="Forum" style="background-color: #efefef">';
-                // dataForum += '<div class="media mediaForum"  data-id="/api/helpdesk/ticket-responses/'+value.id+'" data-staff="/api/helpdesk/staffs/'+value.staff.id+'"  data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'" data-client="/api/clients/'+value.client.id+'" style="margin-top: 10px; margin-bottom: 10px; border: #3e3b42 solid 1px;padding: 12px" data-time="/api/helpdesk/ticket-responses/'+value.responseFor+'">';
-                // dataForum += '<div class="media-left media-top" style="">';
-                //
-                // dataForum += '<img class="direct-chat-img img-lg" src="../img/user4-128x128.jpg">';
-                // // dataForum += '<img class="direct-chat-img img-lg" src="../img/user7-128x128.jpg">';
-                // dataForum += '</div>';
-                // dataForum += '<div class="media-body"><span class="date-post pull-right"><span class="glyphicon glyphicon-time"></span> diposting pada '+moment(value.createdAt).format("D MMM 'YY - HH:mm a")+'</span>';
-                // dataForum += '<h4 class="media-heading">'+value.client.user.fullname+'</h4>'; //clientName
-                // dataForum += '<h5 class="text-muted">'+value.staff.user.fullname+'</h5>'; //staffName
-                // dataForum += '</div>';
-                //
-                // dataForum += '<div style="background-color: white; margin-left: 1px; margin-top: 10px; margin-bottom: 2px; border: #3e3b42 solid 1px;padding: 5px">'+value.message+''; //forumMessage
-                //
-                // dataForum += '</div>';
-                // dataForum += '</div>';
-                // dataForum += '</div>';
-                // dataForum += '</div>';
 
             });
 
@@ -317,13 +312,22 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
                     var ticketId =  ticket.split("/").pop();
                 // }
 
-                var result = '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+data.id+'"  ' +
-                    'data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'" ' +
-                    'data-client="/api/users/'+data.client.id+'" data-time="'+data.createdAt+'">' +
-                    '<div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">'+data.client.fullname+'</span>' +
-                    '<span class="wkt direct-chat-timestamp pull-right">'+moment(data.createdAt).format('LLLL')+'</span>' +
-                    '</div><img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">' +
-                    '<div class="direct-chat-text">'+data.message+'</div></div>';
+                // if (value.staff) {
+                //     tr += 'data-staff="/api/helpdesk/staffs/'+value.staff.user.id+'"';
+                // }
+
+
+                var result = '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+data.id+'"  ';
+                result += 'data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'" ';
+                if(data.client) {
+                    result += 'data-client="/api/users/' + data.client.id + '" ';
+                }
+                result +=    'data-time="'+data.createdAt+'">';
+                result += '<div class="direct-chat-info clearfix">';
+                // result += '<span class="direct-chat-name pull-left">'+data.client.fullname+'</span>';
+                result += '<span class="wkt direct-chat-timestamp pull-right">'+moment(data.createdAt).format('LLLL')+'</span>';
+                result += '</div><img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">';
+                result += '<div class="direct-chat-text">'+data.message+'</div></div>';
 
                 $('#chatHistory').append(result);
                 $('#chatMessage').val('');
@@ -361,7 +365,12 @@ function getTicketList() {
                 var no = 1;
                 $.each(memberData, function (index, value) {
 
-                        tr += '<tr id="'+ value.id + '">';
+                    // dataForum += 'data-client="/api/users/' + value.client.id + '"';
+
+                    if (value.staff) {
+                        tr += 'data-staff="/api/helpdesk/staffs/'+value.staff.user.id+'"';
+                    }
+                        tr += '<tr id="'+ value.id +'" data-ticket="/api/helpdesk/tickets/'+value.id+'" data-client="/api/users/'+value.client.id+'">';
                         tr += '<td>' + no + '</td>';
                         tr += '<td>' + value.category.name + '</td>';
                         tr += '<td>' + value.title + '</td>';
@@ -411,7 +420,7 @@ function getTicketList() {
                         tr += '<td>';
 
                         if(value.staff){
-                            tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button>';
+                            tr += '<button data-id="' + value.id + '" class="detail-my-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button>';
                         }
 
                         tr += '</td>';
@@ -844,7 +853,7 @@ function getMyAssignmentList() {
                         }
 
                         tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>';
-                        tr += '<td><button class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button></td>';
+                        tr += '<td><button class="detail-my-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button></td>';
                         tr += '</tr>';
 
                         no++;
@@ -904,7 +913,7 @@ function getAllTicketList() {
                         tr += '<tr id="'+value.id+'"';
 
                         if (value.staff) {
-                            tr += 'staff="' + value.staff.id + '" staff-user="' + value.staff.user.id + '"';
+                            tr += 'staff="' + value.staff.id + '" staff-user="' + value.staff.id + '"';
                         }
 
                         if (value.client) {
@@ -984,7 +993,7 @@ function getAllTicketList() {
                         tr += '<td>';
 
                         if(value.staff){
-                            tr += '<button data-id="' + value.id + '" class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button>';
+                            tr += '<button data-id="' + value.id + '" class="detail-my-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button>';
                         }
                         tr += '<button data-id="' + value.id + '" class="confirm-tic btn btn-default btn-xs btn-flat" title="AMBIL TIKET"><i class="fa fa-check"></i></button>';
                         // tr += '<div class="badge badge-notify">1</div>';

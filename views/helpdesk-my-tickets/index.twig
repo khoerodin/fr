@@ -122,12 +122,12 @@
                                     <form id="formTiket">
                                         {#<-------- notifikasi read------------#}
                                         <input type="hidden" name="read" value="false">
-
-                                        <div class="form-group">
-                                            <label for="name">Nama</label>
-                                            <input type="text" class="form-control" readonly id="name" value="{{ me.fullname }}">
+                                        {#<-------- end notifikasi read------------#}
+                                        {#<div class="form-group">#}
+                                            {#<label for="name">Nama</label>#}
+                                            {#<input type="text" class="form-control" readonly id="name" value="{{ me.fullname }}">#}
                                             <input type="hidden" value="/api/users/{{ me.id }}" name="client">
-                                        </div>
+                                        {#</div>#}
 
                                         <div class="form-group">
                                             <label for="judul">Kategori</label>
@@ -146,10 +146,10 @@
                                             <input type="text" class="form-control" id="title" name="title">
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="email" class="form-control" id="email" readonly value="{{ me.email }}">
-                                        </div>
+                                        {#<div class="form-group">#}
+                                            {#<label for="email">Email</label>#}
+                                            {#<input type="email" class="form-control" id="email" readonly value="{{ me.email }}">#}
+                                        {#</div>#}
 
                                         <div class="input-group">
                                             <label for="name">Pesan</label>

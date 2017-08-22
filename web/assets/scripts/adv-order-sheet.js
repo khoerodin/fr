@@ -717,12 +717,32 @@ $(document).ajaxComplete(function() {
 });
 // end Sisipan
 
+// accounting js
+accounting.settings = {
+    currency: {
+        symbol : "",
+        format: "%s%v",
+        decimal : ",",
+        thousand: ".",
+        precision : 2
+    },
+    number: {
+        precision : 0,
+        thousand: ".",
+        decimal : ","
+    }
+}
+
+function unformatMoney(formatted) {
+    return parseFloat(formatted.replace(/[^0-9-,]/g, ''));
+}
+
 //menghitung biaya
 function getBiaya() {
     var kolom = parseInt($('#columnSize').val());
     var mmBaris = parseInt($('#milimeterSize').val());
     var terbit = parseInt($('#totalPost').val());
-    var tarif = parseInt($('#basePrice').val());
+    var tarif = unformatMoney($('#basePrice').val());
     var final;
 
     if ($('#columnSize').val() && $('#milimeterSize').val() && $('#totalPost').val() && $('#basePrice').val() ) {
@@ -734,10 +754,10 @@ function getBiaya() {
             $('input[name="jenisIklan"]').val().toLowerCase() === 'tarif khusus' ||
             $('input[name="jenisIklan"]').val().toLowerCase().startsWith('paket')
         ) {
-            final = parseInt(tarif);
+            final = parseFloat(tarif);
             return final;
         } else {
-            final = parseInt((kolom * mmBaris) * terbit * tarif);
+            final = parseFloat((kolom * mmBaris) * terbit * tarif);
             return final;
         }
     }
@@ -745,9 +765,9 @@ function getBiaya() {
 
 // menghitung diskon dalam %
 function getDiscountValue() {
-    var ppnRp = parseInt($('#taxValue').val());
+    var ppnRp = unformatMoney($('#taxValue').val());
     var biaya = getBiaya() + ppnRp;
-    var diskonRp = parseInt($('#discountValue').val());
+    var diskonRp = unformatMoney($('#discountValue').val());
 
     var diskonPersen = ( diskonRp / biaya ) * 100;
     $('#discountPercentage').val(diskonPersen);
@@ -755,9 +775,9 @@ function getDiscountValue() {
 
 // menghitung diskon dalam rupiah
 function getDiscountPercentage() {
-    var ppnRp = parseInt($('#taxValue').val());
+    var ppnRp = unformatMoney($('#taxValue').val());
     var biaya = getBiaya() + ppnRp;
-    var diskonPersen = parseInt($('#discountPercentage').val());
+    var diskonPersen = parseFloat($('#discountPercentage').val());
     var diskonRp = (biaya * diskonPersen) / 100;
     $('#discountValue').val(diskonRp);
 }
@@ -774,15 +794,15 @@ $(document).on('keyup keydown change mouseup', '#discountPercentage', function (
 
 // hitung pajak %
 function getTaxValue(){
-    var ppnRp = $('#taxValue').val();
+    var ppnRp = unformatMoney($('#taxValue').val());
 
-    var ppnPersen = ( parseInt(ppnRp) / getBiaya() ) * 100;
+    var ppnPersen = ( ppnRp / getBiaya() ) * 100;
     $('#taxPercentage').val(ppnPersen);
 }
 
 // hitung pajak rupiah
 function getTaxPercentage() {
-    var ppnPersen = parseInt($('#taxPercentage').val());
+    var ppnPersen = parseFloat($('#taxPercentage').val());
 
     var taxValue = (getBiaya() * ppnPersen) / 100;
     $('#taxValue').val(taxValue);
@@ -800,10 +820,10 @@ $(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
 
 // hitung cahsback %
 function getCashBackValue() {
-    var diskon = parseInt($('#discountValue').val());
-    var ppn = parseInt($('#taxValue').val());
+    var diskon = unformatMoney($('#discountValue').val());
+    var ppn = unformatMoney($('#taxValue').val());
     var biaya = getBiaya() - diskon + ppn;
-    var cashBackRp = parseInt($('#cashBackValue').val());
+    var cashBackRp = unformatMoney($('#cashBackValue').val());
 
     var cashBackPersen = ( cashBackRp / biaya ) * 100;
     $('#cashBackPercentage').val(cashBackPersen);
@@ -811,10 +831,10 @@ function getCashBackValue() {
 
 // hitung cashback rupiah
 function getCashBackPercentage() {
-    var diskon = parseInt($('#discountValue').val());
-    var ppn = parseInt($('#taxValue').val());
+    var diskon = unformatMoney($('#discountValue').val());
+    var ppn = unformatMoney($('#taxValue').val());
     var biaya = getBiaya() - diskon + ppn;
-    var cashBackPersen = parseInt($('#cashBackPercentage').val());
+    var cashBackPersen = parseFloat($('#cashBackPercentage').val());
 
     var cashBackRp = (biaya * cashBackPersen) / 100;
     $('#cashBackValue').val(cashBackRp);
@@ -834,12 +854,12 @@ $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function (
 function getJumlahBayar() {
     if($('#discountValue').val() && $('#taxValue').val() && $('#cashBackValue').val()) {
 
-        var diskon = parseInt($('#discountValue').val());
-        var ppn = parseInt($('#taxValue').val());
-        var cashBack = parseInt($('#cashBackValue').val());
+        var diskon = unformatMoney($('#discountValue').val());
+        var ppn = unformatMoney($('#taxValue').val());
+        var cashBack = unformatMoney($('#cashBackValue').val());
 
-        jumlahBayar = parseInt(getBiaya() - diskon + ppn - cashBack);
-        $('#totalAmount').val(jumlahBayar);
+        jumlahBayar = parseFloat(getBiaya() - diskon + ppn - cashBack);
+        $('#totalAmount').val(accounting.formatMoney(jumlahBayar));
 
         return jumlahBayar;
     }
@@ -848,33 +868,72 @@ function getJumlahBayar() {
 // hitung netto
 function getNetto() {
     if($('#quantity').val()) {
-        var quantity = parseInt($('#quantity').val());
+        var quantity = unformatMoney($('#quantity').val());
         var netto;
 
         if ($('#material').val()) {
-            var materai = parseInt($('#material').val());
+            var materai = unformatMoney($('#material').val());
             netto = (getJumlahBayar() * quantity) - materai;
         } else {
             netto = getJumlahBayar() * quantity;
         }
 
-        $('#netto').text(accounting.formatMoney(netto, "Rp ", 2, ".", ","));
+        $('#netto').text('Rp ' + accounting.formatMoney(netto));
         $('#nettoRp').val(netto);
-        var RpText = $('#netto').text();
-        console.log(accounting.unformat(RpText, ','));
 
         terbilang('nettoRp', 'terbilangNetto');
     }
 }
+
+$('#basePrice, ' +
+    '#discountValue, ' +
+    '#taxValue, ' +
+    '#cashBackValue, ' +
+    '#totalAmount, ' +
+    '#material').on('blur', function() {
+    var $this = $(this);
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+});
+
+$(document).on('blur', '#taxPercentage', function () {
+    var $this = $('#taxValue');
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+});
+
+$(document).on('blur', '#cashBackPercentage', function () {
+    var $this = $('#cashBackValue');
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+});
+
+$(document).on('blur', '#discountPercentage', function () {
+    var $this = $('#discountValue');
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+});
+
+$(document).on('ready', function() {
+    $('#basePrice').val(accounting.formatMoney($('#basePrice').val()));
+    $('#discountValue').val(accounting.formatMoney($('#discountValue').val()));
+    $('#taxValue').val(accounting.formatMoney($('#taxValue').val()));
+    $('#cashBackValue').val(accounting.formatMoney($('#cashBackValue').val()));
+    $('#material').val(accounting.formatMoney($('#material').val()));
+});
 
 // klik tombol hitung
 $(document).on(
     'click', '#hitung',
     function (e) {
         e.preventDefault();
-        getTaxPercentage();
-        getDiscountPercentage();
-        getCashBackPercentage();
+        getTaxValue();
+        getDiscountValue();
+        getCashBackValue();
         getNetto();
         $('#btn-order').prop('disabled', false);
         $('#btn-order-update').prop('disabled', false);
@@ -1072,9 +1131,7 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                                     var tgl = $(this).closest('tr').find('.tgl');
                                     var tglText = tgl.text();
 
-                                    localS
-
-torage.setItem('tglText', tglText);
+                                    localStorage.setItem('tglText', tglText);
 
                                     $(this)
                                         .removeClass('edit-item-btn')

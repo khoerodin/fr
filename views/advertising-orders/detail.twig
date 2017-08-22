@@ -1,6 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
+    <script src="/assets/accountingjs/accounting.min.js"></script>
     <script src="/assets/scripts/adv-order-sheet.js"></script>
     <script src="/assets/listjs/list.min.js"></script>
     <script>
@@ -405,7 +406,7 @@
                                             <label for="">Tarif Iklan</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" min="0" name="basePrice" value="{{ order.basePrice }}" id="basePrice" class="form-control">
+                                                <input type="text" name="basePrice" value="{{ order.basePrice }}" id="basePrice" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-xs-3">
@@ -419,7 +420,7 @@
                                             <label for="">Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="discountValue" value="{{ order.discountValue }}" id="discountValue" min="0" class="form-control">
+                                                <input type="text" name="discountValue" value="{{ order.discountValue }}" id="discountValue" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -440,7 +441,7 @@
                                             <label for="">PPN Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="taxValue" value="{{ order.taxValue }}" id="taxValue" min="0" class="form-control">
+                                                <input type="text" name="taxValue" value="{{ order.taxValue }}" id="taxValue" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -461,7 +462,7 @@
                                             <label for="">Cashback Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="cashBackValue" value="{{ order.cashBackValue }}" id="cashBackValue" min="0" class="form-control">
+                                                <input type="text" name="cashBackValue" value="{{ order.cashBackValue }}" id="cashBackValue" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -496,7 +497,7 @@
                                             <label for="">Materai</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" min="0" name="material" value="{{ order.material }}" id="material" class="form-control">
+                                                <input type="text" name="material" value="{{ order.material }}" id="material" class="form-control">
                                             </div>
                                         </div>
                                     </div>

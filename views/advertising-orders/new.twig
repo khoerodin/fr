@@ -1,6 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
+    <script src="/assets/accountingjs/accounting.min.js"></script>
     <script src="/assets/scripts/adv-order-sheet.js"></script>
     <script src="/assets/listjs/list.min.js"></script>
     <script>
@@ -344,7 +345,7 @@
                                             <label for="">Tarif Iklan</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" min="0" name="basePrice" id="basePrice" class="form-control">
+                                                <input type="text" name="basePrice" id="basePrice" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
@@ -358,7 +359,7 @@
                                             <label for="">PPN Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="taxValue" id="taxValue" min="0" class="form-control">
+                                                <input type="text" name="taxValue" id="taxValue" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -379,7 +380,7 @@
                                             <label for="">Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="discountValue" id="discountValue" min="0" class="form-control">
+                                                <input type="text" name="discountValue" id="discountValue" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -400,7 +401,7 @@
                                             <label for="">Cashback Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" name="cashBackValue" id="cashBackValue" min="0" class="form-control">
+                                                <input type="text" name="cashBackValue" id="cashBackValue" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -435,7 +436,7 @@
                                             <label for="">Materai</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="number" min="0" name="material" id="material" class="form-control">
+                                                <input type="txt" name="material" id="material" class="form-control">
                                             </div>
                                         </div>
                                     </div>

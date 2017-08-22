@@ -860,6 +860,7 @@ function getJumlahBayar() {
 
         jumlahBayar = parseFloat(getBiaya() - diskon + ppn - cashBack);
         $('#totalAmount').val(accounting.formatMoney(jumlahBayar));
+        $('[name="totalAmount"]').val(jumlahBayar);
 
         return jumlahBayar;
     }
@@ -885,30 +886,20 @@ function getNetto() {
     }
 }
 
-$('#basePrice, ' +
-    '#discountValue, ' +
-    '#taxValue, ' +
-    '#cashBackValue, ' +
-    '#totalAmount, ' +
-    '#material').on('blur', function() {
+$(document).on('blur', '#basePrice', function () {
     var $this = $(this);
     var value = $this.val();
     var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
     $this.val(accounting.formatMoney(unformat));
+    $('[name="basePrice"]').val(parseFloat(unformat));
 });
 
-$(document).on('blur', '#taxPercentage', function () {
-    var $this = $('#taxValue');
+$(document).on('blur', '#discountValue', function () {
+    var $this = $(this);
     var value = $this.val();
     var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
     $this.val(accounting.formatMoney(unformat));
-});
-
-$(document).on('blur', '#cashBackPercentage', function () {
-    var $this = $('#cashBackValue');
-    var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
+    $('[name="discountValue"]').val(parseFloat(unformat));
 });
 
 $(document).on('blur', '#discountPercentage', function () {
@@ -916,6 +907,55 @@ $(document).on('blur', '#discountPercentage', function () {
     var value = $this.val();
     var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
     $this.val(accounting.formatMoney(unformat));
+    $('[name="discountValue"]').val(parseFloat(unformat));
+});
+
+$(document).on('blur', '#taxValue', function () {
+    var $this = $(this);
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="taxValue"]').val(parseFloat(unformat));
+});
+
+$(document).on('blur', '#taxPercentage', function () {
+    var $this = $('#taxValue');
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="taxValue"]').val(parseFloat(unformat));
+});
+
+$(document).on('blur', '#cashBackValue', function () {
+    var $this = $(this);
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="cashBackValue"]').val(parseFloat(unformat));
+});
+
+$(document).on('blur', '#cashBackPercentage', function () {
+    var $this = $('#cashBackValue');
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="cashBackValue"]').val(parseFloat(unformat));
+});
+
+$(document).on('blur', '#totalAmount', function () {
+    var $this = $(this);
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="totalAmount"]').val(parseFloat(unformat));
+});
+
+$(document).on('blur', '#material', function () {
+    var $this = $(this);
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="material"]').val(parseFloat(unformat));
 });
 
 $(document).on('ready', function() {

@@ -581,7 +581,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
             value: ticket
         },
         {
-            name: 'client',
+            name: 'user',
             value: client
         },
         {

@@ -641,7 +641,7 @@ $(document).on('click', '#assign-tic', function () {
                                 },
                                 {
                                     name: 'receiver',
-                                    value: $('#currentUser').val()
+                                    value: data.staff.user.id
                                 },
                                 {
                                     name: 'sender',
@@ -658,6 +658,7 @@ $(document).on('click', '#assign-tic', function () {
                             ],
                             success: function (data, textStatus, jqXHR) {
                                 toastr.success('Sukses mengirim tiket');
+                                getAllTicketList();
                             }
                         }
                     });
@@ -794,14 +795,16 @@ function getMyAssignmentList() {
                 var no = 1;
                 $.each(memberData, function (index, value) {
 
-                        tr += '<tr id="'+value.id+'">';
-                        tr += '<td>'+no+'</td>';
-                        tr += '<td>'+value.category.name+'</td>';
-                        tr += '<td>'+value.title+'</td>';
+                    if(value.status !== 'closed') {
+
+                        tr += '<tr id="' + value.id + '">';
+                        tr += '<td>' + no + '</td>';
+                        tr += '<td>' + value.category.name + '</td>';
+                        tr += '<td>' + value.title + '</td>';
                         // tr += '<td>'+value.message+'</td>';
                         // tr += '<td>'+value.status+'</td>';
 
-                        if(value.status === 'open') {
+                        if (value.status === 'open') {
 
                             tr += '<td align="center"><div class="fa fa-ticket fa-2x" data-toggle="tooltip" data-placement="bottom" title="Open" style="color: orange;"></div></td>'
 
@@ -809,9 +812,9 @@ function getMyAssignmentList() {
 
                             tr += '<td align="center"><div class="fa fa-tag fa-2x" data-toggle="tooltip" data-placement="bottom" title="Assignment" style="color: cornflowerblue;"></div></td>'
 
-                        } else if (value.status === 'closed') {
-
-                            tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
+                            // } else if (value.status === 'closed') {
+                            //
+                            //     tr += '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
 
                         } else if (value.status === 'onprogress') {
 
@@ -823,7 +826,7 @@ function getMyAssignmentList() {
 
                         }
 
-                        if(value.priority === 'very_urgent') {
+                        if (value.priority === 'very_urgent') {
 
                             tr += '<td align="center"><div class="fa fa-fighter-jet fa-2x" data-toggle="tooltip" data-placement="bottom" title="Very Urgent" style="color: red;"></div></td>'
 
@@ -840,12 +843,12 @@ function getMyAssignmentList() {
                             tr += '<td align="center"><div class="fa fa-blind fa-2x" data-toggle="tooltip" data-placement="bottom" title="Low" style="color: darkorange"></div></td>';
                         }
 
-                        tr += '<td>'+moment(value.createdAt).format('LLLL')+'</td>';
+                        tr += '<td>' + moment(value.createdAt).format('LLLL') + '</td>';
                         tr += '<td><button class="detail-tic btn btn-default btn-xs btn-flat" title="KIRIM PESAN"><i class="fa fa-envelope"></i></button></td>';
                         tr += '</tr>';
 
                         no++;
-
+                    }
                 });
 
                 if (no <= 1 ) {

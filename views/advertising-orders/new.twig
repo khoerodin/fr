@@ -56,6 +56,9 @@
                             toastr.error("Gagal Menyimpan Order");
                             $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
 
+                        } else if (data.message) {
+                            toastr.error("Gagal Menyimpan Order");
+                            $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
                         } else {
 
                             var orderId = data.id;
@@ -249,7 +252,7 @@
                                     <label for="">Pasang Di</label>
                                     <div class="input-group" id="mediaIklan">
                                         <input type="text" readonly name="mediaIklan" class="form-control" value="{{ media.name }}">
-                                        <input type="hidden" id="media" name="media" value="{{ media.id }}">
+                                        <input type="hidden" id="media" name="media" value="/api/advertising/media/{{ media.id }}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -345,7 +348,8 @@
                                             <label for="">Tarif Iklan</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" name="basePrice" id="basePrice" class="form-control">
+                                                <input type="text" id="basePrice" class="form-control">
+                                                <input type="hidden" name="basePrice">
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
@@ -359,7 +363,8 @@
                                             <label for="">PPN Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" name="taxValue" id="taxValue" class="form-control">
+                                                <input type="text" id="taxValue" class="form-control">
+                                                <input type="hidden" name="taxValue">
                                             </div>
                                         </div>
                                     </div>
@@ -380,7 +385,8 @@
                                             <label for="">Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" name="discountValue" id="discountValue" class="form-control">
+                                                <input type="text" id="discountValue" class="form-control">
+                                                <input type="hidden" name="discountValue">
                                             </div>
                                         </div>
                                     </div>
@@ -401,7 +407,8 @@
                                             <label for="">Cashback Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" name="cashBackValue" id="cashBackValue" class="form-control">
+                                                <input type="text" id="cashBackValue" class="form-control">
+                                                <input type="hidden" name="cashBackValue">
                                             </div>
                                         </div>
                                     </div>
@@ -415,7 +422,8 @@
                                             <label for="">Jumlah Bayar</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" name="totalAmount" id="totalAmount" readonly class="form-control">
+                                                <input type="text" id="totalAmount" readonly class="form-control">
+                                                <input type="hidden" name="totalAmount">
                                             </div>
                                         </div>
                                     </div>
@@ -436,7 +444,8 @@
                                             <label for="">Materai</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="txt" name="material" id="material" class="form-control">
+                                                <input type="txt" id="material" class="form-control">
+                                                <input type="hidden" name="material">
                                             </div>
                                         </div>
                                     </div>

@@ -159,7 +159,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Order Dari</label>
-                                    <select name="orderFrom" id="orderFrom" class="form-control" style="width: 100%">
+                                    <select disabled name="orderFrom" id="orderFrom" class="form-control" style="width: 100%">
                                         <option selected disabled>PILIH PERWAKILAN</option>
                                         {% for rep in representatives %}
                                             {% if order.orderFrom.id == rep.id %}
@@ -174,7 +174,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Nomor Order</label>
-                                    <input type="text" name="orderNumber" value="{{ order.orderNumber }}" id="orderNumber" class="form-control">
+                                    <input type="text" readonly name="orderNumber" value="{{ order.orderNumber }}" id="orderNumber" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">

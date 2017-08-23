@@ -13,6 +13,47 @@
             'postalCode',
             'phoneNumber'
         ];
+
+        function paddy(number, pad, char) {
+            var pad_char = typeof char !== 'undefined' ? char : '0';
+            var pad = new Array(1 + pad).join(pad_char);
+            return (pad + number).slice(-pad.length);
+        }
+
+        $('[data-modal-add="advertising/customers"] select[name="representative"]').on('change', function () {
+
+            var module = $(this).val().replace('/api/','');
+
+            $.ajax({
+                url: '/api',
+                type: 'POST',
+                data: {
+                    module: module,
+                    method: 'get'
+                },
+                success: function (repData) {
+                    var repData = JSON.parse(repData);
+
+                    $.ajax({
+                        url: '/api',
+                        type: 'POST',
+                        data: {
+                            module: 'last-id/adv-customers',
+                            method: 'get'
+                        },
+                        success: function (data) {
+                            var data = JSON.parse(data);
+                            var urutan = paddy(data.id, 4);
+
+                            $('[data-modal-add="advertising/customers"] #code').val(repData.code+urutan);
+                        }
+                    });
+                }
+            });
+
+
+
+        });
     </script>
 {% endblock %}
 
@@ -73,7 +114,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="code">Kode</label>
-                                                <input type="text" name="code" class="form-control" id="code" placeholder="Kode">
+                                                <input readonly type="text" name="code" class="form-control" id="code" placeholder="Kode">
                                             </div>
                                             <div class="form-group">
                                                 <label for="name">Nama</label>

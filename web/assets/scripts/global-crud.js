@@ -435,7 +435,8 @@ function detail(module,id) {
 
                                     jQuery('select[data-object="' + dataObject + '"]').html(select).removeClass('loading').removeAttr('disabled');
                                     jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', false);
-                                },
+                                    $('[data-modal-detail="advertising/customers"] [name="representative"]').attr('disabled', 'disabled');
+                                    },
                                 error: function (jqXHR, textStatus, errorThrown) {
                                     jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', true);
                                 }

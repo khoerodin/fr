@@ -8,6 +8,7 @@
         var columns = [
             'code',
             'name',
+            'representative.name',
             'city.name',
             'postalCode',
             'phoneNumber'
@@ -39,6 +40,7 @@
                             <th width="5%">#</th>
                             <th>Kode</th>
                             <th>Nama</th>
+                            <th>Perwakilan</th>
                             <th>Kota</th>
                             <th>Kode Pos</th>
                             <th>No. Telepon</th>
@@ -63,6 +65,12 @@
                                 <div class="modal-body">
                                     <form role="form" class="clients add form">
                                         <div class="box-body">
+                                            <div class="form-group">
+                                                <label>Perwakilan</label>
+                                                <select name="representative" data-object="representatives#name" class="form-control select-add-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="code">Kode</label>
                                                 <input type="text" name="code" class="form-control" id="code" placeholder="Kode">
@@ -152,12 +160,6 @@
                                                     <option></option>
                                                 </select>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Perwakilan</label>
-                                                <select name="representative" data-object="representatives#name" class="form-control select-add-modal">
-                                                    <option></option>
-                                                </select>
-                                            </div>
                                         </div>
                                         <!-- /.box-body -->
                                     </form>
@@ -183,8 +185,14 @@
                                     <form role="form" class="clients detail form">
                                         <div class="box-body">
                                             <div class="form-group">
+                                                <label>Perwakilan</label>
+                                                <select disabled name="representative" data-object="representatives#name" data-selected="representative#name" class="form-control select-edit-modal">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="code">Kode</label>
-                                                <input type="text" name="code" class="form-control" id="code" placeholder="Kode">
+                                                <input readonly type="text" name="code" class="form-control" id="code" placeholder="Kode">
                                             </div>
                                             <div class="form-group">
                                                 <label for="name">Nama</label>
@@ -268,12 +276,6 @@
                                             <div class="form-group">
                                                 <label>Grup Tagihan</label>
                                                 <select name="billingGroup" data-object="billing/groups#name" data-selected="billingGroup#name" class="form-control select-edit-modal">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Perwakilan</label>
-                                                <select name="representative" data-object="representatives#name" data-selected="representative#name" class="form-control select-edit-modal">
                                                     <option></option>
                                                 </select>
                                             </div>

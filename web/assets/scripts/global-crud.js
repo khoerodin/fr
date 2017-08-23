@@ -338,10 +338,10 @@ function detail(module,id) {
             jQuery('div[data-modal-detail="'+module+'"] .edit.btn').text('UPDATE').prop('disabled', true);
             jQuery('tbody[data-list="'+module+'"] tr#'+id).attr('style', 'background-color:#f39c12;transition:background 3s ease;');
 
-            jQuery('div[data-modal-detail="'+module+'"] input').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
-            jQuery('div[data-modal-detail="'+module+'"] select').addClass('loading').prop('disabled', true).html('<option selected>LOADING...</option>');
-            jQuery('div[data-modal-detail="'+module+'"] textarea').addClass('loading').attr('placeholder', 'LOADING...').prop('disabled', true);
-            jQuery('div[data-modal-detail="'+module+'"] input[type="checkbox"]').prop('disabled', true);
+            jQuery('div[data-modal-detail="'+module+'"] input').addClass('loading').attr('placeholder', 'LOADING...');
+            jQuery('div[data-modal-detail="'+module+'"] select').addClass('loading').html('<option selected>LOADING...</option>');
+            jQuery('div[data-modal-detail="'+module+'"] textarea').addClass('loading').attr('placeholder', 'LOADING...');
+            jQuery('div[data-modal-detail="'+module+'"] input[type="checkbox"]');
         },
         success: function (data, textStatus, jqXHR) {
             arr = JSON.parse(data);
@@ -449,10 +449,10 @@ function detail(module,id) {
                         } else if (value === false || value === 'undefined') {
                             jQuery('.' + module + '.detail-modal.modal input[type="checkbox"]#' + index).prop('checked', false).removeAttr('disabled');
                         } else {
-                            jQuery('div[data-modal-detail="' + module + '"] input#' + index).val(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
-                            jQuery('div[data-modal-detail="' + module + '"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index).removeAttr('disabled readonly');
-                            jQuery('div[data-modal-detail="' + module + '"] input#username').val(value).removeClass('loading').attr('placeholder', index).attr('readonly', 'readonly');
-                            jQuery('div[data-modal-detail="' + module + '"] input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE').removeAttr('disabled readonly');
+                            jQuery('div[data-modal-detail="' + module + '"] input#' + index).val(value).removeClass('loading').attr('placeholder', index);
+                            jQuery('div[data-modal-detail="' + module + '"] textarea#' + index).text(value).removeClass('loading').attr('placeholder', index);
+                            jQuery('div[data-modal-detail="' + module + '"] input#username').val(value).removeClass('loading').attr('placeholder', index);
+                            jQuery('div[data-modal-detail="' + module + '"] input[type="password"]').val('').removeClass('loading').attr('placeholder', 'LEAVE BLANK IF DONT WANT TO CHANGE');
                             jQuery('div[data-modal-detail="' + module + '"] select#' + index + ' option[value="'+value+'"]').attr('selected', 'selected');
                         }
                         jQuery('div[data-modal-detail="' + module + '"] .edit.btn').prop('disabled', false);

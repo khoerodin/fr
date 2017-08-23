@@ -821,7 +821,7 @@ function getDiscountPercentage() {
     var biaya = getBiaya() + ppnRp;
     var diskonPersen = parseFloat($('#discountPercentage').val());
     var diskonRp = (biaya * diskonPersen) / 100;
-    $('#discountValue').val(diskonRp);
+    $('#discountValue').val(diskonRp.toString().replace('.',','));
 }
 
 $(document).on('keyup keydown change mouseup', '#discountValue', function () {
@@ -847,7 +847,7 @@ function getTaxPercentage() {
     var ppnPersen = parseFloat($('#taxPercentage').val());
 
     var taxValue = (getBiaya() * ppnPersen) / 100;
-    $('#taxValue').val(taxValue);
+    $('#taxValue').val(taxValue.toString().replace('.',','));
 }
 
 $(document).on('keyup keydown change mouseup', '#taxValue', function () {
@@ -879,7 +879,7 @@ function getCashBackPercentage() {
     var cashBackPersen = parseFloat($('#cashBackPercentage').val());
 
     var cashBackRp = (biaya * cashBackPersen) / 100;
-    $('#cashBackValue').val(cashBackRp);
+    $('#cashBackValue').val(cashBackRp.toString().replace('.',','));
 }
 
 $(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
@@ -1013,10 +1013,26 @@ $(document).on(
     'click', '#hitung',
     function (e) {
         e.preventDefault();
-        getTaxValue();
-        getDiscountValue();
-        getCashBackValue();
+        getTaxPercentage();
+        getDiscountPercentage();
+        getCashBackPercentage();
         getNetto();
+
+        var tax = $('#taxValue');
+        var taxValue = tax.val();
+        var unformatTax = taxValue.replace(/\./g,'').replace(/\,/g,'.');
+        tax.val(accounting.formatMoney(unformatTax));
+
+        var discount = $('#discountValue');
+        var discountValue = tax.val();
+        var unformatDiscount= discountValue.replace(/\./g,'').replace(/\,/g,'.');
+        discount.val(accounting.formatMoney(unformatDiscount));
+
+        var cashBack = $('#cashBackValue');
+        var cashBackValue = tax.val();
+        var unformatCashBack = taxValue.replace(/\./g,'').replace(/\,/g,'.');
+        cashBack.val(accounting.formatMoney(unformatCashBack));
+
         $('#btn-order').prop('disabled', false);
         $('#btn-order-update').prop('disabled', false);
 });

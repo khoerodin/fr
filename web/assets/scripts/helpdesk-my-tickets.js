@@ -159,6 +159,25 @@ $(document).on('click', '#btnSave', function () {
 
                 } else {
                     getTicketList();
+                    //------------------------ Insert Pesan Klien ke chatHistory -------------------------
+                    var result = '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+data.id+'"  ';
+                    if(data.ticket) {
+                        result += 'data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'" ';
+                    }
+                    if(data.client) {
+                        result += 'data-client="/api/users/' + data.client.id + '" ';
+                    }
+                    result += 'data-time="'+data.createdAt+'"';
+                    result += '>';
+                    result += '<div class="direct-chat-info clearfix">';
+                    // result += '<span class="direct-chat-name pull-left">'+data.client.fullname+'</span>';
+                    result += '<span class="wkt direct-chat-timestamp pull-right">'+moment(data.createdAt).format('LLLL')+'</span>';
+                    result += '</div><img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">';
+                    result += '<div class="direct-chat-text">'+data.message+'</div></div>';
+
+                    $('#tiketModal .modal-body #chatHistory').append(result);
+                    //------------------------ End Insert Pesan Klien ke chatHistory -------------------------
+
                     $("#newTicketModal #message").val('');
                     $("#newTicketModal #title").val('');
 
@@ -178,15 +197,15 @@ $(document).on('click', '#btnSave', function () {
                             params: [
                                 {
                                     name: 'domain',
-                                    value: 'Helpdesk'
+                                    value: 'Helpdesk Ticket - Add New Ticket'
                                 },
                                 {
                                     name: 'receiver',
-                                    value: $('#admin').val()
+                                    value: $('#admin').val() // Admin menerima Tiket untuk diteruskan / assign ke Staff
                                 },
                                 {
                                     name: 'sender',
-                                    value: $('#currentUser').val()
+                                    value: $('#currentUser').val() //Klien mengirim permohonan pemrosesan tiket ke Admin
                                 },
                                 {
                                     name: 'message',
@@ -467,6 +486,9 @@ $(document).on('click', '.detail-my-tic', function () {
     var timeId = $(this).closest('tr').data('waktu');
     $('.list-post-date').html(moment(timeId).format("D MMM 'YY - HH:mm a"));
 
+    // var msg = $(this).closest('tr').data('message');
+    // $('#tiketModal .modal-body #chatHistory').html(msg);
+
 
     getTicketData(ticketId);
     $('#tiketModal').modal({show: true, backdrop: 'static'});
@@ -665,7 +687,43 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
 
                 $('#chatHistory').append(result);
                 $('#chatMessage').val('');
-                console.log(result);
+                // console.log(result);
+
+                //---------------- send notifikasi ---------------
+
+                $.ajax({
+                    url: '/api',
+                    type: 'POST',
+                    data: {
+                        module: 'notifications',
+                        method: 'POST',
+                        params: [
+                            {
+                                name: 'domain',
+                                value: 'Helpdesk Tiket - Post Forum (Klien)'
+                            },
+                            {
+                                name: 'receiver',
+                                value: data.staff.user.id //staff terpilih menerima pesan dari klien
+                            },
+                            {
+                                name: 'sender',
+                                value: $('#currentUser').val() //klien mengirim pesan ke staff
+                            },
+                            {
+                                name: 'message',
+                                value: data.message
+                            },
+                            {
+                                name: 'read',
+                                value: false
+                            }
+                        ],
+                        success: function (data, textStatus, jqXHR) {
+
+                        }
+                    }
+                });
             }
         }
     });

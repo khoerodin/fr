@@ -19,6 +19,9 @@ $(document).on('click', '.detail-my-tic', function () {
     var timeId = $(this).closest('tr').data('waktu');
     $('.list-post-date').html(moment(timeId).format("D MMM 'YY - HH:mm a"));
 
+    var msg = $(this).closest('tr').data('message');
+    // $('#tiketModal #chatHistory #msg').attr
+
 
     getTicketData(ticketId);
     $('#tiketModal').modal({show: true, backdrop: 'static'});
@@ -331,6 +334,43 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
 
                 $('#chatHistory').append(result);
                 $('#chatMessage').val('');
+
+                //---------------- send notifikasi ---------------
+
+                $.ajax({
+                    url: '/api',
+                    type: 'POST',
+                    data: {
+                        module: 'notifications',
+                        method: 'POST',
+                        params: [
+                            {
+                                name: 'domain',
+                                value: 'Helpdesk Tiket - Post Forum'
+                            },
+                            {
+                                name: 'receiver',
+                                value: $('#currentUser').val() //klien menerima pesan dari staff sebagai sender
+                            },
+                            {
+                                name: 'sender',
+                                value: data.staff.user.id //staff terpilih berkomunikasi dengan klien sebagai receiver
+                            },
+                            {
+                                name: 'message',
+                                value: data.message
+                            },
+                            {
+                                name: 'read',
+                                value: false
+                            }
+                        ],
+                        success: function (data, textStatus, jqXHR) {
+
+                        }
+                    }
+                });
+
             }
         }
     });
@@ -646,15 +686,15 @@ $(document).on('click', '#assign-tic', function () {
                             params: [
                                 {
                                     name: 'domain',
-                                    value: 'helpdesk/tickets/' + data.id
+                                    value: 'Helpdesk Ticket - Assign Staff by Admin'
                                 },
                                 {
                                     name: 'receiver',
-                                    value: data.staff.user.id
+                                    value: data.staff.user.id  //staff sebagai penerima notifikasi dari Admin
                                 },
                                 {
                                     name: 'sender',
-                                    value: $('#admin').val()
+                                    value: $('#admin').val() //Admin sebagai pengirim notifikasi ke staff untuk tiket yang di-assign
                                 },
                                 {
                                     name: 'message',

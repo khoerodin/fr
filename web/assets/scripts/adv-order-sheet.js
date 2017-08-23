@@ -25,15 +25,16 @@ $("#orderFrom").select2({
         success: function (data) {
             var data = JSON.parse(data);
             var urutan = paddy(data.id, 3);
-            var orderNumber;
+            var orderNumber = 'OI/'+urutan+'/'+code+'/'+month+'/'+year;
+            $('#orderNumber').val(orderNumber);
 
-            if (text.startsWith("BIS")) {
-                orderNumber = 'OI/'+urutan+'/'+month+'/'+year;
-                $('#orderNumber').val(orderNumber);
-            } else {
-                orderNumber = 'OI/'+urutan+'/'+code+'/'+month+'/'+year;
-                $('#orderNumber').val(orderNumber);
-            }
+            // if (text.startsWith("BIS")) {
+            //     orderNumber = 'OI/'+urutan+'/'+month+'/'+year;
+            //     $('#orderNumber').val(orderNumber);
+            // } else {
+            //     orderNumber = 'OI/'+urutan+'/'+code+'/'+month+'/'+year;
+            //     $('#orderNumber').val(orderNumber);
+            // }
         }
     });
 });

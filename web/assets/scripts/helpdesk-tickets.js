@@ -19,10 +19,6 @@ $(document).on('click', '.detail-my-tic', function () {
     var timeId = $(this).closest('tr').data('waktu');
     $('.list-post-date').html(moment(timeId).format("D MMM 'YY - HH:mm a"));
 
-    var msg = $(this).closest('tr').data('message');
-    // $('#tiketModal #chatHistory #msg').attr
-
-
     getTicketData(ticketId);
     $('#tiketModal').modal({show: true, backdrop: 'static'});
 
@@ -204,6 +200,9 @@ function getTicketData(ticketId) {
     $('#tiketModal .listDetail #list-tgl-post').text(momentPost);
     $('#tiketModal #chatHistory').text(message);
     $('#tiketModal .listDetail #list-cat').text(category);
+    var msg = $('tr#'+ticketId).data('msg');
+
+    // console.log(msg);
 
     $.ajax({
         url: '/api',
@@ -217,12 +216,12 @@ function getTicketData(ticketId) {
                 }
             ]
         },
-        success: function (data) {
+        success: function (data, value) {
             var data = JSON.parse(data);
             // console.log(data);
             var finalData = data['hydra:member'];
 
-            var dataForum = '';
+            var dataForum = msg;
 
             $.each(finalData, function (index, value) {
 
@@ -245,9 +244,15 @@ function getTicketData(ticketId) {
 
                 dataForum += '<span class="wkt direct-chat-timestamp pull-right">'+moment(value.createdAt).format('LLLL')+'</span>';
                 dataForum += '</div>';
-                dataForum += '<img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">';
+
+                if(value.client) {
+                    dataForum += '<img class="direct-chat-img" src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }" alt="message user image">';
+                }
+
                 dataForum += '<div class="direct-chat-text">'+value.message+'</div>';
                 dataForum += '</div>';
+
+                //<label class="avatar-img user-image" style="background-image: url('/api/images/profiles/df656d86e54ecf1f0b0d72f027b667568a5451ef?ext=jpeg');"></label>
 
 
             });
@@ -329,7 +334,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
                 result += '<div class="direct-chat-info clearfix">';
                 // result += '<span class="direct-chat-name pull-left">'+data.client.fullname+'</span>';
                 result += '<span class="wkt direct-chat-timestamp pull-right">'+moment(data.createdAt).format('LLLL')+'</span>';
-                result += '</div><img class="direct-chat-img" src="../img/user4-128x128.jpg" alt="message user image">';
+                result += '</div><img class="direct-chat-img" src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }" alt="message user image">';
                 result += '<div class="direct-chat-text">'+data.message+'</div></div>';
 
                 $('#chatHistory').append(result);
@@ -950,7 +955,7 @@ function getAllTicketList() {
 
                     if(value.status !== 'closed'){
 
-                        tr += '<tr id="'+value.id+'"';
+                        tr += '<tr id="'+value.id+'" data-msg="'+value.message+'"';
 
                         if (value.staff) {
                             tr += 'staff="' + value.staff.id + '" staff-user="' + value.staff.id + '"';
@@ -976,16 +981,17 @@ function getAllTicketList() {
                         }
 
                         tr += '<td>' + value.category.name +'</td>';
-                        tr += '<td>' + value.title + '<input type="hidden" value="'+value.message+'" id="msg" name="msg"></td>';
+                        tr += '<td>' + value.title + '</td>';
                         // tr += '<td>' + value.message + '</td>';
                         // tr += '<td>' + value.status + '</td>';
                         // tr += '<div class="direct-chat-messages" id="chatHistory">'+ value.message +'</div>';
-                        msg += '<div class="direct-chat-msg"><div class="direct-chat-info clearfix">' +
-                            '<span class="direct-chat-name pull-left">'+value.client.fullname+'</span>' +
-                            '<span class="wkt direct-chat-timestamp pull-right">'+value.createdAt+'</span>' +
-                            '</div><img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">' +
-                            '<div class="direct-chat-text">'+value.message+'</div>' +
-                            '</div>';
+                        msg += '<div class="direct-chat-msg"><div class="direct-chat-info clearfix">';
+                        msg += '<span class="direct-chat-name pull-left">'+value.client.fullname+'</span>';
+                        msg += '<span class="wkt direct-chat-timestamp pull-right">'+value.createdAt+'</span>';
+                        if(value.staff) {
+                            msg += '</div><img class="direct-chat-img" src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }">';
+                        }
+                        msg += '<div class="direct-chat-text">'+value.message+'</div></div>';
 
 
                         if(value.status === 'open') {

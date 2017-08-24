@@ -151,14 +151,82 @@ function getOrders(param) {
                     cache: true,
                 },
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-                minimumInputLength: 2,
-            }).on("select2:select", function () {
+                minimumInputLength: 2
+            }).on("select2:select", function (e) {
                 var id = $("#searchOrder").val();
+                var text = $("#searchOrder option:selected").text();
+
+                if("searchHistory" in localStorage){
+                    var searchStorage = localStorage.getItem('searchHistory');
+                    var searchHistory = JSON.parse(searchStorage);
+                    searchHistory.push({id: id, text: text});
+
+                    searchHistory = removeDuplicates(searchHistory);
+
+                    if (searchHistory.length > 5) searchHistory.splice(0, searchHistory.length - 5);
+                    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                } else {
+                    var searchHistory = ( typeof searchHistory != 'undefined' && searchHistory instanceof Array ) ? searchHistory : [];
+                    searchHistory.push({id: id, text: text});
+                    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                }
+
                 window.location.href = '/advertising/orders/'+id;
             }).on("select2:unselect", function () {
                 //
-            }).on("select2:open", function () {
-                //
+            }).on("select2:open", function (e) {
+
+                if("searchHistory" in localStorage){
+                    var searchStorsge = localStorage.getItem('searchHistory');
+                    console.log(JSON.parse(searchStorsge));
+                    var searchHistory = JSON.parse(searchStorsge).reverse();
+                    console.log(searchHistory);
+                    var opt = '';
+                    $.each(searchHistory, function (index, value) {
+                        opt += '<li class="optionHistory select2-results__option" data-id="'+value.id+'">'+value.text+'</li>';
+                    });
+
+                    setTimeout(function(){
+                        $('.select2-results__options').html(opt);
+
+                        $('.optionHistory').hover(
+                            function () {
+                                $(this).css({"background-color":"#337ab7", "color":"#fff", "cursor":"pointer"});
+                            },
+
+                            function () {
+                                $(this).css({"background-color":"#fff", "color":"inherit"});
+                            },
+                        );
+
+                        $('.optionHistory').click(function (e) {
+                            var id = $(this).data('id');
+                            var text = $(this).text();
+
+                            if("searchHistory" in localStorage){
+                                var searchStorage = localStorage.getItem('searchHistory');
+                                var searchHistory = JSON.parse(searchStorage);
+                                searchHistory.push({id: id, text: text});
+
+                                searchHistory = removeDuplicates(searchHistory);
+
+                                if (searchHistory.length > 5) searchHistory.splice(0, searchHistory.length - 5);
+                                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                            } else {
+                                var searchHistory = ( typeof searchHistory != 'undefined' && searchHistory instanceof Array ) ? searchHistory : [];
+                                searchHistory.push({id: id, text: text});
+                                localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+                            }
+
+                            window.location.href = '/advertising/orders/'+id;
+                        });
+
+
+                    }, 200);
+                }
+
+
+
             }).on("select2:closing", function () {
                 //
             });
@@ -188,6 +256,19 @@ function getOrders(param) {
 }
 
 getOrders();
+
+//localStorage.removeItem('searchHistory');
+
+function removeDuplicates(arr) {
+    var hashTable = {};
+
+    return arr.filter(function (el) {
+        var key = JSON.stringify(el);
+        var match = Boolean(hashTable[key]);
+
+        return (match ? false : hashTable[key] = true);
+    });
+}
 
 $(document).on('click', '#newOrder', function () {
     window.location.href = '/advertising/orders/new';

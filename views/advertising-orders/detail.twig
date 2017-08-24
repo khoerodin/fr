@@ -4,148 +4,7 @@
     <script src="/assets/accountingjs/accounting.min.js"></script>
     <script src="/assets/scripts/adv-order-sheet.js"></script>
     <script src="/assets/listjs/list.min.js"></script>
-    <script>
-        $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
-            locale: 'id',
-            format: "dddd, DD MMMM YYYY",
-            defaultDate: '{{ order.invoicedAt }}',
-            ignoreReadonly: true
-        }).on('dp.change', function(e){
-            var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-            $('#invoicedAt').val(tgl);
-        });
-        idFormatInputInvoicedAt = $('#inputInvoicedAt').val();
-        $('#invoicedAt').val(moment(idFormatInputInvoicedAt, 'dddd, DD MMMM YYYY').format('YYYY-MM-DD HH:mm:ss'));
-
-        $('#dtBookedAt, #inputBookedAt').datetimepicker({
-            locale: 'id',
-            format: "dddd, DD MMMM YYYY",
-            defaultDate: '{{ order.bookedAt }}',
-            ignoreReadonly: true
-        }).on('dp.change', function(e){
-            var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-            $('#bookedAt').val(tgl);
-        });
-        idFormatInputBookedAt = $('#inputInvoicedAt').val();
-        $('#bookedAt').val(moment(idFormatInputBookedAt, 'dddd, DD MMMM YYYY').format('YYYY-MM-DD HH:mm:ss'));
-
-        getJumlahBayar();
-        getNetto();
-
-        $(document).on('click', '#btn-order-update', function () {
-
-            bootbox.confirm({
-                message: "YAKIN AKAN MEMPERBARUI ORDER?",
-                animate: false,
-                buttons: {
-                    confirm: {
-                        label: 'OK',
-                        className: 'btn-danger btn-flat'
-                    },
-                    cancel: {
-                        label: 'CANCEL',
-                        className: 'btn-default btn-flat'
-                    }
-                },
-                callback: function (result) {
-                   if (result) {
-
-                       var id = $('input[name="id"]').val();
-                       $.ajax({
-                           url: '/api',
-                           type: 'POST',
-                           data: {
-                               module: 'advertising/orders/' + id,
-                               method: 'PUT',
-                               params: $('#orderForm').serializeArray()
-                           },
-                           success: function (data, textStatus, jqXHR) {
-                               if (jqXHR.status === 200) {
-
-                                   var updateForm = $('#dateForm input.put');
-                                   var arrData = [];
-                                   $.each(updateForm, function (index, value) {
-                                       arrData.push({id: value.id, type: 'put', publishDate: value.value});
-                                   });
-
-                                   var postForm = $('#dateForm input.post');
-                                   $.each(postForm, function (index, value) {
-                                       arrData.push({id: value.id, orderId: id, type: 'post', publishDate: value.value});
-                                   });
-
-                                   var deleteForm = $('#dateForm input.delete');
-                                   $.each(deleteForm, function (index, value) {
-                                       arrData.push({id: value.id, orderId: id, type: 'delete', publishDate: value.value});
-                                   });
-
-                                   $.ajax({
-                                       url: '/advertising/orders/publish-ads/update',
-                                       type: 'post',
-                                       data: {data: arrData},
-                                       success: function (data) {
-
-                                           if (data.length) {
-                                               bootbox.alert({
-                                                   message: "SUKSES MENYIMPAN ORDER",
-                                                   animate: false,
-                                                   buttons: {
-                                                       ok: {
-                                                           className: 'btn-danger btn-flat'
-                                                       }
-                                                   },
-                                                   callback: function (result) {
-                                                       window.location.href = '/advertising/orders';
-                                                   }
-                                               });
-                                           }
-
-                                       },
-                                       error: function () {
-                                           bootbox.alert({
-                                               message: "GAGAL MEMPERBARUI ORDER",
-                                               animate: false,
-                                               buttons: {
-                                                   ok: {
-                                                       className: 'btn-danger btn-flat'
-                                                   }
-                                               }
-                                           });
-                                       }
-                                   });
-
-                               } else {
-                                   bootbox.alert({
-                                       message: "GAGAL MEMPERBARUI ORDER",
-                                       animate: false,
-                                       buttons: {
-                                           ok: {
-                                               className: 'btn-danger btn-flat'
-                                           }
-                                       }
-                                   });
-                               }
-                           },
-                           error: function (jqXHR, textStatus, errorThrown) {
-                               bootbox.alert({
-                                   message: "GAGAL MEMPERBARUI ORDER",
-                                   animate: false,
-                                   buttons: {
-                                       ok: {
-                                           className: 'btn-danger btn-flat'
-                                       }
-                                   }
-                               });
-                           }
-                       });
-
-                   }else {
-                       $('#btn-order-update').prop('disabled', true);
-                   }
-                }
-            });
-
-        });
-    </script>
+    <script src="/assets/scripts/adv-order-detail.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -155,6 +14,8 @@
                 <div class="box-body">
                     <form class="row" id="orderForm">
                         <input type="hidden" name="id" value="{{ order.id }}">
+                        <input type="hidden" name="orderInvoicedAt" value="{{ order.invoicedAt }}">
+                        <input type="hidden" name="orderBookedAt" value="{{ order.bookedAt }}">
                         <div class="col-md-6 row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -271,18 +132,6 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Emiten</label>
-                                    <div class="input-group" id="emiten">
-                                        <input type="text" readonly name="emiten" value="{{ order.category.parent.parent.name }}" class="form-control">
-                                        <input type="hidden" id="category1" value="{{ order.category.parent.parent.id }}" name="category1">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
                                     <label for="">Nama PIC</label>
                                     <div class="input-group" id="pic">
                                         <input type="text" name="pic" value="{{ order.accountExecutive.name }}" readonly class="form-control">
@@ -311,6 +160,18 @@
                                     <div class="input-group" id="mediaIklan">
                                         <input type="text" readonly name="mediaIklan" value="{{ order.media.name }}" class="form-control">
                                         <input type="hidden" id="media" name="media" value="/api/advertising/media/{{ order.media.id }}">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Emiten</label>
+                                    <div class="input-group" id="emiten">
+                                        <input type="text" readonly name="emiten" value="{{ order.category.parent.parent.name }}" class="form-control">
+                                        <input type="hidden" id="category1" value="{{ order.category.parent.parent.id }}" name="category1">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -382,7 +243,7 @@
                                         <div class="col-xs-3">
                                             <label for="">Terbit</label>
                                             <div class="input-group">
-                                                <input type="number" readonly name="totalPost" value="{{ order.totalPost }}" id="totalPost" min="1" class="form-control">
+                                                <input type="number" name="totalPost" value="{{ order.totalPost }}" id="totalPost" min="1" class="form-control">
                                                 <div class="input-group-addon">kali</div>
                                             </div>
                                         </div>
@@ -578,7 +439,7 @@
                     </form>
                 </div>
                 <div class="box-footer clearfix">
-                    <button class="btn btn-flat btn-danger pull-right" id="btn-order-update" disabled>PERBARUI</button>
+                    <button class="btn btn-flat btn-danger pull-right" id="btn-order-update" disabled>SIMPAN</button>
                 </div>
             </div>
             <!-- /.box -->

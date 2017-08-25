@@ -1,5 +1,32 @@
 // --------------------------------- 01 Agustus 2017 ------------------------------------------
 
+//DETAIL TIKET-KU (Forum)
+$(document).on('click', '.detail-my-tic', function () {
+    var ticketId = $(this).closest('tr').attr('id');
+    $('#tiketModal .modal-body').attr('data-ticketid', ticketId);
+
+    var staffId = $(this).closest('tr').data('staff');
+    $('#tiketModal .modal-body').attr('data-staffid', staffId);
+
+    var clientId = $(this).closest('tr').data('client');
+    $('#tiketModal .modal-body').attr('data-clientid', clientId);
+
+    var staffUserId = $(this).closest('tr').data('staff-user');
+    $('#tiketModal .modal-body').attr('data-staff-userid', staffUserId);
+
+    var timeId = $(this).closest('tr').data('waktu');
+    $('.list-post-date').html(moment(timeId).format("D MMM 'YY - HH:mm a"));
+
+    var msg = $(this).closest('tr'+ticketId).data('msg');
+    // $('#tiketModal .modal-body #chatHistory').html(msg);
+
+    getTicketData(ticketId);
+    $('#tiketModal').modal({show: true, backdrop: 'static'});
+
+
+
+});
+
 getTicketList();
 //get data tiket
 function getTicketList() {
@@ -158,7 +185,6 @@ $(document).on('click', '#btnSave', function () {
                     toastr.error('Error mengirim tiket');
 
                 } else {
-                    toastr.success('Sukses mengirim tiket');
                     getTicketList();
                     $("#newTicketModal #message").val('');
                     $("#newTicketModal #title").val('');
@@ -451,32 +477,7 @@ function getClosedTicketList() {
 
 }
 
-//DETAIL TIKET-KU (Forum)
-$(document).on('click', '.detail-my-tic', function () {
-    var ticketId = $(this).closest('tr').attr('id');
-    $('#tiketModal .modal-body').attr('data-ticketid', ticketId);
 
-    var staffId = $(this).closest('tr').data('staff');
-    $('#tiketModal .modal-body').attr('data-staffid', staffId);
-
-    var clientId = $(this).closest('tr').data('client');
-    $('#tiketModal .modal-body').attr('data-clientid', clientId);
-
-    var staffUserId = $(this).closest('tr').data('staff-user');
-    $('#tiketModal .modal-body').attr('data-staff-userid', staffUserId);
-
-    var timeId = $(this).closest('tr').data('waktu');
-    $('.list-post-date').html(moment(timeId).format("D MMM 'YY - HH:mm a"));
-
-    var msg = $(this).closest('tr'+ticketId).data('msg');
-    // $('#tiketModal .modal-body #chatHistory').html(msg);
-
-    getTicketData(ticketId);
-    $('#tiketModal').modal({show: true, backdrop: 'static'});
-
-
-
-});
 
 //SEND CHAT - KEYBOARD ENTER
 $(document).find('#chatMessage').on('keypress', function(e){
@@ -534,7 +535,6 @@ function getTicketData(ticketId) {
     // var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
     var category = $('tbody#ticketList tr#'+ticketId+' td:nth-child(2)').text();
     var momentPost = $('tbody#ticketList tr#'+ticketId+' td:nth-child(6)').text();
-    var message = $('#detailNewTicketModal .modal-body')
 
     $('#tiketModal .listDetail #list-title').text(title);
     $('#tiketModal .listDetail #list-tgl-post').text(momentPost);
@@ -561,37 +561,43 @@ function getTicketData(ticketId) {
             // console.log(data);
             var finalData = data['hydra:member'];
 
-            var dataForum = msg;
+            var result = '<div class="media" id="mediaForum"><div class="media-left"><img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6><h4 class="media-heading">Nama Klien</h4><p>'+msg+'</p></div></div><hr>';
 
             $.each(finalData, function (index, value) {
 
-                dataForum += '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
+                result += '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
 
                 if (value.ticket) {
-                    dataForum += 'data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'"';
+                    result += 'data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'"';
                 }
 
                 if (value.client) {
-                    dataForum += 'data-client="/api/users/' + value.client.id + '"';
+                    result += 'data-client="/api/users/' + value.client.id + '"';
                 }
 
-                dataForum += ' data-time="'+value.createdAt+'">';
-                dataForum += '<div class="direct-chat-info clearfix">';
-
-                if (value.client) {
-                    dataForum += '<span class="direct-chat-name pull-left">' + value.client.fullname + '</span>';
+                if (value.staff) {
+                    result += 'data-staff="/api/helpdesk/staffs/'+value.staff.user.id+'"';
                 }
 
-                dataForum += '<span class="wkt direct-chat-timestamp pull-right">'+moment(value.createdAt).format('LLLL')+'</span>';
-                dataForum += '</div>';
-                dataForum += '<img class="direct-chat-img" src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }" alt="message user image">';
-                dataForum += '<div class="direct-chat-text" data-msg="'+value.message+'"></div>';
-                dataForum += '</div>';
+                result += ' data-time="'+value.createdAt+'">';
+                result += '<div class="media-left">';
+                if(value.client) {
+                    result += '<img src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }}" class="media-object" style="width:60px">';
+                }
+                result += '</div>';
+                result += '<div class="media-body">';
+                if(value.client) {
+                    result += '<h4 class="media-heading">' + value.client.fullname + '</h4><h5><span class="pull-right">\'+moment(value.createdAt).format(\'LLLL\')+\'</span></h5>';
+                }
+                result += '<p>'+value.message+'</p>';
+                result += '</div>';
+                result += '</div>';
+                result += '<hr>';
 
             });
 
 
-            $('#chatHistory').html(dataForum); //tbody result
+            $('#chatHistory').html(result); //tbody result
 
         }
     });
@@ -653,20 +659,35 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
                 var ticketId =  ticket.split("/").pop();
                 // }
 
-                var result = '<div class="direct-chat-msg" data-id="/api/helpdesk/ticket-responses/'+data.id+'"  ';
-                if(data.ticket) {
-                    result += 'data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'" ';
+                var result = '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+data.id+'"';
+
+                if (data.ticket) {
+                    result += 'data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'"';
                 }
+
+                if (data.client) {
+                    result += 'data-client="/api/users/' + data.client.id + '"';
+                }
+
+                if (data.staff) {
+                    result += 'data-staff="/api/helpdesk/staffs/'+data.staff.user.id+'"';
+                }
+
+                result += ' data-time="'+data.createdAt+'">';
+                result += '<div class="media-left">';
                 if(data.client) {
-                    result += 'data-client="/api/users/' + data.client.id + '" ';
+                    result += '<img src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }}" class="media-object" style="width:60px">';
                 }
-                result += 'data-time="'+data.createdAt+'"';
-                result += '>';
-                result += '<div class="direct-chat-info clearfix">';
-                // result += '<span class="direct-chat-name pull-left">'+data.client.fullname+'</span>';
-                result += '<span class="wkt direct-chat-timestamp pull-right">'+moment(data.createdAt).format('LLLL')+'</span>';
-                result += '</div><img class="direct-chat-img" src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }" alt="message user image">';
-                result += '<div class="direct-chat-text">'+data.message+'</div></div>';
+                result += '</div>';
+                result += '<div class="media-body">';
+                if(data.client) {
+                    result += '<h4 class="media-heading">' + data.client.fullname + '</h4><h5><span class="pull-right">'+moment(value.createdAt).format('LLLL')+'</span></h5>';
+                }
+                result += '<p>'+data.message+'</p>';
+                result += '</div>';
+                result += '</div>';
+                result += '<hr>';
+
                 $('#chatHistory').append(result);
                 $('#chatMessage').val('');
                 // console.log(result);
@@ -716,8 +737,6 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
 $(document).on('click', '#send', function () {
     var waktu = moment().format("ddd, D MMM YYYY, h:mm A");
     var text = $('#chatMessage').val();
-    //var html = '<div class="direct-chat-info clearfix"><span class="direct-chat-name pull-left">Nama</span><span class="direct-chat-timestamp pull-right">'+waktu+'</span></div><div class="direct-chat-msg right"><div class="direct-chat-text">'+text+'</div></div>';
-    //$(document).find('#chatHistory').append(html);
     var responseId = $('#chatHistory:last').data('id');
     var staff = $('#chatHistory:last').data('staff');
     var ticket = $('#chatHistory:last').data('ticket');

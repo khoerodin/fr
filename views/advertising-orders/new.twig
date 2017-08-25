@@ -4,95 +4,7 @@
     <script src="/assets/accountingjs/accounting.min.js"></script>
     <script src="/assets/scripts/adv-order-sheet.js"></script>
     <script src="/assets/listjs/list.min.js"></script>
-    <script>
-        $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
-            locale: 'id',
-            format: "dddd, DD MMMM YYYY",
-            ignoreReadonly: true
-        }).on('dp.change', function(e){
-            var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-            $('#invoicedAt').val(tgl);
-        });
-
-        $('#dtBookedAt, #inputBookedAt').datetimepicker({
-            locale: 'id',
-            format: "dddd, DD MMMM YYYY",
-            ignoreReadonly: true
-        }).on('dp.change', function(e){
-            var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-            $('#bookedAt').val(tgl);
-        });
-
-        $(document).on('click', '#btn-order', function () {
-            $.ajax({
-                url: '/api',
-                type: 'POST',
-                data: {
-                    module: 'advertising/orders',
-                    method: 'POST',
-                    params: $('#orderForm').serializeArray()
-                },
-                beforeSend: function () {
-                    $('div .has-error').removeClass('has-error');
-                    $('p.help-block').remove();
-                    $('#btn-order').text('MENYIMPAN ORDER ...').prop('disabled', true);
-                },
-                success: function (data, textStatus, jqXHR) {
-                    var data = JSON.parse(data);
-
-                    if ( jqXHR.status === 200 ) {
-
-                        if ("violations" in data) {
-
-                            $.each(data, function (index, value) {
-                                if(index === 'violations'){
-                                    $.each(value, function (idx, val) {
-                                        $('form#orderForm #'+val.propertyPath).parent('div').addClass('has-error');
-                                        $( '<p class="help-block">'+val.message+'</p>' ).insertAfter( 'form#orderForm #'+val.propertyPath);
-                                    });
-                                }
-                            });
-
-                            toastr.error("Gagal Menyimpan Order");
-                            $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
-
-                        } else if (data.message) {
-                            toastr.error("Gagal Menyimpan Order");
-                            $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
-                        } else {
-
-                            var orderId = data.id;
-                            var data = localStorage.getItem('jenisEdisi');
-
-                            if (data === 'DATES') {
-                                saveByDates(orderId);
-                            } else if (data === 'DAYS') {
-                                saveByDays(orderId);
-                            }
-
-                        }
-
-                    } else {
-                        toastr.error("Gagal Menyimpan Order");
-                        $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
-                    }
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    bootbox.alert({
-                        message: "GAGAL MENYIMPAN ORDER",
-                        animate: false,
-                        buttons: {
-                            ok: {
-                                className: 'btn-danger btn-flat'
-                            }
-                        }
-                    });
-                    $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
-                }
-            });
-        });
-    </script>
+    <script src="/assets/scripts/adv-order-new.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -213,18 +125,6 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Emiten</label>
-                                    <div class="input-group" id="emiten">
-                                        <input type="text" readonly name="emiten" class="form-control">
-                                        <input type="hidden" id="category1" name="category1">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
                                     <label for="">Nama PIC</label>
                                     <div class="input-group" id="pic">
                                         <input type="text" name="pic" readonly class="form-control">
@@ -253,6 +153,18 @@
                                     <div class="input-group" id="mediaIklan">
                                         <input type="text" readonly name="mediaIklan" class="form-control" value="{{ media.name }}">
                                         <input type="hidden" id="media" name="media" value="/api/advertising/media/{{ media.id }}">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Emiten</label>
+                                    <div class="input-group" id="emiten">
+                                        <input type="text" readonly name="emiten" class="form-control">
+                                        <input type="hidden" id="category1" name="category1">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -324,7 +236,7 @@
                                         <div class="col-xs-3">
                                             <label for="">Terbit</label>
                                             <div class="input-group">
-                                                <input type="number" name="totalPost" id="totalPost" readonly min="1" class="form-control">
+                                                <input type="number" name="totalPost" id="totalPost" min="1" class="form-control">
                                                 <div class="input-group-addon">kali</div>
                                             </div>
                                         </div>
@@ -355,7 +267,7 @@
                                         <div class="col-xs-4">
                                             <label for="">PPN %</label>
                                             <div class="input-group">
-                                                <input type="number" value="0" name="taxPercentage" id="taxPercentage" min="0" max="100" class="form-control">
+                                                <input type="number" value="10" name="taxPercentage" id="taxPercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
@@ -516,7 +428,7 @@
                     </form>
                 </div>
                 <div class="box-footer clearfix">
-                    <button class="btn btn-flat btn-danger pull-right" id="btn-order" disabled>ORDER SEKARANG</button>
+                    <button class="btn btn-flat btn-danger pull-right" id="btn-order" disabled>SIMPAN</button>
                 </div>
             </div>
             <!-- /.box -->

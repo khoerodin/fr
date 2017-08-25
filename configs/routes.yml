@@ -17,7 +17,7 @@ app:
         #Login
         - { path: '/login', controller: 'Bisnis:Login@index', methods: ['GET'] }
         - { path: '/login_check', controller: 'Bisnis:Login@processLogin', methods: ['POST'] }
-        - { path: '/logout', controller: 'Bisnis:Login@logout', methods: ['PUT'] }
+        - { path: '/logout', controller: 'Bisnis:Login@logout', methods: ['PUT', 'GET'] }
 
         #Administration
         - { path: '/clients', controller: 'Bisnis:Clients@index', methods: ['GET'] }

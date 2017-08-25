@@ -755,8 +755,14 @@ $(document).ajaxComplete(function() {
         $('#sirculationArea').val('/api/cities/'+cityId);
         $('input[name="sisipan"]').val($(this).find('td:eq(0)').text());
         $('#sisipanModal').modal('hide');
+        $('#clearText').show();
     });
 });
+
+//tombol clear
+if (!$('#sirculationArea').val()) {
+    $('#clearText').hide();
+}
 // end Sisipan
 
 // accounting js
@@ -1024,13 +1030,13 @@ $(document).on(
         tax.val(accounting.formatMoney(unformatTax));
 
         var discount = $('#discountValue');
-        var discountValue = tax.val();
+        var discountValue = discount.val();
         var unformatDiscount= discountValue.replace(/\./g,'').replace(/\,/g,'.');
         discount.val(accounting.formatMoney(unformatDiscount));
 
         var cashBack = $('#cashBackValue');
-        var cashBackValue = tax.val();
-        var unformatCashBack = taxValue.replace(/\./g,'').replace(/\,/g,'.');
+        var cashBackValue = cashBack.val();
+        var unformatCashBack = cashBackValue.replace(/\./g,'').replace(/\,/g,'.');
         cashBack.val(accounting.formatMoney(unformatCashBack));
 
         $('#btn-order').prop('disabled', false);
@@ -1443,55 +1449,6 @@ function getDatesByDates() {
     return tanggal.removeDuplicates();
 }
 
-function saveByDates(orderId) {
-    var data = getDatesByDates();
-    var tanggal = [];
-
-    $.each(data, function (index, value) {
-        tanggal.push({
-            publishDate: value
-        });
-    });
-
-    $.ajax({
-        url: '/advertising/orders/publish-ads',
-        type: 'post',
-        data: {
-            tanggal: tanggal,
-            orderId: orderId
-        },
-        success: function (data, textStatus, jqXHR) {
-
-            if (data.length) {
-                bootbox.alert({
-                    message: "SUKSES MENYIMPAN ORDER",
-                    animate: false,
-                    buttons: {
-                        ok: {
-                            className: 'btn-danger btn-flat'
-                        }
-                    },
-                    callback: function (result) {
-                        window.location.href = '/advertising/orders';
-                    }
-                });
-            }
-
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            bootbox.alert({
-                message: "GAGAL MEMPERBARUI ORDER",
-                animate: false,
-                buttons: {
-                    ok: {
-                        className: 'btn-danger btn-flat'
-                    }
-                }
-            });
-        }
-    });
-}
-
 function getDatesByDays() {
     if ($('#startDate').val() && $('#endDate').val()) {
         var startDate = moment($('#startDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
@@ -1538,57 +1495,6 @@ function getDatesByDays() {
     }
 }
 
-function saveByDays(orderId) {
-    if ($('#startDate').val() && $('#endDate').val()) {
-
-        var data = getDatesByDays();
-        var tanggal = [];
-        $.each(data, function (index, value) {
-            tanggal.push({
-                publishDate: value
-            });
-        });
-
-        $.ajax({
-            url: '/advertising/orders/publish-ads',
-            type: 'post',
-            data: {
-                tanggal: tanggal,
-                orderId: orderId
-            },
-            success: function (data, textStatus, jqXHR) {
-
-                if (data.length) {
-                    bootbox.alert({
-                        message: "SUKSES MENYIMPAN ORDER",
-                        animate: false,
-                        buttons: {
-                            ok: {
-                                className: 'btn-danger btn-flat'
-                            }
-                        },
-                        callback: function (result) {
-                            window.location.href = '/advertising/orders';
-                        }
-                    });
-                }
-
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                bootbox.alert({
-                    message: "GAGAL MEMPERBARUI ORDER",
-                    animate: false,
-                    buttons: {
-                        ok: {
-                            className: 'btn-danger btn-flat'
-                        }
-                    }
-                });
-            }
-        });
-    }
-}
-
 localStorage.setItem('jenisEdisi', 'DATES');
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var data = $(e.target).data('id');
@@ -1626,4 +1532,5 @@ $(document).on('click', 'button#clearText', function (e) {
     e.preventDefault();
     $(this).closest('.input-group').find('input[type="hidden"]').val('');
     $(this).closest('.input-group').find('input[type="text"]').val('');
+    $(this).hide();
 });

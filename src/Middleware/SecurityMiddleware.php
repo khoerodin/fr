@@ -44,7 +44,7 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
             $session = $this->container['internal.session_storage'];
             $token = $session->get('token');
             if (!$token) {
-               return new RedirectResponse('/login');
+               return new RedirectResponse('/logout');
             } else {
                 /** @var ClientInterface $client */
                 $client = $this->container['internal.http_client'];
@@ -52,7 +52,7 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
                 $me = $client->get('users/me');
 
                 if(401 == $me->getStatusCode()){
-                    return new RedirectResponse('/login');
+                    return new RedirectResponse('/logout');
                 } else {
                     $session->set('me', $me->getContent());
                     $userId = json_decode($me->getContent(), true)['id'];

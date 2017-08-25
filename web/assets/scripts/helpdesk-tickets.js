@@ -7,10 +7,10 @@ $(document).on('click', '.detail-my-tic', function () {
     var ticketId = $(this).closest('tr').attr('id');
     $('#tiketModal .modal-body').attr('data-ticketid', ticketId);
 
-    var staffId = $(this).closest('tr').data('staff');
+    var staffId = $(this).closest('tr').attr('staff');
     $('#tiketModal .modal-body').attr('data-staffid', staffId);
 
-    var clientId = $(this).closest('tr').data('client');
+    var clientId = $(this).closest('tr').attr('client');
     $('#tiketModal .modal-body').attr('data-clientid', clientId);
 
     var staffUserId = $(this).closest('tr').data('staff-user');
@@ -59,12 +59,27 @@ $(document).on('click', '#send', function () {
         }
 
     }
-
     var trueClientId;
     if(typeof client !== 'undefined'){
         trueClientId = client;
     } else {
         trueClientId = '/api/users/'+clientId;
+    }
+
+    if ($('#tiketModal .modal-body').data('clientid') === $('#currentUser').val()) {
+
+        trueClientId = trueClientId;
+
+    } else {
+        trueTicketId = null;
+    }
+
+    if ($('#tiketModal .modal-body').data('staffid') !== $('#currentUser').val()) {
+
+        trueStaffId = trueStaffId;
+
+    } else {
+        trueStaffId = null;
     }
 
     if(text !== ''){
@@ -189,6 +204,7 @@ $(document).find('.wkt').append(html);
 function getTicketData(ticketId) {
 
     var client = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(2)').text();
+    var staff = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(3)').text();
     var title = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(5)').text();
     var category = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(4)').text();
     var momentPost = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(8)').text();
@@ -221,7 +237,7 @@ function getTicketData(ticketId) {
             // console.log(data);
             var finalData = data['hydra:member'];
 
-            var dataForum = '<div class="media" id="mediaForum"><div class="media-left"><img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6><h4 class="media-heading">Nama Klien</h4><p>'+msg+'</p></div></div><hr>';
+            var dataForum = '<div class="media" id="mediaForum"><div class="media-left"><img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6><h4 class="media-heading">'+client+'</h4><p>'+msg+'</p></div></div><hr>';
             $.each(finalData, function (index, value) {
 
                 dataForum += '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
@@ -240,9 +256,14 @@ function getTicketData(ticketId) {
                 dataForum += '</div>';
                 dataForum += '<div class="media-body">';
                 dataForum += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
-                // if(value.client) {' + value.client.fullname + '
-                    dataForum += '<h4 class="media-heading">Nama User</h4>';
-                // }
+
+
+                if(value.client.id === $('#currentUser').val() ) {
+                    dataForum += '<h4 class="media-heading">'+value.client.fullname+'</h4>';
+                } else {
+                    dataForum += '<h4 class="media-heading">'+value.staff.user.fullname+'</h4>';
+                }
+
                 dataForum += '<p>'+value.message+'</p>';
                 dataForum += '</div>';
                 dataForum += '</div>';
@@ -273,7 +294,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
             value: ticket
         },
         {
-            name: 'user',
+            name: 'client',
             value: client
         },
         {
@@ -309,7 +330,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
             } else {
                 // if (ticket) {
                     //$("#replyMessage").val('');
-                    var ticketId =  ticket.split("/").pop();
+                    // var ticketId =  ticket.split("/").pop();
                 // }
 
                 // if (value.staff) {
@@ -332,16 +353,23 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
 
                 result += ' data-time="'+data.createdAt+'">';
                 result += '<div class="media-body">';
-                result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
-                if(data.client) {
-                    result += '<h4 class="media-heading">' + data.client.fullname + '</h4>';
+                result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(data.createdAt).format('LLLL')+'</h6>';
+
+                if(data.staff.user.id === $('#currentUser').val()) {
+                    result += '<h4 class="media-heading">'+data.staff.user.fullname+'</h4>';
+                } else {
+                    result += '<h4 class="media-heading">'+data.client.fullname+'</h4>';
                 }
+
+                console.log($('#currentUser').val());
+                console.log(data.staff.user.id);
+
                 result += '<p>'+data.message+'</p>';
                 result += '</div>';
                 result += '<div class="media-right">';
-                if(data.client) {
+                // if(data.client) {
                     result += '<img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">';
-                }
+                // }
                 result += '</div>';
                 result += '</div>';
                 result += '<hr>';

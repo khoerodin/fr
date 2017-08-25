@@ -285,21 +285,18 @@
                                                 <div class="box-body">
                                                     <!-- Conversations are loaded here -->
                                                     <div class="direct-chat-messages" id="chatHistory">
-                                                        <!-- Message. Default to the left -->
-                                                        <div class="direct-chat-msg">
-                                                            <div class="direct-chat-info clearfix">
-                                                                <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
-                                                                <span class="wkt direct-chat-timestamp pull-right"></span>
+                                                        <!-- Media Message -->
+                                                        <div class="media" id="mediaForum" data-id="" data-ticket="" data-client="" data-staff="" data-time="">
+                                                            <div class="media-left">
+                                                                <img src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }}" class="media-object" style="width:60px">
                                                             </div>
-                                                            <!-- /.direct-chat-info -->
-                                                            <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
-                                                            <!-- /.direct-chat-img -->
-                                                            <div class="direct-chat-text">
-                                                                Selamat datang di Helpdesk Si JAGO. Jika ada hal yang ingin ditanyakan terkait layanan kami, jangan sungkan untuk bertanya melalui live chat kami :)
+                                                            <div class="media-body">
+                                                                <h4 class="media-heading"></h4><h5><span class="pull-right"></span></h5>
+                                                                <p></p>
                                                             </div>
-                                                            <!-- /.direct-chat-text -->
                                                         </div>
-                                                        <!-- /.direct-chat-msg -->
+                                                        <hr>
+                                                        <!-- End Media Message -->
 
                                                     </div>
 

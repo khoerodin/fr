@@ -5328,3 +5328,9 @@ tr.active {
   color: #fff; /* active text color */
   background-color: #a94442; /* active bg color */
 }
+
+.selected {
+  background-color: #337ab7;
+  color: #fff;
+  cursor: pointer
+}

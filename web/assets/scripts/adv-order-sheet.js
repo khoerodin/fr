@@ -898,6 +898,28 @@ $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function (
     getJumlahBayar();
 });
 
+
+$(document).on('click', '#klik', function () {
+    getDiscount();
+});
+
+// ambil diskon
+// function getDiscount() {
+//     var result;
+//     var $this = 'input[name=pickDiscount]';
+//     if ($($this+':checked').length > 0) {
+//         if ($($this+':checked').val() === '1') {
+//             result = $('#discountPercentage').val();
+//         } else {
+//             result = unformatMoney($('#discountValue').val());
+//         }
+//     } else {
+//         result = parseFloat(0);
+//     }
+//
+//     console.log(result);
+// }
+
 // hitung jumlah bayar
 function getJumlahBayar() {
     if($('#discountValue').val() && $('#taxValue').val() && $('#cashBackValue').val()) {
@@ -1533,4 +1555,21 @@ $(document).on('click', 'button#clearText', function (e) {
     $(this).closest('.input-group').find('input[type="hidden"]').val('');
     $(this).closest('.input-group').find('input[type="text"]').val('');
     $(this).hide();
+});
+
+$('input').on("keypress", function(e) {
+    /* ENTER PRESSED*/
+    if (e.keyCode == 13) {
+        /* FOCUS ELEMENT */
+        var inputs = $(this).parents("form").eq(0).find(":input");
+        var idx = inputs.index(this);
+
+        if (idx == inputs.length - 1) {
+            inputs[0].select()
+        } else {
+            inputs[idx + 1].focus(); //  handles submit buttons
+            inputs[idx + 1].select();
+        }
+        return false;
+    }
 });

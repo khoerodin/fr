@@ -62,10 +62,16 @@ function getTicketList() {
 
                         if(value.client) {
                             tr += ' data-client="/api/users/'+value.client.id+'"';
+
+                            tr += ' data-client-fullname="'+value.client.fullname+'"';
                         }
 
                         if(value.ticket) {
                             tr += ' data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'"';
+                        }
+
+                        if(value.message) {
+                            tr += ' data-msg="'+value.message+'"';
                         }
 
                         tr += '>';
@@ -490,26 +496,26 @@ $(document).find('#chatMessage').on('keypress', function(e){
 });
 
 //<----------------- IS TYPING A MESSAGE -------------->
-var textarea = $('#chatMessage');
-var typingStatus = $('#typing_on');
-var lastTypedTime = moment().format("ddd, D MMM YYYY, h:mm A");
-var typingDelayMillis = 4000;
-
-
-function refreshTypingStatus() {
-    if (!textarea.is(':focus') || textarea.val() == '' || new Date().getTime() - lastTypedTime.getTime() > typingDelayMillis) {
-        typingStatus.html('<span style="visibility: hidden">.</span>');
-    } else {
-        typingStatus.html('someone is typing...');
-    }
-}
-function updateLastTypedTime() {
-    lastTypedTime = new Date();
-}
-
-setInterval(refreshTypingStatus, 100);
-textarea.keypress(updateLastTypedTime);
-textarea.blur(refreshTypingStatus);
+// var textarea = $('#chatMessage');
+// var typingStatus = $('#typing_on');
+// var lastTypedTime = moment().format("ddd, D MMM YYYY, h:mm A");
+// var typingDelayMillis = 4000;
+//
+//
+// function refreshTypingStatus() {
+//     if (!textarea.is(':focus') || textarea.val() == '' || new Date().getTime() - lastTypedTime.getTime() > typingDelayMillis) {
+//         typingStatus.html('<span style="visibility: hidden">.</span>');
+//     } else {
+//         typingStatus.html('someone is typing...');
+//     }
+// }
+// function updateLastTypedTime() {
+//     lastTypedTime = new Date();
+// }
+//
+// setInterval(refreshTypingStatus, 100);
+// textarea.keypress(updateLastTypedTime);
+// textarea.blur(refreshTypingStatus);
 //<----------------- END IS TYPING A MESSAGE -------------->
 
 //<----------------- DATE TIME MOMENT JS -------------->
@@ -535,14 +541,16 @@ function getTicketData(ticketId) {
     // var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
     var category = $('tbody#ticketList tr#'+ticketId+' td:nth-child(2)').text();
     var momentPost = $('tbody#ticketList tr#'+ticketId+' td:nth-child(6)').text();
+    var user = $('tbody#ticketList tr#'+ticketId).data('client-fullname');
 
     $('#tiketModal .listDetail #list-title').text(title);
     $('#tiketModal .listDetail #list-tgl-post').text(momentPost);
     // $('#tiketModal .list-msg').text(message);
     $('#tiketModal .listDetail #list-cat').text(category);
-    var msg = $('tr#'+ticketId).data('msg');
+    var msg = $('div#myTickets tr#'+ticketId).data('msg');
 
     // console.log(ticketId);
+    console.log(msg);
 
     $.ajax({
         url: '/api',
@@ -561,7 +569,8 @@ function getTicketData(ticketId) {
             // console.log(data);
             var finalData = data['hydra:member'];
 
-            var result = '<div class="media" id="mediaForum"><div class="media-left"><img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6><h4 class="media-heading">Nama Klien</h4><p>'+msg+'</p></div></div><hr>';
+                var result = '<div class="media" id="mediaForum"><div class="media-left"><img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  ' + moment(data.createdAt).format('LLLL') + '</h6><h4 class="media-heading">'+user+'</h4><p>' + msg + '</p></div></div><hr>';
+
 
             $.each(finalData, function (index, value) {
 
@@ -587,7 +596,7 @@ function getTicketData(ticketId) {
                 result += '</div>';
                 result += '<div class="media-body">';
                 // if(value.client) {
-                    result += '<h4 class="media-heading">' + value.client.fullname + '</h4><h5><span class="pull-right">\'+moment(value.createdAt).format(\'LLLL\')+\'</span></h5>';
+                    result += '<h4 class="media-heading">' + value.client.fullname + '</h4><h5><span class="pull-right">'+moment(value.createdAt).format('LLLL')+'</span></h5>';
                 // }
                 result += '<p>'+value.message+'</p>';
                 result += '</div>';
@@ -775,7 +784,8 @@ $(document).on('click', '#send', function () {
     if(text !== ''){
         postTicketData(responseId, trueStaffId, trueTicketId, trueClientId, text);
     }else{
-        alert('Teks tidak boleh kosong bro..');
+        // alert('Teks tidak boleh kosong bro..');
+        toastr.error('Error! Pesan tidak boleh kosong');
     }
 
 });

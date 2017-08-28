@@ -85,7 +85,8 @@ $(document).on('click', '#send', function () {
     if(text !== ''){
         postTicketData(responseId, trueStaffId, trueTicketId, trueClientId, text);
     }else{
-        alert('Teks tidak boleh kosong bro..');
+        // alert('Teks tidak boleh kosong bro..');
+        toastr.error('Error! Teks tidak boleh kosong!');
     }
 
 });
@@ -208,6 +209,7 @@ function getTicketData(ticketId) {
     var title = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(5)').text();
     var category = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(4)').text();
     var momentPost = $('tbody#allTicketList tr#'+ticketId+' td:nth-child(8)').text();
+    var msg = $('#allTickets tr#'+ticketId).data('msg');
     // var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
     // var message = $('#msg').text();
 
@@ -216,9 +218,7 @@ function getTicketData(ticketId) {
     $('#tiketModal .listDetail #list-tgl-post').text(momentPost);
     // $('#tiketModal #chatHistory').text(message);
     $('#tiketModal .listDetail #list-cat').text(category);
-    var msg = $('tr#'+ticketId).data('msg');
 
-    // console.log(msg);
 
     $.ajax({
         url: '/api',
@@ -237,41 +237,58 @@ function getTicketData(ticketId) {
             // console.log(data);
             var finalData = data['hydra:member'];
 
-            var dataForum = '<div class="media" id="mediaForum"><div class="media-left"><img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6><h4 class="media-heading">'+client+'</h4><p>'+msg+'</p></div></div><hr>';
+            // if(('#currentUser').val()){
+                var tr = '<div class="media" id="mediaForum"><div class="media-left"><img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6><h4 class="media-heading">'+client+'</h4><p>'+msg+'</p></div></div><hr>';
+            // } else {
+            //     var tr = '<div class="media" id="mediaForum"><div class="media-left"><img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  ' + moment(value.createdAt).format('LLLL') + '</h6><h4 class="media-heading">' + client + '</h4><p>' + value.message + '</p></div></div><hr>';
+            // }
+
             $.each(finalData, function (index, value) {
 
-                dataForum += '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
+                // console.log(data);
+
+                tr += '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
 
                 if (value.ticket) {
-                    dataForum += 'data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'"';
+                    tr += 'data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'"';
                 }
 
                 if (value.client) {
-                    dataForum += 'data-client="/api/users/' + value.client.id + '"';
+                    tr += 'data-client="/api/users/' + value.client.id + '"';
                 }
 
-                dataForum += ' data-time="'+value.createdAt+'">';
-                dataForum += '<div class="media-left">';
-                dataForum += '<img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">';
-                dataForum += '</div>';
-                dataForum += '<div class="media-body">';
-                dataForum += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
+                if (value.staff) {
+                    tr += 'data-staff="/api/helpdesk/staffs/'+value.staff.user.id+'"';
+                }
+
+                tr += ' data-time="'+value.createdAt+'"';
+
+                tr += '>';
+                tr += '<div class="media-left">';
+                // if (value.client) {
+                //     tr += '<img src="/api/helpdesk/ticket-responses/'+value.client.profileImage+'" class="media-object" style="width:60px">';
+                // }
+
+                tr += '<img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">';
+                tr += '</div>';
+                tr += '<div class="media-body">';
+                tr += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
 
 
                 if(value.client.id === $('#currentUser').val() ) {
-                    dataForum += '<h4 class="media-heading">'+value.client.fullname+'</h4>';
+                    tr += '<h4 class="media-heading">'+value.client.fullname+'</h4>';
                 } else {
-                    dataForum += '<h4 class="media-heading">'+value.staff.user.fullname+'</h4>';
+                    tr += '<h4 class="media-heading">'+value.staff.user.fullname+'</h4>';
                 }
 
-                dataForum += '<p>'+value.message+'</p>';
-                dataForum += '</div>';
-                dataForum += '</div>';
-                dataForum += '<hr>';
+                tr += '<p>'+value.message+'</p>';
+                tr += '</div>';
+                tr += '</div>';
+                tr += '<hr>';
             });
 
 
-            $('#chatHistory').html(dataForum); //tbody result
+            $('#chatHistory').html(tr); //tbody result
 
         }
     });
@@ -447,7 +464,7 @@ function getTicketList() {
                 var no = 1;
                 $.each(memberData, function (index, value) {
 
-                    // dataForum += 'data-client="/api/users/' + value.client.id + '"';
+                    // tr += 'data-client="/api/users/' + value.client.id + '"';
 
                     if (value.staff) {
                         tr += 'data-staff="/api/helpdesk/staffs/'+value.staff.user.id+'"';
@@ -888,7 +905,24 @@ function getMyAssignmentList() {
 
                     if(value.status !== 'closed') {
 
-                        tr += '<tr id="' + value.id + '">';
+                        tr += '<tr id="' + value.id + '"';
+                        tr += 'data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
+
+                        if (value.ticket) {
+                            tr += 'data-ticket="/api/helpdesk/tickets/'+value.ticket.id+'"';
+                        }
+
+                        if (value.client) {
+                            tr += 'data-client="/api/users/' + value.client.id + '"';
+                        }
+
+                        if (value.staff) {
+                            tr += 'data-staff="/api/helpdesk/staffs/'+value.staff.user.id+'"';
+                        }
+
+                        tr += ' data-time="'+value.createdAt+'"';
+
+                        tr += '>';
                         tr += '<td>' + no + '</td>';
                         tr += '<td>' + value.category.name + '</td>';
                         tr += '<td>' + value.title + '</td>';
@@ -995,7 +1029,7 @@ function getAllTicketList() {
                         tr += '<tr id="'+value.id+'" data-msg="'+value.message+'"';
 
                         if (value.staff) {
-                            tr += 'staff="' + value.staff.id + '" staff-user="' + value.staff.id + '"';
+                            tr += 'staff="' + value.staff.id + '" staff-user="' + value.staff.user.id + '"';
                         }
 
                         if (value.client) {

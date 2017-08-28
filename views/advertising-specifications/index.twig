@@ -2,7 +2,7 @@
 
 {% block js %}
     <script src="/assets/scripts/global-crud.js"></script>
-    <script src="/assets/scripts/adv-detail.js"></script>
+    <script src="/assets/scripts/adv-specifications.js"></script>
     <script>
         window.module = 'advertising/specifications';
         window.field = 'name';
@@ -128,7 +128,7 @@
                                                 <th>Nama</th>
                                                 <th>Tipe</th>
                                                 <th>Keterangan</th>
-                                                <th width="10%"><span class="pull-right">Action</span></th>
+                                                <th width="15%"><span class="pull-right">Action</span></th>
                                             </tr>
                                         </thead>
 
@@ -214,6 +214,74 @@
                         </div>
                     </div>
                     {#END FORM ADD DETAIL MODAL#}
+
+                    {#PRICE LIST MODAL#}
+                    <div id="priceList" class="modal" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">LIS HARGA IKLAN</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th>JENIS IKLAN</th>
+                                            <th>DETAIL JENIS IKLAN</th>
+                                            <th>TYPE</th>
+                                            <th width="10%">TAHUN</th>
+                                            <th>HARGA</th>
+                                            <th width="10%"><span class="pull-right">AKSI</span></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="priceListBody">
+                                        <tr>
+                                            <td colspan="7">LOADING...</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    {#END PRICE LIST MODAL#}
+
+                    {#FORM DETAIL HARGA MODAL#}
+                    <div id="detailHarga" class="modal" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Detail Harga Iklan</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" class="detail form">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label for="year">Tahun</label>
+                                                <input type="number" name="year" class="form-control" id="year" placeholder="Tahun">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="price">Harga</label>
+                                                <input type="text" name="price" class="form-control" id="price" placeholder="Price">
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="id" name="id">
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" id="updateHarga" class="btn btn-flat btn-danger">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {#END DETAIL HARGA MODAL#}
 
                 </div>
                 <!-- /.box-body -->

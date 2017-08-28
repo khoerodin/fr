@@ -183,7 +183,10 @@ function getOrders(param) {
                     console.log(searchHistory);
                     var opt = '';
                     $.each(searchHistory, function (index, value) {
-                        opt += '<li class="optionHistory select2-results__option" data-id="'+value.id+'">'+value.text+'</li>';
+                        if (index === 0) {
+                            var selected = 'selected';
+                        }
+                        opt += '<li class="optionHistory '+selected+' select2-results__option" data-id="'+value.id+'">'+value.text+'</li>';
                     });
 
                     setTimeout(function(){
@@ -191,11 +194,11 @@ function getOrders(param) {
 
                         $('.optionHistory').hover(
                             function () {
-                                $(this).css({"background-color":"#337ab7", "color":"#fff", "cursor":"pointer"});
+                                $(this).addClass('selected');
                             },
 
                             function () {
-                                $(this).css({"background-color":"#fff", "color":"inherit"});
+                                $(this).removeClass('selected');
                             },
                         );
 
@@ -222,7 +225,7 @@ function getOrders(param) {
                         });
 
 
-                    }, 200);
+                    }, 1);
                 }
 
 

@@ -150,6 +150,7 @@ function getAdvDetail(advSpecId, specName) {
                 tr += '<span class="pull-right">';
                 tr += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
                 tr += '<button class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+                tr += '<button class="price btn btn-default btn-xs btn-flat" title="DETAIL HARGA IKLAN"><i class="fa fa-money"></i></button>';
                 tr += '</span></td>';
                 tr += '</td>';
                 tr += '</tr>';
@@ -316,4 +317,131 @@ $(document).on('click', '#form-add-detail .add-detail', function () {
             }
         }
     });
+});
+
+$(document).on('click', '.price', function () {
+
+    var load = '<tr><td colspan="7">LOADING...</td></tr>';
+    var id = $(this).closest('tr').data('id');
+
+    $('#priceList tbody').html(load);
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'advertising/prices',
+            method: 'get',
+            params: [
+                { 'specificationDetail.id': id }
+            ]
+        },
+        success: function (data, textStatus, jqXHR) {
+            var data = JSON.parse(data);
+            var member = data['hydra:member'];
+            var tr = '';
+            var no = 1;
+            $.each(member, function (index, value) {
+                tr += '<tr data-id="'+value.id+'">';
+                tr += '<td>'+no+'</td>';
+                tr += '<td>'+value.specificationDetail.specification.name+'</td>';
+                tr += '<td>'+value.specificationDetail.name+'</td>';
+                tr += '<td>'+value.specificationDetail.type.name+'</td>';
+                tr += '<td>'+value.year+'</td>';
+                tr += '<td>'+value.price+'</td>';
+                tr += '<td><span class="pull-right">' +
+                    '<button class="detail-price btn btn-xs btn-default btn-flat"><i class="fa fa-eye"></i></button>' +
+                    '<button class="delete-price btn btn-xs btn-default btn-flat"><i class="fa fa-times"></i></button>' +
+                    '</span></td>';
+                tr += '</tr>';
+                no++;
+            });
+            $('#priceList tbody').html(tr);
+
+            if (data['hydra:totalItems'] < 1) {
+                $('#priceList tbody').html('<tr><td colspan="7">NO DATA AVAILABLE</td></tr>');
+            }
+        }
+    });
+
+    $('#priceList').modal({show: true, backdrop: 'static'});
+});
+
+$(document).on('click', '.detail-price', function () {
+
+    var id = $(this).closest('tr').data('id');
+    $('#detailHarga #year').val('');
+    $('#detailHarga #price').val('');
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'advertising/prices/' + id,
+            method: 'get'
+        },
+        success: function (data) {
+            var data = JSON.parse(data);
+            $('#detailHarga #year').val(data.year);
+            $('#detailHarga #price').val(data.price);
+            $('#detailHarga #id').val(data.id);
+        }
+    });
+
+    $('#detailHarga').modal({show: true, backdrop: 'static'});
+
+});
+
+$(document).on('click', '#detailHarga #updateHarga', function () {
+    var id = $('#detailHarga #id').val();
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'advertising/prices/' + id,
+            method: 'put',
+            params: $('#detailHarga form').serializeArray()
+        },
+        success: function (data, textStatus, jqXHR) {
+            data = JSON.parse(data);
+            var td4 = data.year;
+            var td5 = data.price;
+
+            $('#priceList tr#'+id).find("td:eq(4)").text(td4);
+            $('#priceList tr#'+id).find("td:eq(5)").text(td5);
+
+            if (jqXHR.status === 200) {
+                $('#detailHarga').modal('hide');
+                toastr.success('Data berhasil diperbaharui');
+            } else {
+                toastr.error('Error memperbarui data Anda');
+            }
+        }
+    });
+});
+
+$(document).on('click', '.delete-price', function () {
+    var module = 'advertising/prices';
+    var id = $(this).closest('tr').data('id');
+    var elm = jQuery('#priceList tbody tr[data-id="'+id+'"]');
+    elm.addClass('bg-red');
+    setTimeout(function(){
+        bootbox.confirm({
+            message: "ARE YOU SURE YOU WANT TO DELETE THIS DATA?",
+            animate: false,
+            buttons: {
+                confirm: {
+                    className: 'btn-danger btn-flat'
+                },
+                cancel: {
+                    className: 'btn-default btn-flat'
+                }
+            },
+            callback: function (result) {
+                if (result === false) {
+                    elm.removeClass('bg-red');
+                } else {
+                    del(module, id, 'priceListBody');
+                }
+            }
+        });
+    }, 20);
 });

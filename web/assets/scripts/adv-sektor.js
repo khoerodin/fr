@@ -12,7 +12,7 @@ function getSelectEmiten() {
         success: function (successData, textStatus, jqXHR) {
             successData = JSON.parse(successData);
             var memberData = successData['hydra:member'];
-            var select = '<option selected value="nodata">PILIH EMITEN</option>';
+            var select = '<option selected disabled value="nodata">PILIH EMITEN</option>';
             $.each(memberData, function (index, value) {
                 select += '<option value="'+value.id+'">'+value.name+'</option>';
             });
@@ -188,5 +188,9 @@ function del(module, id, formId) {
     });
 
 }
+
+$('#select-emiten').select2({
+    theme: 'bootstrap'
+});
 
 

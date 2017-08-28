@@ -123,12 +123,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Nama PIC</label>
-                                    <div class="input-group" id="pic">
-                                        <input type="text" name="pic" readonly class="form-control">
-                                        <input type="hidden" id="accountExecutive" name="accountExecutive">
+                                    <label for="">Tipe Iklan</label>
+                                    <div class="input-group" id="tipeIklan">
+                                        <input type="text" readonly name="tipeIklan" class="form-control">
+                                        <input type="hidden" name="type" id="type" >
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -137,10 +137,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Tipe Iklan</label>
-                                    <div class="input-group" id="tipeIklan">
-                                        <input type="text" readonly name="tipeIklan" class="form-control">
-                                        <input type="hidden" name="type" id="type" >
+                                    <label for="">Nama PIC</label>
+                                    <div class="input-group" id="pic">
+                                        <input type="text" name="pic" readonly class="form-control">
+                                        <input type="hidden" id="accountExecutive" name="accountExecutive">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -428,7 +428,13 @@
                     </form>
                 </div>
                 <div class="box-footer clearfix">
-                    <button class="btn btn-flat btn-danger pull-right" id="btn-order" disabled>SIMPAN</button>
+
+                    <div class="col-xs-5"></div>
+                    <div class="col-xs-2">
+                        <button class="btn btn-flat btn-danger pull-right btn-block" id="btn-order" disabled>SIMPAN</button>
+                    </div>
+                    <div class="col-xs-5"></div>
+
                 </div>
             </div>
             <!-- /.box -->

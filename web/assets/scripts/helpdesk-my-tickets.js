@@ -581,14 +581,14 @@ function getTicketData(ticketId) {
 
                 result += ' data-time="'+value.createdAt+'">';
                 result += '<div class="media-left">';
-                if(value.client) {
-                    result += '<img src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }}" class="media-object" style="width:60px">';
-                }
+                // if(value.client) {
+                    result += '<img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">';
+                // }
                 result += '</div>';
                 result += '<div class="media-body">';
-                if(value.client) {
+                // if(value.client) {
                     result += '<h4 class="media-heading">' + value.client.fullname + '</h4><h5><span class="pull-right">\'+moment(value.createdAt).format(\'LLLL\')+\'</span></h5>';
-                }
+                // }
                 result += '<p>'+value.message+'</p>';
                 result += '</div>';
                 result += '</div>';

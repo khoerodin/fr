@@ -2,7 +2,7 @@
 
 //DETAIL TIKET-KU (Forum)
 $(document).on('click', '.detail-my-tic', function () {
-    var ticketId = $(this).closest('tr').attr('id');
+    var ticketId = $(this).closest('tr').data('id');
     $('#tiketModal .modal-body').attr('data-ticketid', ticketId);
 
     var staffId = $(this).closest('tr').data('staff');
@@ -57,13 +57,13 @@ function getTicketList() {
 
                         tr += '<tr id="'+value.id+'"';
                         if (value.staff) {
-                            tr += ' data-staff="/api/helpdesk/staffs/'+value.staff.id+'"';
+                            tr += ' staff="/api/users/'+value.staff.id+'"';
                         }
 
                         if(value.client) {
                             tr += ' data-client="/api/users/'+value.client.id+'"';
 
-                            tr += ' data-client-fullname="'+value.client.fullname+'"';
+                            tr += ' data-client-fullname="'+value.client.fullname+'"'; // !! penting !!
                         }
 
                         if(value.ticket) {
@@ -569,7 +569,7 @@ function getTicketData(ticketId) {
             // console.log(data);
             var finalData = data['hydra:member'];
 
-                var result = '<div class="media" id="mediaForum"><div class="media-left"><img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  ' + moment(data.createdAt).format('LLLL') + '</h6><h4 class="media-heading">'+user+'</h4><p>' + msg + '</p></div></div><hr>';
+                var result = '<div class="media" id="mediaForum"><div class="media-left"><img src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }}" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  ' + moment(data.createdAt).format('LLLL') + '</h6><h4 class="media-heading">'+user+'</h4><p>' + msg + '</p></div></div><hr>';
 
 
             $.each(finalData, function (index, value) {
@@ -591,7 +591,7 @@ function getTicketData(ticketId) {
                 result += ' data-time="'+value.createdAt+'">';
                 result += '<div class="media-left">';
                 // if(value.client) {
-                    result += '<img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">';
+                    result += '<img src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }}" class="media-object" style="width:60px">';
                 // }
                 result += '</div>';
                 result += '<div class="media-body">';

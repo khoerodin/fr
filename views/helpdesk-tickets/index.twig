@@ -192,19 +192,17 @@
                                                     <!-- Conversations are loaded here -->
                                                     <div class="direct-chat-messages" id="chatHistory">
                                                         <!-- Message. Default to the left -->
-                                                        <div class="direct-chat-msg">
-                                                            <div class="direct-chat-info clearfix">
-                                                                <span class="direct-chat-name pull-left">{{ me.fullname }}</span>
-                                                                <span class="wkt direct-chat-timestamp pull-right"></span>
-                                                            </div>
-                                                            <!-- /.direct-chat-info -->
-                                                            <img class="direct-chat-img" src="/api/images/{{ image[0] }}?ext={{ image[1] }}" alt="message user image">
-                                                            <!-- /.direct-chat-img -->
-                                                            <div class="direct-chat-text">
-                                                                Selamat datang di Helpdesk Si JAGO. Jika ada hal yang ingin ditanyakan terkait layanan kami, jangan sungkan untuk bertanya melalui live chat kami :)
-                                                            </div>
-                                                            <!-- /.direct-chat-text -->
+                                                        <div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/" data-ticket="/api/helpdesk/tickets/" data-client="/api/users/" data-time="">
+                                                        <div class="media-left">
+                                                            <img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">';
                                                         </div>
+                                                            <div class="media-body">
+                                                                <h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i> Hari, Tanggal dan Jam</h6>
+                                                                <h4 class="media-heading">Nama Klien / Staff</h4>
+                                                                <p>Isi Pesan</p>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
                                                         <!-- /.direct-chat-msg -->
 
                                                     </div>

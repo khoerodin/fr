@@ -339,6 +339,7 @@ function getPriceList(id) {
             var tr = '';
             var no = 1;
             $.each(member, function (index, value) {
+
                 tr += '<tr data-id="'+value.id+'">';
                 tr += '<td>'+no+'</td>';
                 tr += '<td>'+value.specificationDetail.specification.name+'</td>';
@@ -346,6 +347,7 @@ function getPriceList(id) {
                 tr += '<td>'+value.specificationDetail.type.name+'</td>';
                 tr += '<td>'+value.year+'</td>';
                 tr += '<td>'+value.price+'</td>';
+                tr += '<td>'+((value.active === true) ? '<span class="text-success">Aktif</span>' : '<span class="text-danger">Tidak Aktif</span>')+'</td>';
                 tr += '<td><span class="pull-right">' +
                     '<button class="detail-price btn btn-xs btn-default btn-flat"><i class="fa fa-eye"></i></button>' +
                     '<button class="delete-price btn btn-xs btn-default btn-flat"><i class="fa fa-times"></i></button>' +
@@ -356,7 +358,7 @@ function getPriceList(id) {
             $('#priceList tbody').html(tr);
 
             if (data['hydra:totalItems'] < 1) {
-                $('#priceList tbody').html('<tr><td colspan="7">NO DATA AVAILABLE</td></tr>');
+                $('#priceList tbody').html('<tr><td colspan="8">NO DATA AVAILABLE</td></tr>');
             }
         }
     });
@@ -367,7 +369,7 @@ function getPriceList(id) {
 }
 
 $(document).on('click', '.price', function () {
-    
+
     var id = $(this).closest('tr').data('id');
     $('#add-harga.btn').attr('data-id', id);
 
@@ -443,6 +445,12 @@ $(document).on('click', '.detail-price', function () {
             var data = JSON.parse(data);
             $('#detailHarga #year').val(data.year);
             $('#detailHarga #price').val(data.price);
+            if(data.active === true) {
+                $('#detailHarga #active').prop('checked', true);
+            } else {
+                $('#detailHarga #active').prop('checked', false);
+            }
+
             $('#detailHarga #id').val(data.id);
         }
     });
@@ -465,9 +473,12 @@ $(document).on('click', '#detailHarga #updateHarga', function () {
             data = JSON.parse(data);
             var td4 = data.year;
             var td5 = data.price;
+            var td6 = ((data.active === true) ? '<span class="text-success">Aktif</span>' : '<span class="text-danger">Tidak Aktif</span>');
 
-            $('#priceList tr#'+id).find("td:eq(4)").text(td4);
-            $('#priceList tr#'+id).find("td:eq(5)").text(td5);
+            $('#priceList tr[data-id="'+id+'"]').find("td:eq(4)").text(td4);
+            $('#priceList tr[data-id="'+id+'"]').find("td:eq(5)").text(td5);
+            $('#priceList tr').find("td:eq(6)").html('<span class="text-danger">Tidak Aktif</span>');
+            $('#priceList tr[data-id="'+id+'"]').find("td:eq(6)").html(td6);
 
             if (jqXHR.status === 200) {
                 $('#detailHarga').modal('hide');

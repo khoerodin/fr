@@ -8,7 +8,7 @@ $(document).on('click', 'tbody[data-list="advertising/specifications"] .detail-a
     $('#detail-jenis select#search-spec-detail').select2({
 
         theme: "bootstrap",
-        placeholder: "SEARCH TYPE",
+        placeholder: "SEARCH NAME",
         allowClear: true,
         ajax: {
             url: "/api/search",
@@ -296,6 +296,8 @@ $(document).on('click', '.add-btn.add-adv-detail', function () {
 });
 
 $(document).on('click', '#form-add-detail .add-detail', function () {
+
+    var load = '<tr><td colspan="7">LOADING...</td></tr>';
     var advSpecId = $(this).data('id');
     var data = {
         'module' : 'advertising/specification-details',
@@ -319,12 +321,8 @@ $(document).on('click', '#form-add-detail .add-detail', function () {
     });
 });
 
-$(document).on('click', '.price', function () {
+function getPriceList(id) {
 
-    var load = '<tr><td colspan="7">LOADING...</td></tr>';
-    var id = $(this).closest('tr').data('id');
-
-    $('#priceList tbody').html(load);
     $.ajax({
         url: '/api',
         type: 'POST',
@@ -363,7 +361,70 @@ $(document).on('click', '.price', function () {
         }
     });
 
+    var load = '<tr><td colspan="7">LOADING...</td></tr>';
+    $('#priceList tbody').html(load);
     $('#priceList').modal({show: true, backdrop: 'static'});
+}
+
+$(document).on('click', '.price', function () {
+    
+    var id = $(this).closest('tr').data('id');
+    $('#add-harga.btn').attr('data-id', id);
+
+    getPriceList(id)
+
+    // $('#priceList #search-harga').select2({
+    //
+    //     theme: "bootstrap",
+    //     placeholder: "SEARCH YEAR",
+    //     allowClear: true,
+    //     ajax: {
+    //         url: "/api/search",
+    //         dataType: 'json',
+    //         type: 'POST',
+    //         delay: 250,
+    //         data: function (params) {
+    //             return {
+    //                 q: params.term,
+    //                 page: params.page,
+    //                 module: 'advertising/prices',
+    //                 method: 'get',
+    //                 field: 'specificationDetail.name'.split('#'),
+    //                 params: {
+    //                     'specificationDetail.id' : id
+    //                 }
+    //             };
+    //         },
+    //         processResults: function (data) {
+    //             if(data.length > 0) {
+    //                 return {
+    //                     results: $.map(data, function(obj) {
+    //                         console.log(obj);
+    //                         return { id: obj.id, text: obj['specificationDetail.name'] };
+    //                     })
+    //                 }
+    //             } else {
+    //                 var elms = $('.harga-search').removeClass('col-md-12').addClass('col-md-10');
+    //                 elms += $('.button-harga-area').addClass('col-md-2');
+    //                 elms += $('.button-harga-area a.add-btn').css('visibility', 'visible');
+    //
+    //                 return {
+    //                     results: elms
+    //                 }
+    //             }
+    //         },
+    //         cache: true,
+    //     },
+    //     escapeMarkup: function (markup) { return markup; },
+    //     minimumInputLength: 2
+    // }).on("select2:select", function () {
+    //     // var specName = $('#detail-jenis select#search-spec-detail option:selected').text();
+    //     // getAdvDetail(advSpecId, specName);
+    // }).on("select2:open", function () {
+    //     // $('.detail-jenis-search').removeClass('col-md-10').addClass('col-md-12');
+    //     // $('.button-detail-jenis-area').removeClass('col-md-2');
+    //     // $('.button-detail-jenis-area a.add-btn').css('visibility', 'hidden');
+    // });
 });
 
 $(document).on('click', '.detail-price', function () {
@@ -444,4 +505,57 @@ $(document).on('click', '.delete-price', function () {
             }
         });
     }, 20);
+});
+
+$(document).on('click', '#add-harga', function () {
+    var spcId = $(this).data('id');
+    $('#addHarga form [name="specificationDetail"]').val('/api/advertising/specification-details/'+spcId);
+    $('#addHarga').modal({show: true, backdrop: 'static'});
+});
+
+$(document).on('click', '#addHarga #saveHarga', function () {
+
+    $('#saveHarga').text('SAVE').prop('disabled', true);
+    $('div .has-error').removeClass('has-error');
+    $('p.help-block').remove();
+
+    $.ajax({
+        type: 'post',
+        url: '/api',
+        data: {
+            module: 'advertising/prices',
+            method: 'post',
+            params: $('#addHarga form').serializeArray()
+        },
+        success: function (data, textStatus, jqXHR) {
+            var arr = JSON.parse(data);
+            if ("violations" in arr) {
+
+                $.each(arr, function (index, value) {
+                    if(index === 'violations'){
+                        $.each(value, function (idx, val) {
+                            $('#addHarga form #'+val.propertyPath).parent('div').addClass('has-error');
+                            $( '<p class="help-block">'+val.message+'</p>' ).insertAfter( '#addHarga form #'+val.propertyPath );
+                        });
+                    }
+                });
+
+                toastr.error('Error when saving your data');
+
+            } else if('id' in arr) {
+                $('#addHarga').modal('hide');
+                toastr.success('Data successfully added');
+            } else {
+                toastr.error('Error when saving your data');
+            }
+            var id = $('#add-harga.btn').attr('data-id');
+            getPriceList(id);
+            $('#saveHarga').text('SAVE').prop('disabled', false);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            toastr.error('Error when saving your data');
+            $('#saveHarga').text('SAVE').prop('disabled', false);
+        }
+    });
+
 });

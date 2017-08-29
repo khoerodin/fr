@@ -120,7 +120,7 @@ $(document).on('keyup', '#klienModal #serachList', function () {
     getCustomers(params, 'klienModal');
 });
 
-$(document).ajaxComplete(function() {
+// $(document).ajaxComplete(function() {
     //pilih pemasang iklan dari list dg cara double klik
     $(document).on('dblclick', '#pemasangModalData tr', function () {
         var customerId = $(this).data('id');
@@ -137,7 +137,7 @@ $(document).ajaxComplete(function() {
         $('input[name="klien"]').val($(this).find('td:eq(1)').text()+' - '+$(this).find('td:eq(2)').text());
         $('#klienModal').modal('hide');
     });
-});
+// });
 
 // klik tombol Jenis Iklan
 $(document).on('click', '#jenisIklan button', function () {
@@ -199,7 +199,7 @@ function getSpecifications(params) {
     });
 }
 
-$(document).ajaxComplete(function() {
+// $(document).ajaxComplete(function() {
     //ketika double klik list jenis iklan
     $(document).on('dblclick', '#jenisIklanModalData tr', function () {
         var specificationId = $(this).data('id');
@@ -213,7 +213,7 @@ $(document).ajaxComplete(function() {
         $('#btn-order').prop('disabled', true);
         $('#btn-order-update').prop('disabled', true);
     });
-});
+// });
 // end Jenis Iklan
 
 // klik pilih Tipe Iklan
@@ -276,15 +276,35 @@ function getTypes(params) {
     });
 }
 
-$(document).ajaxComplete(function() {
+//$(document).ajaxComplete(function() {
     //ketika double klik list tipe iklan
     $(document).on('dblclick', '#tipeIklanModalData tr', function () {
         var typesId = $(this).data('id');
         $('#type').val('/api/advertising/types/'+typesId);
         $('input[name="tipeIklan"]').val($(this).find('td:eq(0)').text());
         $('#tipeIklanModal').modal('hide');
+        
+        $.ajax({
+            type: 'post',
+            url: '/api',
+            data: {
+                method: 'get',
+                module: 'advertising/prices',
+                params: [
+                    {
+                        'specificationDetail.type.id': typesId,
+                        active: true
+                    }
+                ]
+            },
+            success: function (data) {
+                var data = JSON.parse(data)['hydra:member'];
+                $('#basePrice, [name="basePrice"]').val(data[0]['price']);
+            }
+        });
+        
     });
-});
+//});
 // end Tipe Iklan
 
 // klik pilih Media Iklan
@@ -347,7 +367,7 @@ function getMedia(params) {
     });
 }
 
-$(document).ajaxComplete(function() {
+// $(document).ajaxComplete(function() {
     //double klik media iklan
     $(document).on('dblclick', '#mediaIklanModalData tr', function () {
         var mediaId = $(this).data('id');
@@ -355,7 +375,7 @@ $(document).ajaxComplete(function() {
         $('input[name="mediaIklan"]').val($(this).find('td:eq(0)').text());
         $('#mediaIklanModal').modal('hide');
     });
-});
+// });
 // end Media Iklan
 
 // klik pilih Emiten
@@ -421,7 +441,7 @@ function getEmiten() {
     });
 }
 
-$(document).ajaxComplete(function() {
+// $(document).ajaxComplete(function() {
     // double klik list emiten
     $(document).on('dblclick', '#emitenData tr', function () {
 
@@ -436,7 +456,7 @@ $(document).ajaxComplete(function() {
         $('#category').val('');
         $('input[name="sub-sektor"]').val('');
     });
-});
+// });
 // end Emiten
 
 // pilih Sektor
@@ -515,7 +535,7 @@ function getSektor(params, parentId) {
     });
 }
 
-$(document).ajaxComplete(function() {
+// $(document).ajaxComplete(function() {
     //double klik list sektor
     $(document).on('dblclick', '#sektorModalData tr', function () {
         var sektorId = $(this).data('id');
@@ -526,7 +546,7 @@ $(document).ajaxComplete(function() {
         $('#category').val('');
         $('input[name="sub-sektor"]').val('');
     });
-});
+// });
 // end Sektor
 
 // pilioh Sub-Sektor
@@ -605,7 +625,7 @@ function getSubSektor(params, parentId) {
     });
 }
 
-$(document).ajaxComplete(function() {
+// $(document).ajaxComplete(function() {
     // double klik list sub sektor
     $(document).on('dblclick', '#subSektorModalData tr', function () {
         var sektorId = $(this).data('id');
@@ -613,7 +633,7 @@ $(document).ajaxComplete(function() {
         $('input[name="sub-sektor"]').val($(this).find('td:eq(0)').text());
         $('#subSektorModal').modal('hide');
     });
-});
+// });
 // end Sektor
 
 // pilih PIC / accountExecutive
@@ -677,7 +697,7 @@ function getPIC(params) {
     });
 }
 
-$(document).ajaxComplete(function() {
+// $(document).ajaxComplete(function() {
     //double klik data PIC
     $(document).on('dblclick', '#PICModalData tr', function () {
         var accountExecutiveId = $(this).data('id');
@@ -685,7 +705,7 @@ $(document).ajaxComplete(function() {
         $('input[name="pic"]').val($(this).find('td:eq(1)').text());
         $('#PICModal').modal('hide');
     });
-});
+// });
 // end PIC / accountExecutive
 
 // pilih Sisipan
@@ -748,7 +768,7 @@ function getSisipan(params) {
     });
 }
 
-$(document).ajaxComplete(function() {
+// $(document).ajaxComplete(function() {
     // double klik data sisipan
     $(document).on('dblclick', '#sisipanModalData tr', function () {
         var cityId = $(this).data('id');
@@ -757,7 +777,7 @@ $(document).ajaxComplete(function() {
         $('#sisipanModal').modal('hide');
         $('#clearText').show();
     });
-});
+// });
 
 //tombol clear
 if (!$('#sirculationArea').val()) {

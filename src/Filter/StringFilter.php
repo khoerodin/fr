@@ -14,7 +14,8 @@ class StringFilter extends AbstractFilter
     public function cast($value)
     {
         if ('#' === substr($value, 0, 1)) {
-            if ($_string = is_numeric(substr($value, 1))) {
+            $_string = substr($value, 1);
+            if (is_numeric($_string)) {
                 $this->stopNext = true;
 
                 return (string) $_string;

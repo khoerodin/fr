@@ -65,8 +65,6 @@ function getTicketData(ticketId) {
             var finalData = data['hydra:member'];
 
             if($('#currentUser').val()){
-
-
                 var tr = '<div class="media" id="mediaForum"><div class="media-left"><img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6><h4 class="media-heading">'+client+'</h4><p>'+msg+'</p></div></div><hr>';
             } else {
                 var tr = '<div class="media" id="mediaForum"><div class="media-left"><img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  ' + moment(value.createdAt).format('LLLL') + '</h6><h4 class="media-heading">' + client + '</h4><p>' + value.message + '</p></div></div><hr>';
@@ -97,31 +95,31 @@ function getTicketData(ticketId) {
                 tr += '>';
                 tr += '<div class="media-left">';
 
-                if (value.staff) {
+                // if (value.staff) {
 
-                    if(value.staff.user.id === $('#currentUser').val()) {
+                    if(value.ticket.staff.user.id === $('#currentUser').val()) {
 
-                        var img = (value.staff.user.profileImage).split(".");
+                        var img = (value.ticket.staff.user.profileImage).split(".");
                         tr += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
                         // '+img[0]+'?ext='+img[1]+'
                     }
 
-                }
+                // }
                 tr += '</div>';
                 tr += '<div class="media-body">';
                 tr += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
 
                 // if(value.staff) {
-                // console.log(value);
+                // console.log(value.ticket);
                 // console.log(value.staff.id);
                 // console.log($('#currentUser').val());
-                if(value.staff) {
+                // if(value.staff) {
 
-                    if (value.staff.user.id === $('#currentUser').val()) {
-                        tr += '<h4 class="media-heading">' + value.staff.fullname + '</h4>';
-                    }
-                } else if (value.client) {
-                    tr += '<h4 class="media-heading">' + value.client.fullname + '</h4>';
+                    if (value.ticket.staff.user.id === $('#currentUser').val()) {
+                        tr += '<h4 class="media-heading">' + value.ticket.staff.fullname + '</h4>';
+                    } else {
+                // } else if (value.client) {
+                    tr += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
                 }
                 // }
 
@@ -200,7 +198,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
                 // if (value.staff) {
                 //     tr += 'data-staff="/api/helpdesk/staffs/'+value.staff.user.id+'"';
                 // }
-
+                // console.log(data);
                 var result = '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+data.id+'"';
 
                 if (data.ticket) {
@@ -217,10 +215,10 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
 
                 result += 'data-time="'+data.createdAt+'">';
                 result += '<div class="media-left">';
-                // console.log(data);
+                console.log(data);
                 if(data.staff) {
                     var img = (data.staff.user.profileImage).split(".");
-                    result += '<img src="/api/images/profiles/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
+                    result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
                 }
                 result += '</div>';
                 result += '<div class="media-body">';
@@ -263,7 +261,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
                             },
                             {
                                 name: 'message',
-                                value: data.message
+                                value: message
                             },
                             {
                                 name: 'read',

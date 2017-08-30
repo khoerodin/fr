@@ -1,460 +1,197 @@
-// EMITEN
-var emitenData = {
-    module: 'advertising/categories/root',
-    method: 'get'
-};
+$.fn.extend({
+    treed: function (o) {
 
-getData(emitenData, 'emitenTable');
+        var openedClass = 'glyphicon-minus-sign';
+        var closedClass = 'glyphicon-plus-sign';
 
-$(document).on('click', '#emitenTable tr', function (e) {
-    var id = $(this).attr('id');
-
-    if (id) {
-        var sektorData = {
-            module: 'advertising/categories',
-            method: 'get',
-            params: [{'parent.id': id}]
-        };
-    }
-
-    getData(sektorData, 'sektorTable', 'sektor');
-
-    if ($(this).hasClass("bg-yellow")) {
-        $(this).removeClass("bg-yellow");
-    } else {
-        $(this).addClass("bg-yellow");
-        $(this).siblings().removeClass('bg-yellow');
-    }
-    $('.sub-sektor').removeAttr('data-toggle');
-});
-
-// detail emiten
-$(document).on('click', 'tbody#emitenTable .detail-btn', function () {
-    var id = $(this).attr('data-id');
-    getDetail(id, 'emitenModal');
-});
-
-// edit form emiten
-$(document).on('click', 'div#emitenModal .edit.btn', function () {
-    var params = $('div#emitenModal form');
-    var id = $('div#emitenModal form input#id').val();
-    editAction('advertising/categories', id, params, 'emitenModal', 'emitenTable', ['name']);
-});
-
-// Delete emiten
-$(document).on('click', 'tbody#emitenTable .delete-btn', function () {
-    var module = 'advertising/categories';
-    var id = $(this).attr('data-id');
-    var elm = jQuery('tbody tr#'+id);
-    elm.addClass('bg-red');
-    setTimeout(function(){
-        bootbox.confirm({
-            message: "ARE YOU SURE YOU WANT TO DELETE THIS DATA?",
-            animate: false,
-            buttons: {
-                confirm: {
-                    className: 'btn-danger btn-flat'
-                },
-                cancel: {
-                    className: 'btn-default btn-flat'
-                }
-            },
-            callback: function (result) {
-                if (result === false) {
-                    elm.removeClass('bg-red');
-                } else {
-                    del(module, id, emitenData, 'emitenTable');
-                }
+        if (typeof o != 'undefined'){
+            if (typeof o.openedClass != 'undefined'){
+                openedClass = o.openedClass;
             }
-        });
-    }, 20);
-
-});
-// END EMITEN
-
-// SEKTOR
-$(document).on('click', '#sektorTable tr', function (e) {
-    var id = $(this).attr('id');
-    if (id) {
-        var sektorData = {
-            module: 'advertising/categories',
-            method: 'get',
-            params: [{'parent.id': id}]
+            if (typeof o.closedClass != 'undefined'){
+                closedClass = o.closedClass;
+            }
         };
 
-        getData(sektorData, 'subSektorTable', 'sub-sektor');
-    }
-
-    if ($(this).hasClass("bg-yellow")) {
-        $(this).removeClass("bg-yellow");
-    } else {
-        $(this).addClass("bg-yellow");
-        $(this).siblings().removeClass('bg-yellow');
-    }
-});
-
-// detail sektor
-$(document).on('click', 'tbody#sektorTable .detail-btn', function () {
-    var id = $(this).attr('data-id');
-    getDetail(id, 'sektorModal');
-});
-
-// edit form sektor
-$(document).on('click', 'div#emitenModal .edit.btn', function () {
-    var params = $('div#emitenModal form');
-    var id = $('div#emitenModal form input#id').val();
-    editAction('advertising/categories', id, params, 'emitenModal', 'emitenTable', ['name']);
-});
-
-// Delete sektor
-$(document).on('click', 'tbody#sektorTable .delete-btn', function () {
-    var module = 'advertising/categories';
-    var id = $(this).attr('data-id');
-    var elm = jQuery('tbody tr#'+id);
-    elm.addClass('bg-red');
-    setTimeout(function(){
-        bootbox.confirm({
-            message: "ARE YOU SURE YOU WANT TO DELETE THIS DATA?",
-            animate: false,
-            buttons: {
-                confirm: {
-                    className: 'btn-danger btn-flat'
-                },
-                cancel: {
-                    className: 'btn-default btn-flat'
+        //initialize each of the top levels
+        var tree = $(this);
+        tree.addClass("tree");
+        tree.find('li').has("ul").each(function () {
+            var branch = $(this); //li with children ul
+            branch.prepend("<i class='indicator glyphicon " + closedClass + "'></i>");
+            branch.addClass('branch');
+            branch.on('click', function (e) {
+                if (this == e.target) {
+                    var icon = $(this).children('i:first');
+                    icon.toggleClass(openedClass + " " + closedClass);
+                    $(this).children().children().toggle();
                 }
-            },
-            callback: function (result) {
-                console.log(result);
-                if (result === false) {
-                    elm.removeClass('bg-red');
-                } else {
-                    del(module, id, null, 'sektorTable');
-                }
-            }
+            })
+            branch.children().children().toggle();
         });
-    }, 20);
-
+        //fire event from the dynamically added icon
+        tree.find('.branch .indicator').each(function(){
+            $(this).on('click', function () {
+                $(this).closest('li').click();
+            });
+        });
+        //fire event to open branch if the li contains an anchor instead of text
+        tree.find('.branch>a').each(function () {
+            $(this).on('click', function (e) {
+                $(this).closest('li').click();
+                e.preventDefault();
+            });
+        });
+        //fire event to open branch if the li contains a button instead of text
+        tree.find('.branch>button').each(function () {
+            $(this).on('click', function (e) {
+                $(this).closest('li').click();
+                e.preventDefault();
+            });
+        });
+    }
 });
-// END SEKTOR
 
-function getData(data, tableId, dest) {
-    var dest;
-    $.ajax({
-        url: "/api",
-        type: "POST",
-        data: data,
-        beforeSend: function () {},
-        success: function (data, textStatus, jqXHR) {
-            data = JSON.parse(data);
-            var no = 1;
-            var tr = '';
-            $.each(data['hydra:member'], function (index, value) {
-                tr += '<tr id="'+value.id+'">';
-                tr += '<td>'+no+'</td>';
-                tr += '<td>'+value.name+'</td>';
-                tr += '<td><span class="pull-right">';
-                tr += '<button data-id="' + value.id + '" class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                tr += '<button data-id="' + value.id + '" class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
-                tr += '</td>';
-                tr += '</tr>';
-                no++;
-            });
+//Initialization of treeviews
+$('#categoriesTree').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+$(window).load(function() {
+    $("#categoriesTree > .branch").trigger('click');
+});
 
-            if (data['hydra:member'].length > 0) {
-                $('tbody#'+tableId).html(tr);
-            } else {
-                $('tbody#'+tableId).html('<tr><td colspan="33">NO DATA</td></tr>');
-            }
+$(document).on('click', '#categoriesTree li span', function () {
+    $('#categoriesTree li span').removeClass('active');
+    $(this).addClass('active');
 
-            $('.'+dest).attr('data-toggle', 'tab');
-        },
-        error: function (jqXHR, textStatus, errorThrown) {}
-    });
+    var id = $(this).closest('li').data('id');
+    var text = $(this).text();
+});
 
-}
+$('#categoriesTree li span').bind('contextmenu', function() {
+    $('#categoriesTree li span').removeClass('active');
+    $(this).addClass('active');
 
-function getDetail(id, modalId) {
-    $.ajax({
-        url: "/api",
-        type: "POST",
-        data: {
-            module: 'advertising/categories/'+id,
-            method: 'get'
-        },
-        beforeSend: function () {
-            $('div#'+modalId+' input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
-            $('div#'+modalId).modal({show: true, backdrop: 'static'});
-        },
-        success: function (data) {
-            $('div#'+modalId+' input').removeClass('loading').prop('readonly', false).removeAttr('placeholder');
+    var id = $(this).closest('li').data('id');
+    var text = $(this).text();
+});
 
-            data = JSON.parse(data);
-            $.each(data, function (index, value) {
-                if (typeof value === 'object') {
-
-                    var select = jQuery('select.select-edit-modal');
-
-                    $.each(select, function (indSlct, valSlct) {
-
-                        var dataSelected = $(valSlct).attr('data-selected');
-                        var objectSelected = dataSelected.split("#")[0];
-                        var fieldSelected = dataSelected.split("#")[1];
-
-                        var dataObject = $(valSlct).attr('data-object');
-                        var object = dataObject.split("#")[0];
-                        var field = dataObject.split("#")[1];
-                        var dataSelect = {
-                            module: object,
-                            method: 'get',
-                        };
-
-                        jQuery('select[data-object="' + dataObject + '"]').select2({
-
-                            theme: "bootstrap",
-                            placeholder: "SEARCH A " + field.toUpperCase(),
-                            allowClear: true,
-                            ajax: {
-                                url: "/api/search",
-                                dataType: 'json',
-                                type: 'POST',
-                                delay: 250,
-                                data: function (params) {
-                                    return {
-                                        q: params.term,
-                                        page: params.page,
-                                        module: object,
-                                        method: 'get',
-                                        field: field.split('#')
-                                    };
-                                },
-                                processResults: function (data) {
-                                    if (data.length > 0) {
-                                        return {
-                                            results: $.map(data, function (obj) {
-                                                return {id: '/api/' + object + '/' + obj.id, text: obj[field]};
-                                            })
-                                        }
-                                    }
-                                },
-                                cache: true,
-                            },
-                            escapeMarkup: function (markup) {
-                                return markup;
-                            },
-                            minimumInputLength: 2
-                        });
-
-                        $.ajax({
-                            url: "/api",
-                            type: "POST",
-                            data: dataSelect,
-                            beforeSend: function () {
-                                jQuery('select[data-object="' + dataObject + '"]').html('<option selected>LOADING..</option>');
-                                jQuery('div#'+modalId+' .edit.btn').prop('disabled', true);
-                            },
-                            success: function (data, textStatus, jqXHR) {
-                                var select = '';
-                                var arr = JSON.parse(data);
-                                $.each(arr, function (indeks, velyu) {
-                                    if (indeks === 'hydra:member') {
-
-                                        $.each(velyu, function (ind, valu) {
-
-                                            if (value == null) {
-                                                select += '<option value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
-                                            } else {
-                                                if (value['id'] === valu.id && (objectSelected === index || index === 'parent')) {
-                                                    select += '<option selected value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
-                                                } else {
-                                                    select += '<option value="/api/' + object + '/' + valu.id + '">' + valu[field] + '</option>';
-                                                }
-                                            }
-
-                                        });
-
-                                    }
-                                });
-
-                                if (value == null) {
-                                    select += '<option selected></option>';
-                                }
-                                jQuery('select[data-object="' + dataObject + '"]').html(select).removeClass('loading').removeAttr('disabled');
-                                jQuery('div#'+modalId+' .edit.btn').prop('disabled', false);
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                jQuery('div#'+modalId+' .edit.btn').prop('disabled', true);
-                            }
-                        });
-
-                    });
-
-                } else if(index.startsWith("@") === false) {
-                    $('#'+modalId+' input#'+index).val(value);
-                }
-            });
-        },
-    });
-}
-
-// delete a data
-function del(module, id, moduleData, tableId) {
-
-    var data = {
-        module : module+'/'+id,
-        method: 'delete',
-        params: {}
-    };
-
-    var elm = jQuery('tbody tr#'+id);
-
-    $.ajax({
-        url: "/api",
-        type: "POST",
-        data: data,
-        beforeSend: function () {},
-        success: function (data, textStatus, jqXHR) {
-            elm.hide('slow', function(){ elm.remove(); });
-            toastr.success('Data successfully deleted');
-            if ((moduleData) && (tableId)) {
-                getData(moduleData, tableId);
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            toastr.error('Error when deleting your data');
-            elm.removeClass('bg-red');
+new BootstrapMenu('#categoriesTree li span', {
+    menuEvent: 'right-click',
+    menuSource: 'element',
+    fetchElementData: function($catElem) {
+        var catId = $catElem.data('id');
+        var catName = $catElem.data('name');
+        return {id: catId, name: catName};
+    },
+    actions: [{
+        name: 'TAMBAH',
+        onClick: function(data) {
+            $('#addCategory #parent').val('/api/advertising/categories/'+data.id);
+            $('#addCategory').modal({show: true, backdrop: 'static'});
         }
-    });
+    }, {
+        name: 'EDIT',
+        onClick: function(data) {
+            $('#editCategory #id').val(data.id);
+            $('#editCategory #name').val(data.name);
+            $('#editCategory').modal({show: true, backdrop: 'static'});
+        }
+    }, {
+        name: 'HAPUS',
+        onClick: function() {
+            toastr.error("Terhapus dab!");
+        }
+    }]
+});
 
-}
+$(document).on('click', '#addCategory #saveCategory', function () {
 
-
-
-// edit action aka update
-function editAction(module, id, params, modalId, tableId, columns) {
-
-    var data = {
-        module : module+'/'+id,
-        method: 'put',
-        params: jQuery(params).serializeArray()
-    };
+    $('div .has-error').removeClass('has-error');
+    $('p.help-block').remove();
+    $('#saveCategory').text('MENYIMPAN...').prop('disabled', true);
 
     $.ajax({
-        url: "/api",
-        type: "POST",
-        data: data,
-        beforeSend: function () {
-            jQuery('div .has-error').removeClass('has-error');
-            jQuery('p.help-block').remove();
-            jQuery('div#'+modalId+' .edit.btn').text('UPDATING...').prop('disabled', true);
+        type: 'post',
+        url: '/api',
+        data: {
+            module: 'advertising/categories',
+            method: 'post',
+            params: $('#addCategory form').serializeArray()
         },
         success: function (data, textStatus, jqXHR) {
-
             var arr = JSON.parse(data);
             if ("violations" in arr) {
 
                 $.each(arr, function (index, value) {
-                    if (index === 'violations') {
+                    if(index === 'violations'){
                         $.each(value, function (idx, val) {
-                            jQuery('div#'+modalId+' form #' + val.propertyPath).parent('div').addClass('has-error');
-                            jQuery('<p class="help-block">' + val.message + '</p>').insertAfter('div#'+modalId+' form #' + val.propertyPath);
+                            $('#addCategory #'+val.propertyPath).parent('div').addClass('has-error');
+                            $( '<p class="help-block">'+val.message+'</p>' ).insertAfter( '#addCategory #'+val.propertyPath );
                         });
                     }
                 });
 
-                jQuery('div#'+modalId+' .edit.btn').text('UPDATE').prop('disabled', false);
-                toastr.error('Error when updating your data');
+                toastr.error('Error menambahkan kategori');
+
             } else if('id' in arr) {
-                jQuery.each(columns, function (idx,val) {
-                    kolom = idx+2;
-                    jQuery.each(arr, function (i,v) {
-                        if (val === i) {
-                            jQuery('tbody#'+tableId+' tr#'+id+' td:nth-child('+kolom+')').text(v);
-                        } else if(v instanceof Object && val.split('.')[0] === i) {
-                            jQuery.each(v, function (ix,vl) {
-                                if(ix === val.split('.')[1]) {
-                                    jQuery('tbody#'+tableId+' tr#'+id+' td:nth-child('+kolom+')').text(vl);
-                                }
-                            });
-                        }
-                    });
-                });
-
-                toastr.success('Data successfully updated');
-                $('div#'+modalId).modal('hide');
-                $('div#'+modalId+' .edit.btn').text('UPDATE').prop('disabled', false);
+                $('#addCategory #name').val('');
+                toastr.success('Berhasil menambahkan kategori');
+                $('#addCategory').modal('hide');
             } else {
-                toastr.error('Error when updating your data');
+                toastr.error('Error menambahkan kategori');
             }
-
+            $('#saveCategory').text('SIMPAN').prop('disabled', false);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            jQuery('div#'+modalId+' .edit.btn').text('UPDATE').prop('disabled', false);
-            toastr.error('Error when updating your data');
+            toastr.error('Error menambahkan kategori');
+            $('#saveCategory').text('SIMPAN').prop('disabled', false);
         }
     });
 
-}
+});
 
-jQuery(".search-name").select2({
-    theme: "bootstrap",
-    allowClear: true,
-    ajax: {
-        url: "/api/search",
-        dataType: 'json',
-        type: 'POST',
-        delay: 250,
-        data: function (params) {
-            return {
-                q: params.term,
-                page: params.page,
-                module: module,
-                method: 'get',
-                field: field.split('#')
-            };
+$(document).on('click', '#editCategory #updateCategory', function () {
+
+    $('div .has-error').removeClass('has-error');
+    $('p.help-block').remove();
+    $('#updateCategory').text('MENYIMPAN...').prop('disabled', true);
+
+    $.ajax({
+        type: 'post',
+        url: '/api',
+        data: {
+            module: 'advertising/categories',
+            method: 'put',
+            params: $('#updateCategory form').serializeArray()
         },
-        processResults: function (data) {
-            if(data.length > 0) {
-                return {
-                    results: $.map(data, function(obj) {
-                        return { id: obj.id, text: obj[field.split('#')[0]] };
-                    })
-                }
+        success: function (data, textStatus, jqXHR) {
+            console.log(data);
+            var arr = JSON.parse(data);
+            if ("violations" in arr) {
+
+                $.each(arr, function (index, value) {
+                    if(index === 'violations'){
+                        $.each(value, function (idx, val) {
+                            $('#editCategory #'+val.propertyPath).parent('div').addClass('has-error');
+                            $( '<p class="help-block">'+val.message+'</p>' ).insertAfter( '#addCategory #'+val.propertyPath );
+                        });
+                    }
+                });
+
+                toastr.error('Error memperbarui kategori');
+
+            } else if('id' in arr) {
+                $('#editCategory #name').val('');
+                toastr.success('Berhasil memperbarui kategori');
+                $('#editCategory').modal('hide');
             } else {
-                var elms = jQuery('.search-area').removeClass('col-md-12').addClass('col-md-10');
-                elms += jQuery('.button-area').addClass('col-md-2');
-                elms += jQuery('a[data-btn-add="'+module+'"]').css('visibility', 'visible');
-
-                return {
-                    results: elms
-                }
+                toastr.error('Error memperbarui kategori');
             }
-
+            $('#updateCategory').text('SIMPAN').prop('disabled', false);
         },
-        cache: true,
-    },
-    escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-    minimumInputLength: 2,
-}).on("select2:select", function () {
-    var id = jQuery(".search-name").val();
-    var text = jQuery(".search-name").text();
+        error: function (jqXHR, textStatus, errorThrown) {
+            toastr.error('Error memperbarui kategori');
+            $('#updateCategory').text('SIMPAN').prop('disabled', false);
+        }
+    });
 
-    jQuery('div.detail-modal#sektorModal input').val('').addClass('loading').prop('readonly', true).attr('placeholder','Loading...');
-    jQuery('div.detail-modal#sektorModal input[type="checkbox"]').prop('checkbox', false).prop('disabled', true);
-    jQuery('div.detail-modal#sektorModal').modal({show: true, backdrop: 'static'});
-
-    getDetail(id, 'sektorModal');
-
-    //changeUrlParam(field.split('-')[0], text);
-    //getAll(module,columns);
-}).on("select2:unselect", function () {
-    //history.pushState(false,false,document.location.origin+'/'+module);
-    //getAll(module,columns);
-}).on("select2:open", function () {
-    jQuery('a[data-btn-add="advertising-categories"]').css('visibility', 'hidden');
-    jQuery('.search-area').removeClass('col-md-10').addClass('col-md-12');
-    jQuery('.button-area').removeClass('col-md-2');
-}).on("select2:closing", function () {
-    var searchTerms = $('span.select2-search.select2-search--dropdown input.select2-search__field').val();
-    localStorage.setItem("searchTerms", searchTerms);
 });

@@ -270,9 +270,40 @@ function getAll(module, columns = [], tbody = 'data-list') {
 // post/save data
 function post(module, params, columns = []) {
 
+    var array = jQuery(params).serializeArray();
+    var params = [];
+    $.each(array, function (index, value) {
+        switch (value.name) {
+            case 'postalCode':
+                prepend = "#";
+                break;
+            case 'phoneNumber':
+                prepend = "#";
+                break;
+            case 'faxNumber':
+                prepend = "#";
+                break;
+            case 'taxNumber':
+                prepend = "#";
+                break;
+            case 'taxPhoneNumber':
+                prepend = "#";
+                break;
+            case 'taxFaxNumber':
+                prepend = "#";
+                break;
+            case 'bankAccountNumber':
+                prepend = "#";
+                break;
+            default:
+                prepend = "";
+        }
+        params.push({name: value.name, value: prepend+value.value});
+    });
+
     var data = {
         'module' : module,
-        'params' : jQuery(params).serializeArray(),
+        'params' : params,
         'method' : 'post'
     };
 
@@ -492,10 +523,41 @@ function detail(module,id) {
 // edit action aka update
 function editAction(module, id, params) {
 
+    var array = jQuery(params).serializeArray();
+    var params = [];
+    $.each(array, function (index, value) {
+        switch (value.name) {
+            case 'postalCode':
+                prepend = "#";
+                break;
+            case 'phoneNumber':
+                prepend = "#";
+                break;
+            case 'faxNumber':
+                prepend = "#";
+                break;
+            case 'taxNumber':
+                prepend = "#";
+                break;
+            case 'taxPhoneNumber':
+                prepend = "#";
+                break;
+            case 'taxFaxNumber':
+                prepend = "#";
+                break;
+            case 'bankAccountNumber':
+                prepend = "#";
+                break;
+            default:
+                prepend = "";
+        }
+        params.push({name: value.name, value: prepend+value.value});
+    });
+
     var data = {
         module : module+'/'+id,
         method: 'put',
-        params: jQuery(params).serializeArray()
+        params: params
     };
 
     $.ajax({

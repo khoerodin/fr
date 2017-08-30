@@ -13,12 +13,15 @@ class StringFilter extends AbstractFilter
      */
     public function cast($value)
     {
-        if (is_numeric('#' . $value)) {
-            $this->stopNext = true;
+        if ('#' === substr($value, 0, 1)) {
+            $_string = substr($value, 1);
+            if (is_numeric($_string)) {
+                $this->stopNext = true;
 
-            return (int) $value;
+                return (string) $_string;
+            }
         }
 
-        return str_replace('#', '', $value);
+        return $value;
     }
 }

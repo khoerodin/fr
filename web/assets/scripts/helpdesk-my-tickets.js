@@ -2,7 +2,7 @@
 
 //DETAIL TIKET-KU (Forum)
 $(document).on('click', '.detail-my-tic', function () {
-    var ticketId = $(this).closest('tr').data('id');
+    var ticketId = $(this).closest('tr').attr('id');
     $('#tiketModal .modal-body').attr('data-ticketid', ticketId);
 
     var staffId = $(this).closest('tr').data('staff');
@@ -14,16 +14,25 @@ $(document).on('click', '.detail-my-tic', function () {
     var staffUserId = $(this).closest('tr').data('staff-user');
     $('#tiketModal .modal-body').attr('data-staff-userid', staffUserId);
 
+    var catName = $(this).closest('tr').data('category-name');
+    $('#tiketModal .modal-body').attr('data-category-name', catName);
+
+    var titleName = $(this).closest('tr').data('title');
+    $('#tiketModal .modal-body').attr('data-title', titleName);
+
     var timeId = $(this).closest('tr').data('waktu');
     $('.list-post-date').html(moment(timeId).format("D MMM 'YY - HH:mm a"));
 
     var msg = $(this).closest('tr'+ticketId).data('msg');
     // $('#tiketModal .modal-body #chatHistory').html(msg);
 
+    var pict = $(this).closest('tr').data('img');
+    $('#tiketModal .modal-body').attr('data-img', pict);
+
     getTicketData(ticketId);
     $('#tiketModal').modal({show: true, backdrop: 'static'});
 
-
+    // console.log($('#currentUser').val());
 
 });
 
@@ -73,7 +82,10 @@ function getTicketList() {
                         if(value.message) {
                             tr += ' data-msg="'+value.message+'"';
                         }
-
+                        tr += 'data-category-name="'+value.category.name+'"';
+                        tr += 'data-title="'+value.title+'"';
+                        tr += 'data-time="'+value.createdAt+'"';
+                        tr += 'data-img="'+value.client.profileImage+'"';
                         tr += '>';
 
                         tr += '<td>'+no+'</td>';
@@ -250,150 +262,6 @@ $(document).on('click', '#btnSave', function () {
     });
 });
 
-// Melihat detil tiket (BELUM DIPAKAI)
-$(document).on('click', '.detail-tic', function () {
-    var id = $(this).data('id');
-
-    //3 Agustus 2017 - Detail tiket
-    // ajax ticket by id
-    $.ajax({
-        url: '/api',
-        type: 'POST',
-        data:  {
-            'module' : 'helpdesk/tickets/' + id,
-            'method' : 'get'
-        },
-        success: function (ticketData, textStatus, jqXHR) {
-
-            var ticketData = JSON.parse(ticketData);
-
-            $('#detailNewTicketModal #formTiket #title').val(ticketData.title);
-            $('#detailNewTicketModal #formTiket #message').val(ticketData.message);
-            $('#detailNewTicketModal #formTiket #id').val(ticketData.id);
-
-
-            // ajax helpdesk categories
-            $.ajax({
-                url: '/api',
-                type: 'POST',
-                data: {
-                    module: 'helpdesk/categories',
-                    method: 'get'
-                },
-                success: function (data, textStatus, jqXHR) {
-                    var data = JSON.parse(data)['hydra:member'];
-                    var category = '';
-                    $.each(data, function (index, value) {
-
-                        if ( value.id === ticketData.category.id ) {
-                            category += '<option selected value="/api/helpdesk/categories/'+value.id+'">'+value.name+'</option>';
-                        } else {
-                            category += '<option value="/api/helpdesk/categories/'+value.id+'">'+value.name+'</option>';
-                        }
-
-                    });
-
-                    $('#detailNewTicketModal #formTiket #category').html(category);
-                }
-            });
-
-
-        }
-    });
-
-
-    $("#formTiket #category").select2({
-        theme: "bootstrap"
-    });
-
-    $('#detailNewTicketModal').modal({show: true, backdrop: 'static'});
-
-});
-//update / edit
-$(document).on('click', '#btnUpdate', function () {
-    var id = $('#detailNewTicketModal #formTiket #id').val();
-
-    $.ajax({
-        url: '/api',
-        type: 'POST',
-        data: {
-            module: 'helpdesk/tickets/' + id,
-            method: 'put',
-            params : $('#detailNewTicketModal #formTiket').serializeArray()
-        },
-        success: function (data, textStatus, jqXHR) {
-
-            if ( jqXHR.status === 200 ) {
-
-                var data = JSON.parse(data);
-
-                if ("violations" in data) {
-
-                    $.each(data, function (index, value) {
-                        if(index === 'violations'){
-                            $.each(value, function (idx, val) {
-                                $('div#detailNewTicketModal form #'+val.propertyPath).parent('div').addClass('has-error');
-                                $( '<p class="help-block">'+val.message+'</p>' ).insertAfter( 'div#detailNewTicketModal form #'+val.propertyPath);
-                            });
-                        }
-                    });
-
-                    toastr.error('Error memperbarui tiket');
-
-                } else {
-                    getTicketList();
-                    toastr.success('Sukses memperbarui tiket');
-                    $('#detailNewTicketModal').modal('hide');
-
-                }
-
-            } else {
-                toastr.error('Error memperbarui tiket');
-            }
-
-        }
-    });
-
-});
-
-// Delete action
-$(document).on('click', '.delete-tic', function () {
-    var module = window.module;
-    var id = $(this).attr('data-id');
-    var elm = jQuery('tbody[data-list="'+module+'"] tr#'+id);
-    elm.addClass('bg-red');
-    $.ajax({
-        url: '/api',
-        type: 'POST',
-        data: {
-            module: 'helpdesk/tickets/' + id,
-            method: 'delete'
-        },
-        success: setTimeout(function(){
-            bootbox.confirm({
-                message: "ARE YOU SURE YOU WANT TO DELETE THIS DATA?",
-                animate: false,
-                buttons: {
-                    confirm: {
-                        className: 'btn-danger btn-flat'
-                    },
-                    cancel: {
-                        className: 'btn-default btn-flat'
-                    }
-                },
-                callback: function (result) {
-                    if (result === false) {
-                        elm.removeClass('bg-red');
-                    } else {
-                        getTicketList();
-                    }
-                }
-            });
-        }, 20)
-
-    })
-});
-
 //GET CLOSED TICKETS
 getClosedTicketList();
 function getClosedTicketList() {
@@ -536,21 +404,24 @@ $(document).find('.wkt').append(html2);
 //<----------------- GET DETIL TIKET-KU UNTUK TIKET RESPON-------------->
 function getTicketData(ticketId) {
 
-
-    var title = $('tbody#ticketList tr#'+ticketId+' td:nth-child(3)').text();
-    // var message = $('tbody[data-list="helpdesk/tickets"] tr#'+ticketId+' td:nth-child(6)').text();
+    // var title = $('#tableTicket #ticketList tr#'+ticketId).attr('data-title');
     var category = $('tbody#ticketList tr#'+ticketId+' td:nth-child(2)').text();
-    var momentPost = $('tbody#ticketList tr#'+ticketId+' td:nth-child(6)').text();
-    var user = $('tbody#ticketList tr#'+ticketId).data('client-fullname');
+    var title = $('tbody#ticketList tr#'+ticketId+' td:nth-child(3)').text();
+    var momentPost = $('tbody#ticketList tr#'+ticketId).attr('data-time');
+    var tgl = moment(momentPost).format('LLLL');
+    var user = $('#tableTicket #ticketList tr#'+ticketId).data('client-fullname');
+    // var img = $('#myTickets #tableTicket #ticketList tr#'+ticketId).attr('data-img');
+    var client = $('tbody#ticketList tr#'+ticketId).data('client-fullname');
+    var img = $('tbody#ticketList tr#'+ticketId).attr('data-img').split(".");
 
     $('#tiketModal .listDetail #list-title').text(title);
-    $('#tiketModal .listDetail #list-tgl-post').text(momentPost);
+    $('#tiketModal .listDetail #list-tgl-post').text(tgl);
     // $('#tiketModal .list-msg').text(message);
     $('#tiketModal .listDetail #list-cat').text(category);
     var msg = $('div#myTickets tr#'+ticketId).data('msg');
 
     // console.log(ticketId);
-    console.log(msg);
+    // console.log(msg);
 
     $.ajax({
         url: '/api',
@@ -569,9 +440,13 @@ function getTicketData(ticketId) {
             // console.log(data);
             var finalData = data['hydra:member'];
 
-                var result = '<div class="media" id="mediaForum"><div class="media-left"><img src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }}" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  ' + moment(data.createdAt).format('LLLL') + '</h6><h4 class="media-heading">'+user+'</h4><p>' + msg + '</p></div></div><hr>';
+            if($('#currentUser').val()){
+                var result = '<div class="media" id="mediaForum"><div class="media-left"><img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+tgl+'</h6><h4 class="media-heading">'+client+'</h4><p>'+msg+'</p></div></div><hr>';
+            } else {
+                var result = '<div class="media" id="mediaForum"><div class="media-left"><img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px"></div><div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  ' +tgl+ '</h6><h4 class="media-heading">' + client + '</h4><p>' + data.message + '</p></div></div><hr>';
+            }
 
-
+                // var result = '';
             $.each(finalData, function (index, value) {
 
                 result += '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
@@ -587,17 +462,29 @@ function getTicketData(ticketId) {
                 if (value.staff) {
                     result += 'data-staff="/api/helpdesk/staffs/'+value.staff.user.id+'"';
                 }
+                result += 'data-img="'+value.ticket.client.profileImage+'"';
+                result += 'data-time="'+value.createdAt+'">';
 
-                result += ' data-time="'+value.createdAt+'">';
                 result += '<div class="media-left">';
-                // if(value.client) {
-                    result += '<img src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }}" class="media-object" style="width:60px">';
-                // }
+                if(value.ticket.staff.user.id === $('#currentUser').val()) {
+
+                    var img = (value.ticket.staff.user.profileImage).split(".");
+                    result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
+                    // '+img[0]+'?ext='+img[1]+'
+                } else {
+                    var img2 = (value.ticket.client.profileImage).split(".");
+                    result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
+                }
                 result += '</div>';
                 result += '<div class="media-body">';
-                // if(value.client) {
-                    result += '<h4 class="media-heading">' + value.client.fullname + '</h4><h5><span class="pull-right">'+moment(value.createdAt).format('LLLL')+'</span></h5>';
-                // }
+                result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
+
+                if (value.ticket.staff.user.id === $('#currentUser').val()) {
+                    result += '<h4 class="media-heading">' + value.ticket.staff.fullname + '</h4>';
+                } else if (value.ticket.client.id === $('#currentUser').val()){
+                    result += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
+                }
+
                 result += '<p>'+value.message+'</p>';
                 result += '</div>';
                 result += '</div>';
@@ -605,8 +492,7 @@ function getTicketData(ticketId) {
 
             });
 
-
-            $('#chatHistory').html(result); //tbody result
+            $('#chatHistory').html(result);
 
         }
     });
@@ -665,7 +551,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
             } else {
                 // if (ticket) {
                 //$("#replyMessage").val('');
-                var ticketId =  ticket.split("/").pop();
+                // var ticketId =  ticket.split("/").pop();
                 // }
 
                 var result = '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+data.id+'"';
@@ -779,6 +665,22 @@ $(document).on('click', '#send', function () {
         trueClientId = client;
     } else {
         trueClientId = clientId
+    }
+
+    if ($('#tiketModal .modal-body').data('clientid') === $('#currentUser').val()) {
+
+        trueClientId = trueClientId;
+
+    } else {
+        trueClientId = null;
+    }
+
+    if ($('#tiketModal .modal-body').data('staffid') !== $('#currentUser').val()) {
+
+        trueStaffId = trueStaffId;
+
+    } else {
+        trueStaffId = null;
     }
 
     if(text !== ''){

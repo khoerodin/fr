@@ -433,7 +433,7 @@ function getCategory() {
                     }
                 });
                 $('#categoryValue').val(list);
-                $('[name="category"]').val(id);
+                $('[name="category"]').val('/api/advertising/categories/'+id);
                 $('#categoryModal').modal('hide');
             });
         },

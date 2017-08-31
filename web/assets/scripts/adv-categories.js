@@ -156,7 +156,7 @@ $(document).on('click', '#editCategory #updateCategory', function () {
             } else if('id' in data) {
                 $('#editCategory #name').val('');
                 toastr.success('Berhasil memperbarui kategori');
-                $('[data-id="'+id+'"]').text(data.name);
+                $('[data-id="'+id+'"]').text(data.name).attr('data-name', data.name);
                 $('#editCategory').modal('hide');
 
                 $('#categoriesTree li span').bind('contextmenu', function() {

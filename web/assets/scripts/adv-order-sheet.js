@@ -395,6 +395,7 @@ function getCategory() {
                                 '<ul>' + data + '</ul>' +
                             '</li>' +
                         '</ul>';
+
             $('#categoryModal .modal-body').html(html);
             $('#categoriesTree').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
             $("#categoriesTree > .branch").trigger('click');
@@ -442,12 +443,6 @@ function getCategory() {
         }
     });
 }
-
-// double klik list emiten
-// $(document).on('dblclick', '#', function () {
-//
-// });
-// end Emiten
 
 // pilih PIC / accountExecutive
 $(document).on('click', '#pic button', function () {

@@ -34,6 +34,7 @@ app:
         #Master
         - { path: '/advertising/ads', controller: 'Bisnis:AdvertisingAds@index', methods: ['GET'] }
         - { path: '/advertising/categories', controller: 'Bisnis:AdvertisingCategories@index', methods: ['GET'] }
+        - { path: '/advertising/categories/tree', controller: 'Bisnis:AdvertisingCategories@treeView', methods: ['GET'] }
         - { path: '/advertising/customers', controller: 'Bisnis:AdvertisingCustomers@index', methods: ['GET'] }
         - { path: '/advertising/layouts', controller: 'Bisnis:AdvertisingLayouts@index', methods: ['GET'] }
         - { path: '/advertising/payment-methods', controller: 'Bisnis:AdvertisingPaymentMethods@index', methods: ['GET'] }

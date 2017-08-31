@@ -2,6 +2,8 @@
 
 namespace Bisnis\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class AdvertisingCategoriesController extends AdminController
 {
     public function indexAction()
@@ -22,7 +24,16 @@ class AdvertisingCategoriesController extends AdminController
         return $this->view('advertising-categories/index.twig', $data);
     }
 
-    private function getCategory($parentCategoryId, $data) {
+    public function treeViewAction()
+    {
+        $categories = $this->request('advertising/categories', 'get');
+        $categories = json_decode($categories->getContent(), true)['hydra:member'];
+
+        return new Response($this->getCategory(NULL, $categories));
+    }
+
+    private function getCategory($parentCategoryId, $data)
+    {
         $str = '';
         foreach ($data as $row) {
             if ($row['parent']['id'] == $parentCategoryId) {

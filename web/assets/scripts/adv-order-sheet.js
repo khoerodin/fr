@@ -379,60 +379,62 @@ function getMedia(params) {
 // end Media Iklan
 
 // klik pilih Emiten
-$(document).on('click', '#emiten button', function () {
-    getEmiten();
-    $('#emitenModal').modal({show: true, backdrop: 'static'});
-    $('#emitenModal input#serachList').focus();
+$(document).on('click', '#category button', function () {
+    getCategory();
+    $('#categoryModal').modal({show: true, backdrop: 'static'});
 });
 
 //ambil data emiten
-function getEmiten() {
+function getCategory() {
     $.ajax({
-        url: '/api',
-        type: 'POST',
-        data: {
-            module: 'advertising/categories/root',
-            method: 'get'
-        },
+        url: '/advertising/categories/tree',
+        type: 'GET',
         success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data)['hydra:member'];
-            localStorage.setItem("emitenList", JSON.stringify(memberData));
+            var html = '<ul id="categoriesTree" style="font-size: 16px;">' +
+                            '<li><span>KATEGORI IKLAN</span></a>' +
+                                '<ul>' + data + '</ul>' +
+                            '</li>' +
+                        '</ul>';
+            $('#categoryModal .modal-body').html(html);
+            $('#categoriesTree').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+            $("#categoriesTree > .branch").trigger('click');
 
-            tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th class="sort" data-sort="name" style="cursor: pointer;">Emiten</th></tr></thead>';
-            tableData += '<tbody id="emitenData" class="list">';
-
-            $.each(memberData, function (index, value) {
-                tableData += '<tr style="cursor: pointer" data-id="'+value.id+'">';
-                tableData += '<td class="name">'+value.name+'</td>';
-                tableData += '</tr>';
+            $('#categoriesTree li span').bind('contextmenu', function() {
+                $('#categoriesTree li span').removeClass('active');
+                $(this).addClass('active');
             });
 
-            tableData += '</tbody>';
-            tableData += '<table>';
-            tableData += '<ul class="pagination pagination-sm"></ul>';
+            $('#categoriesTree li span').click(function () {
+                $('#categoriesTree li span').removeClass('active');
+                $(this).addClass('active');
+            });
 
-            if (memberData.length > 0) {
-                tableData = tableData;
-            } else {
-                tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Emiten</th></tr></thead>';
-                tableData += '<tbody>';
-                tableData += '<tr><td colspan="1" class="text-danger">TIDAK ADA DATA</td></tr>';
-                tableData += '</tbody>';
-                tableData += '<tbody>';
-            }
-            $('#emitenModal .modal-body #data-list').html(tableData);
+            $('ul#categoriesTree li span').dblclick(function () {
+                $('#categoryValue').val('');
 
-            var emitenTableOptions = {
-                valueNames: [ 'name' ],
-                page: 11,
-                pagination: true
-            };
+                var id = $(this).closest('li span').data('id');
+                var breadCrumb = [];
+                $(this).parents('li').each(function (index, value) {
+                    var treeText = value.innerText;
+                    var treeArr = treeText.match(/[^\r\n]+/g);
+                    breadCrumb.push(treeArr[0]);
+                });
+                var bcArr = breadCrumb.reverse();
+                var list = '';
+                var total = bcArr.length;
+                $.each(bcArr, function (index, value) {
+                    if (index !== 0) {
+                        if (index === total - 1) {
+                            list += value+'  ';
+                        } else {
+                            list += value+' ➤ ';
+                        }
 
-            var emitenList = new List('emitenModal', emitenTableOptions);
-            emitenList.on('updated', function(list) {
-                if (list.matchingItems.length < 1) {
-                    $('#emitenData').html('<tr class="no-result"><td class="text-danger">TIDAK ADA DATA</td></tr>');
-                }
+                    }
+                });
+                $('#categoryValue').val(list);
+                $('[name="category"]').val(id);
+                $('#categoryModal').modal('hide');
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -441,200 +443,11 @@ function getEmiten() {
     });
 }
 
-// $(document).ajaxComplete(function() {
-    // double klik list emiten
-    $(document).on('dblclick', '#emitenData tr', function () {
-
-        var emitenId = $(this).data('id');
-        $('#category1').val(emitenId);
-        $('input[name="emiten"]').val($(this).find('td:eq(0)').text());
-        $('#emitenModal').modal('hide');
-
-        $('#category2').val('');
-        $('input[name="sektor"]').val('');
-
-        $('#category').val('');
-        $('input[name="sub-sektor"]').val('');
-    });
+// double klik list emiten
+// $(document).on('dblclick', '#', function () {
+//
 // });
 // end Emiten
-
-// pilih Sektor
-$(document).on('click', '#sektor button', function () {
-    if( $('#category1').val() ) {
-        var parentId = $('#category1').val();
-        getSektor(null, parentId);
-        $('#sektorModal').modal({show: true, backdrop: 'static'});
-        $('#sektorModal input#serachList').focus();
-    } else {
-        bootbox.alert({
-            message: "Silakan pilih Emiten terlebih dahulu",
-            buttons: {
-                ok: {
-                    label: 'OK',
-                    className: 'btn-flat btn-danger'
-                }
-            },
-            animate: false
-        });
-    }
-});
-
-//cari list sektor
-$(document).on('keyup', '#sektorModal #serachList', function () {
-    var params = $(this).val();
-    var parentId = $('#category1').val();
-    getSektor(params, parentId);
-});
-
-//ambil data sektor
-function getSektor(params, parentId) {
-    $.ajax({
-        url: '/api',
-        type: 'POST',
-        data: {
-            module: 'advertising/categories',
-            method: 'get',
-            params: [
-                {
-                    name: params,
-                    'parent.id': parentId
-                }
-            ]
-        },
-        success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data)['hydra:member'];
-
-            tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Sektor</th></tr></thead>';
-            tableData += '<tbody id="sektorModalData">';
-
-            $.each(memberData, function (index, value) {
-                tableData += '<tr style="cursor: pointer" data-id="'+value.id+'">';
-                tableData += '<td>'+value.name+'</td>';
-                tableData += '</tr>';
-            });
-
-            tableData += '</tbody>';
-            tableData += '<table>';
-            tableData += '';
-
-            if (memberData.length > 0) {
-                tableData = tableData;
-            } else {
-                tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Sektor</th></tr></thead>';
-                tableData += '<tbody>';
-                tableData += '<tr><td colspan="1" class="text-danger">TIDAK ADA DATA</td></tr>';
-                tableData += '</tbody>';
-                tableData += '<tbody>';
-            }
-            $('#sektorModal .modal-body #data-list').html(tableData);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-
-        }
-    });
-}
-
-// $(document).ajaxComplete(function() {
-    //double klik list sektor
-    $(document).on('dblclick', '#sektorModalData tr', function () {
-        var sektorId = $(this).data('id');
-        $('#category2').val(sektorId);
-        $('input[name="sektor"]').val($(this).find('td:eq(0)').text());
-        $('#sektorModal').modal('hide');
-
-        $('#category').val('');
-        $('input[name="sub-sektor"]').val('');
-    });
-// });
-// end Sektor
-
-// pilioh Sub-Sektor
-$(document).on('click', '#sub-sektor button', function () {
-    if( $('#category2').val() ) {
-        var parentId = $('#category2').val();
-        getSubSektor(null, parentId);
-        $('#subSektorModal').modal({show: true, backdrop: 'static'});
-        $('#subSektorModal input#serachList').focus();
-    } else {
-        bootbox.alert({
-            message: "Silakan pilih Sektor terlebih dahulu",
-            buttons: {
-                ok: {
-                    label: 'OK',
-                    className: 'btn-flat btn-danger'
-                }
-            },
-            animate: false
-        });
-    }
-});
-
-//cari list sub sektor
-$(document).on('keyup', '#subSektorModal #serachList', function () {
-    var params = $(this).val();
-    var parentId = $('#category2').val();
-    getSubSektor(params, parentId);
-});
-
-//ambil sub sektor data
-function getSubSektor(params, parentId) {
-    $.ajax({
-        url: '/api',
-        type: 'POST',
-        data: {
-            module: 'advertising/categories',
-            method: 'get',
-            params: [
-                {
-                    name: params,
-                    'parent.id': parentId
-                }
-            ]
-        },
-        success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data)['hydra:member'];
-
-            tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Sub Sektor</th></tr></thead>';
-            tableData += '<tbody id="subSektorModalData">';
-
-            $.each(memberData, function (index, value) {
-                tableData += '<tr style="cursor: pointer" data-id="'+value.id+'">';
-                tableData += '<td>'+value.name+'</td>';
-                tableData += '</tr>';
-            });
-
-            tableData += '</tbody>';
-            tableData += '<table>';
-            tableData += '';
-
-            if (memberData.length > 0) {
-                tableData = tableData;
-            } else {
-                tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Sub Sektor</th></tr></thead>';
-                tableData += '<tbody>';
-                tableData += '<tr><td colspan="1" class="text-danger">TIDAK ADA DATA</td></tr>';
-                tableData += '</tbody>';
-                tableData += '<tbody>';
-            }
-            $('#subSektorModal .modal-body #data-list').html(tableData);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-
-        }
-    });
-}
-
-// $(document).ajaxComplete(function() {
-    // double klik list sub sektor
-    $(document).on('dblclick', '#subSektorModalData tr', function () {
-        var sektorId = $(this).data('id');
-        $('#category').val('/api/advertising/categories/'+sektorId);
-        $('input[name="sub-sektor"]').val($(this).find('td:eq(0)').text());
-        $('#subSektorModal').modal('hide');
-    });
-// });
-// end Sektor
 
 // pilih PIC / accountExecutive
 $(document).on('click', '#pic button', function () {

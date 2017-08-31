@@ -40,7 +40,7 @@ new BootstrapMenu('#categoriesTree li span', {
         name: 'HAPUS',
         onClick: function(data) {
             bootbox.confirm({
-                message: "YAKIN AKAN MENGHAPUS KATEGORI INI?<br/>KATEGORI DI BAWAHNYA AKAN IKUT TERHAPUS, HATI-HATI!",
+                message: "YAKIN AKAN MENGHAPUS KATEGORI INI?<br/>ANAK KATEGORI (JIKA ADA) JUGA AKAN IKUT TERHAPUS, HATI-HATI!",
                 animate: false,
                 buttons: {
                     confirm: {

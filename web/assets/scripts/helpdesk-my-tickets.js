@@ -484,7 +484,7 @@ function getTicketData(ticketId) {
 
                 // var result = '';
             $.each(finalData, function (index, value) {
-
+                console.log(value);
                 result += '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
 
                 if (value.ticket) {
@@ -524,23 +524,23 @@ function getTicketData(ticketId) {
 
 //After
                 if(value.ticket.staff.user.id === $('#currentUser').val() && value.staff !== null) {
-                    var img = (value.ticket.staff.user.profileImage).split(".");
-                    result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
-                } else {
                     var img2 = (value.ticket.client.profileImage).split(".");
                     result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
                     // '+img[0]+'?ext='+img[1]+'
+                } else {
+                    var img = (value.ticket.staff.user.profileImage).split(".");
+                    result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
                 }
 
                 result += '</div>';
                 result += '<div class="media-body">';
                 result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
                 if(value.ticket.client.id === $('#currentUser').val() && value.ticket.staff !== null) {
-                    result += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
-                } else {
                     if(value.staff) {
                         result += '<h4 class="media-heading">' + value.ticket.staff.user.fullname + '</h4>';
                     }
+                } else {
+                    result += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
                 }
 //End After
                 result += '<p>'+value.message+'</p>';

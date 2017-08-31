@@ -2,6 +2,7 @@
 
 {% block js %}
     <script src="/assets/accountingjs/accounting.min.js"></script>
+    <script src="/assets/treeview/treed.js"></script>
     <script src="/assets/scripts/adv-order-sheet.js"></script>
     <script src="/assets/listjs/list.min.js"></script>
     <script src="/assets/scripts/adv-order-new.js"></script>
@@ -161,34 +162,10 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Emiten</label>
-                                    <div class="input-group" id="emiten">
-                                        <input type="text" readonly name="emiten" class="form-control">
-                                        <input type="hidden" id="category1" name="category1">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="">Sektor</label>
-                                    <div class="input-group" id="sektor">
-                                        <input type="text" readonly name="sektor" class="form-control">
-                                        <input type="hidden" id="category2" name="category2">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="">Sub Sektor</label>
-                                    <div class="input-group" id="sub-sektor">
-                                        <input type="text" readonly name="sub-sektor" class="form-control">
-                                        <input type="hidden" id="category" name="category">
+                                    <label for="">Kategori Iklan</label>
+                                    <div class="input-group" id="category">
+                                        <input type="text" readonly id="categoryValue" class="form-control">
+                                        <input type="hidden" name="category">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -561,21 +538,18 @@
     </div>
     {#End Media Iklan#}
 
-    {#Emiten#}
-    <div id="emitenModal" class="modal" role="dialog">
+    {#Category#}
+    <div id="categoryModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Emiten</h4>
-                    <small class="text-success">Dobel klik Emiten untuk memilihnya</small>
+                    <h4 class="modal-title">Pilih Kategori</h4>
+                    <small class="text-success">Letakkan kursor pada kategori yang dipilih</small>
                 </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control search" id="serachEmiten" placeholder="CARI EMITEN">
-                    <div id="data-list" style="margin-top: 10px"></div>
-                </div>
+                <div class="modal-body"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -583,55 +557,7 @@
 
         </div>
     </div>
-    {#End Emiten#}
-
-    {#Sektor#}
-    <div id="sektorModal" class="modal" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Sektor</h4>
-                    <small class="text-success">Dobel klik Sektor untuk memilihnya</small>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control" id="serachList" placeholder="CARI SEKTOR">
-                    <div id="data-list" style="margin-top: 10px"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    {#End Sektor#}
-
-    {#Sektor#}
-    <div id="subSektorModal" class="modal" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Sub Sektor</h4>
-                    <small class="text-success">Dobel klik Sub Sektor untuk memilihnya</small>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control" id="serachList" placeholder="CARI SUB SEKTOR">
-                    <div id="data-list" style="margin-top: 10px"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    {#End Sektor#}
+    {#End Category#}
 
     {#PIC / Account Executive#}
     <div id="PICModal" class="modal" role="dialog">

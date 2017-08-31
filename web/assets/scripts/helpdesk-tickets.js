@@ -107,7 +107,7 @@ function getTicketData(ticketId) {
             }
 
             $.each(finalData, function (index, value) {
-
+                // console.log(value);
                 tr += '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
 
                 if (value.ticket) {
@@ -126,13 +126,12 @@ function getTicketData(ticketId) {
 
                 tr += '>';
                 tr += '<div class="media-left">';
-
-                    if(value.ticket.staff.user.id === $('#currentUser').val()) {
-
+                // value.ticket.staff.user.id === $('#currentUser').val() &&
+                    if( value.staff !== null) {
                         var img = (value.ticket.staff.user.profileImage).split(".");
                         tr += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
+                    } else if(value.ticket.client){
                         // '+img[0]+'?ext='+img[1]+'
-                    } else {
                         var img2 = (value.ticket.client.profileImage).split(".");
                         tr += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
                     }
@@ -140,10 +139,10 @@ function getTicketData(ticketId) {
                 tr += '</div>';
                 tr += '<div class="media-body">';
                 tr += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
-
-                    if (value.ticket.staff.user.id === $('#currentUser').val()) {
+                // value.ticket.staff.user.id === $('#currentUser').val()
+                    if (value.staff !== null) {
                         tr += '<h4 class="media-heading">' + value.ticket.staff.fullname + '</h4>';
-                    } else if (value.ticket.client.id === $('#currentUser').val()){
+                    } else {//if (value.ticket.client.id === $('#currentUser').val()){
                         tr += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
                     }
 
@@ -239,20 +238,26 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
 
                 result += 'data-time="'+data.createdAt+'">';
                 result += '<div class="media-left">';
+
                 // console.log(data);
-                if(data.ticket.staff) {
+                if(data.ticket.staff.user.id === $('#currentUser').val() && data.staff !== null) {
                     var img = (data.ticket.staff.user.profileImage).split(".");
                     result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
+                } else {
+                var img2 = (data.ticket.client.profileImage).split(".");
+                result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
+                // '+img[0]+'?ext='+img[1]+'
                 }
+
                 result += '</div>';
                 result += '<div class="media-body">';
                 result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(data.createdAt).format('LLLL')+'</h6>';
-                if(data.ticket.client) {
+                if(data.ticket.client.id === $('#currentUser').val() && data.ticket.staff !== null) {
                     result += '<h4 class="media-heading">' + data.ticket.client.fullname + '</h4>';
                 } else {
-                    // if(data.staff) {
+                    if(data.staff) {
                         result += '<h4 class="media-heading">' + data.ticket.staff.user.fullname + '</h4>';
-                    // }
+                    }
                 }
                 result += '<p>'+data.message+'</p>';
                 result += '</div>';
@@ -323,7 +328,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
                         if (jqXHR.status === 200) {
 
                             var data = JSON.parse(data);
-                            console.log(data);
+                            // console.log(data);
                             if($('#currentUser').val() === data.staff.user.id && $('#currentUser').val() !== data.client.id) {
                                 // console.log(data.read);
                                 data.read = true;

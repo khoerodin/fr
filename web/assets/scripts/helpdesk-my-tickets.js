@@ -34,6 +34,42 @@ $(document).on('click', '.detail-my-tic', function () {
 
     // console.log($('#currentUser').val());
 
+    //----------------------- READ / UNREAD NOTIF INSIDE DETAIL-MY-TIC -------------------------
+
+    var params = [
+        {
+            name: 'read',
+            value: false
+
+        }
+    ];
+
+    var idTicket = ticketId;
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'helpdesk/tickets/' + idTicket,
+            method: 'put', //put berarti update
+            params: params
+        },
+        success: function (data, textStatus, jqXHR) {
+
+            if (jqXHR.status === 200) {
+
+                var data = JSON.parse(data);
+                if($('#currentUser').val() === data.staff.user.id && $('#currentUser').val() !== data.client.id) {
+                    // console.log(data.read); //jangan dihapus
+                    data.read = true;
+                }
+
+                // console.log(data.read); //jangan dihapus
+            }
+        }
+    });
+    //----------------------- END READ / UNREAD NOTIF INSIDE DETAIL-MY-TIC -------------------------
+
+
 });
 
 getTicketList();
@@ -464,8 +500,8 @@ function getTicketData(ticketId) {
                 }
                 result += 'data-img="'+value.ticket.client.profileImage+'"';
                 result += 'data-time="'+value.createdAt+'">';
-
                 result += '<div class="media-left">';
+//Before
                 if(value.ticket.staff.user.id === $('#currentUser').val()) {
 
                     var img = (value.ticket.staff.user.profileImage).split(".");
@@ -484,7 +520,29 @@ function getTicketData(ticketId) {
                 } else if (value.ticket.client.id === $('#currentUser').val()){
                     result += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
                 }
+//End Before
 
+//After
+                if(value.ticket.staff.user.id === $('#currentUser').val() && value.staff !== null) {
+                    var img = (value.ticket.staff.user.profileImage).split(".");
+                    result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
+                } else {
+                    var img2 = (value.ticket.client.profileImage).split(".");
+                    result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
+                    // '+img[0]+'?ext='+img[1]+'
+                }
+
+                result += '</div>';
+                result += '<div class="media-body">';
+                result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
+                if(value.ticket.client.id === $('#currentUser').val() && value.ticket.staff !== null) {
+                    result += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
+                } else {
+                    if(value.staff) {
+                        result += '<h4 class="media-heading">' + value.ticket.staff.user.fullname + '</h4>';
+                    }
+                }
+//End After
                 result += '<p>'+value.message+'</p>';
                 result += '</div>';
                 result += '</div>';

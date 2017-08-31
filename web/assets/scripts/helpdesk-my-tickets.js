@@ -502,24 +502,24 @@ function getTicketData(ticketId) {
                 result += 'data-time="'+value.createdAt+'">';
                 result += '<div class="media-left">';
 //Before
-                if(value.ticket.staff.user.id === $('#currentUser').val()) {
-
-                    var img = (value.ticket.staff.user.profileImage).split(".");
-                    result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
-                    // '+img[0]+'?ext='+img[1]+'
-                } else {
-                    var img2 = (value.ticket.client.profileImage).split(".");
-                    result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
-                }
-                result += '</div>';
-                result += '<div class="media-body">';
-                result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
-
-                if (value.ticket.staff.user.id === $('#currentUser').val()) {
-                    result += '<h4 class="media-heading">' + value.ticket.staff.fullname + '</h4>';
-                } else if (value.ticket.client.id === $('#currentUser').val()){
-                    result += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
-                }
+//                 if(value.ticket.staff.user.id === $('#currentUser').val()) {
+//
+//                     var img = (value.ticket.staff.user.profileImage).split(".");
+//                     result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
+//                     // '+img[0]+'?ext='+img[1]+'
+//                 } else {
+//                     var img2 = (value.ticket.client.profileImage).split(".");
+//                     result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
+//                 }
+//                 result += '</div>';
+//                 result += '<div class="media-body">';
+//                 result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
+//
+//                 if (value.ticket.staff.user.id === $('#currentUser').val()) {
+//                     result += '<h4 class="media-heading">' + value.ticket.staff.fullname + '</h4>';
+//                 } else if (value.ticket.client.id === $('#currentUser').val()){
+//                     result += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
+//                 }
 //End Before
 
 //After

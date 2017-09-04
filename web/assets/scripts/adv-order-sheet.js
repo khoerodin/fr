@@ -307,7 +307,8 @@ function getTypes(params, spcId) {
                 var total = JSON.parse(data)['hydra:totalItems'];
                 var data = JSON.parse(data)['hydra:member'];
 
-                if (total.length > 0) {
+                if (total > 0) {
+                    console.log(data[0]['price']);
                     $('#basePrice, [name="basePrice"]').val(data[0]['price']);
                 } else {
                     $('#basePrice, [name="basePrice"]').val(0);

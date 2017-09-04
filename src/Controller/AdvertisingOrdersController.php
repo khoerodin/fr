@@ -63,14 +63,35 @@ class AdvertisingOrdersController extends AdminController
         $paymentMethod = $this->request('billing/payment-methods', 'get');
         $paymentMethod = json_decode($paymentMethod->getContent(), true)['hydra:member'];
 
+        $categories = $this->request('advertising/categories', 'get');
+        $categories = json_decode($categories->getContent(), true)['hydra:member'];
+
         $data = [
             'meta' => $meta,
             'order' => $order,
             'representatives' => $representatives,
             'paymentMethod' => $paymentMethod,
+            'categories' => $this->getTreeParents($order['category']['id'],$categories)
         ];
 
         return $this->view('advertising-orders/detail.twig', $data);
+    }
+
+    private function getTreeParents($childId, $array)
+    {
+        $str = '';
+        foreach ($array as $value) {
+            if ( $childId == $value['id'] ) {
+
+                $str .= $this->getTreeParents( $value['parent']['id'], $array);
+                if ( $value['parent']['id'] != null) {
+                    $str .= ' ➤ ';
+                }
+                $str .= $value['name'];
+
+            }
+        }
+        return $str;
     }
 
     function publishAdsAction(Request $request)

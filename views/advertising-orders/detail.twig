@@ -2,6 +2,7 @@
 
 {% block js %}
     <script src="/assets/accountingjs/accounting.min.js"></script>
+    <script src="/assets/treeview/treed.js"></script>
     <script src="/assets/scripts/adv-order-sheet.js"></script>
     <script src="/assets/listjs/list.min.js"></script>
     <script src="/assets/scripts/adv-order-detail.js"></script>
@@ -130,12 +131,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Nama PIC</label>
-                                    <div class="input-group" id="pic">
-                                        <input type="text" name="pic" value="{{ order.accountExecutive.name }}" readonly class="form-control">
-                                        <input type="hidden" id="accountExecutive" value="/api/advertising/account-executives/{{ order.accountExecutive.id }}" name="accountExecutive">
+                                    <label for="">Tipe Iklan</label>
+                                    <div class="input-group" id="tipeIklan">
+                                        <input type="text" readonly name="tipeIklan" value="{{ order.type.name }}" class="form-control">
+                                        <input type="hidden" name="type" value="/api/advertising/types/{{ order.type.id }}" id="type" >
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -144,10 +145,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Tipe Iklan</label>
-                                    <div class="input-group" id="tipeIklan">
-                                        <input type="text" readonly name="tipeIklan" value="{{ order.type.name }}" class="form-control">
-                                        <input type="hidden" name="type" value="/api/advertising/types/{{ order.type.id }}" id="type" >
+                                    <label for="">Nama PIC</label>
+                                    <div class="input-group" id="pic">
+                                        <input type="text" name="pic" value="{{ order.accountExecutive.name }}" readonly class="form-control">
+                                        <input type="hidden" id="accountExecutive" value="/api/advertising/account-executives/{{ order.accountExecutive.id }}" name="accountExecutive">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -168,34 +169,10 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Emiten</label>
-                                    <div class="input-group" id="emiten">
-                                        <input type="text" readonly name="emiten" value="{{ order.category.parent.parent.name }}" class="form-control">
-                                        <input type="hidden" id="category1" value="{{ order.category.parent.parent.id }}" name="category1">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="">Sektor</label>
-                                    <div class="input-group" id="sektor">
-                                        <input type="text" readonly name="sektor" value="{{ order.category.parent.name }}" class="form-control">
-                                        <input type="hidden" id="category2" value="{{ order.category.parent.id }}" name="category2">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="">Sub Sektor</label>
-                                    <div class="input-group" id="sub-sektor">
-                                        <input type="text" readonly name="sub-sektor" value="{{ order.category.name }}" class="form-control">
-                                        <input type="hidden" id="category" value="/api/advertising/categories/{{ order.category.id }}" name="category">
+                                    <label for="">Kategori Iklan</label>
+                                    <div class="input-group" id="category">
+                                        <input type="text" readonly id="categoryValue" value="{{ categories }}" class="form-control">
+                                        <input type="hidden" name="category" value="{{ order.category.id }}" name="category1">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -570,21 +547,18 @@
     </div>
     {#End Media Iklan#}
 
-    {#Emiten#}
-    <div id="emitenModal" class="modal" role="dialog">
+    {#Category#}
+    <div id="categoryModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Emiten</h4>
-                    <small class="text-success">Dobel klik Emiten untuk memilihnya</small>
+                    <h4 class="modal-title">Pilih Kategori</h4>
+                    <small class="text-success">Letakkan kursor pada kategori yang dipilih</small>
                 </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control search" id="serachEmiten" placeholder="CARI EMITEN">
-                    <div id="data-list" style="margin-top: 10px"></div>
-                </div>
+                <div class="modal-body"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -592,55 +566,7 @@
 
         </div>
     </div>
-    {#End Emiten#}
-
-    {#Sektor#}
-    <div id="sektorModal" class="modal" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Sektor</h4>
-                    <small class="text-success">Dobel klik Sektor untuk memilihnya</small>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control" id="serachList" placeholder="CARI SEKTOR">
-                    <div id="data-list" style="margin-top: 10px"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    {#End Sektor#}
-
-    {#Sektor#}
-    <div id="subSektorModal" class="modal" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Sub Sektor</h4>
-                    <small class="text-success">Dobel klik Sub Sektor untuk memilihnya</small>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control" id="serachList" placeholder="CARI SUB SEKTOR">
-                    <div id="data-list" style="margin-top: 10px"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    {#End Sektor#}
+    {#End Category#}
 
     {#PIC / Account Executive#}
     <div id="PICModal" class="modal" role="dialog">

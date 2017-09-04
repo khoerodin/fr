@@ -218,7 +218,9 @@ function getSpecifications(params) {
 
 // klik pilih Tipe Iklan
 $(document).on('click', '#tipeIklan button', function () {
-    getTypes();
+    var longSpcId = $('#specification').val();
+    var spcId = longSpcId.split('/').pop();
+    getTypes(null, spcId);
     $('#tipeIklanModal').modal({show: true, backdrop: 'static'});
     $('#tipeIklanModal input#serachList').focus();
 });
@@ -226,20 +228,23 @@ $(document).on('click', '#tipeIklan button', function () {
 //pencarian tipe iklan
 $(document).on('keyup', '#tipeIklanModal #serachList', function () {
     var params = $(this).val();
-    getTypes(params);
+    var longSpcId = $('#specification').val();
+    var spcId = longSpcId.split('/').pop();
+    getTypes(params, spcId);
 });
 
 //mengambil data tipe iklan
-function getTypes(params) {
+function getTypes(params, spcId) {
     $.ajax({
         url: '/api',
         type: 'POST',
         data: {
-            module: 'advertising/types',
+            module: 'advertising/specification-details',
             method: 'get',
             params: [
                 {
-                    name: params
+                    'type.name': params,
+                    'specification.id': spcId
                 }
             ]
         },
@@ -250,8 +255,8 @@ function getTypes(params) {
             tableData += '<tbody id="tipeIklanModalData">';
 
             $.each(memberData, function (index, value) {
-                tableData += '<tr style="cursor: pointer" data-id="'+value.id+'">';
-                tableData += '<td>'+value.name+'</td>';
+                tableData += '<tr style="cursor: pointer" data-id="'+value.type.id+'">';
+                tableData += '<td>'+value.type.name+'</td>';
                 tableData += '</tr>';
             });
 
@@ -298,8 +303,16 @@ function getTypes(params) {
                 ]
             },
             success: function (data) {
+
+                var total = JSON.parse(data)['hydra:totalItems'];
                 var data = JSON.parse(data)['hydra:member'];
-                $('#basePrice, [name="basePrice"]').val(data[0]['price']);
+
+                if (total.length > 0) {
+                    $('#basePrice, [name="basePrice"]').val(data[0]['price']);
+                } else {
+                    $('#basePrice, [name="basePrice"]').val(0);
+                }
+
             }
         });
         

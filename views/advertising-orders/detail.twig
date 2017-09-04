@@ -15,7 +15,7 @@
                 <div class="box-body">
                     <form class="row" id="orderForm">
                         <input type="hidden" name="id" value="{{ order.id }}">
-                        <input type="hidden" name="orderInvoicedAt" value="{{ order.invoicedAt }}">
+                            <input type="hidden" name="orderInvoicedAt" value="{{ order.invoicedAt }}">
                         <input type="hidden" name="orderBookedAt" value="{{ order.bookedAt }}">
                         <div class="col-md-6 row">
                             <div class="col-md-12">
@@ -95,7 +95,7 @@
                                     <label for="">Klien</label>
                                     <div class="input-group" id="klien">
                                         <input type="text" readonly name="klien" value="{{ order.client.name }}" class="form-control">
-                                        <input type="hidden" name="client" id="client" value="/api/advertising/customers/{{ order.client.id }}">
+                                        <input type="hidden" name="client" id="client" value="/api/advertising/customers/{% if order.client.id is defined %}{{ order.client.id }}{% endif %}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>

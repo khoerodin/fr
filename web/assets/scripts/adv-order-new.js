@@ -7,9 +7,10 @@ $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
     var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
     $('#invoicedAt').val(tgl);
 });
+$('#invoicedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 $('#inputBookedAt').val(moment().format('dddd, DD MMMM YYYY'));
-$('#bookedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'))
+$('#bookedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 // $('#dtBookedAt, #inputBookedAt').datetimepicker({
 //     locale: 'id',

@@ -13,6 +13,9 @@ $(document).on('click', '.detail-my-tic', function () {
     var clientId = $(this).closest('tr').data('client');
     $('#tiketModal .modal-body').attr('data-clientid', clientId);
 
+    var categoryId = $(this).closest('tr').attr('category');
+    $('#tiketModal .modal-body').attr('data-category', categoryId);
+
     var staffUserId = $(this).closest('tr').data('staff-user');
     $('#tiketModal .modal-body').attr('data-staff-userid', staffUserId);
 
@@ -45,14 +48,15 @@ $(document).on('click', '.detail-my-tic', function () {
 
             if (jqXHR.status === 200) {
 
+
                 var data = JSON.parse(data);
 
                 if($('#currentUser').val() === data.staff.user.id && $('#currentUser').val() !== data.client.id) {
-                    // console.log(data.read); //jangan dihapus
+                    console.log('sudah dibaca =',data.read); //jangan dihapus
                     data.read = true;
                 }
 
-                // console.log(data.read); //jangan dihapus
+                console.log('sudah dibaca =',data.read); //jangan dihapus
             }
         }
     });
@@ -239,7 +243,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
                 result += 'data-time="'+data.createdAt+'">';
                 result += '<div class="media-left">';
 
-                // console.log(data);
+                console.log(data);
                 if(data.ticket.staff.user.id === $('#currentUser').val() && data.staff !== null) {
                     var img = (data.ticket.staff.user.profileImage).split(".");
                     result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
@@ -253,6 +257,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
                 result += '<div class="media-body">';
                 result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(data.createdAt).format('LLLL')+'</h6>';
                 if(data.ticket.client.id === $('#currentUser').val() && data.ticket.staff !== null) {
+                // if(data.ticket.client.id === $('#currentUser').val() && data.ticket.staff !== null) {
                     result += '<h4 class="media-heading">' + data.ticket.client.fullname + '</h4>';
                 } else {
                     if(data.staff) {
@@ -664,29 +669,39 @@ $(document).on('click', 'button.confirm-tic', function () {
                 type: 'POST',
                 data: {
                     module: 'helpdesk/staffs',
-                    method: 'get'
+                    method: 'get',
+                    params: [
+                        {
+                            'category.id' : ticketData.category.id
+                        }
+                    ]
                 },
                 success: function (data, textStatus, jqXHR) {
                     var data = JSON.parse(data)['hydra:member'];
                     var staff = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN.. </option>';
+
                     $.each(data, function (index, value) {
+                        // console.log(value);
+                        // console.log('value =',value.category.id);
+                        // console.log('ticketData =',ticketData.category.id);
 
-                        //console.log(value.id, ticketData.staff.id);
+                        // $('#confirm-tic #formKonfirmasiTiket #staff').val();
+                        // if(value.category.id === ticketData.category.id) {
+                            if (ticketData.staff) {
 
-                        if (ticketData.staff) {
+                                if (value.id === ticketData.staff.id) {
+                                    staff += '<option selected value="/api/helpdesk/staffs/' + value.id + '">' + value.user.fullname + '</option>';
+                                } else {
+                                    staff += '<option value="/api/helpdesk/staffs/' + value.id + '">' + value.user.fullname + '</option>';
+                                }
 
-                            if ( value.id === ticketData.staff.id ) {
-                                staff += '<option selected value="/api/helpdesk/staffs/'+value.id+'">'+value.user.fullname+'</option>';
                             } else {
-                                staff += '<option value="/api/helpdesk/staffs/'+value.id+'">'+value.user.fullname+'</option>';
+                                staff += '<option value="/api/helpdesk/staffs/' + value.id + '">' + value.user.fullname + '</option>';
                             }
-
-                        } else {
-                            staff += '<option value="/api/helpdesk/staffs/'+value.id+'">'+value.user.fullname+'</option>';
-                        }
+                        // }
 
                     });
-
+                    // console.log($('#confirm-tic #formKonfirmasiTiket #staff :selected').text());
                     $('#confirm-tic #formKonfirmasiTiket #id').val(id);
                     $('#confirm-tic #formKonfirmasiTiket #staff').html(staff);
                 }
@@ -1057,7 +1072,7 @@ function getAllTicketList() {
             if (memberData.length > 0) {
                 var no = 1;
                 $.each(memberData, function (index, value) {
-
+                    // console.log(value);
                     if(value.status !== 'closed'){
                         tr += '<tr id="'+value.id+'" data-msg="'+value.message+'"';
 
@@ -1071,6 +1086,7 @@ function getAllTicketList() {
 
                         tr += 'waktu="'+value.createdAt+'"';
                         tr += 'data-img="'+value.client.profileImage+'"';
+                        tr += 'category="'+value.category.id+'"';
                         tr += '>';
 
                         tr += '<td>' + no + '</td>';

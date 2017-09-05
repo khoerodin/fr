@@ -523,7 +523,7 @@ function getTicketData(ticketId) {
 //End Before
 
 //After
-                if(value.ticket.staff.user.id === $('#currentUser').val() && value.staff !== null) {
+                if(value.staff === null) {
                     var img2 = (value.ticket.client.profileImage).split(".");
                     result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
                     // '+img[0]+'?ext='+img[1]+'
@@ -535,12 +535,10 @@ function getTicketData(ticketId) {
                 result += '</div>';
                 result += '<div class="media-body">';
                 result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
-                if(value.ticket.client.id === $('#currentUser').val() && value.ticket.staff !== null) {
-                    if(value.staff) {
-                        result += '<h4 class="media-heading">' + value.ticket.staff.user.fullname + '</h4>';
-                    }
-                } else {
+                if(value.staff === null) {
                     result += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
+                } else {
+                    result += '<h4 class="media-heading">' + value.ticket.staff.user.fullname + '</h4>';
                 }
 //End After
                 result += '<p>'+value.message+'</p>';
@@ -611,7 +609,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
                 //$("#replyMessage").val('');
                 // var ticketId =  ticket.split("/").pop();
                 // }
-
+                console.log(data);
                 var result = '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+data.id+'"';
 
                 if (data.ticket) {
@@ -660,7 +658,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time) {
                             },
                             {
                                 name: 'receiver',
-                                value: data.staff.user.id //staff terpilih menerima pesan dari klien
+                                value: '' //data.staff.user.id //staff terpilih menerima pesan dari klien
                             },
                             {
                                 name: 'sender',

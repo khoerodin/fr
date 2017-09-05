@@ -1,6 +1,10 @@
 // dropdown menggunakan select2
-$("#printAs, #paymentMethod").select2({
+$("#printAs, #paymentMethod, #printInvoiceAs").select2({
     theme: 'bootstrap'
+});
+
+$(document).on('ready', function() {
+    $('#hitung').trigger('click');
 });
 
 $("#orderFrom").select2({
@@ -998,10 +1002,6 @@ $(document).on('blur', '#totalAmount', function () {
     var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
     $this.val(accounting.formatMoney(unformat));
     $('[name="totalAmount"]').val(parseFloat(unformat));
-});
-
-$(document).on('ready', function() {
-    $('#hitung').trigger('click');
 });
 
 // klik tombol hitung

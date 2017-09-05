@@ -132,7 +132,7 @@ $(document).on('click', '#btn-order-update', function () {
                 });
 
             }else {
-                $('#btn-order-update').prop('disabled', true);
+                // $('#btn-order-update').prop('disabled', true);
             }
         }
     });

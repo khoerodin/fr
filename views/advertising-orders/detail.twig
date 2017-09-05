@@ -429,6 +429,8 @@
                             </div>
                             <div class="col-md-12">
                                 <hr>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Jenis Bayar</label>
                                     <select name="paymentMethod" id="paymentMethod" class="form-control" style="width: 100%">
@@ -443,7 +445,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Sisipan</label>
                                     <div class="input-group" id="sisipan" style="position: relative;">
@@ -466,6 +468,17 @@
                                 <div class="form-group">
                                     <label for="">Keterangan Order</label>
                                     <input type="text" name="orderDescription" value="{{ order.orderDescription }}" id="orderDescription" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="printInvoiceAs">Status Detail</label>
+                                    <select class="form-control" id="printInvoiceAs" name="printInvoiceAs">
+                                        <option disabled selected>PILIH</option>
+                                        <option value="n" {% if order.printInvoiceAs == 'n' %}selected{% endif %}>NORMAL</option>
+                                        <option value="p" {% if order.printInvoiceAs == 'p' %}selected{% endif %}>PECAH</option>
+                                        <option value="b" {% if order.printInvoiceAs == 'b' %}selected{% endif %}>GABUNG</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

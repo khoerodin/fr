@@ -77,7 +77,7 @@
                                     <label for="">Pemasang</label>
                                     <div class="input-group" id="pemasang">
                                         <input type="text" readonly value="{{ order.customer.name }}" name="pemasang" class="form-control">
-                                        <input type="hidden" name="customer" id="customer" value="/api/advertising/customers/{{ order.customer.id }}" >
+                                        <input type="hidden" name="customer" id="customer" value="{% if order.customer.id is defined %}/api/advertising/customers/{{ order.customer.id }}{% endif %}" >
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -95,7 +95,7 @@
                                     <label for="">Klien</label>
                                     <div class="input-group" id="klien">
                                         <input type="text" readonly name="klien" value="{{ order.client.name }}" class="form-control">
-                                        <input type="hidden" name="client" id="client" value="/api/advertising/customers/{% if order.client.id is defined %}{{ order.client.id }}{% endif %}">
+                                        <input type="hidden" name="client" id="client" value="{% if order.client.id is defined %}/api/advertising/customers/{{ order.client.id }}{% endif %}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -124,7 +124,7 @@
                                     <label for="">Jenis Iklan</label>
                                     <div class="input-group" id="jenisIklan">
                                         <input type="text" readonly name="jenisIklan" value="{{ order.specification.name }}" class="form-control">
-                                        <input type="hidden" name="specification" value="/api/advertising/specifications/{{ order.specification.id }}" id="specification" >
+                                        <input type="hidden" name="specification" value="{% if order.specification.id is defined %}/api/advertising/specifications/{{ order.specification.id }}"{% endif %} id="specification" >
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -136,7 +136,7 @@
                                     <label for="">Tipe Iklan</label>
                                     <div class="input-group" id="tipeIklan">
                                         <input type="text" readonly name="tipeIklan" value="{{ order.type.name }}" class="form-control">
-                                        <input type="hidden" name="type" value="/api/advertising/types/{{ order.type.id }}" id="type" >
+                                        <input type="hidden" name="type" value="{% if order.type.id is defined %}/api/advertising/types/{{ order.type.id }}"{% endif %} id="type" >
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -148,7 +148,7 @@
                                     <label for="">Nama PIC</label>
                                     <div class="input-group" id="pic">
                                         <input type="text" name="pic" value="{{ order.accountExecutive.name }}" readonly class="form-control">
-                                        <input type="hidden" id="accountExecutive" value="/api/advertising/account-executives/{{ order.accountExecutive.id }}" name="accountExecutive">
+                                        <input type="hidden" id="accountExecutive" value="{% if order.accountExecutive.id is defined %}/api/advertising/account-executives/{{ order.accountExecutive.id }}"{% endif %} name="accountExecutive">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -160,7 +160,7 @@
                                     <label for="">Pasang Di</label>
                                     <div class="input-group" id="mediaIklan">
                                         <input type="text" readonly name="mediaIklan" value="{{ order.media.name }}" class="form-control">
-                                        <input type="hidden" id="media" name="media" value="/api/advertising/media/{{ order.media.id }}">
+                                        <input type="hidden" id="media" name="media" value="{% if order.media.id is defined %}/api/advertising/media/{{ order.media.id }}{% endif %}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -172,7 +172,7 @@
                                     <label for="">Kategori Iklan</label>
                                     <div class="input-group" id="category">
                                         <input type="text" readonly id="categoryValue" value="{{ categories }}" class="form-control">
-                                        <input type="hidden" name="category" value="{{ order.category.id }}" name="category1">
+                                        <input type="hidden" name="category" value="{% if order.category.id is defined %}/api/advertising/categories/{{ order.category.id }}{% endif %}">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
@@ -393,7 +393,7 @@
                                     <div class="input-group" id="sisipan" style="position: relative;">
                                         <button id="clearText" class="btn btn-xs btn-danger" style="position: absolute; right: 44px; top: 6px; z-index: 1041;">clear</button>
                                         <input type="text" readonly name="sisipan" value="{{ order.sirculationArea.name }}" class="form-control">
-                                        <input type="hidden" id="sirculationArea" value="/api/cities/{{ order.sirculationArea.id }}" name="sirculationArea">
+                                        <input type="hidden" id="sirculationArea" value="{% if order.sirculationArea.id is defined %}/api/cities/{{ order.sirculationArea.id }}"{% endif %} name="sirculationArea">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>

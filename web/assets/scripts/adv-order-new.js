@@ -32,7 +32,7 @@ $(document).on('click', '#btn-order', function () {
             params: $('#orderForm').serializeArray()
         },
         beforeSend: function () {
-            $('div .has-error').removeClass('has-error');
+            $('div.has-error').removeClass('has-error');
             $('p.help-block').remove();
             $('#btn-order').text('MENYIMPAN ORDER ...').prop('disabled', true);
         },

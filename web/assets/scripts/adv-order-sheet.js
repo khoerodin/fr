@@ -677,8 +677,91 @@ $(document).on('keyup keydown change mouseup', '#discountValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#discountPercentage', function () {
-    getDiscountPercentage();
+    $('#hitung').trigger('click');
+});
+
+// menghitung plus diskon dalam %
+function getSurchargeValue() {
+    var ppnRp = unformatMoney($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var plusDiskonRp = unformatMoney($('#surchargeValue').val());
+
+    var plusDiskonPersen = ( plusDiskonRp / biaya ) * 100;
+    $('#surchargePercentage').val(plusDiskonPersen);
+}
+
+// menghitung plus diskon dalam rupiah
+function getSurchargePercentage() {
+    var ppnRp = unformatMoney($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var plusDiskonPersen = parseFloat($('#surchargePercentage').val());
+    var plusDiskonRp = (biaya * plusDiskonPersen) / 100;
+    $('#surchargeValue').val(plusDiskonRp.toString().replace('.',','));
+}
+
+$(document).on('keyup keydown change mouseup', '#surchargeValue', function () {
+    getSurchargeValue();
     getJumlahBayar();
+});
+
+$(document).on('keyup keydown change mouseup', '#surchargePercentage', function () {
+    $('#hitung').trigger('click');
+});
+
+// menghitung min diskon dalam %
+function getMinDiscountValue() {
+    var ppnRp = unformatMoney($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var minDiskonRp = unformatMoney($('#minDiscountValue').val());
+
+    var minDiskonPersen = ( minDiskonRp / biaya ) * 100;
+    $('#minDiscountPercentage').val(minDiskonPersen);
+}
+
+// menghitung min diskon dalam rupiah
+function getMinDiscountPercentage() {
+    var ppnRp = unformatMoney($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var minDiskonPersen = parseFloat($('#minDiscountPercentage').val());
+    var minDiskonRp = (biaya * minDiskonPersen) / 100;
+    $('#minDiscountValue').val(minDiskonRp.toString().replace('.',','));
+}
+
+$(document).on('keyup keydown change mouseup', '#minDiscountValue', function () {
+    getMinDiscountValue();
+    getJumlahBayar();
+});
+
+$(document).on('keyup keydown change mouseup', '#minDiscountPercentage', function () {
+    $('#hitung').trigger('click');
+});
+
+// menghitung npb diskon dalam %
+function getNpbDiscountValue() {
+    var ppnRp = unformatMoney($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var npbDiskonRp = unformatMoney($('#npbDiscountValue').val());
+
+    var npbDiskonPersen = ( npbDiskonRp / biaya ) * 100;
+    $('#npbDiscountPercentage').val(npbDiskonPersen);
+}
+
+// menghitung npb diskon dalam rupiah
+function getNpbDiscountPercentage() {
+    var ppnRp = unformatMoney($('#taxValue').val());
+    var biaya = getBiaya() + ppnRp;
+    var npbDiskonPersen = parseFloat($('#npbDiscountPercentage').val());
+    var npbDiskonRp = (biaya * npbDiskonPersen) / 100;
+    $('#npbDiscountValue').val(npbDiskonRp.toString().replace('.',','));
+}
+
+$(document).on('keyup keydown change mouseup', '#npbDiscountValue', function () {
+    getNpbDiscountValue();
+    getJumlahBayar();
+});
+
+$(document).on('keyup keydown change mouseup', '#npbDiscountPercentage', function () {
+    $('#hitung').trigger('click');
 });
 
 // hitung pajak %
@@ -703,8 +786,7 @@ $(document).on('keyup keydown change mouseup', '#taxValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
-    getTaxPercentage();
-    getJumlahBayar();
+    $('#hitung').trigger('click');
 });
 
 // hitung cahsback %
@@ -721,8 +803,11 @@ function getCashBackValue() {
 // hitung cashback rupiah
 function getCashBackPercentage() {
     var diskon = unformatMoney($('#discountValue').val());
+    var plusDiskon = unformatMoney($('#surchargeValue').val());
+    var minDiskon = unformatMoney($('#minDiscountValue').val());
+    var npbDiskon = unformatMoney($('#npbDiscountValue').val());
     var ppn = unformatMoney($('#taxValue').val());
-    var biaya = getBiaya() - diskon + ppn;
+    var biaya = getBiaya() - diskon - plusDiskon - minDiskon - npbDiskon + ppn;
     var cashBackPersen = parseFloat($('#cashBackPercentage').val());
 
     var cashBackRp = (biaya * cashBackPersen) / 100;
@@ -735,13 +820,7 @@ $(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function () {
-    getCashBackPercentage();
-    getJumlahBayar();
-});
-
-
-$(document).on('click', '#klik', function () {
-    getDiscount();
+    $('#hitung').trigger('click');
 });
 
 // ambil diskon
@@ -763,13 +842,23 @@ $(document).on('click', '#klik', function () {
 
 // hitung jumlah bayar
 function getJumlahBayar() {
-    if($('#discountValue').val() && $('#taxValue').val() && $('#cashBackValue').val()) {
+    if(
+        $('#discountValue').val() &&
+        $('#taxValue').val() &&
+        $('#cashBackValue').val() &&
+        $('#surchargeValue').val() &&
+        $('#minDiscountValue').val() &&
+        $('#npbDiscountValue').val()
+    ) {
 
         var diskon = unformatMoney($('#discountValue').val());
         var ppn = unformatMoney($('#taxValue').val());
         var cashBack = unformatMoney($('#cashBackValue').val());
+        var plusDiskon = unformatMoney($('#surchargeValue').val());
+        var minDiskon = unformatMoney($('#minDiscountValue').val());
+        var npbDiskon = unformatMoney($('#npbDiscountValue').val());
 
-        jumlahBayar = parseFloat(getBiaya() - diskon + ppn - cashBack);
+        var jumlahBayar = parseFloat(getBiaya() - diskon + ppn - cashBack + plusDiskon - minDiskon - npbDiskon  );
         $('#totalAmount').val(accounting.formatMoney(jumlahBayar));
         $('[name="totalAmount"]').val(jumlahBayar);
 
@@ -781,14 +870,7 @@ function getJumlahBayar() {
 function getNetto() {
     if($('#quantity').val()) {
         var quantity = unformatMoney($('#quantity').val());
-        var netto;
-
-        if ($('#material').val()) {
-            var materai = unformatMoney($('#material').val());
-            netto = (getJumlahBayar() * quantity) - materai;
-        } else {
-            netto = getJumlahBayar() * quantity;
-        }
+        var netto = getJumlahBayar() * quantity;
 
         $('#netto').text('Rp ' + accounting.formatMoney(netto));
         $('#nettoRp').val(netto);
@@ -797,6 +879,7 @@ function getNetto() {
     }
 }
 
+// base price
 $(document).on('blur', '#basePrice', function () {
     var $this = $(this);
     var value = $this.val();
@@ -805,6 +888,24 @@ $(document).on('blur', '#basePrice', function () {
     $('[name="basePrice"]').val(parseFloat(unformat));
 });
 
+// surcharge / plus discount
+$(document).on('blur', '#surchargeValue', function () {
+    var $this = $(this);
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="surchargeValue"]').val(parseFloat(unformat));
+});
+
+$(document).on('blur', '#surchargePercentage', function () {
+    var $this = $('#surchargeValue');
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="surchargeValue"]').val(parseFloat(unformat));
+});
+
+// discount
 $(document).on('blur', '#discountValue', function () {
     var $this = $(this);
     var value = $this.val();
@@ -821,6 +922,41 @@ $(document).on('blur', '#discountPercentage', function () {
     $('[name="discountValue"]').val(parseFloat(unformat));
 });
 
+//min discount
+$(document).on('blur', '#minDiscountPercentage', function () {
+    var $this = $('#minDiscountValue');
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="minDiscountValue"]').val(parseFloat(unformat));
+});
+
+$(document).on('blur', '#minDiscountValue', function () {
+    var $this = $(this);
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="minDiscountValue"]').val(parseFloat(unformat));
+});
+
+//npb discount
+$(document).on('blur', '#npbDiscountPercentage', function () {
+    var $this = $('#npbDiscountValue');
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="npbDiscountValue"]').val(parseFloat(unformat));
+});
+
+$(document).on('blur', '#minDiscountValue', function () {
+    var $this = $(this);
+    var value = $this.val();
+    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="npbDiscountValue"]').val(parseFloat(unformat));
+});
+
+// tax
 $(document).on('blur', '#taxValue', function () {
     var $this = $(this);
     var value = $this.val();
@@ -837,6 +973,7 @@ $(document).on('blur', '#taxPercentage', function () {
     $('[name="taxValue"]').val(parseFloat(unformat));
 });
 
+// cashback
 $(document).on('blur', '#cashBackValue', function () {
     var $this = $(this);
     var value = $this.val();
@@ -853,6 +990,8 @@ $(document).on('blur', '#cashBackPercentage', function () {
     $('[name="cashBackValue"]').val(parseFloat(unformat));
 });
 
+
+// total
 $(document).on('blur', '#totalAmount', function () {
     var $this = $(this);
     var value = $this.val();
@@ -861,20 +1000,8 @@ $(document).on('blur', '#totalAmount', function () {
     $('[name="totalAmount"]').val(parseFloat(unformat));
 });
 
-$(document).on('blur', '#material', function () {
-    var $this = $(this);
-    var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="material"]').val(parseFloat(unformat));
-});
-
 $(document).on('ready', function() {
-    $('#basePrice').val(accounting.formatMoney($('#basePrice').val()));
-    $('#discountValue').val(accounting.formatMoney($('#discountValue').val()));
-    $('#taxValue').val(accounting.formatMoney($('#taxValue').val()));
-    $('#cashBackValue').val(accounting.formatMoney($('#cashBackValue').val()));
-    $('#material').val(accounting.formatMoney($('#material').val()));
+    $('#hitung').trigger('click');
 });
 
 // klik tombol hitung
@@ -882,9 +1009,39 @@ $(document).on(
     'click', '#hitung',
     function (e) {
         e.preventDefault();
+
+        if (!$('#taxPercentage').val()) {
+            $('#taxPercentage').val(0);
+        }
+
+        if (!$('#surchargePercentage').val()) {
+            $('#surchargePercentage').val(0);
+        }
+
+        if (!$('#minDiscountPercentage').val()) {
+            $('#minDiscountPercentage').val(0);
+        }
+
+        if (!$('#discountPercentage').val()) {
+            $('#discountPercentage').val(0);
+        }
+
+        if (!$('#npbDiscountPercentage').val()) {
+            $('#npbDiscountPercentage').val(0);
+        }
+
+        if (!$('#cashBackPercentage').val()) {
+            $('#cashBackPercentage').val(0);
+        }
+
         getTaxPercentage();
         getDiscountPercentage();
         getCashBackPercentage();
+
+        getSurchargePercentage();
+        getMinDiscountPercentage();
+        getNpbDiscountPercentage();
+
         getNetto();
 
         var tax = $('#taxValue');
@@ -902,22 +1059,37 @@ $(document).on(
         var unformatCashBack = cashBackValue.replace(/\./g,'').replace(/\,/g,'.');
         cashBack.val(accounting.formatMoney(unformatCashBack));
 
-        $('#btn-order').prop('disabled', false);
-        $('#btn-order-update').prop('disabled', false);
+        var surcharge = $('#surchargeValue');
+        var surchargeValue = surcharge.val();
+        var unformatSurcharge = surchargeValue.replace(/\./g,'').replace(/\,/g,'.');
+        surcharge.val(accounting.formatMoney(unformatSurcharge));
+
+        var minDiscount = $('#minDiscountValue');
+        var minDiscountValue = minDiscount.val();
+        var unformatMinDiscount = minDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
+        minDiscount.val(accounting.formatMoney(unformatMinDiscount));
+
+        var npbDiscount = $('#npbDiscountValue');
+        var npbDiscountValue = npbDiscount.val();
+        var unformatNpbDiscount = npbDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
+        npbDiscount.val(accounting.formatMoney(unformatNpbDiscount));
+
+        $('#btn-order').prop('disabled', false).text('SIMPAN');
+        $('#btn-order-update').prop('disabled', false).text('SIMPAN');
 });
 
 $(document).on(
     'keyup keydown change mouseup',
     '#columnSize, #milimeterSize, #totalPost, ' +
     '#basePrice, #discountValue, #discountPercentage, ' +
-    '#taxValue, #taxPercentage, #quantity, #material, ' +
+    '#taxValue, #taxPercentage, #quantity, ' +
     '#cashBackValue, #cashBackPercentage, ' +
     'input[name="jenisIklan"], #specification',
     function () {
         $('#netto').text(accounting.formatMoney(0, "Rp ", 2, ".", ","));
         $('#nettoRp').val(0);
-        $('#btn-order').prop('disabled', true);
-        $('#btn-order-update').prop('disabled', true);
+        $('#btn-order').prop('disabled', true).text('KLIK TOMBOL HITUNG');
+        $('#btn-order-update').prop('disabled', true).text('KLIK TOMBOL HITUNG');
     });
 
 // fungsi terbilang rupiah indonesia

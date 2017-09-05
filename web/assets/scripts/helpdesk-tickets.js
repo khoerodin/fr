@@ -244,19 +244,20 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
                 result += '<div class="media-left">';
 
                 console.log(data);
-                // if(data.ticket.staff.user.id === $('#currentUser').val() && data.staff !== null) {
-                //     var img = (data.ticket.staff.user.profileImage).split(".");
-                //     result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
-                // } else {
-                // var img2 = (data.ticket.client.profileImage).split(".");
-                // result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
-                // // '+img[0]+'?ext='+img[1]+'
-                // }
+                if(data.ticket.staff.user.id === $('#currentUser').val() && data.staff !== null) {
+                    var img = (data.ticket.staff.user.profileImage).split(".");
+                    result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
+                } else {
+                var img2 = (data.ticket.client.profileImage).split(".");
+                result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
+                // '+img[0]+'?ext='+img[1]+'
+                }
 
                 result += '</div>';
                 result += '<div class="media-body">';
                 result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(data.createdAt).format('LLLL')+'</h6>';
                 if(data.ticket.client.id === $('#currentUser').val() && data.ticket.staff !== null) {
+                // if(data.ticket.client.id === $('#currentUser').val() && data.ticket.staff !== null) {
                     result += '<h4 class="media-heading">' + data.ticket.client.fullname + '</h4>';
                 } else {
                     if(data.staff) {

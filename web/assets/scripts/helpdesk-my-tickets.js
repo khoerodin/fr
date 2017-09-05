@@ -523,7 +523,7 @@ function getTicketData(ticketId) {
 //End Before
 
 //After
-                if(value.ticket.staff !== null) {
+                if(value.staff === null) {
                     var img2 = (value.ticket.client.profileImage).split(".");
                     result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
                     // '+img[0]+'?ext='+img[1]+'
@@ -535,7 +535,7 @@ function getTicketData(ticketId) {
                 result += '</div>';
                 result += '<div class="media-body">';
                 result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
-                if(value.ticket.staff !== null) {
+                if(value.staff === null) {
                     result += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
                 } else {
                     result += '<h4 class="media-heading">' + value.ticket.staff.user.fullname + '</h4>';

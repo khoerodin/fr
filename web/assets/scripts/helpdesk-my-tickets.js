@@ -700,7 +700,7 @@ function postTicketData(responseFor, staff, ticket, client, message) {
                 //$("#replyMessage").val('');
                 // var ticketId =  ticket.split("/").pop();
                 // }
-                console.log(data);
+                // console.log(data);
                 var result = '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+data.id+'"';
 
                 if (data.ticket) {

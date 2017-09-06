@@ -6,6 +6,8 @@ $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
 }).on('dp.change', function(e){
     var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
     $('#invoicedAt').val(tgl);
+}).on('dp.hide', function(e){
+    $('[name="pemasang"]').focus();
 });
 $('#invoicedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'));
 

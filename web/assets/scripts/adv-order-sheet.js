@@ -39,9 +39,13 @@ $("#orderFrom").select2({
             //     orderNumber = 'OI/'+urutan+'/'+code+'/'+month+'/'+year;
             //     $('#orderNumber').val(orderNumber);
             // }
+
+            $('#orderLetter').focus();
         }
     });
 });
+
+$("#orderFrom").select2('open');
 
 function paddy(number, pad, char) {
     var pad_char = typeof char !== 'undefined' ? char : '0';
@@ -1570,19 +1574,283 @@ $(document).on('click', 'button#clearText', function (e) {
     $(this).hide();
 });
 
-$('input').on("keypress", function(e) {
-    /* ENTER PRESSED*/
-    if (e.keyCode == 13) {
-        /* FOCUS ELEMENT */
-        var inputs = $(this).parents("form").eq(0).find(":input");
-        var idx = inputs.index(this);
-
-        if (idx == inputs.length - 1) {
-            inputs[0].select()
-        } else {
-            inputs[idx + 1].focus(); //  handles submit buttons
-            inputs[idx + 1].select();
-        }
-        return false;
+$('#orderLetter').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#inputInvoicedAt').focus();
     }
+});
+
+$('[name="pemasang"]').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#pemasang button').focus();
+    }
+});
+
+$('#pemasangModal').on('hide.bs.modal', function () {
+    $('[name="klien"]').focus();
+});
+
+$('[name="klien"]').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#klien button').focus();
+    }
+});
+
+$('#klienModal').on('hide.bs.modal', function () {
+    $('#printAs').select2('open');
+});
+
+$('#printAs').on('select2:close', function () {
+    $('#contractLetter').focus();
+});
+
+$('#contractLetter').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('[name="jenisIklan"]').focus();
+    }
+});
+
+$('[name="jenisIklan"]').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#jenisIklan button').focus();
+    }
+});
+
+$('#jenisIklanModal').on('hide.bs.modal', function () {
+    $('[name="tipeIklan"]').focus();
+});
+
+$('[name="tipeIklan"]').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#tipeIklan button').focus();
+    }
+});
+
+$('#tipeIklanModal').on('hide.bs.modal', function () {
+    $('[name="pic"]').focus();
+});
+
+$('[name="pic"]').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#pic button').focus();
+    }
+});
+
+$('#PICModal').on('hide.bs.modal', function () {
+    $('[name="mediaIklan"]').focus();
+});
+
+$('[name="mediaIklan"]').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#mediaIklan button').focus();
+    }
+});
+
+$('#mediaIklanModal').on('hide.bs.modal', function () {
+    $('#categoryValue').focus();
+});
+
+$('#categoryValue').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#category button').focus();
+    }
+});
+
+$('#categoryModal').on('hide.bs.modal', function () {
+    $('#title').focus();
+});
+
+$('#title').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#columnSize').focus();
+    }
+});
+
+$('#columnSize').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#milimeterSize').focus();
+    }
+});
+
+$('#milimeterSize').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#setEdisiTerbitButton').focus();
+    }
+});
+
+$('#setEdisiTerbitModal').on('hide.bs.modal', function () {
+    $('#totalPost').focus();
+});
+
+$('#totalPost').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#contractDuration').focus();
+    }
+});
+
+$('#contractDuration').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#basePrice').focus();
+    }
+});
+
+$('#basePrice').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#taxPercentage').focus();
+    }
+});
+
+$('#taxPercentage').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#taxValue').focus();
+    }
+});
+
+$('#taxValue').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#surchargePercentage').focus();
+    }
+});
+
+$('#surchargePercentage').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#surchargeValue').focus();
+    }
+});
+
+$('#surchargeValue').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#minDiscountPercentage').focus();
+    }
+});
+
+$('#minDiscountPercentage').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#minDiscountValue').focus();
+    }
+});
+
+$('#minDiscountValue').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#discountPercentage').focus();
+    }
+});
+
+$('#discountPercentage').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#discountValue').focus();
+    }
+});
+
+$('#discountValue').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#npbDiscountPercentage').focus();
+    }focus
+});
+
+$('#npbDiscountPercentage').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#npbDiscountValue').focus();
+    }
+});
+
+$('#npbDiscountValue').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#cashBackPercentage').focus();
+    }
+});
+
+$('#cashBackPercentage').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#cashBackValue').focus();
+    }
+});
+
+$('#cashBackValue').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#totalAmount').focus();
+    }
+});
+
+$('#totalAmount').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#quantity').focus();
+    }
+});
+
+$('#quantity').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#hitung').focus();
+    }
+});
+
+$('#hitung').keydown(function (e) {
+    $(this).click();
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#paymentMethod').select2('open');
+    }
+});
+
+$('#paymentMethod').on('select2:close', function () {
+    $('[name="sisipan"]').focus();
+    console.log('sasa');
+});
+
+$('[name="sisipan"]').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#sisipan button').focus();
+    }
+});
+
+$('#sisipanModal').on('hide.bs.modal', function () {
+    $('#materialDescription').focus();
+});
+
+$('#materialDescription').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#orderDescription').focus();
+    }
+});
+
+$('#orderDescription').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#printInvoiceAs').select2('open');
+    }
+});
+
+$('#printInvoiceAs').on('select2:close', function () {
+    $("#orderFrom").select2('open');
 });

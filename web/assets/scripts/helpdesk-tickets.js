@@ -111,7 +111,7 @@ function getTicketData(ticketId) {
             }
 
             $.each(finalData, function (index, value) {
-                console.log(value);
+                // console.log(value);
                 tr += '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
 
                 if (value.ticket) {

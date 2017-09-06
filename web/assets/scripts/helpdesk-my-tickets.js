@@ -32,7 +32,6 @@ $(document).on('click', '.detail-my-tic', function () {
     getTicketData(ticketId);
     $('#tiketModal').modal({show: true, backdrop: 'static'});
 
-    // console.log($('#currentUser').val());
 
     //----------------------- READ / UNREAD NOTIF INSIDE DETAIL-MY-TIC -------------------------
 
@@ -40,7 +39,6 @@ $(document).on('click', '.detail-my-tic', function () {
         {
             name: 'read',
             value: false
-
         }
     ];
 
@@ -58,8 +56,11 @@ $(document).on('click', '.detail-my-tic', function () {
             if (jqXHR.status === 200) {
 
                 var data = JSON.parse(data);
+                console.log(data);
                 if($('#currentUser').val() === data.staff.user.id) {
-
+                    // console.log($('#currentUser').val());
+                    // console.log(data.staff.user.id);
+                    // console.log(data);
                     data.read = true;
                 }
 

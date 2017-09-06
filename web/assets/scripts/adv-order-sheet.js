@@ -215,16 +215,21 @@ function getSpecifications(params) {
         $('input[name="jenisIklan"]').val($(this).find('td:eq(0)').text());
         $('#jenisIklanModal').modal('hide');
 
-        // ubah netto
-        $('#netto').text(accounting.formatMoney(0, "Rp ", 2, ".", ","));
-        $('#nettoRp').val(0);
         $('#btn-order').prop('disabled', true);
         $('#btn-order-update').prop('disabled', true);
+
+        $('#hitung').click();
+        $('#tipeIklan button').prop('disabled', false);
     });
 // });
 // end Jenis Iklan
 
 // klik pilih Tipe Iklan
+
+if ( $('#specification').val() ) {
+    $('#tipeIklan button').prop('disabled', false);
+}
+
 $(document).on('click', '#tipeIklan button', function () {
     var longSpcId = $('#specification').val();
     var spcId = longSpcId.split('/').pop();

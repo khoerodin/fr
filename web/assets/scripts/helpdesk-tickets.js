@@ -56,7 +56,7 @@ $(document).on('click', '.detail-my-tic', function () {
                     data.read = true;
                 }
 
-                console.log('sudah dibaca =',data.read); //jangan dihapus
+                // console.log('sudah dibaca =',data.read); //jangan dihapus
             }
         }
     });
@@ -111,7 +111,7 @@ function getTicketData(ticketId) {
             }
 
             $.each(finalData, function (index, value) {
-                // console.log(value);
+                console.log(value);
                 tr += '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+value.id+'"';
 
                 if (value.ticket) {
@@ -131,7 +131,7 @@ function getTicketData(ticketId) {
                 tr += '>';
                 tr += '<div class="media-left">';
                 // value.ticket.staff.user.id === $('#currentUser').val() &&
-                    if( value.staff !== null) {
+                    if( value.staff) {
                         var img = (value.ticket.staff.user.profileImage).split(".");
                         tr += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
                     } else if(value.ticket.client){
@@ -144,7 +144,7 @@ function getTicketData(ticketId) {
                 tr += '<div class="media-body">';
                 tr += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
                 // value.ticket.staff.user.id === $('#currentUser').val()
-                    if (value.staff !== null) {
+                    if (value.staff) {
                         tr += '<h4 class="media-heading">' + value.ticket.staff.fullname + '</h4>';
                     } else {//if (value.ticket.client.id === $('#currentUser').val()){
                         tr += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
@@ -204,21 +204,23 @@ function postTicketData(responseFor, staff, ticket, message, time) {
         },
         success: function (data) {
             var data = JSON.parse(data);
-            console.log(data);
+            // console.log(data);
             if(data === 401) {
 
             } else {
 
                 var result = '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+data.id+'"';
 
-                // if (data.ticket) {
+                if (data.ticket) {
                     result += 'data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'"';
-                // }
+                }
 
-                // if (data.staff) {
+                if (data.staff) {
                     result += 'data-staff="'+data.staff.user.id+'"';
-                // }
-
+                }
+                if(data.client){
+                    result += 'data-client="'+data.client.id+'"';
+                    }
                 result += 'data-time="'+data.createdAt+'">';
                 result += '<div class="media-left">';
 
@@ -229,7 +231,7 @@ function postTicketData(responseFor, staff, ticket, message, time) {
                 result += '<div class="media-body">';
                 result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(data.createdAt).format('LLLL')+'</h6>';
                 result += '<h4 class="media-heading">' + data.ticket.staff.user.fullname + '</h4>';
-                result += '<p>'+data.message+'</p>'; console.log(data.message);
+                result += '<p>'+data.message+'</p>';
                 result += '</div>';
                 result += '</div>';
                 result += '<hr>';
@@ -363,7 +365,7 @@ $(document).on('click', '#send', function () {
         // console.log('staff ID = ',trueStaffId);
         // console.log('ticket ID = ',trueTicketId);
         // console.log('client ID = ',trueClientId);
-        console.log(text);
+        // console.log(text);
     }else{
         // alert('Teks tidak boleh kosong bro..');
         toastr.error('Error! Teks tidak boleh kosong!');

@@ -803,8 +803,12 @@ $(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
 // hitung cahsback %
 function getCashBackValue() {
     var diskon = unformatMoney($('#discountValue').val());
+    var plusDiskon = unformatMoney($('#surchargeValue').val());
+    var minDiskon = unformatMoney($('#minDiscountValue').val());
+    var npbDiskon = unformatMoney($('#npbDiscountValue').val());
     var ppn = unformatMoney($('#taxValue').val());
-    var biaya = getBiaya() - diskon + ppn;
+
+    var biaya = getBiaya() - diskon - plusDiskon - minDiskon - npbDiskon + ppn;
     var cashBackRp = unformatMoney($('#cashBackValue').val());
 
     var cashBackPersen = ( cashBackRp / biaya ) * 100;
@@ -818,6 +822,8 @@ function getCashBackPercentage() {
     var minDiskon = unformatMoney($('#minDiscountValue').val());
     var npbDiskon = unformatMoney($('#npbDiscountValue').val());
     var ppn = unformatMoney($('#taxValue').val());
+
+
     var biaya = getBiaya() - diskon - plusDiskon - minDiskon - npbDiskon + ppn;
     var cashBackPersen = parseFloat($('#cashBackPercentage').val());
 

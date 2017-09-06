@@ -639,35 +639,65 @@ function unformatMoney(formatted) {
 
 //menghitung biaya
 function getBiaya() {
-    var kolom = parseInt($('#columnSize').val());
-    var mmBaris = parseInt($('#milimeterSize').val());
-    var terbit = parseInt($('#totalPost').val());
-    var tarif = unformatMoney($('#basePrice').val());
+    var kolom;
+    var mmBaris;
+    var terbit;
+    var tarif;
     var final;
 
-    if ($('#columnSize').val() && $('#milimeterSize').val() && $('#totalPost').val() && $('#basePrice').val() ) {
-        if (
-            $('input[name="jenisIklan"]').val().toLowerCase() === 'kuping' ||
-            $('input[name="jenisIklan"]').val().toLowerCase() === 'banner' ||
-            $('input[name="jenisIklan"]').val().toLowerCase() === 'stapel' ||
-            $('input[name="jenisIklan"]').val().toLowerCase() === 'eksposisi' ||
-            $('input[name="jenisIklan"]').val().toLowerCase() === 'tarif khusus' ||
-            $('input[name="jenisIklan"]').val().toLowerCase().startsWith('paket')
-        ) {
-            final = parseFloat(tarif);
-            return final;
-        } else {
-            final = parseFloat((kolom * mmBaris) * terbit * tarif);
-            return final;
-        }
+    kolom = parseInt($('#columnSize').val());
+    mmBaris = parseInt($('#milimeterSize').val());
+    terbit = parseInt($('#totalPost').val());
+    tarif = unformatMoney($('#basePrice').val());
+
+    if (!$('#columnSize').val()) {
+        kolom = parseFloat(0);
+    }
+
+    if (!$('#milimeterSize').val()) {
+        mmBaris = parseFloat(0);
+    }
+
+    if (!$('#totalPost').val()) {
+        terbit = parseFloat(0);
+    }
+
+    if (!$('#basePrice').val()) {
+        tarif = parseFloat(0);
+    }
+
+    if (
+        $('input[name="jenisIklan"]').val().toLowerCase() === 'kuping' ||
+        $('input[name="jenisIklan"]').val().toLowerCase() === 'banner' ||
+        $('input[name="jenisIklan"]').val().toLowerCase() === 'stapel' ||
+        $('input[name="jenisIklan"]').val().toLowerCase() === 'eksposisi' ||
+        $('input[name="jenisIklan"]').val().toLowerCase() === 'tarif khusus' ||
+        $('input[name="jenisIklan"]').val().toLowerCase().startsWith('paket')
+    ) {
+        final = parseFloat(tarif);
+        return final;
+    } else {
+        final = parseFloat((kolom * mmBaris) * terbit * tarif);
+        return final;
     }
 }
 
 // menghitung diskon dalam %
 function getDiscountValue() {
-    var ppnRp = unformatMoney($('#taxValue').val());
+    var ppnRp;
+    var diskonRp;
+
+    ppnRp = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppnRp = parseFloat(0);
+    }
+
     var biaya = getBiaya() + ppnRp;
-    var diskonRp = unformatMoney($('#discountValue').val());
+
+    diskonRp = unformatMoney($('#discountValue').val());
+    if (!$('#discountValue').val()) {
+        diskonRp = parseFloat(0);
+    }
 
     var diskonPersen = ( diskonRp / biaya ) * 100;
     $('#discountPercentage').val(diskonPersen);
@@ -675,9 +705,20 @@ function getDiscountValue() {
 
 // menghitung diskon dalam rupiah
 function getDiscountPercentage() {
-    var ppnRp = unformatMoney($('#taxValue').val());
+    var ppnRp;
+    var diskonPersen;
+    ppnRp = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppnRp = parseFloat(0);
+    }
+
     var biaya = getBiaya() + ppnRp;
-    var diskonPersen = parseFloat($('#discountPercentage').val());
+
+    diskonPersen = unformatMoney($('#discountPercentage').val());
+    if (!$('#discountPercentage').val()) {
+        diskonPersen = parseFloat(0);
+    }
+
     var diskonRp = (biaya * diskonPersen) / 100;
     $('#discountValue').val(diskonRp.toString().replace('.',','));
 }
@@ -693,9 +734,20 @@ $(document).on('keyup keydown change mouseup', '#discountPercentage', function (
 
 // menghitung plus diskon dalam %
 function getSurchargeValue() {
-    var ppnRp = unformatMoney($('#taxValue').val());
+    var ppnRp;
+    var plusDiskonRp;
+
+    ppnRp = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppnRp = parseFloat(0);
+    }
+
     var biaya = getBiaya() + ppnRp;
-    var plusDiskonRp = unformatMoney($('#surchargeValue').val());
+
+    plusDiskonRp = unformatMoney($('#surchargeValue').val());
+    if (!$('#surchargeValue').val()) {
+        plusDiskonRp = parseFloat(0);
+    }
 
     var plusDiskonPersen = ( plusDiskonRp / biaya ) * 100;
     $('#surchargePercentage').val(plusDiskonPersen);
@@ -703,9 +755,21 @@ function getSurchargeValue() {
 
 // menghitung plus diskon dalam rupiah
 function getSurchargePercentage() {
-    var ppnRp = unformatMoney($('#taxValue').val());
+    var ppnRp;
+    var plusDiskonPersen;
+
+    ppnRp = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppnRp = parseFloat(0);
+    }
+
     var biaya = getBiaya() + ppnRp;
-    var plusDiskonPersen = parseFloat($('#surchargePercentage').val());
+
+    plusDiskonPersen = unformatMoney($('#surchargePercentage').val());
+    if (!$('#surchargePercentage').val()) {
+        plusDiskonPersen = parseFloat(0);
+    }
+
     var plusDiskonRp = (biaya * plusDiskonPersen) / 100;
     $('#surchargeValue').val(plusDiskonRp.toString().replace('.',','));
 }
@@ -721,9 +785,20 @@ $(document).on('keyup keydown change mouseup', '#surchargePercentage', function 
 
 // menghitung min diskon dalam %
 function getMinDiscountValue() {
-    var ppnRp = unformatMoney($('#taxValue').val());
+    var ppnRp;
+    var minDiskonRp;
+
+    ppnRp = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppnRp = parseFloat(0);
+    }
+
     var biaya = getBiaya() + ppnRp;
-    var minDiskonRp = unformatMoney($('#minDiscountValue').val());
+
+    minDiskonRp = unformatMoney($('#minDiscountValue').val());
+    if (!$('#minDiscountValue').val()) {
+        minDiskonRp = parseFloat(0);
+    }
 
     var minDiskonPersen = ( minDiskonRp / biaya ) * 100;
     $('#minDiscountPercentage').val(minDiskonPersen);
@@ -731,9 +806,21 @@ function getMinDiscountValue() {
 
 // menghitung min diskon dalam rupiah
 function getMinDiscountPercentage() {
-    var ppnRp = unformatMoney($('#taxValue').val());
+    var ppnRp;
+    var minDiskonPersen;
+
+    ppnRp = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppnRp = parseFloat(0);
+    }
+
     var biaya = getBiaya() + ppnRp;
-    var minDiskonPersen = parseFloat($('#minDiscountPercentage').val());
+
+    minDiskonPersen = unformatMoney($('#minDiscountPercentage').val());
+    if (!$('#minDiscountPercentage').val()) {
+        minDiskonPersen = parseFloat(0);
+    }
+
     var minDiskonRp = (biaya * minDiskonPersen) / 100;
     $('#minDiscountValue').val(minDiskonRp.toString().replace('.',','));
 }
@@ -749,9 +836,20 @@ $(document).on('keyup keydown change mouseup', '#minDiscountPercentage', functio
 
 // menghitung npb diskon dalam %
 function getNpbDiscountValue() {
-    var ppnRp = unformatMoney($('#taxValue').val());
+    var ppnRp;
+    var npbDiskonRp;
+
+    ppnRp = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppnRp = parseFloat(0);
+    }
+
     var biaya = getBiaya() + ppnRp;
-    var npbDiskonRp = unformatMoney($('#npbDiscountValue').val());
+
+    npbDiskonRp = unformatMoney($('#npbDiscountValue').val());
+    if (!$('#npbDiscountValue').val()) {
+        npbDiskonRp = parseFloat(0);
+    }
 
     var npbDiskonPersen = ( npbDiskonRp / biaya ) * 100;
     $('#npbDiscountPercentage').val(npbDiskonPersen);
@@ -759,9 +857,21 @@ function getNpbDiscountValue() {
 
 // menghitung npb diskon dalam rupiah
 function getNpbDiscountPercentage() {
-    var ppnRp = unformatMoney($('#taxValue').val());
+    var ppnRp;
+    var npbDiskonPersen;
+
+    ppnRp = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppnRp = parseFloat(0);
+    }
+
     var biaya = getBiaya() + ppnRp;
-    var npbDiskonPersen = parseFloat($('#npbDiscountPercentage').val());
+
+    npbDiskonPersen = unformatMoney($('#npbDiscountPercentage').val());
+    if (!$('#npbDiscountPercentage').val()) {
+        npbDiskonPersen = parseFloat(0);
+    }
+
     var npbDiskonRp = (biaya * npbDiskonPersen) / 100;
     $('#npbDiscountValue').val(npbDiskonRp.toString().replace('.',','));
 }
@@ -777,7 +887,12 @@ $(document).on('keyup keydown change mouseup', '#npbDiscountPercentage', functio
 
 // hitung pajak %
 function getTaxValue(){
-    var ppnRp = unformatMoney($('#taxValue').val());
+    var ppnRp;
+
+    ppnRp = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppnRp = parseFloat(0);
+    }
 
     var ppnPersen = ( ppnRp / getBiaya() ) * 100;
     $('#taxPercentage').val(ppnPersen);
@@ -785,7 +900,12 @@ function getTaxValue(){
 
 // hitung pajak rupiah
 function getTaxPercentage() {
-    var ppnPersen = parseFloat($('#taxPercentage').val());
+    var ppnPersen;
+
+    ppnPersen = unformatMoney($('#taxPercentage').val());
+    if (!$('#taxPercentage').val()) {
+        ppnPersen = parseFloat(0);
+    }
 
     var taxValue = (getBiaya() * ppnPersen) / 100;
     $('#taxValue').val(taxValue.toString().replace('.',','));
@@ -802,11 +922,36 @@ $(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
 
 // hitung cahsback %
 function getCashBackValue() {
-    var diskon = unformatMoney($('#discountValue').val());
-    var plusDiskon = unformatMoney($('#surchargeValue').val());
-    var minDiskon = unformatMoney($('#minDiscountValue').val());
-    var npbDiskon = unformatMoney($('#npbDiscountValue').val());
-    var ppn = unformatMoney($('#taxValue').val());
+    var diskon;
+    var plusDiskon;
+    var minDiskon;
+    var npbDiskon;
+    var ppn;
+
+    diskon = unformatMoney($('#discountValue').val());
+    if (!$('#discountValue').val()) {
+        diskon = parseFloat(0);
+    }
+
+    plusDiskon = unformatMoney($('#surchargeValue').val());
+    if (!$('#surchargeValue').val()) {
+        plusDiskon = parseFloat(0);
+    }
+
+    minDiskon = unformatMoney($('#minDiscountValue').val());
+    if (!$('#minDiscountValue').val()) {
+        minDiskon = parseFloat(0);
+    }
+
+    npbDiskon = unformatMoney($('#npbDiscountValue').val());
+    if (!$('#minDiscountValue').val()) {
+        npbDiskon = parseFloat(0);
+    }
+
+    ppn = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppn = parseFloat(0);
+    }
 
     var biaya = getBiaya() - diskon - plusDiskon - minDiskon - npbDiskon + ppn;
     var cashBackRp = unformatMoney($('#cashBackValue').val());
@@ -817,12 +962,36 @@ function getCashBackValue() {
 
 // hitung cashback rupiah
 function getCashBackPercentage() {
-    var diskon = unformatMoney($('#discountValue').val());
-    var plusDiskon = unformatMoney($('#surchargeValue').val());
-    var minDiskon = unformatMoney($('#minDiscountValue').val());
-    var npbDiskon = unformatMoney($('#npbDiscountValue').val());
-    var ppn = unformatMoney($('#taxValue').val());
+    var diskon;
+    var plusDiskon;
+    var minDiskon;
+    var npbDiskon;
+    var ppn;
 
+    diskon = unformatMoney($('#discountValue').val());
+    if (!$('#discountValue').val()) {
+        diskon = parseFloat(0);
+    }
+
+    plusDiskon = unformatMoney($('#surchargeValue').val());
+    if (!$('#surchargeValue').val()) {
+        plusDiskon = parseFloat(0);
+    }
+
+    minDiskon = unformatMoney($('#minDiscountValue').val());
+    if (!$('#minDiscountValue').val()) {
+        minDiskon = parseFloat(0);
+    }
+
+    npbDiskon = unformatMoney($('#npbDiscountValue').val());
+    if (!$('#minDiscountValue').val()) {
+        npbDiskon = parseFloat(0);
+    }
+
+    ppn = unformatMoney($('#taxValue').val());
+    if (!$('#taxValue').val()) {
+        ppn = parseFloat(0);
+    }
 
     var biaya = getBiaya() - diskon - plusDiskon - minDiskon - npbDiskon + ppn;
     var cashBackPersen = parseFloat($('#cashBackPercentage').val());
@@ -859,28 +1028,51 @@ $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function (
 
 // hitung jumlah bayar
 function getJumlahBayar() {
-    if(
-        $('#discountValue').val() &&
-        $('#taxValue').val() &&
-        $('#cashBackValue').val() &&
-        $('#surchargeValue').val() &&
-        $('#minDiscountValue').val() &&
-        $('#npbDiscountValue').val()
-    ) {
+    var diskon;
+    var ppn;
+    var cashBack;
+    var plusDiskon;
+    var minDiskon;
+    var npbDiskon;
 
-        var diskon = unformatMoney($('#discountValue').val());
-        var ppn = unformatMoney($('#taxValue').val());
-        var cashBack = unformatMoney($('#cashBackValue').val());
-        var plusDiskon = unformatMoney($('#surchargeValue').val());
-        var minDiskon = unformatMoney($('#minDiscountValue').val());
-        var npbDiskon = unformatMoney($('#npbDiscountValue').val());
+    diskon = unformatMoney($('#discountValue').val());
+    ppn = unformatMoney($('#taxValue').val());
+    cashBack = unformatMoney($('#cashBackValue').val());
+    plusDiskon = unformatMoney($('#surchargeValue').val());
+    minDiskon = unformatMoney($('#minDiscountValue').val());
+    npbDiskon = unformatMoney($('#npbDiscountValue').val());
 
-        var jumlahBayar = parseFloat(getBiaya() - diskon + ppn - cashBack + plusDiskon - minDiskon - npbDiskon  );
-        $('#totalAmount').val(accounting.formatMoney(jumlahBayar));
-        $('[name="totalAmount"]').val(jumlahBayar);
-
-        return jumlahBayar;
+    if (!$('#discountValue').val()) {
+        diskon = parseFloat(0);
     }
+
+    if (!$('#taxValue').val()) {
+        ppn = parseFloat(0);
+    }
+
+    if (!$('#cashBackValue').val()) {
+        cashBack = parseFloat(0);
+    }
+
+    if (!$('#surchargeValue').val()) {
+        plusDiskon = parseFloat(0);
+    }
+
+    if (!$('#minDiscountValue').val()) {
+        minDiskon = parseFloat(0);
+    }
+
+    if (!$('#npbDiscountValue').val()) {
+        npbDiskon = parseFloat(0);
+    }
+
+    console.log(diskon);
+
+    var jumlahBayar = parseFloat(getBiaya() - diskon + ppn - cashBack + plusDiskon - minDiskon - npbDiskon  );
+    $('#totalAmount').val(accounting.formatMoney(jumlahBayar));
+    $('[name="totalAmount"]').val(jumlahBayar);
+
+    return jumlahBayar;
 }
 
 // hitung netto
@@ -1023,29 +1215,29 @@ $(document).on(
     function (e) {
         e.preventDefault();
 
-        if (!$('#taxPercentage').val()) {
-            $('#taxPercentage').val(0);
-        }
-
-        if (!$('#surchargePercentage').val()) {
-            $('#surchargePercentage').val(0);
-        }
-
-        if (!$('#minDiscountPercentage').val()) {
-            $('#minDiscountPercentage').val(0);
-        }
-
-        if (!$('#discountPercentage').val()) {
-            $('#discountPercentage').val(0);
-        }
-
-        if (!$('#npbDiscountPercentage').val()) {
-            $('#npbDiscountPercentage').val(0);
-        }
-
-        if (!$('#cashBackPercentage').val()) {
-            $('#cashBackPercentage').val(0);
-        }
+        // if (!$('#taxPercentage').val()) {
+        //     $('#taxPercentage').val(0);
+        // }
+        //
+        // if (!$('#surchargePercentage').val()) {
+        //     $('#surchargePercentage').val(0);
+        // }
+        //
+        // if (!$('#minDiscountPercentage').val()) {
+        //     $('#minDiscountPercentage').val(0);
+        // }
+        //
+        // if (!$('#discountPercentage').val()) {
+        //     $('#discountPercentage').val(0);
+        // }
+        //
+        // if (!$('#npbDiscountPercentage').val()) {
+        //     $('#npbDiscountPercentage').val(0);
+        // }
+        //
+        // if (!$('#cashBackPercentage').val()) {
+        //     $('#cashBackPercentage').val(0);
+        // }
 
         getTaxPercentage();
         getDiscountPercentage();

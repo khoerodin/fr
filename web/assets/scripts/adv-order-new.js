@@ -24,6 +24,8 @@ $('#bookedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'));
 //     $('#bookedAt').val(tgl);
 // });
 
+$("#orderFrom").select2('open');
+
 $(document).on('click', '#btn-order', function () {
     $.ajax({
         url: '/api',

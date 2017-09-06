@@ -6,24 +6,29 @@ $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
 }).on('dp.change', function(e){
     var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
     $('#invoicedAt').val(tgl);
+}).on('dp.hide', function () {
+    $('[name="pemasang"]').focus();
 });
-idFormatInputInvoicedAt = $('#inputInvoicedAt').val();
-$('#invoicedAt').val(moment(idFormatInputInvoicedAt, 'dddd, DD MMMM YYYY').format('YYYY-MM-DD HH:mm:ss'));
+idFormatInputInvoicedAt = $('#orderInvoicedAt').val();
+$('#invoicedAt').val(moment(idFormatInputInvoicedAt).format('YYYY-MM-DD HH:mm:ss'));
 
-$('#dtBookedAt, #inputBookedAt').datetimepicker({
-    locale: 'id',
-    format: "dddd, DD MMMM YYYY",
-    defaultDate: $('[name="orderBookedAt"]').val(),
-    ignoreReadonly: true
-}).on('dp.change', function(e){
-    var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-    $('#bookedAt').val(tgl);
+// $('#dtBookedAt, #inputBookedAt').datetimepicker({
+//     locale: 'id',
+//     format: "dddd, DD MMMM YYYY",
+//     defaultDate: $('[name="orderBookedAt"]').val(),
+//     ignoreReadonly: true
+// }).on('dp.change', function(e){
+//     var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+//     $('#bookedAt').val(tgl);
+// });
+
+idFormatInputBookedAt = $('#orderBookedAt').val();
+$('#inputBookedAt').val(moment(idFormatInputBookedAt).format('dddd, DD MMMM YYYY'));
+$('#bookedAt').val(moment(idFormatInputBookedAt).format('YYYY-MM-DD HH:mm:ss'));
+
+$(document).ready(function () {
+    $("#orderNumber").focus();
 });
-idFormatInputBookedAt = $('#inputInvoicedAt').val();
-$('#bookedAt').val(moment(idFormatInputBookedAt, 'dddd, DD MMMM YYYY').format('YYYY-MM-DD HH:mm:ss'));
-
-getJumlahBayar();
-getNetto();
 
 $(document).on('click', '#btn-order-update', function () {
 

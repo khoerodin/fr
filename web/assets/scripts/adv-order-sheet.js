@@ -40,12 +40,10 @@ $("#orderFrom").select2({
             //     $('#orderNumber').val(orderNumber);
             // }
 
-            $('#orderLetter').focus();
+            $('#orderNumber').focus();
         }
     });
 });
-
-$("#orderFrom").select2('open');
 
 function paddy(number, pad, char) {
     var pad_char = typeof char !== 'undefined' ? char : '0';
@@ -1579,7 +1577,21 @@ $(document).on('click', 'button#clearText', function (e) {
     $(this).hide();
 });
 
+$('#orderNumber').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#orderLetter').focus();
+    }
+});
+
 $('#orderLetter').keydown(function (e) {
+    if (e.which === 13) {
+        e.preventDefault();
+        $('#inputBookedAt').focus();
+    }
+});
+
+$('#inputBookedAt').keydown(function (e) {
     if (e.which === 13) {
         e.preventDefault();
         $('#inputInvoicedAt').focus();
@@ -1691,11 +1703,12 @@ $('#columnSize').keydown(function (e) {
 $('#milimeterSize').keydown(function (e) {
     if (e.which === 13) {
         e.preventDefault();
+        $('#edisiTerbitButton').focus();
         $('#setEdisiTerbitButton').focus();
     }
 });
 
-$('#setEdisiTerbitModal').on('hide.bs.modal', function () {
+$('#edisiTerbitModal, #setEdisiTerbitModal').on('hide.bs.modal', function () {
     $('#totalPost').focus();
 });
 

@@ -138,7 +138,7 @@
                                         <input type="text" readonly name="tipeIklan" value="{{ order.type.name }}" class="form-control">
                                         <input type="hidden" name="type" value="{% if order.type.id is defined %}/api/advertising/types/{{ order.type.id }}"{% endif %} id="type" >
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                            <button disabled class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>

@@ -2114,7 +2114,7 @@ $('#orderTag').select2({
             },
             success: function (data) {
                 var data = JSON.parse(data);
-                $('option[value="'+e.timeStamp+'"]').attr('value', data.id);
+                $('option[value="'+e.timeStamp+'"]').attr('value', data.id).prop('selected', true);
             },
             error: function () {
                 $('option[value="'+e.timeStamp+'"]').remove();

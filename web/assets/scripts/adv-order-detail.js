@@ -48,6 +48,13 @@ $(document).on('click', '#btn-order-update', function () {
         callback: function (result) {
             if (result) {
 
+                var params = $('#orderForm').serializeArray();
+                var tags = String($('#orderTag').val());
+                params.push({
+                    name: 'orderTag',
+                    value: tags
+                });
+
                 var id = $('input[name="id"]').val();
                 $.ajax({
                     url: '/api',
@@ -55,7 +62,7 @@ $(document).on('click', '#btn-order-update', function () {
                     data: {
                         module: 'advertising/orders/' + id,
                         method: 'PUT',
-                        params: $('#orderForm').serializeArray()
+                        params: params
                     },
                     success: function (data, textStatus, jqXHR) {
                         if (jqXHR.status === 200) {

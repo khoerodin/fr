@@ -1066,7 +1066,6 @@ function getJumlahBayar() {
         npbDiskon = parseFloat(0);
     }
 
-    console.log(diskon);
 
     var jumlahBayar = parseFloat(getBiaya() - diskon + ppn - cashBack + plusDiskon - minDiskon - npbDiskon  );
     $('#totalAmount').val(accounting.formatMoney(jumlahBayar));
@@ -1077,15 +1076,17 @@ function getJumlahBayar() {
 
 // hitung netto
 function getNetto() {
-    if($('#quantity').val()) {
-        var quantity = unformatMoney($('#quantity').val());
-        var netto = getJumlahBayar() * quantity;
-
-        $('#netto').text('Rp ' + accounting.formatMoney(netto));
-        $('#nettoRp').val(netto);
-
-        terbilang('nettoRp', 'terbilangNetto');
+    var quantity;
+    quantity = unformatMoney($('#quantity').val());
+    if(!$('#quantity').val()) {
+        quantity = parseFloat(1);
     }
+    var netto = getJumlahBayar() * quantity;
+
+    $('#netto').text('Rp ' + accounting.formatMoney(netto));
+    $('#nettoRp').val(netto);
+
+    terbilang('nettoRp', 'terbilangNetto');
 }
 
 // base price

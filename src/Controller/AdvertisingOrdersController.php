@@ -70,12 +70,32 @@ class AdvertisingOrdersController extends AdminController
         $categories = $this->request('advertising/categories', 'get');
         $categories = json_decode($categories->getContent(), true)['hydra:member'];
 
+        $tagStrings = explode(',', $order['orderTag']);
+
+        $allTags = $this->request('advertising/tags', 'get');
+        $allTags = json_decode($allTags->getContent(), true)['hydra:member'];
+
+        $tags = [];
+        foreach ($allTags as $tag) {
+            $selected = 0;
+            if ( in_array($tag['id'], $tagStrings)) {
+                $selected = 1;
+            }
+
+            $tags[] = [
+                'id' => $tag['id'],
+                'name' => $tag['name'],
+                'selected' => $selected
+            ];
+        }
+
         $data = [
             'meta' => $meta,
             'order' => $order,
             'representatives' => $representatives,
             'paymentMethod' => $paymentMethod,
-            'categories' => $this->getTreeParents($order['category']['id'],$categories)
+            'categories' => $this->getTreeParents($order['category']['id'],$categories),
+            'tags' => $tags
         ];
 
         return $this->view('advertising-orders/detail.twig', $data);

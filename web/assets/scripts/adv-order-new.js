@@ -29,7 +29,6 @@ $("#orderFrom").select2('open');
 $(document).on('click', '#btn-order', function () {
     var params = $('#orderForm').serializeArray();
     var tags = String($('#orderTag').val());
-    console.log(tags);
     params.push({
         name: 'orderTag',
         value: tags
@@ -39,7 +38,7 @@ $(document).on('click', '#btn-order', function () {
         url: '/api',
         type: 'POST',
         data: {
-            module: 'advertising/ordersa',
+            module: 'advertising/orders',
             method: 'POST',
             params: params
         },

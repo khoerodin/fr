@@ -38,7 +38,7 @@ $(document).on('click', '.detail-my-tic', function () {
     var params = [
         {
             name: 'read',
-            value: false
+            value: true
         }
     ];
 
@@ -56,7 +56,7 @@ $(document).on('click', '.detail-my-tic', function () {
             if (jqXHR.status === 200) {
 
                 var data = JSON.parse(data);
-                console.log(data);
+                // console.log(data);
                 if($('#currentUser').val() === data.staff.user.id) {
                     // console.log($('#currentUser').val());
                     // console.log(data.staff.user.id);
@@ -261,6 +261,8 @@ function getTicketList() {
                                 tr += '</tr>';
 
                                 no++;
+
+                                $("b").remove(); //menghilangkan element b (bold)
                             }
                     }
                 });

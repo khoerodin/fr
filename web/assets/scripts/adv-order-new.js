@@ -27,13 +27,20 @@ $('#bookedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'));
 $("#orderFrom").select2('open');
 
 $(document).on('click', '#btn-order', function () {
+    var params = $('#orderForm').serializeArray();
+    var tags = String($('#orderTag').val());
+    params.push({
+        name: 'orderTag',
+        value: tags
+    });
+
     $.ajax({
         url: '/api',
         type: 'POST',
         data: {
             module: 'advertising/orders',
             method: 'POST',
-            params: $('#orderForm').serializeArray()
+            params: params
         },
         beforeSend: function () {
             $('div.has-error').removeClass('has-error');

@@ -481,6 +481,16 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Order Tagging</label>
+                                    <select id="orderTag" class="form-control" multiple="multiple">
+                                        {% for tag in tags %}
+                                            <option {% if tag.selected == '1' %}selected{% endif %} value="{{ tag.id }}">{{ tag.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

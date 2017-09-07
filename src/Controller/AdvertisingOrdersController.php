@@ -77,15 +77,10 @@ class AdvertisingOrdersController extends AdminController
 
         $tags = [];
         foreach ($allTags as $tag) {
-            $selected = 0;
-            if ( in_array($tag['id'], $tagStrings)) {
-                $selected = 1;
-            }
-
             $tags[] = [
                 'id' => $tag['id'],
                 'name' => $tag['name'],
-                'selected' => $selected
+                'selected' => ( in_array($tag['id'], $tagStrings) ) ? 1 : 0
             ];
         }
 

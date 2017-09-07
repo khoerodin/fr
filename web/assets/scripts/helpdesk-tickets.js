@@ -30,7 +30,7 @@ $(document).on('click', '.detail-my-tic', function () {
     var params = [
         {
             name: 'read',
-            value: false
+            value: true
 
         }
     ];
@@ -52,11 +52,11 @@ $(document).on('click', '.detail-my-tic', function () {
                 var data = JSON.parse(data);
 
                 if($('#currentUser').val() === data.staff.user.id && $('#currentUser').val() !== data.client.id) {
-                    console.log('sudah dibaca =',data.read); //jangan dihapus
+                    // console.log('sudah dibaca =',data.read); //jangan dihapus
                     data.read = true;
                 }
 
-                console.log('sudah dibaca =',data.read); //jangan dihapus
+                // console.log('sudah dibaca =',data.read); //jangan dihapus
             }
         }
     });
@@ -131,7 +131,7 @@ function getTicketData(ticketId) {
                 tr += '>';
                 tr += '<div class="media-left">';
                 // value.ticket.staff.user.id === $('#currentUser').val() &&
-                    if( value.staff !== null) {
+                    if( value.staff) {
                         var img = (value.ticket.staff.user.profileImage).split(".");
                         tr += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
                     } else if(value.ticket.client){
@@ -144,7 +144,7 @@ function getTicketData(ticketId) {
                 tr += '<div class="media-body">';
                 tr += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(value.createdAt).format('LLLL')+'</h6>';
                 // value.ticket.staff.user.id === $('#currentUser').val()
-                    if (value.staff !== null) {
+                    if (value.staff) {
                         tr += '<h4 class="media-heading">' + value.ticket.staff.fullname + '</h4>';
                     } else {//if (value.ticket.client.id === $('#currentUser').val()){
                         tr += '<h4 class="media-heading">' + value.ticket.client.fullname + '</h4>';
@@ -164,8 +164,8 @@ function getTicketData(ticketId) {
 }
 //<----------------- END DETIL TIKET UNTUK TIKET RESPON -------------->
 
-//<----------------- POST TIKET DAN POST FORUM-------------->
-function postTicketData(responseFor, staff, ticket, client, message, time, pict) {
+//<----------------- POST TIKET DAN POST FORUM (STAFF)-------------->
+function postTicketData(responseFor, staff, ticket, message, time) {
     var params = [
         {
             name: 'responseFor',
@@ -179,27 +179,18 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
             name: 'ticket',
             value: ticket
         },
-        {
-            name: 'client',
-            value: client
-        },
+
         {
             name: 'message',
             value: message
-        },
-        {
-            name: 'time',
-            value: ''
-        },
-        {
-            name: 'pict',
-            value: pict
         }
     ];
+    // console.log(message);
     var parameter = [];
     $.each(params, function (index, value) {
         if (value.value) {
             parameter.push(value);
+            // console.log(value);
         }
     });
 
@@ -217,53 +208,29 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
             if(data === 401) {
 
             } else {
-                // if (ticket) {
-                //$("#replyMessage").val('');
-                // var ticketId =  ticket.split("/").pop();
-                // }
 
-                // if (value.staff) {
-                //     tr += 'data-staff="/api/helpdesk/staffs/'+value.staff.user.id+'"';
-                // }
-                // console.log(data);
                 var result = '<div class="media" id="mediaForum" data-id="/api/helpdesk/ticket-responses/'+data.id+'"';
 
                 if (data.ticket) {
                     result += 'data-ticket="/api/helpdesk/tickets/'+data.ticket.id+'"';
                 }
 
-                if (data.client) {
-                    result += 'data-client="/api/users/' + data.client.id + '"';
-                }
-
                 if (data.staff) {
                     result += 'data-staff="'+data.staff.user.id+'"';
                 }
-
+                if(data.client){
+                    result += 'data-client="'+data.client.id+'"';
+                    }
                 result += 'data-time="'+data.createdAt+'">';
                 result += '<div class="media-left">';
 
-                console.log(data);
-                if(data.ticket.staff.user.id === $('#currentUser').val() && data.staff !== null) {
                     var img = (data.ticket.staff.user.profileImage).split(".");
                     result += '<img src="/api/images/'+img[0]+'?ext='+img[1]+'" class="media-object" style="width:60px">';
-                } else {
-                var img2 = (data.ticket.client.profileImage).split(".");
-                result += '<img src="/api/images/'+img2[0]+'?ext='+img2[1]+'" class="media-object" style="width:60px">';
                 // '+img[0]+'?ext='+img[1]+'
-                }
-
                 result += '</div>';
                 result += '<div class="media-body">';
                 result += '<h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>  '+moment(data.createdAt).format('LLLL')+'</h6>';
-                if(data.ticket.client.id === $('#currentUser').val() && data.ticket.staff !== null) {
-                // if(data.ticket.client.id === $('#currentUser').val() && data.ticket.staff !== null) {
-                    result += '<h4 class="media-heading">' + data.ticket.client.fullname + '</h4>';
-                } else {
-                    if(data.staff) {
-                        result += '<h4 class="media-heading">' + data.ticket.staff.user.fullname + '</h4>';
-                    }
-                }
+                result += '<h4 class="media-heading">' + data.ticket.staff.user.fullname + '</h4>';
                 result += '<p>'+data.message+'</p>';
                 result += '</div>';
                 result += '</div>';
@@ -334,7 +301,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
 
                             var data = JSON.parse(data);
                             // console.log(data);
-                            if($('#currentUser').val() === data.staff.user.id && $('#currentUser').val() !== data.client.id) {
+                            if($('#currentUser').val() === data.staff.user.id) {
                                 // console.log(data.read);
                                 data.read = true;
                             }
@@ -346,6 +313,7 @@ function postTicketData(responseFor, staff, ticket, client, message, time, pict)
                 //----------------------- END READ / UNREAD NOTIF INSIDE POST TIKET -------------------------
 
             }
+
         }
     });
 
@@ -361,7 +329,6 @@ $(document).on('click', '#send', function () {
     var staff = $('#chatHistory:last').data('staff');
     var ticket = $('#chatHistory:last').data('ticket');
     var client = $('#chatHistory:last').data('client');
-    var pict = $('#chatHistory:last').data('pict');
 
     var ticketId = $('#tiketModal .modal-body').data('ticketid');
     var staffId = $('#tiketModal .modal-body').data('staffid');
@@ -392,31 +359,13 @@ $(document).on('click', '#send', function () {
         trueClientId = '/api/users/'+clientId;
     }
 
-    var truePictId;
-    if(typeof pict !== 'undefined'){
-        truePictId = pict;
-    } else {
-        truePictId = '/api/images/profiles/'+pict;
-    }
-
-    if ($('#tiketModal .modal-body').data('clientid') === $('#currentUser').val()) {
-
-        trueClientId = trueClientId;
-
-    } else {
-        trueClientId = null;
-    }
-
-    if ($('#tiketModal .modal-body').data('staffid') !== $('#currentUser').val()) {
-
-        trueStaffId = trueStaffId;
-
-    } else {
-        trueStaffId = null;
-    }
-
     if(text !== ''){
-        postTicketData(responseId, trueStaffId, trueTicketId, trueClientId, text, truePictId);
+        postTicketData(responseId, trueStaffId, trueTicketId, text);
+        // console.log('response ID = ',responseId);
+        // console.log('staff ID = ',trueStaffId);
+        // console.log('ticket ID = ',trueTicketId);
+        // console.log('client ID = ',trueClientId);
+        // console.log(text);
     }else{
         // alert('Teks tidak boleh kosong bro..');
         toastr.error('Error! Teks tidak boleh kosong!');
@@ -595,7 +544,6 @@ $("#category").select2({
 
 //<------------------------- MY TICKET (DISINI GA KEPAKE) ------------------------>
 $(document).on('click', '#btnSave', function () {
-    alert('haloo');
     $.ajax({
         url: '/api',
         type: 'POST',

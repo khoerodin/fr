@@ -37,7 +37,7 @@ class HelpdeskMyTicketsController extends AdminController
 
 
 
-        return $this->view('helpdesk-my-tickets/index.twig', $data);
+        return $this->view('helpdesk-my-tickets/index2.twig', $data);
     }
 
 }

@@ -159,6 +159,43 @@ function getTicketData(ticketId) {
 
             $('#chatHistory').html(tr); //tbody result
 
+            //------------------------- READ / UNREAD NOTIF GET TICKET DATA ------------------------->>
+
+            var params = [
+                {
+                    name: 'read',
+                    value: true
+                }
+            ];
+
+            var tiketID = ticketId;
+            $.ajax({
+                url: '/api',
+                type: 'POST',
+                data: {
+                    module: 'helpdesk/tickets/' + tiketID,
+                    method: 'put', //put berarti update
+                    params: params
+                },
+                success: function (data, textStatus, jqXHR) {
+
+                    if (jqXHR.status === 200) {
+
+                        var data = JSON.parse(data);
+                        // console.log(data);
+                        if($('#currentUser').val() === data.staff.user.id) {
+                            // console.log($('#currentUser').val());
+                            // console.log(data.staff.user.id);
+                            // console.log(data);
+                            data.read = true;
+                        }
+
+                        // console.log(data.read); //jangan dihapus
+                    }
+                }
+            });
+
+            //-------------------------  END READ / UNREAD NOTIF GET TICKET DATA ---------------------->>
         }
     });
 }
@@ -190,7 +227,6 @@ function postTicketData(responseFor, staff, ticket, message, time) {
     $.each(params, function (index, value) {
         if (value.value) {
             parameter.push(value);
-            // console.log(value);
         }
     });
 
@@ -284,7 +320,7 @@ function postTicketData(responseFor, staff, ticket, message, time) {
 
                     }
                 ];
-                // console.log(data);
+                // console.log('ini di post ticket data',data);
                 var idTicket = data.ticket.id;
                 // console.log(idTicket);
                 $.ajax({
@@ -301,9 +337,9 @@ function postTicketData(responseFor, staff, ticket, message, time) {
 
                             var data = JSON.parse(data);
                             // console.log(data);
-                            if($('#currentUser').val() === data.staff.user.id) {
+                            if($('#currentUser').val() === data.client.id) {
                                 // console.log(data.read);
-                                data.read = true;
+                                data.read = false;
                             }
 
                             // console.log(data.read);
@@ -311,13 +347,9 @@ function postTicketData(responseFor, staff, ticket, message, time) {
                     }
                 });
                 //----------------------- END READ / UNREAD NOTIF INSIDE POST TIKET -------------------------
-
             }
-
         }
     });
-
-
 
 }
 //<----------------- END POST TIKET DAN POST FORUM-------------->
@@ -782,7 +814,10 @@ $(document).on('click', '#assign-tic', function () {
 //<----------------- END ASSIGN TIKET UNTUK STAFF + UPDATE TABLE -------------->
 
 //<----------------- GET LIST CLOSED TIKET-------------->
-getClosedTicketList();
+$(document).on('click', '#closedTickets', function () {
+
+    getClosedTicketList();
+});
 function getClosedTicketList() {
 
     $.ajax({
@@ -793,12 +828,10 @@ function getClosedTicketList() {
             method: 'get',
             params: [
                 {
-                    'client.id' : $('#currentUser').val()
+                    'staff.user.id' : $('#currentUser').val()
                 },
                 {
-                    name: 'status',
-                    value: 'closed'
-
+                    'status' : 'closed'
                 }
             ]
         },
@@ -872,6 +905,9 @@ function getClosedTicketList() {
 
 //<----------------- GET LIST ASSIGNMENT TIKET (LIST TIKET UNTUK STAFF) -------------->
 getMyAssignmentList();
+$(document).on('click', '#assignedTo', function () {
+    getMyAssignmentList();
+});
 function getMyAssignmentList() {
 
     $.ajax({
@@ -994,8 +1030,9 @@ function getMyAssignmentList() {
 //<----------------- END LIST ASSIGNMENT TIKET (LIST TIKET UNTUK STAFF) -------------->
 
 //<----------------- TAMPIL SEMUA TIKET KECUALI STATUS CLOSED -------------->
-getAllTicketList();
-
+$(document).on('click', '#allTickets', function () {
+    getAllTicketList();
+});
 function getAllTicketList() {
 
     $.ajax({

@@ -5,7 +5,7 @@
         var moduleData = {
             module: 'modules',
             method: 'get',
-            params: [{'page': pageNum}]
+            params: [{'page': pageNumber}]
         };
 
         var roleData = {

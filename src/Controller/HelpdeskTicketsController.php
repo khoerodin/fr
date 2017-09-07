@@ -30,6 +30,6 @@ class HelpdeskTicketsController extends AdminController
             'admin' => ['id' => $admin[0]['id'], 'username' => $admin[0]['username']]
         ];
 
-        return $this->view('helpdesk-tickets/index.twig', $data);
+        return $this->view('helpdesk-tickets/index2.twig', $data);
     }
 }

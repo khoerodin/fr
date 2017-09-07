@@ -1,5 +1,5 @@
 (function (window) {
-    var Bisnis = window.Bisnis || {};
+    var Bisnis = {};
 
     Bisnis.init = function (callback) {
         if ('undefined' === typeof window.jQuery) {
@@ -7,12 +7,13 @@
         }
 
         if (Bisnis.validCallback(callback)) {
-            callback();
+            jQuery(document).ready(callback);
         }
     };
 
-    Bisnis.request = function (method, params, successCallback, errorCallback, url) {
+    Bisnis.request = function (params, successCallback, errorCallback, url, method) {
         url = 'undefined' === typeof url ? '/api' : url;
+        method = 'undefined' === typeof method ? 'post' : method;
 
         jQuery.ajax({
             url: url,
@@ -41,4 +42,60 @@
     Bisnis.validCallback = function(callback) {
         return 'function' === typeof callback;
     };
+
+    Bisnis.putHtml = function (selector, content) {
+        jQuery(selector).html(content);
+    };
+
+    Bisnis.getHtml = function (selector) {
+        return jQuery(selector).html();
+    };
+
+    Bisnis.putValue = function (selector, value) {
+        jQuery(selector).val(value);
+    };
+
+    Bisnis.getValue = function (selector) {
+        return jQuery(selector).val();
+    };
+
+    Bisnis.bind = function (event, selector, callback) {
+        jQuery(document).on(event, selector, callback);
+    };
+
+    Bisnis.click = function (selector) {
+        jQuery(selector).click();
+    };
+
+    Bisnis.showModal = function (selector) {
+        jQuery(selector).modal({show: true, backdrop: 'static'});
+    };
+
+    Bisnis.hideModal = function (selector) {
+        jQuery(selector).modal('hide');
+    };
+
+    Bisnis.getData = function (selector, attribute) {
+        return jQuery(selector).data(attribute);
+    };
+
+    Bisnis.store = function (key, value) {
+        localStorage.setItem(key, value);
+    };
+
+    Bisnis.fetch = function (key) {
+        return localStorage.getItem(key);
+    };
+
+    Bisnis.modifySelect = function (selector) {
+        jQuery(selector).select2({
+            theme: "bootstrap"
+        });
+    };
+
+    /** Module List */
+    Bisnis.Helpdesk = {};
+    Bisnis.Util = {};
+
+    window.Bisnis = Bisnis;
 })(window);

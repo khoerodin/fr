@@ -1,23 +1,85 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    {#<script src="/assets/scripts/global-crud.js"></script>#}
-    <script src="/assets/scripts/helpdesk-my-tickets.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Style.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript">
+        Bisnis.init(Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}'));
 
-    <script>
-        window.module = 'helpdesk/tickets';
-        //        window.field = 'name';
-        var columns = [
-            'category.name',
-            'title',
-            'message',
-            'status',
-            'priority',
-            'createdAt'
-        ];
+        Bisnis.bind('click', '.closedTickets', function () {
+            Bisnis.Helpdesk.Ticket.fetchClosed({
+                'client.id': '{{ me.id }}'
+            }, '#closedTicketList', true);
+        });
 
+        Bisnis.bind('click', '.assignToMe', function () {
+            Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}');
+        });
+
+        Bisnis.bind('click', '#btnSave', function () {
+            var clientId = '/api/users/{{ me.id }}';
+            var categoryId = Bisnis.getValue('#ticketCategory');
+            var title = Bisnis.getValue('#ticketTitle');
+            var message = Bisnis.getValue('#ticketMessage');
+
+            Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, title, message, function () {
+                Bisnis.click('.assignToMe');
+                Bisnis.hideModal('#newTicketModal');
+            });
+        });
+
+        Bisnis.bind('click', '.detail', function () {
+            var that = this;
+            Bisnis.store('ticketId', Bisnis.getData(that, 'ticket-id'));
+            Bisnis.Helpdesk.Ticket.markRead(Bisnis.fetch('ticketId'), function () {
+                Bisnis.Helpdesk.Ticket.viewByTicket(Bisnis.fetch('ticketId'));
+                Bisnis.showModal('#tiketDetail');
+                Bisnis.Helpdesk.Ticket.markReadStaffResponseByTicket(Bisnis.fetch('ticketId'));
+            });
+        });
+
+        Bisnis.bind('click', '#sendResponse', function () {
+            var ticketId = Bisnis.fetch('ticketId');
+            Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                var message = Bisnis.getValue('#chatMessage');
+                var staffId = ticket.staff.id;
+                Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+                    if (0 < staff.length) {
+                        staffId = staff[0].id;
+                    }
+
+                    Bisnis.Helpdesk.Ticket.sendReponse([
+                        { name: 'ticket', value: '/api/helpdesk/tickets/' + ticketId },
+                        { name: 'staff', value: '/api/helpdesk/staffs/' + staffId },
+                        { name: 'message', value: message }
+                    ], function () {
+                        Bisnis.putHtml('#chatHistory', '');
+                        Bisnis.Helpdesk.Ticket.viewByTicket(ticketId);
+                        Bisnis.putValue('#chatMessage', '');
+                        Bisnis.Helpdesk.Ticket.markReadStaffResponseByTicket(ticketId);
+                    });
+                });
+            });
+        });
+
+        Bisnis.bind('click', '#closeModalDetail', function () {
+            Bisnis.click('#ticketTab .active');
+        });
+
+        Bisnis.bind('click', '.closeTicket', function () {
+            var that = this;
+            var ticketId = Bisnis.getData(that, 'ticket-id');
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan menutup tiket?', function (result) {
+                if (result) {
+                    Bisnis.Helpdesk.Ticket.close(ticketId);
+                    Bisnis.click('#ticketTab .active');
+                }
+            });
+        });
     </script>
-
 {% endblock %}
 
 {%- block content -%}
@@ -28,20 +90,14 @@
                 </div>
                 <!-- /.box-header -->
     <div class="box-body">
-    <input type="hidden" id="currentUser" value="{{ me.id }}">
-    <input type="hidden" id="admin" value="/api/users/{{ admin.id }}">
-
         <button type="button" data-modal-add="helpdesk/tickets" class="btn btn-danger pull-right add-modal btn-flat" data-toggle="modal" data-target="#newTicketModal" role="dialog" style="width: 150px">Tiket Baru</button>
-
-    <div class="panel with-nav-tabs panel-info">
-        <div class="panel-heading">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="active"><a href="#myTickets" id="myTickets" aria-controls="home" role="tab" data-toggle="tab">SEMUA TIKET-KU</a></li>
-                <li><a href="#closedTickets" id="closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
-            {#<li><a href="#assignedTo" aria-controls="profile" role="tab" data-toggle="tab">ASSIGNED TO ME</a></li>#}
-            </ul>
-        </div>
-
+            <div class="panel with-nav-tabs panel-info">
+                <div class="panel-heading">
+                    <ul id="ticketTab" class="nav nav-tabs" role="tablist">
+                        <li class="active assignToMe"><a href="#myTickets" aria-controls="home" role="tab" data-toggle="tab">TIKETKU</a></li>
+                        <li><a class="closedTickets" href="#closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
+                    </ul>
+                </div>
                 <div class="tab-content">
                 {#start tab content#}
 
@@ -57,15 +113,14 @@
                                         <th>#</th>
                                         <th>Kategori</th>
                                         <th>Judul</th>
-                                        {#<th width="20%">Pesan</th>#}
-                                        <th>Status<span class="pull-right"><div class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Status Tiket"></div></span></th>
+                                        <th>Status</th>
                                         <th>Prioritas</th>
-                                        <th>Tanggal Tambah Tiket</th>
-                                        <th>Aksi</th>
+                                        <th>Tanggal Buat Tiket</th>
+                                        <th>AKSI</th>
                                     </tr>
                                     </thead >
 
-                                    <tbody id="ticketList">
+                                    <tbody id="assignedToMe">
                                     <tr><td colspan="10">LOADING DATA...</td></tr>
                                     </tbody>
                                 </table>
@@ -75,7 +130,7 @@
                     </div>
 
                     {#MY CLOSED TIKET#}
-                    <div id="closedTickets" class="tab-pane fade">
+                    <div id="closedTickets" class="tab-pane fade closedTickets">
 
                         <div class="row">
                             <div class="col-md-12">
@@ -86,11 +141,10 @@
                                         <th>#</th>
                                         <th>Kategori</th>
                                         <th>Judul</th>
-                                        {#<th width="20%">Pesan</th>#}
                                         <th>Status</th>
                                         <th>Prioritas</th>
-                                        <th>Tanggal Tambah Tiket</th>
-                                        <th>Aksi<span class="pull-right"></span></th>
+                                        <th>Tanggal Buat Tiket</th>
+                                        <th>AKSI</th>
                                     </tr>
                                     </thead >
 
@@ -118,50 +172,24 @@
                                 </div>
 
                                 <div class="modal-body">
-
                                     <form id="formTiket">
-                                        {#<-------- notifikasi read------------#}
-                                        <input type="hidden" name="read" value="false">
-                                        {#<-------- end notifikasi read------------#}
-                                        {#<div class="form-group">#}
-                                            {#<label for="name">Nama</label>#}
-                                            {#<input type="text" class="form-control" readonly id="name" value="{{ me.fullname }}">#}
-                                            <input type="hidden" value="/api/users/{{ me.id }}" name="client">
-                                        {#</div>#}
-
                                         <div class="form-group">
                                             <label for="judul">Kategori</label>
-                                            <select name="category" class="form-control" id="category" style="width: 100%">
+                                            <select name="category" class="form-control" id="ticketCategory" style="width: 100%">
                                                 <option selected disabled id="pilih">PILIH KATEGORI</option>
                                                 {% for category in helpdeskCategories %}
-
                                                     <option value="/api/helpdesk/categories/{{ category.id }}">{{ category.name }}</option>
-
                                                 {% endfor %}
                                             </select>
                                         </div>
-
                                         <div class="form-group">
                                             <label for="judul">Judul</label>
-                                            <input type="text" class="form-control" id="title" name="title">
+                                            <input type="text" class="form-control" id="ticketTitle" name="title">
                                         </div>
-
-                                        {#<div class="form-group">#}
-                                            {#<label for="email">Email</label>#}
-                                            {#<input type="email" class="form-control" id="email" readonly value="{{ me.email }}">#}
-                                        {#</div>#}
-
                                         <div class="input-group">
                                             <label for="name">Pesan</label>
-                                            <textarea name="message" placeholder="Masukkan Pesan Anda ..." class="form-control not-ucase" id="message" autocomplete="off" maxlength="20000" cols="150" rows="10"></textarea>
+                                            <textarea name="ticketMessage" placeholder="Masukkan Pesan Anda ..." class="form-control not-ucase" id="ticketMessage" autocomplete="off" maxlength="20000" cols="150" rows="10"></textarea>
                                         </div>
-
-                                        {#Attachment - JANGAN DIHAPUS#}
-                                        {#<div class="input-group">#}
-                                            {#<label for="berkas">Berkas</label>#}
-                                            {#<input type="file" id="berkas">#}
-
-                                        {#</div>#}
                                     </form>
 
 
@@ -248,9 +276,8 @@
                     </div>
                     <!-- /.modal -->
 
-
                     {#modal forum#}
-                    <div class="modal fade" id="tiketModal" role="dialog">
+                    <div class="modal fade" id="tiketDetail" role="dialog">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -266,18 +293,16 @@
                                                 <div class="col-sm-12">
                                                     <div class="row">
                                                         <ul class="list-group listDetail">
-
-                                                            <li class="list-group-item"><span>Kategori : </span><span class="well-sm" id="list-cat">-</span></li>
-                                                            <li class="list-group-item"><span>Judul : </span><span class="well-sm" id="list-title">-</span></li>
-                                                            <li class="list-group-item"><span>Tanggal Tiket : </span><span class="well-sm" id="list-tgl-post">-</span></li>
-
+                                                            <li class="list-group-item">Nama Klien : </span><span class="well-sm chatTicketClient">-</span></li>
+                                                            <li class="list-group-item"><span>Kategori : </span><span class="well-sm chatTicketCategory">-</span></li>
+                                                            <li class="list-group-item"><span>Judul : </span><span class="well-sm chatTicketTitle">-</span></li>
+                                                            <li class="list-group-item"><span>Tanggal Tiket : </span><span class="well-sm chatTicketDate">-</span></li>
                                                         </ul>
                                                     </div>
                                                 </div>
 
                                             </div>
                                             {#end detail tic inside modal forum#}
-
                                             <div class="well well-sm" align="center"><span class="fa fa-hand-o-down pull-left"></span><b>Selamat Datang di Forum Helpdesk!</b><span class="fa-hand-o-down pull-right"></span></div>
 
                                             <div class="box direct-chat">
@@ -285,18 +310,17 @@
                                                 <div class="box-body">
                                                     <!-- Conversations are loaded here -->
                                                     <div class="direct-chat-messages" id="chatHistory">
-                                                        <!-- Media Message -->
-                                                        <div class="media" id="mediaForum" data-id="" data-ticket="" data-client="" data-staff="" data-time="">
+                                                        <div class="media">
                                                             <div class="media-left">
-                                                                <img src="/api/images/profiles/{{ image[0] }}?ext={{ image[1] }}" class="media-object" style="width:60px">
+                                                                <img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">
                                                             </div>
                                                             <div class="media-body">
-                                                                <h4 class="media-heading">Nama Klien / Staff</h4><h5><span class="pull-right">Tanggal</span></h5>
+                                                                <h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i> Hari, Tanggal dan Jam</h6>
+                                                                <h4 class="media-heading">Nama Klien / Staff</h4>
                                                                 <p>Isi Pesan</p>
                                                             </div>
                                                         </div>
                                                         <hr>
-                                                        <!-- End Media Message -->
 
                                                     </div>
 
@@ -311,8 +335,8 @@
                                                     <div class="input-group">
                                                         <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200" style="width: 99%">
                                                         <span class="input-group-btn">
-                                                        &nbsp;<button type="button" class="btn btn-primary btn-flat" id="send">Send</button>
-                                                        </span>
+                                                                    &nbsp;<button type="button" class="btn btn-primary btn-flat" id="sendResponse">Send</button>
+                                                                    </span>
                                                     </div>
                                                 </div>
                                                 <!-- /.box-footer-->
@@ -325,7 +349,7 @@
 
                                 </div> <!-- end modal -->
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalDetail">Close</button>
                                 </div>
                             </div>
                         </div>

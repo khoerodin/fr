@@ -815,7 +815,7 @@ $(document).on('click', '#assign-tic', function () {
 
 //<----------------- GET LIST CLOSED TIKET-------------->
 $(document).on('click', '#closedTickets', function () {
-    
+
     getClosedTicketList();
 });
 function getClosedTicketList() {

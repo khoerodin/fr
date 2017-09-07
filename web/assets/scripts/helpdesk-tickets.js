@@ -814,8 +814,10 @@ $(document).on('click', '#assign-tic', function () {
 //<----------------- END ASSIGN TIKET UNTUK STAFF + UPDATE TABLE -------------->
 
 //<----------------- GET LIST CLOSED TIKET-------------->
-
-getClosedTicketList();
+$(document).on('click', '#closedTickets', function () {
+    
+    getClosedTicketList();
+});
 function getClosedTicketList() {
 
     $.ajax({
@@ -826,12 +828,10 @@ function getClosedTicketList() {
             method: 'get',
             params: [
                 {
-                    'client.id' : $('#currentUser').val()
+                    'staff.user.id' : $('#currentUser').val()
                 },
                 {
-                    name: 'status',
-                    value: 'closed'
-
+                    'status' : 'closed'
                 }
             ]
         },
@@ -905,6 +905,9 @@ function getClosedTicketList() {
 
 //<----------------- GET LIST ASSIGNMENT TIKET (LIST TIKET UNTUK STAFF) -------------->
 getMyAssignmentList();
+$(document).on('click', '#assignedTo', function () {
+    getMyAssignmentList();
+});
 function getMyAssignmentList() {
 
     $.ajax({
@@ -1027,8 +1030,9 @@ function getMyAssignmentList() {
 //<----------------- END LIST ASSIGNMENT TIKET (LIST TIKET UNTUK STAFF) -------------->
 
 //<----------------- TAMPIL SEMUA TIKET KECUALI STATUS CLOSED -------------->
-getAllTicketList();
-
+$(document).on('click', '#allTickets', function () {
+    getAllTicketList();
+});
 function getAllTicketList() {
 
     $.ajax({

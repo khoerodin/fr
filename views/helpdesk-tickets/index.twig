@@ -39,16 +39,17 @@
                     <div class="panel with-nav-tabs panel-info">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li class="active"><a href="#assignedTo" aria-controls="home" role="tab" data-toggle="tab">TIKET-KU</a></li>
-                                <li><a href="#closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
-                                <li><a href="#allTickets" aria-controls="profile" role="tab" data-toggle="tab">SEMUA TIKET</a></li>
+                                <li class="active"><a href="#assignedTo" id="assignedTo" aria-controls="home" role="tab" data-toggle="tab">TIKET-KU</a></li>
+                                <li><a href="#closedTickets" id="closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
+                                <li><a href="#allTickets" id="allTickets" aria-controls="profile" role="tab" data-toggle="tab">SEMUA TIKET</a></li>
                             </ul>
                         </div>
 
                         <div class="tab-content">
 
+
                             {#ASSIGNED TO ME tiket#}
-                            <div id="assignedTo" class="tab-pane fade active in">
+                            <div id="assignedTo" role="tabpanel" class="tab-pane fade active in">
 
                                 <div class="row">
                                     <div class="col-md-12">
@@ -80,7 +81,7 @@
                             {#end ASSIGNED TO ME tiket#}
 
                             {#closed tiket#}
-                            <div id="closedTickets" class="tab-pane fade">
+                            <div id="closedTickets" role="tabpanel" class="tab-pane fade">
 
                                 <div class="row">
                                     <div class="col-md-12">
@@ -112,7 +113,7 @@
 
 
                             {#<-- semua tiket#}
-                            <div id="allTickets" class="tab-pane fade">
+                            <div id="allTickets" role="tabpanel" class="tab-pane fade">
 
                                 <div class="row">
                                     <div class="col-md-12">

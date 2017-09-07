@@ -72,8 +72,10 @@ $(document).on('click', '.detail-my-tic', function () {
 
 
 });
-
 getTicketList();
+$(document).on('click', '#myTickets', function () {
+    getTicketList();
+});
 //get data tiket
 function getTicketList() {
 
@@ -397,7 +399,9 @@ $(document).on('click', '#btnSave', function () {
 });
 
 //GET CLOSED TICKETS
-getClosedTicketList();
+$(document).on('click', '#closedTickets', function () {
+    getClosedTicketList();
+});
 function getClosedTicketList() {
 
     $.ajax({

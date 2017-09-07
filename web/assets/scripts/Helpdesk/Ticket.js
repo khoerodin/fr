@@ -21,10 +21,13 @@
         row = row + '<td>' + ticket.status + '</td>';
         row = row + '<td>' + ticket.priority + '</td>';
         row = row + '<td>' + ticket.createdAt + '</td>';
-        row = row + '<td>'+ createAssignButton(ticket.id, ticket.category.id);
-        row = row + createDetailButton(ticket.id);
+        row = row + '<td>';
 
         if ('closed' !== ticket.status && 'resolved' !== ticket.status) {
+            if ('open' !== ticket.status) {
+                row = row + createDetailButton(ticket.id);
+            }
+
             row = row + createCloseButton(ticket.id) ;
         }
 
@@ -56,10 +59,17 @@
         row = row + '<td>' + ticket.status + '</td>';
         row = row + '<td>' + ticket.priority + '</td>';
         row = row + '<td>' + ticket.createdAt + '</td>';
-        row = row + '<td>'+ createAssignButton(ticket.id, ticket.category.id);
-        row = row + createDetailButton(ticket.id);
+        row = row + '<td>';
+
+        if ('open' === ticket.status || 'assignment' === ticket.status) {
+            row = row + createAssignButton(ticket.id, ticket.category.id);
+        }
 
         if ('closed' !== ticket.status && 'resolved' !== ticket.status) {
+            if ('open' !== ticket.status) {
+                row = row + createDetailButton(ticket.id);
+            }
+
             row = row + createCloseButton(ticket.id) ;
         }
 
@@ -144,14 +154,29 @@
         });
     };
 
-    Bisnis.Helpdesk.Ticket.markReadResponseByTicket = function (ticketId, callback) {
+    Bisnis.Helpdesk.Ticket.markReadClientResponseByTicket = function (ticketId, callback) {
         Bisnis.request({
-            module: 'helpdesk/ticket-responses/' + ticketId + '/read.json',
+            module: 'helpdesk/ticket-responses/' + ticketId + '/read-client.json',
             method: 'put',
             params: []
         }, function () {
             if (Bisnis.validCallback(callback)) {
-                console.log('Marking read all response with ticket id ' + ticketId);
+                console.log('Marking read all client response with ticket id ' + ticketId);
+                callback();
+            }
+        }, function () {
+            console.log('KO');
+        });
+    };
+
+    Bisnis.Helpdesk.Ticket.markReadStaffResponseByTicket = function (ticketId, callback) {
+        Bisnis.request({
+            module: 'helpdesk/ticket-responses/' + ticketId + '/read-staff.json',
+            method: 'put',
+            params: []
+        }, function () {
+            if (Bisnis.validCallback(callback)) {
+                console.log('Marking read all staff response with ticket id ' + ticketId);
                 callback();
             }
         }, function () {
@@ -188,11 +213,42 @@
         });
     };
 
+    Bisnis.Helpdesk.Ticket.createNew = function (clientId, categoryId, title, message, callback) {
+        Bisnis.request({
+            module: 'helpdesk/tickets',
+            method: 'post',
+            params: [
+                {
+                    name: 'client',
+                    value: clientId
+                },
+                {
+                    name: 'category',
+                    value: categoryId
+                },
+                {
+                    name: 'title',
+                    value: title
+                },
+                {
+                    name: 'message',
+                    value: message
+                }
+            ]
+        }, function () {
+            if (Bisnis.validCallback(callback)) {
+                callback();
+            }
+        }, function () {
+            console.log('KO');
+        });
+    };
+
     Bisnis.Helpdesk.Ticket.update = function (ticketId, params, callback) {
         Bisnis.request({
             module: 'helpdesk/tickets/' + ticketId,
             method: 'put',
-            params: [params]
+            params: params
         }, function () {
             if (Bisnis.validCallback(callback)) {
                 callback();
@@ -231,24 +287,29 @@
     };
 
     Bisnis.Helpdesk.Ticket.fetchByStaff = function (staffId) {
-        Bisnis.Helpdesk.Ticket.fetchClosable({'staff.id' : staffId}, '#assignedToMe', true);
+        Bisnis.Helpdesk.Ticket.fetchClosable({'staff.id' : staffId}, '#assignedToMe');
     };
 
     Bisnis.Helpdesk.Ticket.markRead = function (ticketId, callback) {
-        Bisnis.Helpdesk.Ticket.update(ticketId, {name: 'read', value: true}, function () {
+        Bisnis.Helpdesk.Ticket.update(ticketId, [{name: 'read', value: true}], function () {
             console.log('Marking read ticket with id ' + ticketId);
-            Bisnis.Helpdesk.Ticket.markReadResponseByTicket(ticketId, callback);
+            if (Bisnis.validCallback(callback)) {
+                callback();
+            }
         });
     };
 
     Bisnis.Helpdesk.Ticket.close = function (ticketId) {
-        Bisnis.Helpdesk.Ticket.update(ticketId, {name: 'status', value: 'closed'}, function () {
+        Bisnis.Helpdesk.Ticket.update(ticketId, [{name: 'status', value: 'closed'}], function () {
             console.log('Closing ticket with id ' + ticketId);
         });
     };
 
     Bisnis.Helpdesk.Ticket.assignTo = function (ticketId, staffUri, callback) {
-        Bisnis.Helpdesk.Ticket.update(ticketId, {name: 'staff', value: staffUri}, callback);
+        Bisnis.Helpdesk.Ticket.update(ticketId, [
+            {name: 'staff', value: staffUri},
+            {name: 'status', value: 'assignment'}
+        ], callback);
     };
 
     Bisnis.Helpdesk.Ticket.buildChat = function (profileImage, sender, message, date, appendTo) {

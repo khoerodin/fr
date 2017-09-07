@@ -47,6 +47,10 @@
         jQuery(selector).html(content);
     };
 
+    Bisnis.getHtml = function (selector) {
+        return jQuery(selector).html();
+    };
+
     Bisnis.putValue = function (selector, value) {
         jQuery(selector).val(value);
     };

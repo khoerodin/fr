@@ -5070,6 +5070,10 @@ tr.active {
   left: -6px;
 }
 
+.notif-bold{
+  font-weight: bold;
+}
+
 .panel, .panel-heading,.nav-tabs>li>a {
   border-radius: 0px;
 }

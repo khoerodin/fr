@@ -30,7 +30,7 @@ $(document).on('click', '.detail-my-tic', function () {
     var params = [
         {
             name: 'read',
-            value: false
+            value: true
 
         }
     ];

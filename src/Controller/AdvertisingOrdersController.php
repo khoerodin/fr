@@ -37,11 +37,15 @@ class AdvertisingOrdersController extends AdminController
         $media = $this->request('advertising/media', 'get', ['name' => 'BISNIS INDONESIA']);
         $media = json_decode($media->getContent(), true)['hydra:member'];
 
+        $tags = $this->request('advertising/tags', 'get');
+        $tags = json_decode($tags->getContent(), true)['hydra:member'];
+
         $data = [
             'meta' => $meta,
             'representatives' => $representatives,
             'paymentMethod' => $paymentMethod,
-            'media' => ['name' => $media[0]['name'], 'id' => $media[0]['id'] ]
+            'media' => ['name' => $media[0]['name'], 'id' => $media[0]['id'] ],
+            'tags' => $tags
         ];
 
         return $this->view('advertising-orders/new.twig', $data);

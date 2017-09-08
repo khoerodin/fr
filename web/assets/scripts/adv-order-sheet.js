@@ -1503,8 +1503,6 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                                         tgl: inputValue
                                     });
 
-                                    //console.log(datesList.items);
-
                                     tgl.text(inputValue);
 
                                     var tglReady = moment(inputValue, 'dddd, DD MMMM YYYY').format();
@@ -1771,7 +1769,7 @@ $(document).on('click', '#update-edisi-terbit', function () {
 
 $(document).on('click', 'button#clearText', function (e) {
     e.preventDefault();
-    $(this).closest('.input-group').find('input[type="hidden"]').val('');
+    $(this).closest('.input-group').find('input[type="hidden"]').val('#');
     $(this).closest('.input-group').find('input[type="text"]').val('');
     $(this).hide();
 });
@@ -2040,7 +2038,6 @@ $('#hitung').keydown(function (e) {
 
 $('#paymentMethod').on('select2:close', function () {
     $('[name="sisipan"]').focus();
-    console.log('sasa');
 });
 
 $('[name="sisipan"]').keydown(function (e) {
@@ -2069,6 +2066,10 @@ $('#orderDescription').keydown(function (e) {
 });
 
 $('#printInvoiceAs').on('select2:close', function () {
+    $("#orderTag").select2('open');
+});
+
+$('#orderTag').on('select2:close', function () {
     $("#orderFrom").select2('open');
 });
 
@@ -2121,7 +2122,4 @@ $('#orderTag').select2({
             }
         });
     }
-}).on('select2:select', function () {
-    var tags = $('#orderTag').val();
-    console.log(tags);
 });

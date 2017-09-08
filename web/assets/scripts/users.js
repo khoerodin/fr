@@ -56,11 +56,11 @@ jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function
     jQuery('tbody#roles-check').html('<tr><td colspan="6">Loading...</td></tr>');
 });
 
-function getRoles(userId, pageNum) {
+function getRoles(userId, serviceId, pageNum) {
     var moduleData = {
         module: 'modules',
         method: 'get',
-        params: [{'page': pageNum}]
+        params: [{'page': pageNum},{'service.id': serviceId}]
     };
 
     var roleData = {
@@ -129,14 +129,15 @@ function getRoles(userId, pageNum) {
 
             var paging = '';
             $.each(data1['hydra:view'], function (index, value) {
-                if(index.endsWith('previous')) {
-                    page = getQueryVariable('page',value);
-                    paging += '<li><span class="to-roles-page" data-page="'+page+'" title="PREVIOUS PAGE">PREVIOUS</span></li>';
-                }
 
                 if(index.endsWith('first')) {
                     page = getQueryVariable('page',value);
                     paging += '<li><span class="to-roles-page" data-page="'+page+'" title="FIRST PAGE">FIRST</span></li>';
+                }
+
+                if(index.endsWith('previous')) {
+                    page = getQueryVariable('page',value);
+                    paging += '<li><span class="to-roles-page" data-page="'+page+'" title="PREVIOUS PAGE">PREVIOUS</span></li>';
                 }
 
                 if(index.endsWith('next')) {
@@ -149,7 +150,9 @@ function getRoles(userId, pageNum) {
                     paging += '<li><span class="to-roles-page" data-page="'+page+'" title="LAST PAGE">LAST</span></li>';
                 }
             });
-            jQuery('ul[data-paging="roles"].pagination').html(paging);
+
+            paging = '<ul data-paging="roles" class="pagination pagination-sm no-margin pull-right">'+paging+'</ul>';
+            jQuery('.box-footer.roles-pagination').html(paging);
 
 
             rolesResponse(userRoles, userId, pageNum);
@@ -160,13 +163,27 @@ function getRoles(userId, pageNum) {
 // Roles form
 $(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', function () {
     var userId = $(this).attr('data-id');
-    getRoles(userId);
+    var activeId = $('#serviceTab .active a').attr('aria-controls');
+    var name = $(this).closest('tr').find('td:nth-child(2)').text();
+    localStorage.setItem('accessFor', name);
+    $('#userId').val(userId);
+    getRoles(userId, activeId);
 });
 
 $(document).on('click', '.to-roles-page', function () {
     var pageNum = $(this).attr('data-page');
     var userId = $('.roles-modal input#rolesUserId').val();
-    getRoles(userId, pageNum);
+    var activeId = $('#serviceTab .active a').attr('aria-controls');
+    getRoles(userId, activeId, pageNum);
+});
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    // var activeId = $(e.target).attr('aria-controls');
+    // getModules(activeId);
+    //
+    var userId = $('#userId').val();
+    var activeId = $('#serviceTab .active a').attr('aria-controls');
+    getRoles(userId, activeId);
 });
 
 $(document).on('change', '.check-role', function () {
@@ -284,6 +301,9 @@ function rolesResponse(data,userId,page) {
 
     jQuery('tbody#roles-check').html(rolesCheck);
     $('.check-role').bootstrapToggle();
+
+    var accessFor = localStorage.getItem('accessFor');
+    $('.modal-title.roles').html('HAK AKSES <strong>'+accessFor+'</strong>');
 
     var $this = $('.roles-modal');
     $this.modal({show: true, backdrop: 'static'});

@@ -2071,3 +2071,57 @@ $('#orderDescription').keydown(function (e) {
 $('#printInvoiceAs').on('select2:close', function () {
     $("#orderFrom").select2('open');
 });
+
+$('#orderTag').select2({
+    tags: true,
+    theme: 'bootstrap',
+    tokenSeparators: [','],
+    createTag: function (tag) {
+
+        // Check if the option is already there
+        var found = false;
+        $("#orderTag option").each(function() {
+            if ($.trim(tag.term).toUpperCase() === $.trim($(this).text()).toUpperCase()) {
+                found = true;
+            }
+        });
+
+        // Show the suggestion only if a match was not found
+        if (!found) {
+            return {
+                id: tag.term,
+                text: tag.term.toUpperCase(),
+                isNew: true
+            };
+        }
+    }
+}).on("change", function(e) {
+    var isNew = $(this).find('[data-select2-tag="true"]');
+    if(isNew.length){
+        isNew.replaceWith('<option value="'+e.timeStamp+'">'+isNew.val().toUpperCase()+'</option>');
+        $.ajax({
+            type: 'post',
+            url: '/api',
+            data: {
+                module : 'advertising/tags',
+                method: 'post',
+                params: [
+                    {
+                        name: 'name',
+                        value: isNew.val()
+                    }
+                ]
+            },
+            success: function (data) {
+                var data = JSON.parse(data);
+                $('option[value="'+e.timeStamp+'"]').attr('value', data.id).prop('selected', true);
+            },
+            error: function () {
+                $('option[value="'+e.timeStamp+'"]').remove();
+            }
+        });
+    }
+}).on('select2:select', function () {
+    var tags = $('#orderTag').val();
+    console.log(tags);
+});

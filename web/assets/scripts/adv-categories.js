@@ -1,8 +1,11 @@
 //Initialization of treeviews
-$('#categoriesTree').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
-$(window).load(function() {
-    $("#categoriesTree > .branch").trigger('click');
+$(document).ready(function () {
+    $('#categoriesTree').removeClass('hidden').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+    $(window).load(function() {
+        $("#categoriesTree > .branch").click();
+    });
 });
+
 
 $(document).on('click', '#categoriesTree li span', function () {
     $('#categoriesTree li span').removeClass('active');

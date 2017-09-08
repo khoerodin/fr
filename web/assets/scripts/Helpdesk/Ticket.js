@@ -34,7 +34,7 @@
                 break;
             case 'onprogress':
                 statusIcon = statusIcon + '3';
-                statusButton = 'primary';
+                statusButton = 'warning';
                 break;
             case 'resolved':
                 statusIcon = statusIcon + '4';
@@ -42,7 +42,7 @@
                 break;
             default:
                 statusIcon = statusIcon + '4';
-                statusButton = 'warning';
+                statusButton = 'danger';
                 break;
         }
 
@@ -111,7 +111,7 @@
                 break;
             case 'onprogress':
                 statusIcon = statusIcon + '3';
-                statusButton = 'primary';
+                statusButton = 'warning';
                 break;
             case 'resolved':
                 statusIcon = statusIcon + '4';
@@ -119,7 +119,7 @@
                 break;
             default:
                 statusIcon = statusIcon + '4';
-                statusButton = 'warning';
+                statusButton = 'danger';
                 break;
         }
 

@@ -17,6 +17,10 @@
         return '<button class="closeTicket btn btn-danger fa fa-thumbs-down" title="Close" data-ticket-id="' + ticketId + '" type="button"></button>';
     };
 
+    var createReopenButton = function (ticketId) {
+        return '<button class="reopenTicket btn btn-success fa fa-recycle" title="Close" data-ticket-id="' + ticketId + '" type="button"></button>';
+    };
+
     var renderMe = function (idx, ticket, row, style) {
         var statusIcon = 'fa-battery-';
         var statusButton = 'default';
@@ -28,7 +32,7 @@
                 statusIcon = statusIcon + '2';
                 statusButton = 'primary';
                 break;
-            case 'progress':
+            case 'onprogress':
                 statusIcon = statusIcon + '3';
                 statusButton = 'primary';
                 break;
@@ -105,7 +109,7 @@
                 statusIcon = statusIcon + '2';
                 statusButton = 'primary';
                 break;
-            case 'progress':
+            case 'onprogress':
                 statusIcon = statusIcon + '3';
                 statusButton = 'primary';
                 break;
@@ -150,6 +154,10 @@
 
             row = row + createChangePriorityButton(ticket.id);
             row = row + createCloseButton(ticket.id) ;
+        } else {
+            if ('undefined' !== typeof ticket.staff) {
+                row = row + createReopenButton(ticket.id);
+            }
         }
 
         row = row + '</td>';
@@ -409,6 +417,12 @@
     Bisnis.Helpdesk.Ticket.resolve = function (ticketId) {
         updateTicket(ticketId, [{name: 'status', value: 'resolved'}], function () {
             console.log('Resolving ticket with id ' + ticketId);
+        });
+    };
+
+    Bisnis.Helpdesk.Ticket.markOnProgress = function (ticketId) {
+        updateTicket(ticketId, [{name: 'status', value: 'onprogress'}], function () {
+            console.log('Mark on progress ticket with id ' + ticketId);
         });
     };
 

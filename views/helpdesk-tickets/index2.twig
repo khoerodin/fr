@@ -227,9 +227,19 @@
 
         Bisnis.Util.Event.bind('click', '#resolveModalDetail', function () {
             var ticketId = Bisnis.Util.Storage.fetch('ticketId');
-            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan menutup tiket?', function (result) {
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan semua pekerjaan tiket ini sudah selesai?', function (result) {
                 if (result) {
                     Bisnis.Helpdesk.Ticket.resolve(ticketId);
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
+                }
+            });
+        });
+
+        Bisnis.Util.Event.bind('click', '#onprogressModalDetail', function () {
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan mengeset tiket menjadi sedang dalam pengerjaan?', function (result) {
+                if (result) {
+                    Bisnis.Helpdesk.Ticket.markOnProgress(ticketId);
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
                 }
             });
@@ -238,9 +248,20 @@
         Bisnis.Util.Event.bind('click', '.closeTicket', function () {
             var that = this;
             var ticketId = Bisnis.Util.Document.getDataValue(that, 'ticket-id');
-            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan menutup tiket?', function (result) {
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan menutup tiket ini?', function (result) {
                 if (result) {
                     Bisnis.Helpdesk.Ticket.close(ticketId);
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
+                }
+            });
+        });
+
+        Bisnis.Util.Event.bind('click', '.reopenTicket', function () {
+            var that = this;
+            var ticketId = Bisnis.Util.Document.getDataValue(that, 'ticket-id');
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan membuka kembali tiket ini?', function (result) {
+                if (result) {
+                    Bisnis.Helpdesk.Ticket.markOnProgress(ticketId);
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
                 }
             });
@@ -280,7 +301,7 @@
                                                 <th>Status</th>
                                                 <th>Prioritas</th>
                                                 <th>Tanggal Buat Tiket</th>
-                                                <th><span>Aksi</span></th>
+                                                <th>Aksi</th>
                                             </tr>
                                             </thead>
                                             <tbody id="assignedToMe">
@@ -312,6 +333,7 @@
                                                 <th>Status</th>
                                                 <th>Prioritas</th>
                                                 <th>Tanggal Buat Tiket</th>
+                                                <th>Aksi</th>
                                             </tr>
                                             </thead>
                                             <tbody id="closedTicketList">
@@ -343,7 +365,7 @@
                                                 <th>Status</th>
                                                 <th>Prioritas</th>
                                                 <th>Tanggal Buat Tiket</th>
-                                                <th><span>Aksi</span></th>
+                                                <th>Aksi</th>
                                             </tr>
                                             </thead>
                                             <tbody id="allTicketList">
@@ -408,7 +430,7 @@
                                                     <div class="input-group">
                                                         <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200" style="width: 99%">
                                                         <span class="input-group-btn">
-                                                        <button type="button" class="btn btn-primary btn-flat" id="sendResponse">Send</button>
+                                                            <button type="button" class="btn btn-primary btn-flat" id="sendResponse">Send</button>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -422,6 +444,7 @@
 
                                 </div> <!-- end modal -->
                                 <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary pull-left" data-dismiss="modal" id="onprogressModalDetail">Mark Work On Progress</button>
                                     <button type="button" class="btn btn-success pull-left" data-dismiss="modal" id="resolveModalDetail">Resolve</button>
                                     <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalDetail">Close</button>
                                 </div>

@@ -2076,25 +2076,25 @@ $('#orderTag').select2({
     tags: true,
     theme: 'bootstrap',
     tokenSeparators: [','],
-    // createTag: function (tag) {
-    //
-    //     // Check if the option is already there
-    //     var found = false;
-    //     $("#timezones option").each(function() {
-    //         if ($.trim(tag.term).toUpperCase() === $.trim($(this).text()).toUpperCase()) {
-    //             found = true;
-    //         }
-    //     });
-    //
-    //     // Show the suggestion only if a match was not found
-    //     if (!found) {
-    //         return {
-    //             id: tag.term,
-    //             text: tag.term + " (new)",
-    //             isNew: true
-    //         };
-    //     }
-    // }
+    createTag: function (tag) {
+
+        // Check if the option is already there
+        var found = false;
+        $("#orderTag option").each(function() {
+            if ($.trim(tag.term).toUpperCase() === $.trim($(this).text()).toUpperCase()) {
+                found = true;
+            }
+        });
+
+        // Show the suggestion only if a match was not found
+        if (!found) {
+            return {
+                id: tag.term,
+                text: tag.term,
+                isNew: true
+            };
+        }
+    }
 }).on("change", function(e) {
     var isNew = $(this).find('[data-select2-tag="true"]');
     if(isNew.length){

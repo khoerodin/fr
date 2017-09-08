@@ -1771,7 +1771,7 @@ $(document).on('click', '#update-edisi-terbit', function () {
 
 $(document).on('click', 'button#clearText', function (e) {
     e.preventDefault();
-    $(this).closest('.input-group').find('input[type="hidden"]').val('');
+    $(this).closest('.input-group').find('input[type="hidden"]').val('#');
     $(this).closest('.input-group').find('input[type="text"]').val('');
     $(this).hide();
 });
@@ -2069,6 +2069,10 @@ $('#orderDescription').keydown(function (e) {
 });
 
 $('#printInvoiceAs').on('select2:close', function () {
+    $("#orderTag").select2('open');
+});
+
+$('#orderTag').on('select2:close', function () {
     $("#orderFrom").select2('open');
 });
 

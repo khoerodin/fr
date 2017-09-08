@@ -548,6 +548,9 @@ function editAction(module, id, params) {
             case 'bankAccountNumber':
                 prepend = "#";
                 break;
+            case 'plainPassword':
+                prepend = "#";
+                break;
             default:
                 prepend = "";
         }

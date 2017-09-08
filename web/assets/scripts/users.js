@@ -66,7 +66,7 @@ function getRoles(userId, serviceId, pageNum) {
     var roleData = {
         module: 'roles',
         method: 'get',
-        params: [{'user.id': userId}]
+        params: [{'user.id': userId},{'order[name]': 'ASC'}]
     };
 
     var modules;

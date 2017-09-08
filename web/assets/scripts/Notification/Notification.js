@@ -67,7 +67,7 @@
             params: [{
                 'receiver': userId,
                 'notify': false,
-                // 'read': false
+                'read': false
             }]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {

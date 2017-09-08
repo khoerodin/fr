@@ -84,6 +84,12 @@
             Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, title, message, function () {
                 Bisnis.Util.Event.triggerClick('.assignToMe');
                 Bisnis.Util.Dialog.hideModal('#newTicketModal');
+                Bisnis.Notification.send(
+                    'HELPDESK',
+                    '/api/users/{{ admin.id }}',
+                    '/api/users/' + clientId,
+                    'Tiket ' + title + ' barus saja dibuat.'
+                );
             });
         });
 
@@ -116,6 +122,12 @@
                         Bisnis.Helpdesk.Ticket.viewByTicket(ticketId);
                         Bisnis.Util.Document.putValue('#chatMessage', '');
                         Bisnis.Helpdesk.Ticket.markReadStaffResponseByTicket(ticketId);
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + staff.user.id,
+                            '/api/users/{{ me.id }}',
+                            'Tiket ' + title + ' mendapatkan response baru dari user.'
+                        );
                     });
                 });
             });

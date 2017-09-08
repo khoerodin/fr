@@ -10,11 +10,14 @@
     <script type="text/javascript" src="/assets/scripts/Util/Grid.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Notification/Notification.js"></script>
     <script type="text/javascript">
         Bisnis.init(function () {
             Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
             Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#clientTicketPagination');
             Bisnis.Util.Style.modifySelect('#ticketCategory');
+
+            Bisnis.Notification.enableTo('/api/users/{{ me.id }}');
         });
 
         Bisnis.Util.Event.bind('click', '.closedTickets', function () {

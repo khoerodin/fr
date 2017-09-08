@@ -21,10 +21,10 @@
         return '<button class="reopenTicket btn btn-success fa fa-recycle" title="Close" data-ticket-id="' + ticketId + '" type="button"></button>';
     };
 
-    var renderMe = function (idx, ticket, row, style) {
+    var createStatusButton = function (status) {
         var statusIcon = 'fa-battery-';
         var statusButton = 'default';
-        switch (ticket.status) {
+        switch (status) {
             case 'open':
                 statusIcon = statusIcon + '0';
                 break;
@@ -46,8 +46,12 @@
                 break;
         }
 
+        return '<button class="btn btn-' + statusButton + '" style="width: 100%;" title="' + status + '"><i class="fa ' + statusIcon + '"></i></button>';
+    };
+
+    var createPriorityButton = function (priority) {
         var priorityMark = 'danger';
-        switch (ticket.priority) {
+        switch (priority) {
             case 'low':
                 priorityMark = 'default';
                 break;
@@ -59,12 +63,16 @@
                 break;
         }
 
+        return '<button class="btn btn-'+ priorityMark +'" style="width: 100%;" title="' + priority + '"><i class="fa fa-ambulance"></i></button>';
+    };
+
+    var renderMe = function (idx, ticket, row, style) {
         row = row + '<tr class="' + ticket.id + '"'+ style +'>';
         row = row + '<td>' + (idx + 1) + '</td>';
         row = row + '<td>' + ticket.category.name +'</td>';
         row = row + '<td>' + ticket.title + '</td>';
-        row = row + '<td><button class="btn btn-' + statusButton + '" style="width: 100%;" title="' + ticket.status + '"><i class="fa ' + statusIcon + '"></i></button></td>';
-        row = row + '<td><button class="btn btn-'+ priorityMark +'" style="width: 100%;" title="' + ticket.priority + '"><i class="fa fa-bell-o"></i></button></td>';
+        row = row + '<td>' + createStatusButton(ticket.status) +'</td>';
+        row = row + '<td>' + createPriorityButton(ticket.priority) + '</td>';
         row = row + '<td>' + moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss') + '</td>';
         row = row + '<td>';
 
@@ -99,47 +107,10 @@
             row = row + '<td>&nbsp;</td>';
         }
 
-        var statusIcon = 'fa-battery-';
-        var statusButton = 'default';
-        switch (ticket.status) {
-            case 'open':
-                statusIcon = statusIcon + '0';
-                break;
-            case 'assignment':
-                statusIcon = statusIcon + '2';
-                statusButton = 'primary';
-                break;
-            case 'onprogress':
-                statusIcon = statusIcon + '3';
-                statusButton = 'warning';
-                break;
-            case 'resolved':
-                statusIcon = statusIcon + '4';
-                statusButton = 'success';
-                break;
-            default:
-                statusIcon = statusIcon + '4';
-                statusButton = 'danger';
-                break;
-        }
-
-        var priorityMark = 'danger';
-        switch (ticket.priority) {
-            case 'low':
-                priorityMark = 'default';
-                break;
-            case 'normal':
-                priorityMark = 'primary';
-                break;
-            case 'urgent':
-                priorityMark = 'warning';
-                break;
-        }
-
         row = row + '<td>' + ticket.category.name +'</td>';
         row = row + '<td>' + ticket.title + '</td>';
-        row = row + '<td><button class="btn btn-' + statusButton + '" style="width: 100%;" title="' + ticket.status + '"><i class="fa ' + statusIcon + '"></i></button></td>';
-        row = row + '<td><button class="btn btn-'+ priorityMark +'" style="width: 100%;" title="' + ticket.priority + '"><i class="fa fa-bell-o"></i></button></td>';
+        row = row + '<td>' + createStatusButton(ticket.status) +'</td>';
+        row = row + '<td>' + createPriorityButton(ticket.priority) + '</td>';;
         row = row + '<td>' + moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss') + '</td>';
         row = row + '<td>';
 
@@ -306,7 +277,6 @@
             params: []
         }, function () {
             if (Bisnis.validCallback(callback)) {
-                console.log('Marking read all client response with ticket id ' + ticketId);
                 callback();
             }
         }, function () {

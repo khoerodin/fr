@@ -57,6 +57,7 @@
     /** Module List */
     Bisnis.Helpdesk = {};
     Bisnis.Util = {};
+    Bisnis.Notification = {};
 
     window.Bisnis = Bisnis;
 })(window);

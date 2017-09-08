@@ -1,6 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
+    <script type="text/javascript" src="/assets/notification/push_notification.min.js"></script>
     <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Style.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
@@ -10,6 +11,7 @@
     <script type="text/javascript" src="/assets/scripts/Util/Grid.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Notification/Notification.js"></script>
     <script type="text/javascript">
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
             if (0 < staff.length) {
@@ -17,6 +19,8 @@
                 Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
                 Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id, parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#staffTicketPagination');
             }
+
+            Bisnis.Notification.enableTo('/api/users/{{ me.id }}');
         }));
 
         Bisnis.Util.Event.bind('click', '.allTickets', function () {
@@ -193,32 +197,56 @@
                         Bisnis.Helpdesk.Ticket.viewByTicket(ticketId);
                         Bisnis.Util.Document.putValue('#chatMessage', '');
                         Bisnis.Helpdesk.Ticket.markReadClientResponseByTicket(ticketId);
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + staffId,
+                            'Tiket ' + ticket.title + ' mendapatkan response baru dari admin.'
+                        );
                     });
                 });
             });
         });
 
         Bisnis.Util.Event.bind('click', '#assignTo', function () {
-            var staff = Bisnis.Util.Document.getValue('#staff');
-            var ticket = Bisnis.Util.Storage.fetch('ticketId');
+            var staffUri = Bisnis.Util.Document.getValue('#staff');
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
 
-            if ('' === staff || '' === ticket || null === staff || null === ticket) {
+            if ('' === staffUri || '' === ticketId || null === staffUri || null === ticketId) {
                 console.log('invalid assignment');
             } else {
-                Bisnis.Helpdesk.Ticket.assignTo(ticket, staff, function () {
+                Bisnis.Helpdesk.Ticket.assignTo(ticketId, staffUri, function () {
                     Bisnis.Util.Dialog.hideModal('.ticketAssignment');
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
+
+                    Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + ticket.staff.id,
+                            'Tiket ' + ticket.title + ' sedang ditangani oleh ' + ticket.staff.fullname + '.'
+                        );
+                    });
                 });
             }
         });
 
         Bisnis.Util.Event.bind('click', '#changePriority', function () {
-            var ticket = Bisnis.Util.Storage.fetch('ticketId');
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
             var priority = Bisnis.Util.Document.getValue('#priority');
 
             Bisnis.Util.Dialog.hideModal('.ticketChangePriority');
-            Bisnis.Helpdesk.Ticket.changePriority(ticket, priority);
+            Bisnis.Helpdesk.Ticket.changePriority(ticketId, priority);
             Bisnis.Util.Event.triggerClick('#ticketTab .active');
+
+            Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                Bisnis.Notification.send(
+                    'HELPDESK',
+                    '/api/users/' + ticket.client.id,
+                    '/api/helpdesk/staffs/' + ticket.staff.id,
+                    'Tiket ' + ticket.title + ' telah diubah prioritasnya menjadi kode <b>' + priority + '</b>.'
+                );
+            });
         });
 
         Bisnis.Util.Event.bind('click', '#closeModalDetail', function () {
@@ -231,6 +259,15 @@
                 if (result) {
                     Bisnis.Helpdesk.Ticket.resolve(ticketId);
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
+
+                    Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + ticket.staff.id,
+                            'Tiket ' + ticket.title + ' telah selesai ditangani.'
+                        );
+                    });
                 }
             });
         });
@@ -252,6 +289,15 @@
                 if (result) {
                     Bisnis.Helpdesk.Ticket.close(ticketId);
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
+
+                    Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + ticket.staff.id,
+                            'Tiket ' + ticket.title + ' dinonaktifkan oleh Admin.'
+                        );
+                    });
                 }
             });
         });
@@ -263,6 +309,15 @@
                 if (result) {
                     Bisnis.Helpdesk.Ticket.markOnProgress(ticketId);
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
+
+                    Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + ticket.staff.id,
+                            'Tiket ' + ticket.title + ' diaktifkan kembali oleh Admin.'
+                        );
+                    });
                 }
             });
         });

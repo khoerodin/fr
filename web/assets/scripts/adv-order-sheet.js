@@ -2090,7 +2090,7 @@ $('#orderTag').select2({
         if (!found) {
             return {
                 id: tag.term,
-                text: tag.term,
+                text: tag.term.toUpperCase(),
                 isNew: true
             };
         }
@@ -2098,7 +2098,7 @@ $('#orderTag').select2({
 }).on("change", function(e) {
     var isNew = $(this).find('[data-select2-tag="true"]');
     if(isNew.length){
-        isNew.replaceWith('<option value="'+e.timeStamp+'">'+isNew.val()+'</option>');
+        isNew.replaceWith('<option value="'+e.timeStamp+'">'+isNew.val().toUpperCase()+'</option>');
         $.ajax({
             type: 'post',
             url: '/api',

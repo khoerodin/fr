@@ -1,10 +1,12 @@
 (function (Bisnis) {
-    var notify = function (domain, message) {
+    var notify = function (domain, message, callback) {
         jQuery.notify(message, {
             title: domain
         }).click(function(){
             location.href = "/notifications";
         });
+
+        callback();
     };
 
     Bisnis.Notification.send = function (domain, receiver, sender, message, callback) {
@@ -81,8 +83,9 @@
         setInterval(function() {
             Bisnis.Notification.needToBroadcast(userId, function (notifications) {
                 Bisnis.each(function (idx, notification) {
-                    Bisnis.Notification.notify(notification.id);
-                    notify(notification.domain, notification.message);
+                    notify(notification.domain, notification.message, function () {
+                        Bisnis.Notification.notify(notification.id);
+                    });
                 }, notifications);
             });
         }, 7000);

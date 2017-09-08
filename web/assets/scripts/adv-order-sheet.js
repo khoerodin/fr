@@ -1503,8 +1503,6 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                                         tgl: inputValue
                                     });
 
-                                    //console.log(datesList.items);
-
                                     tgl.text(inputValue);
 
                                     var tglReady = moment(inputValue, 'dddd, DD MMMM YYYY').format();
@@ -2040,7 +2038,6 @@ $('#hitung').keydown(function (e) {
 
 $('#paymentMethod').on('select2:close', function () {
     $('[name="sisipan"]').focus();
-    console.log('sasa');
 });
 
 $('[name="sisipan"]').keydown(function (e) {
@@ -2125,7 +2122,4 @@ $('#orderTag').select2({
             }
         });
     }
-}).on('select2:select', function () {
-    var tags = $('#orderTag').val();
-    console.log(tags);
 });

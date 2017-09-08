@@ -20,10 +20,10 @@ function getOrders(param) {
                 var searchArea;
 
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                tableData += '<thead><tr><th width="5%">#</th><th width="10%">NOMOR ORDER</th>';
-                tableData += '<th width="15%">Judul</th>';
-                tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
-                tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
+                tableData += '<thead><tr><th width="3%">#</th><th width="10%">NOMOR ORDER</th>';
+                tableData += '<th width="25%">Judul</th>';
+                tableData += '<th width="15%">Order Dari</th><th width="15%">Pemasang</th>';
+                tableData += '<th width="3%"><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
 
                 $.each(memberData, function (index, value) {

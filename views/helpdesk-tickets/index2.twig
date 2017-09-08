@@ -226,6 +226,13 @@
                             '/api/helpdesk/staffs/' + ticket.staff.id,
                             'Tiket ' + ticket.title + ' sedang ditangani oleh ' + ticket.staff.fullname + '.'
                         );
+
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.staff.user.id,
+                            '/api/users/{{ me.id }}',
+                            'Tiket ' + ticket.title + ' diassign ke Anda.'
+                        );
                     });
                 });
             }

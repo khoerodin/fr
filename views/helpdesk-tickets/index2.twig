@@ -4,52 +4,130 @@
     <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Style.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Document.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Event.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Grid.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
     <script type="text/javascript">
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
             if (0 < staff.length) {
-                Bisnis.store('staff', JSON.stringify(staff[0]));
-                Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id);
+                Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
+                Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
+                Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id, parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#staffTicketPagination');
             }
         }));
 
-        Bisnis.bind('click', '.allTickets', function () {
-            var savedStaff = JSON.parse(Bisnis.fetch('staff'));
+        Bisnis.Util.Event.bind('click', '.allTickets', function () {
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
             if (null === savedStaff || 'undefined' === typeof savedStaff) {
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
                     if (0 < staff.length) {
                         Bisnis.Helpdesk.Ticket.fetchClosable({
-                            'category.id': staff[0].category.id
-                        }, '#allTicketList');
+                            'category.id': staff[0].category.id,
+                            'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                        }, '#allTicketList', false, '#allTicketPagination');
                     }
                 });
             } else {
                 Bisnis.Helpdesk.Ticket.fetchClosable({
-                    'category.id': savedStaff.category.id
-                }, '#allTicketList');
+                    'category.id': savedStaff.category.id,
+                    'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                }, '#allTicketList', false, '#allTicketPagination');
             }
         });
 
-        Bisnis.bind('click', '.closedTickets', function () {
-            var savedStaff = JSON.parse(Bisnis.fetch('staff'));
+        Bisnis.Util.Event.bind('click', '.closedTickets', function () {
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
             if (null === savedStaff || 'undefined' === typeof savedStaff) {
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
                     if (0 < staff.length) {
                         Bisnis.Helpdesk.Ticket.fetchClosed({
-                            'category.id': staff[0].category.id
-                        }, '#closedTicketList');
+                            'category.id': staff[0].category.id,
+                            'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                        }, '#closedTicketList', false, '#closedTicketPagination');
                     }
                 });
             } else {
                 Bisnis.Helpdesk.Ticket.fetchClosed({
-                    'category.id': savedStaff.category.id
-                }, '#closedTicketList');
+                    'category.id': savedStaff.category.id,
+                    'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                }, '#closedTicketList', false, '#closedTicketPagination');
             }
         });
 
-        Bisnis.bind('click', '.assignToMe', function () {
-            var savedStaff = JSON.parse(Bisnis.fetch('staff'));
+        Bisnis.Util.Event.bind('click', '#staffTicketPagination .pagePrevious', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#staffTicketPagination .pageNext', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#staffTicketPagination .pageFirst', function () {
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE',  1);
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#staffTicketPagination .pageLast', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#allTicketPagination .pagePrevious', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#allTicketPagination .pageNext', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#allTicketPagination .pageFirst', function () {
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE',  1);
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#allTicketPagination .pageLast', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#closedTicketPagination .pagePrevious', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#closedTicketPagination .pageNext', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#closedTicketPagination .pageFirst', function () {
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE',  1);
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#closedTicketPagination .pageLast', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '.assignToMe', function () {
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
             if (null === savedStaff || 'undefined' === typeof savedStaff) {
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
                     if (0 < staff.length) {
@@ -61,38 +139,45 @@
             }
         });
 
-        Bisnis.bind('click', '.assign', function () {
+        Bisnis.Util.Event.bind('click', '.assign', function () {
             var that = this;
 
-            Bisnis.store('ticketId', Bisnis.getData(that, 'ticket-id'));
+            Bisnis.Util.Storage.store('ticketId', Bisnis.Util.Document.getDataValue(that, 'ticket-id'));
 
-            Bisnis.Helpdesk.Staff.fetchByCategory(Bisnis.getData(that, 'ticket-category-id'), function (staffList) {
+            Bisnis.Helpdesk.Staff.fetchByCategory(Bisnis.Util.Document.getDataValue(that, 'ticket-category-id'), function (staffList) {
                 var staffOption = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN</option>';
                 Bisnis.each(function (index, value) {
                     staffOption = staffOption + '<option value="/api/helpdesk/staffs/' + value.id + '">' + value.fullname + '</option>';
                 }, staffList);
 
-                Bisnis.putHtml('#staff', staffOption);
-                Bisnis.modifySelect('#staff');
+                Bisnis.Util.Document.putHtml('#staff', staffOption);
+                Bisnis.Util.Style.modifySelect('#staff');
             });
 
-            Bisnis.showModal('.ticketAssignment');
+            Bisnis.Util.Dialog.showModal('.ticketAssignment');
         });
 
-        Bisnis.bind('click', '.detail', function () {
+        Bisnis.Util.Event.bind('click', '.changePriorityTicket', function () {
             var that = this;
-            Bisnis.store('ticketId', Bisnis.getData(that, 'ticket-id'));
-            Bisnis.Helpdesk.Ticket.markRead(Bisnis.fetch('ticketId'), function () {
-                Bisnis.Helpdesk.Ticket.viewByTicket(Bisnis.fetch('ticketId'));
-                Bisnis.showModal('#tiketDetail');
-                Bisnis.Helpdesk.Ticket.markReadClientResponseByTicket(Bisnis.fetch('ticketId'));
+            Bisnis.Util.Storage.store('ticketId', Bisnis.Util.Document.getDataValue(that, 'ticket-id'));
+            Bisnis.Util.Style.modifySelect('#priority');
+            Bisnis.Util.Dialog.showModal('.ticketChangePriority');
+        });
+
+        Bisnis.Util.Event.bind('click', '.detail', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('ticketId', Bisnis.Util.Document.getDataValue(that, 'ticket-id'));
+            Bisnis.Helpdesk.Ticket.markRead(Bisnis.Util.Storage.fetch('ticketId'), function () {
+                Bisnis.Helpdesk.Ticket.viewByTicket(Bisnis.Util.Storage.fetch('ticketId'));
+                Bisnis.Util.Dialog.showModal('#tiketDetail');
+                Bisnis.Helpdesk.Ticket.markReadClientResponseByTicket(Bisnis.Util.Storage.fetch('ticketId'));
             });
         });
 
-        Bisnis.bind('click', '#sendResponse', function () {
-            var ticketId = Bisnis.fetch('ticketId');
+        Bisnis.Util.Event.bind('click', '#sendResponse', function () {
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
             Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
-                var message = Bisnis.getValue('#chatMessage');
+                var message = Bisnis.Util.Document.getValue('#chatMessage');
                 var staffId = ticket.staff.id;
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
                     if (0 < staff.length) {
@@ -104,40 +189,59 @@
                         { name: 'staff', value: '/api/helpdesk/staffs/' + staffId },
                         { name: 'message', value: message }
                     ], function () {
-                        Bisnis.putHtml('#chatHistory', '');
+                        Bisnis.Util.Document.putHtml('#chatHistory', '');
                         Bisnis.Helpdesk.Ticket.viewByTicket(ticketId);
-                        Bisnis.putValue('#chatMessage', '');
+                        Bisnis.Util.Document.putValue('#chatMessage', '');
                         Bisnis.Helpdesk.Ticket.markReadClientResponseByTicket(ticketId);
                     });
                 });
             });
         });
 
-        Bisnis.bind('click', '#assignTo', function () {
-            var staff = Bisnis.getValue('#staff');
-            var ticket = Bisnis.fetch('ticketId');
+        Bisnis.Util.Event.bind('click', '#assignTo', function () {
+            var staff = Bisnis.Util.Document.getValue('#staff');
+            var ticket = Bisnis.Util.Storage.fetch('ticketId');
 
             if ('' === staff || '' === ticket || null === staff || null === ticket) {
                 console.log('invalid assignment');
             } else {
                 Bisnis.Helpdesk.Ticket.assignTo(ticket, staff, function () {
-                    Bisnis.hideModal('.ticketAssignment');
-                    Bisnis.click('#ticketTab .active');
+                    Bisnis.Util.Dialog.hideModal('.ticketAssignment');
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
                 });
             }
         });
 
-        Bisnis.bind('click', '#closeModalDetail', function () {
-            Bisnis.click('#ticketTab .active');
+        Bisnis.Util.Event.bind('click', '#changePriority', function () {
+            var ticket = Bisnis.Util.Storage.fetch('ticketId');
+            var priority = Bisnis.Util.Document.getValue('#priority');
+
+            Bisnis.Util.Dialog.hideModal('.ticketChangePriority');
+            Bisnis.Helpdesk.Ticket.changePriority(ticket, priority);
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#closeModalDetail', function () {
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#resolveModalDetail', function () {
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan menutup tiket?', function (result) {
+                if (result) {
+                    Bisnis.Helpdesk.Ticket.resolve(ticketId);
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
+                }
+            });
         });
         
-        Bisnis.bind('click', '.closeTicket', function () {
+        Bisnis.Util.Event.bind('click', '.closeTicket', function () {
             var that = this;
-            var ticketId = Bisnis.getData(that, 'ticket-id');
+            var ticketId = Bisnis.Util.Document.getDataValue(that, 'ticket-id');
             Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan menutup tiket?', function (result) {
                 if (result) {
                     Bisnis.Helpdesk.Ticket.close(ticketId);
-                    Bisnis.click('#ticketTab .active');
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
                 }
             });
         });
@@ -160,16 +264,11 @@
                                 <li class="allTickets"><a href="#allTickets" aria-controls="profile" role="tab" data-toggle="tab">SEMUA TIKET</a></li>
                             </ul>
                         </div>
-
                         <div class="tab-content">
-
-
                             {#ASSIGNED TO ME tiket#}
                             <div id="assignedTo" role="tabpanel" class="tab-pane fade active in">
-
                                 <div class="row">
                                     <div class="col-md-12">
-
                                         <table class="table table-striped table-bordered table-hover">
                                             <thead>
                                             <tr>
@@ -181,27 +280,27 @@
                                                 <th>Status</th>
                                                 <th>Prioritas</th>
                                                 <th>Tanggal Buat Tiket</th>
-                                                <th><span class="pull-right">Aksi</span></th>
+                                                <th><span>Aksi</span></th>
                                             </tr>
                                             </thead>
-
                                             <tbody id="assignedToMe">
-                                            <tr><td colspan="9">LOADING DATA...</td></tr>
+                                                <tr>
+                                                    <td colspan="9">LOADING DATA...</td>
+                                                </tr>
                                             </tbody>
-
                                         </table>
-
                                     </div>
+                                </div>
+                                <div class="box-footer clearfix">
+                                    <ul id="staffTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                                 </div>
                             </div>
                             {#end ASSIGNED TO ME tiket#}
 
                             {#closed tiket#}
                             <div id="closedTickets" role="tabpanel" class="tab-pane fade">
-
                                 <div class="row">
                                     <div class="col-md-12">
-
                                         <table class="table table-striped table-bordered table-hover">
                                             <thead>
                                             <tr>
@@ -213,28 +312,26 @@
                                                 <th>Status</th>
                                                 <th>Prioritas</th>
                                                 <th>Tanggal Buat Tiket</th>
-                                                <th><span class="pull-right">Aksi</span></th>
                                             </tr>
                                             </thead>
-
                                             <tbody id="closedTicketList">
-                                            <tr><td colspan="9">LOADING DATA...</td></tr>
+                                                <tr>
+                                                    <td colspan="9">LOADING DATA...</td>
+                                                </tr>
                                             </tbody>
-
                                         </table>
-
                                     </div>
+                                </div>
+                                <div class="box-footer clearfix">
+                                    <ul id="closedTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                                 </div>
                             </div>
                             {#end closed tiket#}
 
-
                             {#<-- semua tiket#}
                             <div id="allTickets" role="tabpanel" class="tab-pane fade">
-
                                 <div class="row">
                                     <div class="col-md-12">
-
                                         <table class="table table-striped table-bordered table-hover">
                                             <thead>
                                             <tr>
@@ -246,20 +343,20 @@
                                                 <th>Status</th>
                                                 <th>Prioritas</th>
                                                 <th>Tanggal Buat Tiket</th>
-                                                <th><span class="pull-right">Aksi</span></th>
+                                                <th><span>Aksi</span></th>
                                             </tr>
                                             </thead>
                                             <tbody id="allTicketList">
                                             <tr><td colspan="9">LOADING DATA...</td></tr>
                                             </tbody>
-
                                         </table>
-
                                     </div>
+                                </div>
+                                <div class="box-footer clearfix">
+                                    <ul id="allTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                                 </div>
                             </div>
                             {#<-- end semua tiket#}
-
                             </div>
                             {#<-- end tab content#}
                     </div>
@@ -270,13 +367,11 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">HELPDESK FORUM<span class="pull-right"><button type="button" class="close" data-dismiss="modal">&times;</button></span></h4>
+                                    <h4 class="modal-title">Ticket Detail</h4>
                                 </div>
                                 <div class="modal-body"> <!-- start modal -->
-
                                     <div class="row">
                                         <div class="col-md-12" >
-
                                             {#detail tic inside modal forum#}
                                             <div class="row">
                                                 <div class="col-sm-12">
@@ -289,13 +384,9 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-
                                             </div>
                                             {#end detail tic inside modal forum#}
-                                            <div class="well well-sm" align="center"><span class="fa fa-hand-o-down pull-left"></span><b>Selamat Datang di Forum Helpdesk!</b><span class="fa-hand-o-down pull-right"></span></div>
-
                                             <div class="box direct-chat">
-
                                                 <div class="box-body">
                                                     <!-- Conversations are loaded here -->
                                                     <div class="direct-chat-messages" id="chatHistory">
@@ -312,19 +403,12 @@
                                                         <hr>
 
                                                     </div>
-
-                                                    <!--/.direct-chat-messages-->
-
-                                                </div>
-                                                <!-- /.box-body -->
-                                                <div class="col-sm-12">
-                                                    <div id="typing_on" class="clearfix text-muted visible-lg"></div>
                                                 </div>
                                                 <div class="box-footer">
                                                     <div class="input-group">
                                                         <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200" style="width: 99%">
                                                         <span class="input-group-btn">
-                                                        &nbsp;<button type="button" class="btn btn-primary btn-flat" id="sendResponse">Send</button>
+                                                        <button type="button" class="btn btn-primary btn-flat" id="sendResponse">Send</button>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -338,33 +422,26 @@
 
                                 </div> <!-- end modal -->
                                 <div class="modal-footer">
+                                    <button type="button" class="btn btn-success pull-left" data-dismiss="modal" id="resolveModalDetail">Resolve</button>
                                     <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalDetail">Close</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
                     {#DETAIL MODAL KONFIRMASI TIKET#}
                     <div class="modal ticketAssignment" role="dialog" id="ticketAssignment">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Ambil Tiket</h4>
-                                </div>
                                 <div class="modal-body">
                                     <form id="formKonfirmasiTiket">
                                         <div class="box-body row">
-
-
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="judul">Staff</label>
+                                                    <label for="judul">Pilih Staff</label>
                                                     <select name="staff" class="form-control" id="staff" style="width: 100%"></select>
                                                 </div>
                                             </div>
-
                                         </div>
                                         <input type="hidden" name="id" id="id">
                                     </form>
@@ -378,10 +455,37 @@
                     </div><!-- /.modal -->
                     {#END DETAIL MODAL#}
 
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer clearfix">
-                    <ul data-paging="clients" class="clients pagination pagination-sm no-margin pull-right"></ul>
+                    {#DETAIL MODAL KONFIRMASI TIKET#}
+                    <div class="modal ticketChangePriority" role="dialog" id="ticketChangePriority">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <form id="formKonfirmasiTiket">
+                                        <div class="box-body row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="judul">Pilih Prioritas</label>
+                                                    <select name="priority" class="form-control" id="priority" style="width: 100%">
+                                                        <option selected disabled class="text-muted">PILIH PRIORITAS</option>
+                                                        <option value="low">Kurang Mendesak</option>
+                                                        <option value="normal">Normal</option>
+                                                        <option value="urgent">Mendesak</option>
+                                                        <option value="very_urgent">Sangat Mendesak</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="id" id="id">
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-flat btn-danger" id="changePriority">Ubah Prioritas</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    {#END DETAIL MODAL#}
                 </div>
             </div>
             <!-- /.box -->

@@ -6,6 +6,7 @@
     <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/scripts/User/User.js"></script>
     <script type="text/javascript">
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
             if (0 < staff.length) {
@@ -190,6 +191,17 @@
                                             </tbody>
 
                                         </table>
+                                        {#<ul data-paging="roles" class="pagination pagination-sm no-margin pull-right">#}
+                                            {#<li>#}
+                                                {#<span class="to-roles-page" data-page="1" title="FIRST PAGE">FIRST</span>#}
+                                            {#</li>#}
+                                            {#<li>#}
+                                                {#<span class="to-roles-page" data-page="3" title="LAST PAGE">LAST</span>#}
+                                            {#</li>#}
+                                            {#<li>#}
+                                                {#<span class="to-roles-page" data-page="2" title="NEXT PAGE">NEXT</span>#}
+                                            {#</li>#}
+                                        {#</ul>#}
 
                                     </div>
                                 </div>
@@ -222,7 +234,17 @@
                                             </tbody>
 
                                         </table>
-
+                                        {#<ul data-paging="roles" class="pagination pagination-sm no-margin pull-right">#}
+                                            {#<li>#}
+                                                {#<span class="to-roles-page" data-page="1" title="FIRST PAGE">FIRST</span>#}
+                                            {#</li>#}
+                                            {#<li>#}
+                                                {#<span class="to-roles-page" data-page="3" title="LAST PAGE">LAST</span>#}
+                                            {#</li>#}
+                                            {#<li>#}
+                                                {#<span class="to-roles-page" data-page="2" title="NEXT PAGE">NEXT</span>#}
+                                            {#</li>#}
+                                        {#</ul>#}
                                     </div>
                                 </div>
                             </div>
@@ -254,7 +276,17 @@
                                             </tbody>
 
                                         </table>
-
+                                        {#<ul data-paging="roles" class="pagination pagination-sm no-margin pull-right">#}
+                                            {#<li>#}
+                                                {#<span class="to-roles-page" data-page="1" title="FIRST PAGE">FIRST</span>#}
+                                            {#</li>#}
+                                            {#<li>#}
+                                                {#<span class="to-roles-page" data-page="3" title="LAST PAGE">LAST</span>#}
+                                            {#</li>#}
+                                            {#<li>#}
+                                                {#<span class="to-roles-page" data-page="2" title="NEXT PAGE">NEXT</span>#}
+                                            {#</li>#}
+                                        {#</ul>#}
                                     </div>
                                 </div>
                             </div>

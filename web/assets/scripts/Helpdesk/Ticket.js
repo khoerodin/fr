@@ -2,15 +2,15 @@
     Bisnis.Helpdesk.Ticket = {};
 
     var createAssignButton = function (ticketId, categoryId) {
-        return '<button class="assign" data-ticket-id="' + ticketId + '" data-ticket-category-id="' + categoryId + '" type="button">Assign</button>';
+        return '<button class="assign" data-ticket-id="' + ticketId + '" data-ticket-category-id="' + categoryId + '" type="button"><i class="fa fa-flag" data-toggle="tooltip" data-placement="bottom" title="ASSIGN TICKET" aria-hidden="true"></i></button>';
     };
 
     var createDetailButton = function (ticketId) {
-        return '<button class="detail" data-ticket-id="' + ticketId + '" type="button">Detail</button>';
+        return '<button class="detail" data-ticket-id="' + ticketId + '" type="button"><i class="fa fa-inbox" data-toggle="tooltip" data-placement="bottom" title="DETAIL TIKET" aria-hidden="true"></i></button>';
     };
 
     var createCloseButton = function (ticketId) {
-        return '<button class="closeTicket" data-ticket-id="' + ticketId + '" type="button">Close</button>';
+        return '<button class="closeTicket" data-ticket-id="' + ticketId + '" type="button"><i class="fa fa-times" data-toggle="tooltip" data-placement="bottom" title="TUTUP TIKET" aria-hidden="true"></i></button>';
     };
 
     var renderMe = function (idx, ticket, row, style) {
@@ -18,9 +18,49 @@
         row = row + '<td>' + (idx + 1) + '</td>';
         row = row + '<td>' + ticket.category.name +'</td>';
         row = row + '<td>' + ticket.title + '</td>';
-        row = row + '<td>' + ticket.status + '</td>';
-        row = row + '<td>' + ticket.priority + '</td>';
-        row = row + '<td>' + ticket.createdAt + '</td>';
+        // row = row + '<td>' + ticket.status + '</td>';
+        // row = row + '<td>' + ticket.priority + '</td>';
+        if (ticket.status === 'open') {
+
+            row = row + '<td align="center"><div class="fa fa-ticket fa-2x" data-toggle="tooltip" data-placement="bottom" title="Open" style="color: orange;"></div></td>'
+
+        } else if (ticket.status === 'assignment') {
+
+            row = row + '<td align="center"><div class="fa fa-tag fa-2x" data-toggle="tooltip" data-placement="bottom" title="Assignment" style="color: cornflowerblue;"></div></td>'
+
+        } else if (ticket.status === 'closed') {
+
+            row = row + '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
+
+        } else if (ticket.status === 'onprogress') {
+
+            row = row + '<td align="center"><div class="fa fa-pencil fa-2x" data-toggle="tooltip" data-placement="bottom" title="On Progress" style="color: gold"></div></td>';
+
+        } else if (ticket.status === 'resolved') {
+
+            row = row + '<td align="center"><div class="fa fa-check fa-2x" data-toggle="tooltip" data-placement="bottom" title="Resolved" style="color: lawngreen"></div></td>';
+
+        }
+
+        if (ticket.priority === 'very_urgent') {
+
+            row = row + '<td align="center"><div class="fa fa-fighter-jet fa-2x" data-toggle="tooltip" data-placement="bottom" title="Very Urgent" style="color: red;"></div></td>'
+
+        } else if (ticket.priority === 'urgent') {
+
+            row = row + '<td align="center"><div class="fa fa-car fa-2x" data-toggle="tooltip" data-placement="bottom" title="Urgent" style="color: orangered;"></div></td>'
+
+        } else if (ticket.priority === 'normal') {
+
+            row = row + '<td align="center"><div class="fa fa-motorcycle fa-2x" data-toggle="tooltip" data-placement="bottom" title="Normal" style="color: orange"></div></td>';
+
+        } else if (ticket.priority === 'low') {
+
+            row = row + '<td align="center"><div class="fa fa-blind fa-2x" data-toggle="tooltip" data-placement="bottom" title="Low" style="color: darkorange"></div></td>';
+        }
+
+        // row = row + '<td>' + ticket.createdAt + '</td>';
+        row = row + '<td>' + moment(ticket.createdAt).format('LLLL') + '</td>';
         row = row + '<td>';
 
         if ('closed' !== ticket.status && 'resolved' !== ticket.status) {
@@ -33,6 +73,20 @@
 
         row = row + '</td>';
         row = row + '</tr>';
+
+        if(idx > 17) {
+            row = row + '<ul data-paging="roles" class="pagination pagination-sm no-margin pull-right">';
+            row = row + '<li>';
+            row = row + '<span class="to-roles-page" data-page="1" title="FIRST PAGE">FIRST</span>';
+            row = row + '</li>;'
+            row = row + '<li>';
+            row = row + '<span class="to-roles-page" data-page="3" title="LAST PAGE">LAST</span>';
+            row = row + '</li>';
+            row = row + '<li>';
+            row = row + '<span class="to-roles-page" data-page="2" title="NEXT PAGE">NEXT</span>';
+            row = row + '</li>';
+            row = row + '</ul>';
+        }
 
         return row;
     };
@@ -56,9 +110,47 @@
 
         row = row + '<td>' + ticket.category.name +'</td>';
         row = row + '<td>' + ticket.title + '</td>';
-        row = row + '<td>' + ticket.status + '</td>';
-        row = row + '<td>' + ticket.priority + '</td>';
-        row = row + '<td>' + ticket.createdAt + '</td>';
+        // row = row + '<td>' + ticket.status + '</td>';
+        // row = row + '<td>' + ticket.priority + '</td>';
+        if (ticket.status === 'open') {
+
+            row = row + '<td align="center"><div class="fa fa-ticket fa-2x" data-toggle="tooltip" data-placement="bottom" title="Open" style="color: orange;"></div></td>'
+
+        } else if (ticket.status === 'assignment') {
+
+            row = row + '<td align="center"><div class="fa fa-tag fa-2x" data-toggle="tooltip" data-placement="bottom" title="Assignment" style="color: cornflowerblue;"></div></td>'
+
+        } else if (ticket.status === 'closed') {
+
+            row = row + '<td align="center"><div class="fa fa-close fa-2x" data-toggle="tooltip" data-placement="bottom" title="Closed" style="color: indianred"></div></td>';
+
+        } else if (ticket.status === 'onprogress') {
+
+            row = row + '<td align="center"><div class="fa fa-pencil fa-2x" data-toggle="tooltip" data-placement="bottom" title="On Progress" style="color: gold"></div></td>';
+
+        } else if (ticket.status === 'resolved') {
+
+            row = row + '<td align="center"><div class="fa fa-check fa-2x" data-toggle="tooltip" data-placement="bottom" title="Resolved" style="color: lawngreen"></div></td>';
+
+        }
+
+        if (ticket.priority === 'very_urgent') {
+
+            row = row + '<td align="center"><div class="fa fa-fighter-jet fa-2x" data-toggle="tooltip" data-placement="bottom" title="Very Urgent" style="color: red;"></div></td>'
+
+        } else if (ticket.priority === 'urgent') {
+
+            row = row + '<td align="center"><div class="fa fa-car fa-2x" data-toggle="tooltip" data-placement="bottom" title="Urgent" style="color: orangered;"></div></td>'
+
+        } else if (ticket.priority === 'normal') {
+
+            row = row + '<td align="center"><div class="fa fa-motorcycle fa-2x" data-toggle="tooltip" data-placement="bottom" title="Normal" style="color: orange"></div></td>';
+
+        } else if (ticket.priority === 'low') {
+
+            row = row + '<td align="center"><div class="fa fa-blind fa-2x" data-toggle="tooltip" data-placement="bottom" title="Low" style="color: darkorange"></div></td>';
+        }
+        row = row + '<td>' + moment(ticket.createdAt).format('LLLL') + '</td>';
         row = row + '<td>';
 
         if ('open' === ticket.status || 'assignment' === ticket.status) {
@@ -327,7 +419,7 @@
             Bisnis.putHtml('.chatTicketClient', ticket.client.fullname);
             Bisnis.putHtml('.chatTicketCategory', ticket.category.name);
             Bisnis.putHtml('.chatTicketTitle', ticket.title);
-            Bisnis.putHtml('.chatTicketDate', ticket.createdAt);
+            Bisnis.putHtml('.chatTicketDate', moment(ticket.createdAt).format('LLLL'));
 
             var profileImage = ticket.client.profileImage.split('.');
 
@@ -335,7 +427,7 @@
                 '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
                 ticket.client.fullname,
                 ticket.message,
-                ticket.createdAt
+                moment(ticket.createdAt).format('LLLL')
             );
 
             Bisnis.Helpdesk.Ticket.fetchReponse(ticket.id, function (ticketResponse) {
@@ -354,7 +446,7 @@
                         '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
                         sender,
                         value.message,
-                        value.createdAt,
+                        moment(value.createdAt).format('LLLL'),
                         chat
                     );
                 }, ticketResponse);

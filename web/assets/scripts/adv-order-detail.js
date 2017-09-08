@@ -67,56 +67,70 @@ $(document).on('click', '#btn-order-update', function () {
                     success: function (data, textStatus, jqXHR) {
                         if (jqXHR.status === 200) {
 
-                            var updateForm = $('#dateForm input.put');
-                            var arrData = [];
-                            $.each(updateForm, function (index, value) {
-                                arrData.push({id: value.id, type: 'put', publishDate: value.value});
-                            });
+                            if ( JSON.parse(data).file ) {
+                                bootbox.alert({
+                                    message: "GAGAL MEMPERBARUI ORDER",
+                                    animate: false,
+                                    buttons: {
+                                        ok: {
+                                            className: 'btn-danger btn-flat'
+                                        }
+                                    }
+                                });
+                            } else {
 
-                            var postForm = $('#dateForm input.post');
-                            $.each(postForm, function (index, value) {
-                                arrData.push({id: value.id, orderId: id, type: 'post', publishDate: value.value});
-                            });
+                                var updateForm = $('#dateForm input.put');
+                                var arrData = [];
+                                $.each(updateForm, function (index, value) {
+                                    arrData.push({id: value.id, type: 'put', publishDate: value.value});
+                                });
 
-                            var deleteForm = $('#dateForm input.delete');
-                            $.each(deleteForm, function (index, value) {
-                                arrData.push({id: value.id, orderId: id, type: 'delete', publishDate: value.value});
-                            });
+                                var postForm = $('#dateForm input.post');
+                                $.each(postForm, function (index, value) {
+                                    arrData.push({id: value.id, orderId: id, type: 'post', publishDate: value.value});
+                                });
 
-                            $.ajax({
-                                url: '/advertising/orders/publish-ads/update',
-                                type: 'post',
-                                data: {data: arrData},
-                                success: function (data) {
+                                var deleteForm = $('#dateForm input.delete');
+                                $.each(deleteForm, function (index, value) {
+                                    arrData.push({id: value.id, orderId: id, type: 'delete', publishDate: value.value});
+                                });
 
-                                    if (data.length) {
+                                $.ajax({
+                                    url: '/advertising/orders/publish-ads/update',
+                                    type: 'post',
+                                    data: {data: arrData},
+                                    success: function (data) {
+
+                                        if (data.length) {
+                                            bootbox.alert({
+                                                message: "SUKSES MENYIMPAN ORDER",
+                                                animate: false,
+                                                buttons: {
+                                                    ok: {
+                                                        className: 'btn-danger btn-flat'
+                                                    }
+                                                },
+                                                callback: function (result) {
+                                                    window.location.href = '/advertising/orders';
+                                                }
+                                            });
+                                        }
+
+                                    },
+                                    error: function () {
                                         bootbox.alert({
-                                            message: "SUKSES MENYIMPAN ORDER",
+                                            message: "GAGAL MEMPERBARUI ORDER",
                                             animate: false,
                                             buttons: {
                                                 ok: {
                                                     className: 'btn-danger btn-flat'
                                                 }
-                                            },
-                                            callback: function (result) {
-                                                window.location.href = '/advertising/orders';
                                             }
                                         });
                                     }
+                                });
 
-                                },
-                                error: function () {
-                                    bootbox.alert({
-                                        message: "GAGAL MEMPERBARUI ORDER",
-                                        animate: false,
-                                        buttons: {
-                                            ok: {
-                                                className: 'btn-danger btn-flat'
-                                            }
-                                        }
-                                    });
-                                }
-                            });
+                            }
 
                         } else {
                             bootbox.alert({

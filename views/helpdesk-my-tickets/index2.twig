@@ -128,9 +128,9 @@
                         Bisnis.Helpdesk.Ticket.markReadStaffResponseByTicket(ticketId);
                         Bisnis.Notification.send(
                             'HELPDESK',
-                            '/api/users/' + staff.user.id,
+                            '/api/users/' + ticket.staff.user.id,
                             '/api/users/{{ me.id }}',
-                            'Tiket ' + title + ' mendapatkan response baru dari user.'
+                            'Tiket ' + ticket.title + ' mendapatkan response baru dari user.'
                         );
                     });
                 });

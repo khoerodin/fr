@@ -66,7 +66,7 @@ $(document).on('click', '#btn-order', function () {
                     toastr.error("Gagal Menyimpan Order");
                     $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
 
-                } else if (data.message) {
+                } else if (data.file) {
                     toastr.error("Gagal Menyimpan Order");
                     $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
                 } else {

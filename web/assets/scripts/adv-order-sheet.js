@@ -1,3 +1,25 @@
+function getQueryVariable(variable, query = decodeURIComponent(window.location.search.substring(1)))
+{
+    var vars = query.split("&");
+    if(typeof variable !== 'undefined') {
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+    } else {
+        var keys = [];
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            var param = {};
+            param[pair[0]] = pair[1];
+
+            keys.push(param);
+        }
+        return keys;
+    }
+    return(false);
+}
+
 // dropdown menggunakan select2
 $("#printAs, #paymentMethod, #printInvoiceAs").select2({
     theme: 'bootstrap'
@@ -61,11 +83,12 @@ $(document).on('click', '#pemasang button', function () {
 //mencari pemasang iklan
 $(document).on('keyup', '#pemasangModal #serachList', function () {
     var params = $(this).val();
+    localStorage.setItem('PemasangParams', params);
     getCustomers(params, 'pemasangModal');
 });
 
 //ajax mengambil data pemasang
-function getCustomers(param, modalTag) {
+function getCustomers(param, modalTag, pageNum) {
     $.ajax({
         url: '/api',
         type: 'POST',
@@ -74,7 +97,8 @@ function getCustomers(param, modalTag) {
             method: 'get',
             params: [
                 {
-                    name: param
+                    name: param,
+                    page: pageNum
                 }
             ]
         },
@@ -106,12 +130,51 @@ function getCustomers(param, modalTag) {
                 tableData += '<tbody>';
             }
             $('#'+modalTag +' .modal-body #data-list').html(tableData);
+
+            var view = JSON.parse(data)['hydra:view'];
+            if (view) {
+                var paging = '<ul class="pagination pull-right">';
+                $.each(view, function (idx, val) {
+                    if (idx.startsWith('hydra')) {
+                        if (idx.endsWith('first')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="FIRST PAGE">FIRST</span></li>';
+                        }
+
+                        if (idx.endsWith('previous')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="PREVIOUS PAGE">PREVIOUS</span></li>';
+                        }
+
+                        if (idx.endsWith('next')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="NEXT PAGE">NEXT</span></li>';
+                        }
+
+                        if (idx.endsWith('last')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="LAST PAGE">LAST</span></li>';
+                        }
+                    }
+                });
+                paging += '<ul>';
+
+                $('#'+modalTag+' .box-footer').html(paging);
+            }
+
         },
         error: function (jqXHR, textStatus, errorThrown) {
 
         }
     });
 }
+
+// // paging Pemasang
+$(document).on('click', '#pemasangModal .to-page', function () {
+    var pageNum = $(this).data('page');
+    var params = localStorage.getItem('PemasangParams');
+    getCustomers(params, 'pemasangModal', pageNum);
+});
 
 // ketika klik tombol pilih klien
 $(document).on('click', '#klien button', function () {
@@ -123,7 +186,15 @@ $(document).on('click', '#klien button', function () {
 //cari klien
 $(document).on('keyup', '#klienModal #serachList', function () {
     var params = $(this).val();
+    localStorage.setItem('KlienParams', params);
     getCustomers(params, 'klienModal');
+});
+
+// // paging klien
+$(document).on('click', '#klienModal .to-page', function () {
+    var pageNum = $(this).data('page');
+    var params = localStorage.getItem('KlienParams');
+    getCustomers(params, 'klienModal', pageNum);
 });
 
 // $(document).ajaxComplete(function() {
@@ -155,11 +226,12 @@ $(document).on('click', '#jenisIklan button', function () {
 //pencarian jenis iklan
 $(document).on('keyup', '#jenisIklanModal #serachList', function () {
     var params = $(this).val();
+    localStorage.setItem('jenisIklanParams', params);
     getSpecifications(params);
 });
 
 // mengambil data jenis iklan
-function getSpecifications(params) {
+function getSpecifications(params, pageNum) {
     $.ajax({
         url: '/api',
         type: 'POST',
@@ -168,7 +240,8 @@ function getSpecifications(params) {
             method: 'get',
             params: [
                 {
-                    name: params
+                    name: params,
+                    page: pageNum
                 }
             ]
         },
@@ -198,12 +271,50 @@ function getSpecifications(params) {
                 tableData += '<tbody>';
             }
             $('#jenisIklanModal .modal-body #data-list').html(tableData);
+
+            var view = JSON.parse(data)['hydra:view'];
+            if (view) {
+                var paging = '<ul class="pagination pull-right">';
+                $.each(view, function (idx, val) {
+                    if (idx.startsWith('hydra')) {
+                        if (idx.endsWith('first')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="FIRST PAGE">FIRST</span></li>';
+                        }
+
+                        if (idx.endsWith('previous')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="PREVIOUS PAGE">PREVIOUS</span></li>';
+                        }
+
+                        if (idx.endsWith('next')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="NEXT PAGE">NEXT</span></li>';
+                        }
+
+                        if (idx.endsWith('last')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="LAST PAGE">LAST</span></li>';
+                        }
+                    }
+                });
+                paging += '<ul>';
+
+                $('#jenisIklanModal .box-footer').html(paging);
+            }
         },
         error: function (jqXHR, textStatus, errorThrown) {
 
         }
     });
 }
+
+// // paging jenis iklan
+$(document).on('click', '#jenisIklanModal .to-page', function () {
+    var pageNum = $(this).data('page');
+    var params = localStorage.getItem('jenisIklanParams');
+    getSpecifications(params, pageNum);
+});
 
 // $(document).ajaxComplete(function() {
     //ketika double klik list jenis iklan
@@ -241,11 +352,12 @@ $(document).on('keyup', '#tipeIklanModal #serachList', function () {
     var params = $(this).val();
     var longSpcId = $('#specification').val();
     var spcId = longSpcId.split('/').pop();
-    getTypes(params, spcId);
+    localStorage.setItem('tipeIklanParams', params);
+    getTypes(params, spcId, pageNum);
 });
 
 //mengambil data tipe iklan
-function getTypes(params, spcId) {
+function getTypes(params, spcId, pageNum) {
     $.ajax({
         url: '/api',
         type: 'POST',
@@ -255,7 +367,8 @@ function getTypes(params, spcId) {
             params: [
                 {
                     'type.name': params,
-                    'specification.id': spcId
+                    'specification.id': spcId,
+                    'page': pageNum
                 }
             ]
         },
@@ -285,12 +398,52 @@ function getTypes(params, spcId) {
                 tableData += '<tbody>';
             }
             $('#tipeIklanModal .modal-body #data-list').html(tableData);
+
+            var view = JSON.parse(data)['hydra:view'];
+            if (view) {
+                var paging = '<ul class="pagination pull-right">';
+                $.each(view, function (idx, val) {
+                    if (idx.startsWith('hydra')) {
+                        if (idx.endsWith('first')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="FIRST PAGE">FIRST</span></li>';
+                        }
+
+                        if (idx.endsWith('previous')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="PREVIOUS PAGE">PREVIOUS</span></li>';
+                        }
+
+                        if (idx.endsWith('next')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="NEXT PAGE">NEXT</span></li>';
+                        }
+
+                        if (idx.endsWith('last')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="LAST PAGE">LAST</span></li>';
+                        }
+                    }
+                });
+                paging += '<ul>';
+
+                $('#tipeIklanModal .box-footer').html(paging);
+            }
         },
         error: function (jqXHR, textStatus, errorThrown) {
 
         }
     });
 }
+
+// // paging tipe iklan
+$(document).on('click', '#tipeIklanModal .to-page', function () {
+    var pageNum = $(this).data('page');
+    var params = localStorage.getItem('tipeIklanParams');
+    var longSpcId = $('#specification').val();
+    var spcId = longSpcId.split('/').pop();
+    getTypes(params, spcId, pageNum);
+});
 
 //$(document).ajaxComplete(function() {
     //ketika double klik list tipe iklan
@@ -478,11 +631,12 @@ $(document).on('click', '#pic button', function () {
 //cari PIC
 $(document).on('keyup', '#PICModal #serachList', function () {
     var params = $(this).val();
+    localStorage.setItem('PICParams', params);
     getPIC(params);
 });
 
 //ambil data PIC
-function getPIC(params) {
+function getPIC(params, pageNum) {
     $.ajax({
         url: '/api',
         type: 'POST',
@@ -491,7 +645,8 @@ function getPIC(params) {
             method: 'get',
             params: [
                 {
-                    name: params
+                    name: params,
+                    page: pageNum
                 }
             ]
         },
@@ -522,12 +677,50 @@ function getPIC(params) {
                 tableData += '<tbody>';
             }
             $('#PICModal .modal-body #data-list').html(tableData);
+
+            var view = JSON.parse(data)['hydra:view'];
+            if (view) {
+                var paging = '<ul class="pagination pull-right">';
+                $.each(view, function (idx, val) {
+                    if (idx.startsWith('hydra')) {
+                        if (idx.endsWith('first')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="FIRST PAGE">FIRST</span></li>';
+                        }
+
+                        if (idx.endsWith('previous')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="PREVIOUS PAGE">PREVIOUS</span></li>';
+                        }
+
+                        if (idx.endsWith('next')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="NEXT PAGE">NEXT</span></li>';
+                        }
+
+                        if (idx.endsWith('last')) {
+                            var page = getQueryVariable('page', val);
+                            paging += '<li><span class="to-page" data-page="' + page + '" title="LAST PAGE">LAST</span></li>';
+                        }
+                    }
+                });
+                paging += '<ul>';
+
+                $('#PICModal .box-footer').html(paging);
+            }
         },
         error: function (jqXHR, textStatus, errorThrown) {
 
         }
     });
 }
+
+// paging PIC
+$(document).on('click', '#PICModal .to-page', function () {
+    var pageNum = $(this).data('page');
+    var params = localStorage.getItem('PICParams');
+    getPIC(params, pageNum);
+});
 
 // $(document).ajaxComplete(function() {
     //double klik data PIC
@@ -620,21 +813,21 @@ if (!$('#sirculationArea').val()) {
 // accounting js
 accounting.settings = {
     currency: {
-        symbol : "",
-        format: "%s%v",
-        decimal : ",",
-        thousand: ".",
-        precision : 2
+        symbol : "",   // default currency symbol is '$'
+        format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+        decimal : ".",  // decimal point separator
+        thousand: ",",  // thousands separator
+        precision : 2   // decimal places
     },
     number: {
-        precision : 0,
-        thousand: ".",
-        decimal : ","
+        precision : 0,  // default precision on numbers is 0
+        thousand: ",",
+        decimal : "."
     }
 }
 
 function unformatMoney(formatted) {
-    return parseFloat(formatted.replace(/[^0-9-,]/g, ''));
+    return parseFloat(formatted.replace(/[^0-9-.]/g, ''));
 }
 
 //menghitung biaya
@@ -720,7 +913,7 @@ function getDiscountPercentage() {
     }
 
     var diskonRp = (biaya * diskonPersen) / 100;
-    $('#discountValue').val(diskonRp.toString().replace('.',','));
+    $('#discountValue').val(diskonRp);
 }
 
 $(document).on('keyup keydown change mouseup', '#discountValue', function () {
@@ -729,7 +922,7 @@ $(document).on('keyup keydown change mouseup', '#discountValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#discountPercentage', function () {
-    $('#hitung').trigger('click');
+    $('#hitung').click();
 });
 
 // menghitung plus diskon dalam %
@@ -771,7 +964,7 @@ function getSurchargePercentage() {
     }
 
     var plusDiskonRp = (biaya * plusDiskonPersen) / 100;
-    $('#surchargeValue').val(plusDiskonRp.toString().replace('.',','));
+    $('#surchargeValue').val(plusDiskonRp);
 }
 
 $(document).on('keyup keydown change mouseup', '#surchargeValue', function () {
@@ -780,7 +973,7 @@ $(document).on('keyup keydown change mouseup', '#surchargeValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#surchargePercentage', function () {
-    $('#hitung').trigger('click');
+    $('#hitung').click();
 });
 
 // menghitung min diskon dalam %
@@ -822,7 +1015,7 @@ function getMinDiscountPercentage() {
     }
 
     var minDiskonRp = (biaya * minDiskonPersen) / 100;
-    $('#minDiscountValue').val(minDiskonRp.toString().replace('.',','));
+    $('#minDiscountValue').val(minDiskonRp);
 }
 
 $(document).on('keyup keydown change mouseup', '#minDiscountValue', function () {
@@ -831,7 +1024,7 @@ $(document).on('keyup keydown change mouseup', '#minDiscountValue', function () 
 });
 
 $(document).on('keyup keydown change mouseup', '#minDiscountPercentage', function () {
-    $('#hitung').trigger('click');
+    $('#hitung').click();
 });
 
 // menghitung npb diskon dalam %
@@ -873,7 +1066,7 @@ function getNpbDiscountPercentage() {
     }
 
     var npbDiskonRp = (biaya * npbDiskonPersen) / 100;
-    $('#npbDiscountValue').val(npbDiskonRp.toString().replace('.',','));
+    $('#npbDiscountValue').val(npbDiskonRp);
 }
 
 $(document).on('keyup keydown change mouseup', '#npbDiscountValue', function () {
@@ -882,7 +1075,7 @@ $(document).on('keyup keydown change mouseup', '#npbDiscountValue', function () 
 });
 
 $(document).on('keyup keydown change mouseup', '#npbDiscountPercentage', function () {
-    $('#hitung').trigger('click');
+    $('#hitung').click();
 });
 
 // hitung pajak %
@@ -908,7 +1101,7 @@ function getTaxPercentage() {
     }
 
     var taxValue = (getBiaya() * ppnPersen) / 100;
-    $('#taxValue').val(taxValue.toString().replace('.',','));
+    $('#taxValue').val(taxValue);
 }
 
 $(document).on('keyup keydown change mouseup', '#taxValue', function () {
@@ -917,7 +1110,7 @@ $(document).on('keyup keydown change mouseup', '#taxValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
-    $('#hitung').trigger('click');
+    $('#hitung').click();
 });
 
 // hitung cahsback %
@@ -997,7 +1190,7 @@ function getCashBackPercentage() {
     var cashBackPersen = parseFloat($('#cashBackPercentage').val());
 
     var cashBackRp = (biaya * cashBackPersen) / 100;
-    $('#cashBackValue').val(cashBackRp.toString().replace('.',','));
+    $('#cashBackValue').val(cashBackRp);
 }
 
 $(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
@@ -1006,7 +1199,7 @@ $(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function () {
-    $('#hitung').trigger('click');
+    $('#hitung').click();
 });
 
 // ambil diskon
@@ -1093,111 +1286,112 @@ function getNetto() {
 $(document).on('blur', '#basePrice', function () {
     var $this = $(this);
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="basePrice"]').val(parseFloat(unformat));
+    //var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="basePrice"]').val(parseFloat(value));
 });
 
 // surcharge / plus discount
 $(document).on('blur', '#surchargeValue', function () {
     var $this = $(this);
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="surchargeValue"]').val(parseFloat(unformat));
+
+    //var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="surchargeValue"]').val(parseFloat(value));
 });
 
 $(document).on('blur', '#surchargePercentage', function () {
     var $this = $('#surchargeValue');
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="surchargeValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="surchargeValue"]').val(parseFloat(value));
 });
 
 // discount
 $(document).on('blur', '#discountValue', function () {
     var $this = $(this);
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="discountValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="discountValue"]').val(parseFloat(value));
 });
 
 $(document).on('blur', '#discountPercentage', function () {
     var $this = $('#discountValue');
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="discountValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="discountValue"]').val(parseFloat(value));
 });
 
 //min discount
 $(document).on('blur', '#minDiscountPercentage', function () {
     var $this = $('#minDiscountValue');
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="minDiscountValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="minDiscountValue"]').val(parseFloat(value));
 });
 
 $(document).on('blur', '#minDiscountValue', function () {
     var $this = $(this);
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="minDiscountValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="minDiscountValue"]').val(parseFloat(value));
 });
 
 //npb discount
 $(document).on('blur', '#npbDiscountPercentage', function () {
     var $this = $('#npbDiscountValue');
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="npbDiscountValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="npbDiscountValue"]').val(parseFloat(value));
 });
 
 $(document).on('blur', '#minDiscountValue', function () {
     var $this = $(this);
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="npbDiscountValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="npbDiscountValue"]').val(parseFloat(value));
 });
 
 // tax
 $(document).on('blur', '#taxValue', function () {
     var $this = $(this);
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="taxValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="taxValue"]').val(parseFloat(value));
 });
 
 $(document).on('blur', '#taxPercentage', function () {
     var $this = $('#taxValue');
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="taxValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="taxValue"]').val(parseFloat(value));
 });
 
 // cashback
 $(document).on('blur', '#cashBackValue', function () {
     var $this = $(this);
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="cashBackValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="cashBackValue"]').val(parseFloat(value));
 });
 
 $(document).on('blur', '#cashBackPercentage', function () {
     var $this = $('#cashBackValue');
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="cashBackValue"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="cashBackValue"]').val(parseFloat(value));
 });
 
 
@@ -1205,9 +1399,29 @@ $(document).on('blur', '#cashBackPercentage', function () {
 $(document).on('blur', '#totalAmount', function () {
     var $this = $(this);
     var value = $this.val();
-    var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(unformat));
-    $('[name="totalAmount"]').val(parseFloat(unformat));
+    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
+    $this.val(accounting.formatMoney(value));
+    $('[name="totalAmount"]').val(parseFloat(value));
+});
+
+$(document).on('change', '#totalAmount', function () {
+    $('#hitungMundurBtn').removeClass('hidden');
+});
+
+$(document).on('click', '#hitungMundurBtn', function (e) {
+    e.preventDefault();
+    var totalAmount =  parseFloat($('[name="totalAmount"]').val());
+    var ppnRp = totalAmount / 1.1 * 10 /100;
+    var basePrice = totalAmount - ppnRp;
+
+    $('#taxValue').val(ppnRp);
+    $('[name="taxValue"]').val(ppnRp);
+
+    $('#taxPercentage').val(10);
+
+    $('#basePrice').val(basePrice);
+    $('[name="basePrice"]').val(basePrice);
+    $(this).addClass('hidden');
 });
 
 // klik tombol hitung
@@ -1215,30 +1429,6 @@ $(document).on(
     'click', '#hitung',
     function (e) {
         e.preventDefault();
-
-        // if (!$('#taxPercentage').val()) {
-        //     $('#taxPercentage').val(0);
-        // }
-        //
-        // if (!$('#surchargePercentage').val()) {
-        //     $('#surchargePercentage').val(0);
-        // }
-        //
-        // if (!$('#minDiscountPercentage').val()) {
-        //     $('#minDiscountPercentage').val(0);
-        // }
-        //
-        // if (!$('#discountPercentage').val()) {
-        //     $('#discountPercentage').val(0);
-        // }
-        //
-        // if (!$('#npbDiscountPercentage').val()) {
-        //     $('#npbDiscountPercentage').val(0);
-        // }
-        //
-        // if (!$('#cashBackPercentage').val()) {
-        //     $('#cashBackPercentage').val(0);
-        // }
 
         getTaxPercentage();
         getDiscountPercentage();
@@ -1252,33 +1442,33 @@ $(document).on(
 
         var tax = $('#taxValue');
         var taxValue = tax.val();
-        var unformatTax = taxValue.replace(/\./g,'').replace(/\,/g,'.');
-        tax.val(accounting.formatMoney(unformatTax));
+        // var unformatTax = taxValue.replace(/\./g,'').replace(/\,/g,'.');
+        tax.val(accounting.formatMoney(taxValue));
 
         var discount = $('#discountValue');
         var discountValue = discount.val();
-        var unformatDiscount= discountValue.replace(/\./g,'').replace(/\,/g,'.');
-        discount.val(accounting.formatMoney(unformatDiscount));
+        // var unformatDiscount= discountValue.replace(/\./g,'').replace(/\,/g,'.');
+        discount.val(accounting.formatMoney(discountValue));
 
         var cashBack = $('#cashBackValue');
         var cashBackValue = cashBack.val();
-        var unformatCashBack = cashBackValue.replace(/\./g,'').replace(/\,/g,'.');
-        cashBack.val(accounting.formatMoney(unformatCashBack));
+        // var unformatCashBack = cashBackValue.replace(/\./g,'').replace(/\,/g,'.');
+        cashBack.val(accounting.formatMoney(cashBackValue));
 
         var surcharge = $('#surchargeValue');
         var surchargeValue = surcharge.val();
-        var unformatSurcharge = surchargeValue.replace(/\./g,'').replace(/\,/g,'.');
-        surcharge.val(accounting.formatMoney(unformatSurcharge));
+        // var unformatSurcharge = surchargeValue.replace(/\./g,'').replace(/\,/g,'.');
+        surcharge.val(accounting.formatMoney(surchargeValue));
 
         var minDiscount = $('#minDiscountValue');
         var minDiscountValue = minDiscount.val();
-        var unformatMinDiscount = minDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
-        minDiscount.val(accounting.formatMoney(unformatMinDiscount));
+        // var unformatMinDiscount = minDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
+        minDiscount.val(accounting.formatMoney(minDiscountValue));
 
         var npbDiscount = $('#npbDiscountValue');
         var npbDiscountValue = npbDiscount.val();
-        var unformatNpbDiscount = npbDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
-        npbDiscount.val(accounting.formatMoney(unformatNpbDiscount));
+        // var unformatNpbDiscount = npbDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
+        npbDiscount.val(accounting.formatMoney(npbDiscountValue));
 
         $('#btn-order').prop('disabled', false).text('SIMPAN');
         $('#btn-order-update').prop('disabled', false).text('SIMPAN');
@@ -1292,7 +1482,7 @@ $(document).on(
     '#cashBackValue, #cashBackPercentage, ' +
     'input[name="jenisIklan"], #specification',
     function () {
-        $('#netto').text(accounting.formatMoney(0, "Rp ", 2, ".", ","));
+        $('#netto').text(accounting.formatMoney());
         $('#nettoRp').val(0);
         $('#btn-order').prop('disabled', true).text('KLIK TOMBOL HITUNG');
         $('#btn-order-update').prop('disabled', true).text('KLIK TOMBOL HITUNG');

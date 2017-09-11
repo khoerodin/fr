@@ -1452,33 +1452,33 @@ $(document).on(
 
         var tax = $('#taxValue');
         var taxValue = tax.val();
-        // var unformatTax = taxValue.replace(/\./g,'').replace(/\,/g,'.');
-        tax.val(accounting.formatMoney(taxValue));
+        var unformatTax = unformatMoney(taxValue);
+        tax.val(accounting.formatMoney(unformatTax));
 
         var discount = $('#discountValue');
         var discountValue = discount.val();
-        // var unformatDiscount= discountValue.replace(/\./g,'').replace(/\,/g,'.');
-        discount.val(accounting.formatMoney(discountValue));
+        var unformatDiscount = unformatMoney(discountValue);
+        discount.val(accounting.formatMoney(unformatDiscount));
 
         var cashBack = $('#cashBackValue');
         var cashBackValue = cashBack.val();
-        // var unformatCashBack = cashBackValue.replace(/\./g,'').replace(/\,/g,'.');
-        cashBack.val(accounting.formatMoney(cashBackValue));
+        var unformatCashBack = unformatMoney(cashBackValue);
+        cashBack.val(accounting.formatMoney(unformatCashBack));
 
         var surcharge = $('#surchargeValue');
         var surchargeValue = surcharge.val();
-        // var unformatSurcharge = surchargeValue.replace(/\./g,'').replace(/\,/g,'.');
-        surcharge.val(accounting.formatMoney(surchargeValue));
+        var unformatSurcharge = unformatMoney(surchargeValue);
+        surcharge.val(accounting.formatMoney(unformatSurcharge));
 
         var minDiscount = $('#minDiscountValue');
         var minDiscountValue = minDiscount.val();
-        // var unformatMinDiscount = minDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
-        minDiscount.val(accounting.formatMoney(minDiscountValue));
+        var unformatMinDiscount = unformatMoney(minDiscountValue);
+        minDiscount.val(accounting.formatMoney(unformatMinDiscount));
 
         var npbDiscount = $('#npbDiscountValue');
         var npbDiscountValue = npbDiscount.val();
-        // var unformatNpbDiscount = npbDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
-        npbDiscount.val(accounting.formatMoney(npbDiscountValue));
+        var unformatNpbDiscount = unformatMoney(npbDiscountValue);
+        npbDiscount.val(accounting.formatMoney(unformatNpbDiscount));
 
         $('#btn-order').prop('disabled', false).text('SIMPAN');
         $('#btn-order-update').prop('disabled', false).text('SIMPAN');

@@ -66,6 +66,7 @@ app:
         - { path: '/helpdesk/tickets', controller: 'Bisnis:HelpdeskTickets@index', methods: ['GET'] }
         - { path: '/helpdesk/clients', controller: 'Bisnis:HelpdeskClients@index', methods: ['GET'] }
         - { path: '/helpdesk/my-tickets', controller: 'Bisnis:HelpdeskMyTickets@index', methods: ['GET'] }
+        - { path: '/helpdesk/ticket-stats', controller: 'Bisnis:HelpdeskTicketStats@index', methods: ['GET'] }
 
         #jangan di hapus,
         - { path: '/dummy', controller: 'Bisnis:Dummy@index', methods: ['GET'] }

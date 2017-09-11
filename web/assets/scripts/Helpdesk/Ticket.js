@@ -87,6 +87,20 @@
         row = row + '</td>';
         row = row + '</tr>';
 
+        // if(idx > 17) {
+        //     row = row + '<ul data-paging="roles" class="pagination pagination-sm no-margin pull-right">';
+        //     row = row + '<li>';
+        //     row = row + '<span class="to-roles-page" data-page="1" title="FIRST PAGE">FIRST</span>';
+        //     row = row + '</li>;'
+        //     row = row + '<li>';
+        //     row = row + '<span class="to-roles-page" data-page="3" title="LAST PAGE">LAST</span>';
+        //     row = row + '</li>';
+        //     row = row + '<li>';
+        //     row = row + '<span class="to-roles-page" data-page="2" title="NEXT PAGE">NEXT</span>';
+        //     row = row + '</li>';
+        //     row = row + '</ul>';
+        // }
+
         return row;
     };
 
@@ -133,6 +147,21 @@
 
         row = row + '</td>';
         row = row + '</tr>';
+
+        // if(idx > 17) {
+        //     row = row + '<ul data-paging="roles" class="pagination pagination-sm no-margin pull-right">';
+        //     row = row + '<li>';
+        //     row = row + '<span class="to-roles-page" data-page="1" title="FIRST PAGE">FIRST</span>';
+        //     row = row + '</li>';
+        //     row = row + '<li>';
+        //     row = row + '<span class="to-roles-page" data-page="3" title="LAST PAGE">LAST</span>';
+        //     row = row + '</li>';
+        //     row = row + '<li>';
+        //     row = row + '<span class="to-roles-page" data-page="2" title="NEXT PAGE">NEXT</span>';
+        //     row = row + '</li>';
+        //     row = row + '</ul>';
+        //     alert(idx);
+        // }
 
         return row;
     };
@@ -460,4 +489,5 @@
             });
         });
     };
+
 })(window.Bisnis || {});

@@ -259,7 +259,7 @@
                                             <label for="">PPN Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" value="{{ order.taxValue }}" id="taxValue" class="form-control">
+                                                <input type="text" readonly value="{{ order.taxValue }}" id="taxValue" class="form-control">
                                                 <input type="hidden" name="taxValue" value="{{ order.taxValue }}">
                                             </div>
                                         </div>
@@ -281,7 +281,7 @@
                                             <label for="">Plus Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" value="{{ order.surchargeValue }}" id="surchargeValue" class="form-control">
+                                                <input type="text" readonly value="{{ order.surchargeValue }}" id="surchargeValue" class="form-control">
                                                 <input type="hidden" name="surchargeValue" value="{{ order.surchargeValue }}">
                                             </div>
                                         </div>
@@ -303,7 +303,7 @@
                                             <label for="">Min Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" value="{{ order.minDiscountValue }}" id="minDiscountValue" class="form-control">
+                                                <input type="text" readonly value="{{ order.minDiscountValue }}" id="minDiscountValue" class="form-control">
                                                 <input type="hidden" value="{{ order.minDiscountValue }}" name="minDiscountValue">
                                             </div>
                                         </div>
@@ -325,7 +325,7 @@
                                             <label for="">Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" value="{{ order.discountValue }}" id="discountValue" class="form-control">
+                                                <input type="text" readonly value="{{ order.discountValue }}" id="discountValue" class="form-control">
                                                 <input type="hidden" name="discountValue" value="{{ order.discountValue }}">
                                             </div>
                                         </div>
@@ -347,7 +347,7 @@
                                             <label for="">NPB Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" value="{{ order.npbDiscountValue }}" id="npbDiscountValue" class="form-control">
+                                                <input type="text" readonly value="{{ order.npbDiscountValue }}" id="npbDiscountValue" class="form-control">
                                                 <input type="hidden" value="{{ order.npbDiscountValue }}" name="npbDiscountValue">
                                             </div>
                                         </div>
@@ -369,7 +369,7 @@
                                             <label for="">Cashback Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" value="{{ order.cashBackValue }}" id="cashBackValue" class="form-control">
+                                                <input type="text" readonly value="{{ order.cashBackValue }}" id="cashBackValue" class="form-control">
                                                 <input type="hidden" name="cashBackValue" value="{{ order.cashBackValue }}">
                                             </div>
                                         </div>
@@ -384,7 +384,7 @@
                                             <label for="">Jumlah Bayar</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" value="{{ order.totalAmount }}" id="totalAmount" readonly class="form-control">
+                                                <input type="text" value="{{ order.totalAmount }}" id="totalAmount" class="form-control">
                                                 <input type="hidden" name="totalAmount" value="{{ order.totalAmount }}">
                                             </div>
                                         </div>
@@ -393,6 +393,12 @@
                                             <div class="input-group">
                                                 <input type="number" name="quantity" value="{{ order.quantity }}" id="quantity" min="1" class="form-control">
                                                 <div class="input-group-addon">buah</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label style="visibility: hidden">#</label>
+                                            <div class="input-group">
+                                                <button id="hitungMundurBtn" class="btn btn-success btn-flat hidden">HITUNG MUNDUR</button>
                                             </div>
                                         </div>
                                     </div>

@@ -1421,6 +1421,7 @@ $(document).on('click', '#hitungMundurBtn', function (e) {
 
     $('#basePrice').val(basePrice);
     $('[name="basePrice"]').val(basePrice);
+    $(this).addClass('hidden');
 });
 
 // klik tombol hitung

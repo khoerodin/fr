@@ -2,6 +2,7 @@
     Bisnis.Helpdesk.Ticket = {};
 
     var createAssignButton = function (ticketId, categoryId) {
+<<<<<<< HEAD
         return '<button class="assign btn btn-primary fa fa-reply" style="margin-right: 5px;" title="Assign" data-ticket-id="' + ticketId + '" data-ticket-category-id="' + categoryId + '" type="button"></button>';
     };
 
@@ -66,14 +67,33 @@
         return '<button class="btn btn-'+ priorityMark +'" style="width: 100%;" title="' + priority + '"><i class="fa fa-ambulance"></i></button>';
     };
 
+=======
+        return '<button class="assign" data-ticket-id="' + ticketId + '" data-ticket-category-id="' + categoryId + '" type="button">Assign</button>';
+    };
+
+    var createDetailButton = function (ticketId) {
+        return '<button class="detail" data-ticket-id="' + ticketId + '" type="button">Detail</button>';
+    };
+
+    var createCloseButton = function (ticketId) {
+        return '<button class="closeTicket" data-ticket-id="' + ticketId + '" type="button">Close</button>';
+    };
+
+>>>>>>> 590a4345afd62d4d4ea7ffda562b2a8eee65d7af
     var renderMe = function (idx, ticket, row, style) {
         row = row + '<tr class="' + ticket.id + '"'+ style +'>';
         row = row + '<td>' + (idx + 1) + '</td>';
         row = row + '<td>' + ticket.category.name +'</td>';
         row = row + '<td>' + ticket.title + '</td>';
+<<<<<<< HEAD
         row = row + '<td>' + createStatusButton(ticket.status) +'</td>';
         row = row + '<td>' + createPriorityButton(ticket.priority) + '</td>';
         row = row + '<td>' + moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss') + '</td>';
+=======
+        row = row + '<td>' + ticket.status + '</td>';
+        row = row + '<td>' + ticket.priority + '</td>';
+        row = row + '<td>' + ticket.createdAt + '</td>';
+>>>>>>> 590a4345afd62d4d4ea7ffda562b2a8eee65d7af
         row = row + '<td>';
 
         if ('closed' !== ticket.status && 'resolved' !== ticket.status) {
@@ -87,6 +107,7 @@
         row = row + '</td>';
         row = row + '</tr>';
 
+<<<<<<< HEAD
         // if(idx > 17) {
         //     row = row + '<ul data-paging="roles" class="pagination pagination-sm no-margin pull-right">';
         //     row = row + '<li>';
@@ -101,6 +122,8 @@
         //     row = row + '</ul>';
         // }
 
+=======
+>>>>>>> 590a4345afd62d4d4ea7ffda562b2a8eee65d7af
         return row;
     };
 
@@ -123,9 +146,15 @@
 
         row = row + '<td>' + ticket.category.name +'</td>';
         row = row + '<td>' + ticket.title + '</td>';
+<<<<<<< HEAD
         row = row + '<td>' + createStatusButton(ticket.status) +'</td>';
         row = row + '<td>' + createPriorityButton(ticket.priority) + '</td>';;
         row = row + '<td>' + moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss') + '</td>';
+=======
+        row = row + '<td>' + ticket.status + '</td>';
+        row = row + '<td>' + ticket.priority + '</td>';
+        row = row + '<td>' + ticket.createdAt + '</td>';
+>>>>>>> 590a4345afd62d4d4ea7ffda562b2a8eee65d7af
         row = row + '<td>';
 
         if ('open' === ticket.status || 'assignment' === ticket.status) {
@@ -450,10 +479,17 @@
 
     Bisnis.Helpdesk.Ticket.viewByTicket = function (ticketId) {
         Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+<<<<<<< HEAD
             Bisnis.Util.Document.putHtml('.chatTicketClient', ticket.client.fullname);
             Bisnis.Util.Document.putHtml('.chatTicketCategory', ticket.category.name);
             Bisnis.Util.Document.putHtml('.chatTicketTitle', ticket.title);
             Bisnis.Util.Document.putHtml('.chatTicketDate', moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss'));
+=======
+            Bisnis.putHtml('.chatTicketClient', ticket.client.fullname);
+            Bisnis.putHtml('.chatTicketCategory', ticket.category.name);
+            Bisnis.putHtml('.chatTicketTitle', ticket.title);
+            Bisnis.putHtml('.chatTicketDate', ticket.createdAt);
+>>>>>>> 590a4345afd62d4d4ea7ffda562b2a8eee65d7af
 
             var profileImage = ticket.client.profileImage.split('.');
 
@@ -461,7 +497,11 @@
                 '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
                 ticket.client.fullname,
                 ticket.message,
+<<<<<<< HEAD
                 moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss')
+=======
+                ticket.createdAt
+>>>>>>> 590a4345afd62d4d4ea7ffda562b2a8eee65d7af
             );
 
             Bisnis.Helpdesk.Ticket.fetchReponse(ticket.id, function (ticketResponse) {
@@ -480,7 +520,11 @@
                         '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
                         sender,
                         value.message,
+<<<<<<< HEAD
                         moment(value.createdAt).format('DD-MM-YYYY hh:mm:ss'),
+=======
+                        value.createdAt,
+>>>>>>> 590a4345afd62d4d4ea7ffda562b2a8eee65d7af
                         chat
                     );
                 }, ticketResponse);

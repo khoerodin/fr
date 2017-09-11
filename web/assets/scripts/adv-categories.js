@@ -28,7 +28,12 @@ new BootstrapMenu('#categoriesTree li span', {
     actions: [{
         name: 'TAMBAH',
         onClick: function(data) {
-            $('#addCategory #parent').val('/api/advertising/categories/'+data.id);
+            if (data.id) {
+                $('#addCategory #parent').val('/api/advertising/categories/'+data.id);
+            } else {
+                $('#addCategory #parent').val('');
+            }
+
             $('#addCategory').modal({show: true, backdrop: 'static'});
             $('#addCategory #name').focus();
         }

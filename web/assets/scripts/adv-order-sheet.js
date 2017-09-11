@@ -888,6 +888,7 @@ function getDiscountValue() {
     var biaya = getBiaya() + ppnRp;
 
     diskonRp = unformatMoney($('#discountValue').val());
+    console.log(diskonRp);
     if (!$('#discountValue').val()) {
         diskonRp = parseFloat(0);
     }
@@ -914,6 +915,7 @@ function getDiscountPercentage() {
 
     var diskonRp = (biaya * diskonPersen) / 100;
     $('#discountValue').val(diskonRp);
+
 }
 
 $(document).on('keyup keydown change mouseup', '#discountValue', function () {
@@ -1286,9 +1288,9 @@ function getNetto() {
 $(document).on('blur', '#basePrice', function () {
     var $this = $(this);
     var value = $this.val();
-    //var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="basePrice"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="basePrice"]').val(parseFloat(unformat));
 });
 
 // surcharge / plus discount
@@ -1296,102 +1298,103 @@ $(document).on('blur', '#surchargeValue', function () {
     var $this = $(this);
     var value = $this.val();
 
-    //var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="surchargeValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="surchargeValue"]').val(parseFloat(unformat));
 });
 
 $(document).on('blur', '#surchargePercentage', function () {
     var $this = $('#surchargeValue');
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="surchargeValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="surchargeValue"]').val(parseFloat(unformat));
 });
 
 // discount
 $(document).on('blur', '#discountValue', function () {
     var $this = $(this);
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="discountValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="discountValue"]').val(parseFloat(unformat));
 });
 
 $(document).on('blur', '#discountPercentage', function () {
     var $this = $('#discountValue');
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="discountValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    console.log(unformat)
+    $('[name="discountValue"]').val(parseFloat(unformat));
 });
 
 //min discount
 $(document).on('blur', '#minDiscountPercentage', function () {
     var $this = $('#minDiscountValue');
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="minDiscountValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="minDiscountValue"]').val(parseFloat(unformat));
 });
 
 $(document).on('blur', '#minDiscountValue', function () {
     var $this = $(this);
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="minDiscountValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="minDiscountValue"]').val(parseFloat(unformat));
 });
 
 //npb discount
 $(document).on('blur', '#npbDiscountPercentage', function () {
     var $this = $('#npbDiscountValue');
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="npbDiscountValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="npbDiscountValue"]').val(parseFloat(unformat));
 });
 
 $(document).on('blur', '#minDiscountValue', function () {
     var $this = $(this);
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="npbDiscountValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="npbDiscountValue"]').val(parseFloat(unformat));
 });
 
 // tax
 $(document).on('blur', '#taxValue', function () {
     var $this = $(this);
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="taxValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="taxValue"]').val(parseFloat(unformat));
 });
 
 $(document).on('blur', '#taxPercentage', function () {
     var $this = $('#taxValue');
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="taxValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="taxValue"]').val(parseFloat(unformat));
 });
 
 // cashback
 $(document).on('blur', '#cashBackValue', function () {
     var $this = $(this);
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="cashBackValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="cashBackValue"]').val(parseFloat(unformat));
 });
 
 $(document).on('blur', '#cashBackPercentage', function () {
     var $this = $('#cashBackValue');
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="cashBackValue"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="cashBackValue"]').val(parseFloat(unformat));
 });
 
 
@@ -1399,9 +1402,9 @@ $(document).on('blur', '#cashBackPercentage', function () {
 $(document).on('blur', '#totalAmount', function () {
     var $this = $(this);
     var value = $this.val();
-    // var unformat = value.replace(/\./g,'').replace(/\,/g,'.');
-    $this.val(accounting.formatMoney(value));
-    $('[name="totalAmount"]').val(parseFloat(value));
+    var unformat = unformatMoney(value);
+    $this.val(accounting.formatMoney(unformat));
+    $('[name="totalAmount"]').val(parseFloat(unformat));
 });
 
 $(document).on('change', '#totalAmount', function () {
@@ -1414,14 +1417,21 @@ $(document).on('click', '#hitungMundurBtn', function (e) {
     var ppnRp = totalAmount / 1.1 * 10 /100;
     var basePrice = totalAmount - ppnRp;
 
+    $('#basePrice').val(basePrice);
+    $('[name="basePrice"]').val(basePrice);
+
     $('#taxValue').val(ppnRp);
     $('[name="taxValue"]').val(ppnRp);
 
     $('#taxPercentage').val(10);
 
-    $('#basePrice').val(basePrice);
-    $('[name="basePrice"]').val(basePrice);
     $(this).addClass('hidden');
+
+    $('#netto').text(accounting.formatMoney());
+    $('#nettoRp').val(0);
+    $('#terbilangNetto').text('Nol Rupiah');
+    $('#btn-order').prop('disabled', true).text('KLIK TOMBOL HITUNG');
+    $('#btn-order-update').prop('disabled', true).text('KLIK TOMBOL HITUNG');
 });
 
 // klik tombol hitung
@@ -1442,33 +1452,33 @@ $(document).on(
 
         var tax = $('#taxValue');
         var taxValue = tax.val();
-        // var unformatTax = taxValue.replace(/\./g,'').replace(/\,/g,'.');
-        tax.val(accounting.formatMoney(taxValue));
+        var unformatTax = unformatMoney(taxValue);
+        tax.val(accounting.formatMoney(unformatTax));
 
         var discount = $('#discountValue');
         var discountValue = discount.val();
-        // var unformatDiscount= discountValue.replace(/\./g,'').replace(/\,/g,'.');
-        discount.val(accounting.formatMoney(discountValue));
+        var unformatDiscount = unformatMoney(discountValue);
+        discount.val(accounting.formatMoney(unformatDiscount));
 
         var cashBack = $('#cashBackValue');
         var cashBackValue = cashBack.val();
-        // var unformatCashBack = cashBackValue.replace(/\./g,'').replace(/\,/g,'.');
-        cashBack.val(accounting.formatMoney(cashBackValue));
+        var unformatCashBack = unformatMoney(cashBackValue);
+        cashBack.val(accounting.formatMoney(unformatCashBack));
 
         var surcharge = $('#surchargeValue');
         var surchargeValue = surcharge.val();
-        // var unformatSurcharge = surchargeValue.replace(/\./g,'').replace(/\,/g,'.');
-        surcharge.val(accounting.formatMoney(surchargeValue));
+        var unformatSurcharge = unformatMoney(surchargeValue);
+        surcharge.val(accounting.formatMoney(unformatSurcharge));
 
         var minDiscount = $('#minDiscountValue');
         var minDiscountValue = minDiscount.val();
-        // var unformatMinDiscount = minDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
-        minDiscount.val(accounting.formatMoney(minDiscountValue));
+        var unformatMinDiscount = unformatMoney(minDiscountValue);
+        minDiscount.val(accounting.formatMoney(unformatMinDiscount));
 
         var npbDiscount = $('#npbDiscountValue');
         var npbDiscountValue = npbDiscount.val();
-        // var unformatNpbDiscount = npbDiscountValue.replace(/\./g,'').replace(/\,/g,'.');
-        npbDiscount.val(accounting.formatMoney(npbDiscountValue));
+        var unformatNpbDiscount = unformatMoney(npbDiscountValue);
+        npbDiscount.val(accounting.formatMoney(unformatNpbDiscount));
 
         $('#btn-order').prop('disabled', false).text('SIMPAN');
         $('#btn-order-update').prop('disabled', false).text('SIMPAN');

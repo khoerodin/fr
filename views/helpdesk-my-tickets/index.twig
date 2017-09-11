@@ -11,12 +11,12 @@
     <script type="text/javascript" src="/assets/scripts/Util/Grid.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Category.js"></script>
     <script type="text/javascript" src="/assets/scripts/Notification/Notification.js"></script>
     <script type="text/javascript">
         Bisnis.init(function () {
             Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
             Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#clientTicketPagination');
-            Bisnis.Util.Style.modifySelect('#ticketCategory');
 
             Bisnis.Notification.enableTo('/api/users/{{ me.id }}');
         });
@@ -79,6 +79,19 @@
             Bisnis.Util.Event.triggerClick('#ticketTab .active');
         });
 
+        Bisnis.Util.Event.bind('click', '.addNew', function () {
+            Bisnis.Helpdesk.Category.fetchAll(function (categoryList) {
+                var categoryOption = '<option selected disabled class="text-muted">PILIH TOPIK HELPDESK</option>';
+                Bisnis.each(function (index, value) {
+                    categoryOption = categoryOption + '<option value="/api/helpdesk/categories/' + value.id + '">' + value.name + '</option>';
+                }, categoryList);
+
+                Bisnis.Util.Document.putHtml('#ticketCategory', categoryOption);
+                Bisnis.Util.Style.modifySelect('#ticketCategory');
+                Bisnis.Util.Dialog.showModal('#newTicketModal');
+            });
+        });
+
         Bisnis.Util.Event.bind('click', '#btnSave', function () {
             var clientId = '/api/users/{{ me.id }}';
             var categoryId = Bisnis.Util.Document.getValue('#ticketCategory');
@@ -94,6 +107,7 @@
                     '/api/users/' + clientId,
                     'Tiket ' + title + ' barus saja dibuat.'
                 );
+                Bisnis.succesMessage('Tiket baru berhasil dibuat.');
             });
         });
 
@@ -132,6 +146,7 @@
                             '/api/users/{{ me.id }}',
                             'Tiket ' + ticket.title + ' mendapatkan response baru dari user.'
                         );
+                        Bisnis.succesMessage('Respon terkirim.');
                     });
                 });
             });
@@ -148,6 +163,7 @@
                 if (result) {
                     Bisnis.Helpdesk.Ticket.close(ticketId);
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
+                    Bisnis.succesMessage('Respon berhasil ditutup.');
                 }
             });
         });
@@ -162,7 +178,7 @@
                 </div>
                 <!-- /.box-header -->
     <div class="box-body">
-        <button type="button" data-modal-add="helpdesk/tickets" class="btn btn-danger pull-right add-modal btn-flat" data-toggle="modal" data-target="#newTicketModal" role="dialog" style="width: 150px">Tiket Baru</button>
+        <button type="button" class="btn btn-danger pull-right add-modal btn-flat addNew">Tiket Baru</button>
             <div class="panel with-nav-tabs panel-info">
                 <div class="panel-heading">
                     <ul id="ticketTab" class="nav nav-tabs" role="tablist">
@@ -232,26 +248,18 @@
                     </div>
                 </div>
                 {#end tab content#}
-
-
                     {#ADD MODAL TIKET BARU#}
                     <div class="modal fade" id="newTicketModal" role="dialog">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h4 class="modal-title">Tambah Tiket</h4>
                                 </div>
-
                                 <div class="modal-body">
                                     <form id="formTiket">
                                         <div class="form-group">
                                             <label for="judul">Kategori</label>
                                             <select name="category" class="form-control" id="ticketCategory" style="width: 100%">
-                                                <option selected disabled id="pilih">PILIH KATEGORI</option>
-                                                {% for category in helpdeskCategories %}
-                                                    <option value="/api/helpdesk/categories/{{ category.id }}">{{ category.name }}</option>
-                                                {% endfor %}
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -263,10 +271,7 @@
                                             <textarea name="ticketMessage" placeholder="Masukkan Pesan Anda ..." class="form-control not-ucase" id="ticketMessage" autocomplete="off" maxlength="20000" cols="150" rows="10"></textarea>
                                         </div>
                                     </form>
-
-
                                 </div>
-
                                 <div class="modal-footer">
                                     <div class="col-sm-12">
                                         <div class="row">
@@ -287,47 +292,34 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h4 class="modal-title">Ubah Tiket</h4>
                                 </div>
-
                                 <div class="modal-body">
-
                                     <form id="formTiket">
-
-                                        <input type="hidden" name="id" id="id">
-
                                         <div class="form-group">
                                             <label for="name">Nama</label>
                                             <input type="text" class="form-control" readonly id="name" value="{{ me.fullname }}">
                                             <input type="hidden" value="/api/users/{{ me.id }}" name="client">
                                         </div>
-
                                         <div class="form-group">
                                             <label for="judul">Kategori</label>
                                             <select name="category" class="form-control" id="category" style="width: 100%"></select>
                                         </div>
-
                                         <div class="form-group">
                                             <label for="judul">Judul</label>
                                             <input type="text" class="form-control" id="title" name="title">
 
                                         </div>
-
                                         <div class="form-group">
                                             <label for="email">Email</label>
                                             <input type="email" class="form-control" id="email" readonly value="{{ me.email }}">
                                         </div>
-
                                         <div class="input-group">
                                             <label for="name">Pesan</label>
                                             <textarea name="message" placeholder="Masukkan Pesan Anda ..." class="form-control not-ucase" id="message" autocomplete="off" maxlength="20000" cols="150" rows="10"></textarea>
                                         </div>
                                     </form>
-
-
                                 </div>
-
                                 <div class="modal-footer">
                                     <div class="col-sm-12">
                                         <div class="row">

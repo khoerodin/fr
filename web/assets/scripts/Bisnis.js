@@ -36,6 +36,7 @@
                 }
             },
             error: function (response, textStatus, errorThrown) {
+                Bisnis.errorMessage(response.responseText);
                 if (Bisnis.validCallback(errorCallback)) {
                     errorCallback(response, textStatus, errorThrown);
                 }
@@ -52,6 +53,14 @@
                 return sParameterName[1];
             }
         }
+    };
+
+    Bisnis.errorMessage = function (message) {
+        toastr.error(message);
+    };
+
+    Bisnis.succesMessage = function (message) {
+        toastr.success(message);
     };
 
     /** Module List */

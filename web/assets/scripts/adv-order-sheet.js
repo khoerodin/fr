@@ -1484,19 +1484,20 @@ $(document).on(
         $('#btn-order-update').prop('disabled', false).text('SIMPAN');
 });
 
-$(document).on(
+/*$(document).on(
     'keyup keydown change mouseup',
     '#columnSize, #milimeterSize, #totalPost, ' +
-    '#basePrice, #discountValue, #discountPercentage, ' +
-    '#taxValue, #taxPercentage, #quantity, ' +
-    '#cashBackValue, #cashBackPercentage, ' +
+    '#basePrice, #discountPercentage, ' +
+    '#taxPercentage, #quantity, ' +
+    '#cashBackPercentage, ' +
     'input[name="jenisIklan"], #specification',
     function () {
-        $('#netto').text(accounting.formatMoney());
+        $('#netto').text('-');
         $('#nettoRp').val(0);
         $('#btn-order').prop('disabled', true).text('KLIK TOMBOL HITUNG');
         $('#btn-order-update').prop('disabled', true).text('KLIK TOMBOL HITUNG');
-    });
+        $('#terbilangNetto').text('Klik tombol hitung');
+    });*/
 
 // fungsi terbilang rupiah indonesia
 function terbilang(input, output){

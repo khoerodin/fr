@@ -44,7 +44,11 @@
         })();
 
         Bisnis.init(function () {
-            Bisnis.Notification.enableTo('/api/users/{{ me.id }}', '.notification');
+            Bisnis.Notification.enableTo('/api/users/{{ me.id }}', '.notification', function () {
+                Bisnis.Util.Dialog.hideModal('.modal');
+                window.focus();
+                Bisnis.Util.Event.triggerClick('a.notif_notification');
+            });
 
             Bisnis.Util.Event.bind('click', 'a.notif_notification', function () {
                 Bisnis.Notification.unread('/api/users/{{ me.id }}', function (notifications) {

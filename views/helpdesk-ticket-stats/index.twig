@@ -1,0 +1,42 @@
+{% extends 'layout.twig' %}
+
+{% block js %}
+
+    <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Style.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Chart.js"></script>
+    <script type="text/javascript" src="/assets/scripts/User/User.js"></script>
+
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.js"></script>#}
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>#}
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>#}
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>#}
+
+
+{% endblock %}
+
+{%- block content -%}
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+
+        <!-- import plugin script -->
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+    </head>
+    <body>
+    <!-- line chart canvas element -->
+    <canvas id="statusTicket" width="600" height="400"></canvas>
+    <!-- pie chart canvas element -->
+    <canvas id="countries" width="600" height="400"></canvas>
+    <!-- bar chart canvas element -->
+    <canvas id="income" width="600" height="400"></canvas>
+
+    </body>
+    </html>
+
+{%- endblock -%}

@@ -445,6 +445,7 @@ function detail(module,id) {
                                     var select = '';
                                     var arr = JSON.parse(data);
                                     $.each(arr, function (indeks, velyu) {
+                                        console.log(indeks)
                                         if (indeks === 'hydra:member') {
 
                                             $.each(velyu, function (ind, valu) {

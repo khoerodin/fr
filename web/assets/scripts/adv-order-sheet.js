@@ -887,8 +887,7 @@ function getDiscountValue() {
 
     var biaya = getBiaya() + ppnRp;
 
-    diskonRp = unformatMoney($('#discountValue').val());
-    console.log(diskonRp);
+    diskonRp = $('#discountValue').val();
     if (!$('#discountValue').val()) {
         diskonRp = parseFloat(0);
     }
@@ -924,7 +923,8 @@ $(document).on('keyup keydown change mouseup', '#discountValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#discountPercentage', function () {
-    $('#hitung').click();
+    getDiscountPercentage();
+    getJumlahBayar();
 });
 
 // menghitung plus diskon dalam %
@@ -975,7 +975,8 @@ $(document).on('keyup keydown change mouseup', '#surchargeValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#surchargePercentage', function () {
-    $('#hitung').click();
+    getSurchargePercentage();
+    getJumlahBayar();
 });
 
 // menghitung min diskon dalam %
@@ -1026,7 +1027,8 @@ $(document).on('keyup keydown change mouseup', '#minDiscountValue', function () 
 });
 
 $(document).on('keyup keydown change mouseup', '#minDiscountPercentage', function () {
-    $('#hitung').click();
+    getMinDiscountPercentage();
+    getJumlahBayar();
 });
 
 // menghitung npb diskon dalam %
@@ -1077,7 +1079,8 @@ $(document).on('keyup keydown change mouseup', '#npbDiscountValue', function () 
 });
 
 $(document).on('keyup keydown change mouseup', '#npbDiscountPercentage', function () {
-    $('#hitung').click();
+    getNpbDiscountPercentage();
+    getJumlahBayar();
 });
 
 // hitung pajak %
@@ -1112,7 +1115,8 @@ $(document).on('keyup keydown change mouseup', '#taxValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#taxPercentage', function () {
-    $('#hitung').click();
+    getTaxPercentage();
+    getJumlahBayar();
 });
 
 // hitung cahsback %
@@ -1201,7 +1205,8 @@ $(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
 });
 
 $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function () {
-    $('#hitung').click();
+    getCashBackPercentage();
+    getJumlahBayar();
 });
 
 // ambil diskon
@@ -1279,7 +1284,7 @@ function getNetto() {
     var netto = getJumlahBayar() * quantity;
 
     $('#netto').text('Rp ' + accounting.formatMoney(netto));
-    $('#nettoRp').val(netto);
+    $('#nettoRp').val(netto.toFixed());
 
     terbilang('nettoRp', 'terbilangNetto');
 }
@@ -1325,7 +1330,6 @@ $(document).on('blur', '#discountPercentage', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    console.log(unformat)
     $('[name="discountValue"]').val(parseFloat(unformat));
 });
 
@@ -1411,21 +1415,34 @@ $(document).on('change', '#totalAmount', function () {
     $('#hitungMundurBtn').removeClass('hidden');
 });
 
-$(document).on('click', '#hitungMundurBtn', function (e) {
-    e.preventDefault();
+function hitungMundur() {
     var totalAmount =  parseFloat($('[name="totalAmount"]').val());
     var ppnRp = totalAmount / 1.1 * 10 /100;
     var basePrice = totalAmount - ppnRp;
 
-    $('#basePrice').val(basePrice);
-    $('[name="basePrice"]').val(basePrice);
+    $('#basePrice').val(basePrice.toFixed());
+    $('[name="basePrice"]').val(basePrice.toFixed());
 
-    $('#taxValue').val(ppnRp);
-    $('[name="taxValue"]').val(ppnRp);
-
+    $('#taxValue').val(ppnRp.toFixed());
+    $('[name="taxValue"]').val(ppnRp.toFixed());
     $('#taxPercentage').val(10);
 
+    var newTotalAmount = $('[name="totalAmount"]').val();
+
+    var trueTotalAmount = totalAmount;
+    if (trueTotalAmount > newTotalAmount) {
+        $('#surchargeValue').val(accounting.formatMoney(trueTotalAmount - newTotalAmount));
+    }
+
+    if (newTotalAmount > trueTotalAmount ) {
+        $('#minDiscountValue').val(accounting.formatMoney(newTotalAmount - trueTotalAmount));
+    }
+}
+$(document).on('click', '#hitungMundurBtn', function (e) {
+    e.preventDefault();
+    hitungMundur();
     $(this).addClass('hidden');
+    $('#hitung').click();
 
     $('#netto').text(accounting.formatMoney());
     $('#nettoRp').val(0);
@@ -1440,45 +1457,45 @@ $(document).on(
     function (e) {
         e.preventDefault();
 
-        getTaxPercentage();
-        getDiscountPercentage();
-        getCashBackPercentage();
-
-        getSurchargePercentage();
-        getMinDiscountPercentage();
-        getNpbDiscountPercentage();
+        // getTaxPercentage();
+        // getDiscountPercentage();
+        // getCashBackPercentage();
+        //
+        // getSurchargePercentage();
+        // getMinDiscountPercentage();
+        // getNpbDiscountPercentage();
 
         getNetto();
 
-        var tax = $('#taxValue');
-        var taxValue = tax.val();
-        var unformatTax = unformatMoney(taxValue);
-        tax.val(accounting.formatMoney(unformatTax));
+        // var tax = $('#taxValue');
+        // var taxValue = tax.val();
+        // var unformatTax = unformatMoney(taxValue);
+        // tax.val(accounting.formatMoney(unformatTax));
 
-        var discount = $('#discountValue');
-        var discountValue = discount.val();
-        var unformatDiscount = unformatMoney(discountValue);
-        discount.val(accounting.formatMoney(unformatDiscount));
+        // var discount = $('#discountValue');
+        // var discountValue = discount.val();
+        // var unformatDiscount = unformatMoney(discountValue);
+        // discount.val(accounting.formatMoney(unformatDiscount));
 
-        var cashBack = $('#cashBackValue');
-        var cashBackValue = cashBack.val();
-        var unformatCashBack = unformatMoney(cashBackValue);
-        cashBack.val(accounting.formatMoney(unformatCashBack));
-
-        var surcharge = $('#surchargeValue');
-        var surchargeValue = surcharge.val();
-        var unformatSurcharge = unformatMoney(surchargeValue);
-        surcharge.val(accounting.formatMoney(unformatSurcharge));
-
-        var minDiscount = $('#minDiscountValue');
-        var minDiscountValue = minDiscount.val();
-        var unformatMinDiscount = unformatMoney(minDiscountValue);
-        minDiscount.val(accounting.formatMoney(unformatMinDiscount));
-
-        var npbDiscount = $('#npbDiscountValue');
-        var npbDiscountValue = npbDiscount.val();
-        var unformatNpbDiscount = unformatMoney(npbDiscountValue);
-        npbDiscount.val(accounting.formatMoney(unformatNpbDiscount));
+        // var cashBack = $('#cashBackValue');
+        // var cashBackValue = cashBack.val();
+        // var unformatCashBack = unformatMoney(cashBackValue);
+        // cashBack.val(accounting.formatMoney(unformatCashBack));
+        //
+        // var surcharge = $('#surchargeValue');
+        // var surchargeValue = surcharge.val();
+        // var unformatSurcharge = unformatMoney(surchargeValue);
+        // surcharge.val(accounting.formatMoney(unformatSurcharge));
+        //
+        // var minDiscount = $('#minDiscountValue');
+        // var minDiscountValue = minDiscount.val();
+        // var unformatMinDiscount = unformatMoney(minDiscountValue);
+        // minDiscount.val(accounting.formatMoney(unformatMinDiscount));
+        //
+        // var npbDiscount = $('#npbDiscountValue');
+        // var npbDiscountValue = npbDiscount.val();
+        // var unformatNpbDiscount = unformatMoney(npbDiscountValue);
+        // npbDiscount.val(accounting.formatMoney(unformatNpbDiscount));
 
         $('#btn-order').prop('disabled', false).text('SIMPAN');
         $('#btn-order-update').prop('disabled', false).text('SIMPAN');
@@ -2270,9 +2287,9 @@ $('#printInvoiceAs').on('select2:close', function () {
     $("#orderTag").select2('open');
 });
 
-$('#orderTag').on('select2:close', function () {
-    $("#orderFrom").select2('open');
-});
+// $('#orderTag').on('select2:close', function () {
+//     $("#orderFrom").select2('open');
+// });
 
 $('#orderTag').select2({
     tags: true,

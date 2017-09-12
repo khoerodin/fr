@@ -16,7 +16,8 @@
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-
+                    <li class="dropdown messages-menu notification">
+                    </li>
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -52,4 +53,69 @@
             </div>
         </nav>
     </header>
+
+    <div class="modal fade" id="notificationModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Notifikasi</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped table-bordered table-hover tableTicket">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Topik</th>
+                                    <th>Pesan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                                </thead >
+                                <tbody id="notificationBody">
+                                <tr>
+                                    <td colspan="5">LOADING DATA...</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger" id="notificationReadAll">Tandai Telah Dibaca</button>
+                                <button type="button" class="btn btn-default" id="notificationClose">Tutup</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="notificationDetail" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title notificationDetailTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 notificationDetailBody"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" id="notificationDetailClose">Tutup</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {%- endspaceless -%}

@@ -5,34 +5,105 @@
     </footer>
     <!-- ./wrapper -->
     <!-- jQuery 2.2.3 -->
-    <script src="/assets/jquery/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="/assets/jquery/jquery-2.2.3.min.js"></script>
     <!-- Bootstrap 3.3.6 -->
-    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/assets/moment/moment.js"></script>
-    <script src="/assets/moment/moment-range.js"></script>
+    <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/assets/moment/moment.js"></script>
+    <script type="text/javascript" src="/assets/moment/moment-range.js"></script>
     <script>
         window['moment-range'].extendMoment(moment);
     </script>
-    <script src="/assets/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
-    <script src="/assets/bootstrap-datetimepicker/id.js"></script>
+    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/id.js"></script>
 
-    <script src="/assets/datepicker/js/bootstrap-datepicker.min.js"></script>
-    <script src="/assets/datepicker/locales/bootstrap-datepicker.id.min.js"></script>
+    <script type="text/javascript" src="/assets/datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="/assets/datepicker/locales/bootstrap-datepicker.id.min.js"></script>
 
     <!-- FastClick -->
-    <script src="/assets/fastclick/fastclick.js"></script>
+    <script type="text/javascript" src="/assets/fastclick/fastclick.js"></script>
     <!-- AdminLTE App -->
-    <script src="/assets/adminlte/js/app.js"></script>
-    <script src="/assets/scripts/scripts.js"></script>
+    <script type="text/javascript" src="/assets/adminlte/js/app.js"></script>
+    <script type="text/javascript" src="/assets/scripts/scripts.js"></script>
 
-    <script src="/assets/select2/js/select2.full.min.js"></script>
-    <script src="/assets/bootstrap-toggle/bootstrap-toggle.min.js"></script>
-    <script src="/assets/toastr/toastr.min.js"></script>
-    <script src="/assets/bootbox/bootbox.min.js"></script>
+    <script type="text/javascript" src="/assets/select2/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="/assets/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+    <script type="text/javascript" src="/assets/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="/assets/bootbox/bootbox.min.js"></script>
+    <script type="text/javascript" src="/assets/bootbox/bootbox.min.js"></script>
+    <script type="text/javascript" src="/assets/notification/push_notification.min.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Document.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Event.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Grid.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Notification/Notification.js"></script>
     <script>
         (function() {
             jQuery('li.treeview:has(ul.treeview-menu li)').removeClass('hidden');
             jQuery('ul.treeview-menu:has(ul.treeview-menu li)').removeClass('hidden');
         })();
+
+        Bisnis.init(function () {
+            Bisnis.Notification.enableTo('/api/users/{{ me.id }}', '.notification');
+
+            Bisnis.Util.Event.bind('click', 'a.notif_notification', function () {
+                Bisnis.Notification.unread('/api/users/{{ me.id }}', function (notifications) {
+                    var records = [];
+                    Bisnis.each(function (idx, notification) {
+                        records.push([
+                            {
+                                value: notification.domain
+                            },
+                            {
+                                value: notification.message
+                            },
+                            {
+                                value: null,
+                                format: function () {
+                                    return '<button data-id="' + notification.id + '" class="btn btn-warning readNotification" title="Baca"><i class="fa fa-envelope-o"></i></button>';
+                                }
+                            }
+                        ]);
+                    }, notifications);
+
+                    Bisnis.Util.Grid.renderRecords('#notificationBody', records);
+
+                    Bisnis.Util.Dialog.showModal('#notificationModal');
+                });
+            });
+
+            Bisnis.Util.Event.bind('click', '#notificationClose', function () {
+                Bisnis.Util.Dialog.hideModal('#notificationModal');
+            });
+
+            Bisnis.Util.Event.bind('click', '#notificationDetailClose', function () {
+                Bisnis.Util.Dialog.hideModal('#notificationDetail');
+                Bisnis.Util.Event.triggerClick('a.notif_notification');
+            });
+
+            Bisnis.Util.Event.bind('click', '.readNotification', function () {
+                var that = this;
+                Bisnis.Notification.fetch(Bisnis.Util.Document.getDataValue(that, 'id'), function (notification) {
+                    Bisnis.Notification.read(notification.id, function () {
+                        Bisnis.Util.Document.putHtml('.notificationDetailTitle', notification.domain);
+                        Bisnis.Util.Document.putHtml('.notificationDetailBody', notification.message);
+
+                        Bisnis.Util.Event.triggerClick('#notificationClose');
+                        Bisnis.Util.Dialog.showModal('#notificationDetail');
+                    });
+                });
+            });
+
+            Bisnis.Util.Event.bind('click', '#notificationReadAll', function () {
+                Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Tandai semua telah dibaca?', function (result) {
+                    if (result) {
+                        Bisnis.Notification.readAll('{{ me.id }}', function () {
+                            Bisnis.Util.Event.triggerClick('#notificationClose');
+                            Bisnis.Util.Document.putHtml('.notification', '');
+                        });
+                    }
+                });
+            });
+        });
     </script>
 {%- endspaceless -%}

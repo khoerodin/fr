@@ -50,11 +50,12 @@
                 rowTable = rowTable + '<tr data-idx="' + idx + '">';
             }
 
+            rowTable = rowTable + '<td>' + (idx + 1) + '</td>';
             rowTable = rowTable + columnRenderer(row);
             rowTable = rowTable + '</tr>';
         }, records);
 
-        Bisnis.putHtml(rowTable, rowTable);
+        Bisnis.Util.Document.putHtml(selector, rowTable);
     };
 
     Bisnis.Util.Grid.createPagination = function (selector, last, current) {

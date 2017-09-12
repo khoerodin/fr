@@ -88,6 +88,20 @@
         });
     };
 
+    Bisnis.Notification.fetch = function(notificationId, callback) {
+        Bisnis.request({
+            module: 'notifications/' + notificationId,
+            method: 'get',
+            params: []
+        }, function (response) {
+            if (Bisnis.validCallback(callback)) {
+                callback(JSON.parse(response));
+            }
+        }, function () {
+            console.log('KO');
+        });
+    };
+
     Bisnis.Notification.notify = function(notificationId, callback) {
         Bisnis.request({
             module: 'notifications/' + notificationId,

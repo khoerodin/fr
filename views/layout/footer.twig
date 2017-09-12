@@ -60,7 +60,7 @@
                             {
                                 value: null,
                                 format: function () {
-                                    return '<button class="btn btn-warning" title="Baca"><i class="fa fa-envelope-o"></i></button>';
+                                    return '<button data-id="' + notification.id + '" class="btn btn-warning readNotification" title="Baca"><i class="fa fa-envelope-o"></i></button>';
                                 }
                             }
                         ]);
@@ -74,6 +74,24 @@
 
             Bisnis.Util.Event.bind('click', '#notificationClose', function () {
                 Bisnis.Util.Dialog.hideModal('#notificationModal');
+            });
+
+            Bisnis.Util.Event.bind('click', '#notificationDetailClose', function () {
+                Bisnis.Util.Dialog.hideModal('#notificationDetail');
+                Bisnis.Util.Event.triggerClick('a.notif_notification');
+            });
+
+            Bisnis.Util.Event.bind('click', '.readNotification', function () {
+                var that = this;
+                Bisnis.Notification.fetch(Bisnis.Util.Document.getDataValue(that, 'id'), function (notification) {
+                    Bisnis.Notification.read(notification.id, function () {
+                        Bisnis.Util.Document.putHtml('.notificationDetailTitle', notification.domain);
+                        Bisnis.Util.Document.putHtml('.notificationDetailBody', notification.message);
+
+                        Bisnis.Util.Event.triggerClick('#notificationClose');
+                        Bisnis.Util.Dialog.showModal('#notificationDetail');
+                    });
+                });
             });
 
             Bisnis.Util.Event.bind('click', '#notificationReadAll', function () {

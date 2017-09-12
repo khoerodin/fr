@@ -1,5 +1,28 @@
 (function (Bisnis) {
 
+    var arrayStatus = [
+        0,
+        0,
+        0,
+        0,
+        0
+    ];
+
+    var arrayMonth = [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ];
+
     //STATUS OPEN
     function statusOpen(callback) {
         $.ajax({
@@ -24,12 +47,6 @@
             }
         });
 
-    }
-
-    function open() {
-        statusOpen(function(d) {
-            return d;
-        });
     }
 
     //STATUS ASSIGNMENT
@@ -58,12 +75,6 @@
 
     }
 
-    function assignment() {
-        statusAssignment(function(d) {
-            return d;
-        });
-    }
-
     //STATUS ON PROGRESS
     function statusOnProgress(callback) {
         $.ajax({
@@ -88,12 +99,6 @@
             }
         });
 
-    }
-
-    function onprogress() {
-        statusOnProgress(function(d) {
-            return d;
-        });
     }
 
     //STATUS RESOLVED
@@ -122,12 +127,6 @@
 
     }
 
-    function resolved() {
-        statusResolved(function(d) {
-            return d;
-        });
-    }
-
     //STATUS CLOSED
     function statusClosed(callback) {
         $.ajax({
@@ -154,100 +153,137 @@
 
     }
 
-    function closed() {
-        statusClosed(function(d) {
-            return d;
+    statusOpen(function (totalOpen) {
+       arrayStatus[0] = totalOpen;
+       statusClosed(function (totalClosed) {
+           arrayStatus[4] = totalClosed;
+           statusAssignment(function (totalAssignment) {
+               arrayStatus[1] = totalAssignment;
+               statusResolved(function (totalResolved) {
+                   arrayStatus[3] = totalResolved;
+                   statusOnProgress(function (totalOnProgress) {
+                       arrayStatus[2] = totalOnProgress;
+
+                       // ---------------- STATUS TICKET (LINE CHART) ---------------------------
+                            var dataStatus = {
+                                label: 'Status Tiket',
+                                labels: ["Open", "Assignment", "On Progress", "Resolved", "Closed"],
+                                datasets: [
+                                    {
+                                        fillColor: "rgba(99, 151, 207, 1)",
+                                        strokeColor: "#145293",
+                                        pointColor: "#fff",
+                                        pointStrokeColor: "#11457d",
+                                        // data : [203,156,99,251,305,247]
+                                        data: [
+                                            arrayStatus[0],
+                                            arrayStatus[1],
+                                            arrayStatus[2],
+                                            arrayStatus[3],
+                                            arrayStatus[4]
+                                            // 43,10,1,4,6
+                                        ]
+                                    }
+                                ]
+                            }
+                                       // get line chart canvas
+                                       var statusTicket = document.getElementById('statusTicket').getContext('2d');
+                                        // draw line chart
+                                      new Chart(statusTicket).Line(dataStatus);
+
+                            // ------------ END STATUS TICKET (LINE CHART) -----------------------
+
+
+                       })
+                   })
+               })
+           })
+       });
+
+    //BERDASARKAN WAKTU
+    function createdAtChart(callback) {
+        $.ajax({
+            url: '/api',
+            type: 'POST',
+            data: {
+                module: 'helpdesk/tickets',
+                method: 'get',
+                params: [
+                    {
+                        value : 'createdAt'
+                    }
+                ]
+            },
+            success: function (data, textStatus, jqXHR) {
+
+                var data = JSON.parse(data);
+                var finalData = data['hydra:member'];
+
+                $.each(finalData, function (index, value) {
+
+                    var d = moment(value.createdAt).month(); // 8
+
+                    console.log(d);
+                    if(callback) callback(d)
+
+                });
+            }
         });
+
     }
+    createdAtChart(function (totalTime) {
 
-    var arrayStatus = [
-        open,
-        assignment,
-        onprogress,
-        resolved,
-        closed
-    ];
-    
-// ----------------------------- STATUS TICKET (LINE CHART) ---------------------------
-
-
-var dataStatus = {
-    labels : ["Open","Assignment","On Progress","Resolved","Closed"],
-    datasets : [
-        {
-            fillColor : "rgba(172,194,132,0.4)",
-            strokeColor : "#ACC26D",
-            pointColor : "#fff",
-            pointStrokeColor : "#9DB86D",
-            // data : [203,156,99,251,305,247]
-            data : [
-                arrayStatus[0](), //open(),
-                arrayStatus[1](), //assignment(),
-                arrayStatus[2](), //onprogress(),
-                arrayStatus[3](), //resolved(),
-                arrayStatus[4]() //closed()
-                // 43,10,1,4,6
+        arrayMonth[0] = totalTime;
+        arrayMonth[1] = totalTime;
+        arrayMonth[2] = totalTime;
+        arrayMonth[3] = totalTime;
+        arrayMonth[4] = totalTime;
+        arrayMonth[5] = totalTime;
+        arrayMonth[6] = totalTime;
+        arrayMonth[7] = totalTime;
+        arrayMonth[8] = totalTime;
+        arrayMonth[9] = totalTime;
+        arrayMonth[10] = totalTime;
+        arrayMonth[11] = totalTime;
+        // ----------------------------- STATISTIK BERDASARKAN WAKTU TAMBAH TICKET (BAR CHART) ---------------------------
+        var barData = {
+            labels : ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"],
+            datasets : [
+                {
+                    fillColor : "#145293",
+                    strokeColor : "#11457d",
+                    data : [
+                        arrayMonth[0],
+                        arrayMonth[1],
+                        arrayMonth[2],
+                        arrayMonth[3],
+                        arrayMonth[4],
+                        arrayMonth[5],
+                        arrayMonth[6],
+                        arrayMonth[7],
+                        arrayMonth[8],
+                        arrayMonth[9],
+                        arrayMonth[10],
+                        arrayMonth[11]
+                    ]
+                }//,
+                // {
+                //     fillColor : "rgba(73,188,170,0.4)",
+                //     strokeColor : "rgba(72,174,209,0.4)",
+                //     data : [364,504,605,400,345,320]
+                // }
             ]
         }
-    ]
-};
-// get line chart canvas
-var statusTicket = document.getElementById('statusTicket').getContext('2d');
-// draw line chart
-new Chart(statusTicket).Line(dataStatus);
-// ----------------------------- END STATUS TICKET (LINE CHART) ---------------------------
-
-// ----------------------------- STATISTIK TIKET BERDASARKAN CLIENT (PIE CHART) ---------------------------
-var pieData = [
-    {
-        value: 20,
-        color:"#878BB6"
-    },
-    {
-        value : 40,
-        color : "#4ACAB4"
-    },
-    {
-        value : 10,
-        color : "#FF8153"
-    },
-    {
-        value : 30,
-        color : "#FFEA88"
-    }
-];
-// pie chart options
-var pieOptions = {
-    segmentShowStroke : false,
-    animateScale : true
-}
-// get pie chart canvas
-var countries= document.getElementById("countries").getContext("2d");
-// draw pie chart
-new Chart(countries).Pie(pieData, pieOptions);
-// ----------------------------- END STATISTIK TIKET BERDASARKAN CLIENT (PIE CHART) ---------------------------
-
-
-// ----------------------------- STATISTIK BERDASARKAN WAKTU TAMBAH TICKET (BAR CHART) ---------------------------
-var barData = {
-    labels : ["January","February","March","April","May","June"],
-    datasets : [
-        {
-            fillColor : "#48A497",
-            strokeColor : "#48A4D1",
-            data : [456,479,324,569,702,600]
-        },
-        {
-            fillColor : "rgba(73,188,170,0.4)",
-            strokeColor : "rgba(72,174,209,0.4)",
-            data : [364,504,605,400,345,320]
-        }
-    ]
-}
 // get bar chart canvas
-var income = document.getElementById("income").getContext("2d");
+        var createdTicket = document.getElementById("createdTicket").getContext("2d");
 // draw bar chart
-new Chart(income).Bar(barData);
+        new Chart(createdTicket).Bar(barData);
 // ----------------------------- END STATISTIK BERDASARKAN WAKTU TAMBAH TICKET (BAR CHART) ---------------------------
+    });
+
+
+
+
+
 
 })(window.Bisnis || {});

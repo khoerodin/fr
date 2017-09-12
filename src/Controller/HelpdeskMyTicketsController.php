@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mispc3
- * Date: 31/07/17
- * Time: 10:37
- */
 
 namespace Bisnis\Controller;
 
@@ -18,7 +12,7 @@ class HelpdeskMyTicketsController extends AdminController
             'title' => 'TiketKu',
         ];
 
-        $admin = $this->request('users', 'get', ['username' => 'daniel']);
+        $admin = $this->request('users', 'get', ['username' => 'aden']);
         $admin = json_decode($admin->getContent(), true)['hydra:member'];
 
         $data = [

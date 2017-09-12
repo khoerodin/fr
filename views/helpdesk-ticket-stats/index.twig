@@ -15,28 +15,27 @@
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>#}
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>#}
 
-
 {% endblock %}
 
 {%- block content -%}
 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-
         <!-- import plugin script -->
         <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
-    </head>
-    <body>
-    <!-- line chart canvas element -->
-    <canvas id="statusTicket" width="600" height="400"></canvas>
-    <!-- pie chart canvas element -->
-    <canvas id="countries" width="600" height="400"></canvas>
-    <!-- bar chart canvas element -->
-    <canvas id="income" width="600" height="400"></canvas>
 
-    </body>
-    </html>
+    <div class="row">
+    <div class="col-md-12">
+
+        <!-- line chart canvas element -->
+        <canvas id="statusTicket" width="600" height="400"></canvas>
+
+    </div>
+    <br><br>
+
+    <div class="col-md-12">
+            <!-- bar chart canvas element -->
+            <canvas id="createdTicket" width="600" height="400"></canvas>
+    </div>
+    <br><br>
+    </div>
 
 {%- endblock -%}

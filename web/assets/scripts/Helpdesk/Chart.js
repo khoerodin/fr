@@ -190,6 +190,7 @@
                                        var statusTicket = document.getElementById('statusTicket').getContext('2d');
                                         // draw line chart
                                       new Chart(statusTicket).Line(dataStatus);
+                                        // Chart.destroy();
 
                             // ------------ END STATUS TICKET (LINE CHART) -----------------------
 
@@ -200,7 +201,7 @@
            })
        });
 
-    //BERDASARKAN WAKTU
+    //BERDASARKAN BULAN BUAT TIKET
     function createdAtChart(callback) {
         $.ajax({
             url: '/api',
@@ -219,32 +220,45 @@
                 var data = JSON.parse(data);
                 var finalData = data['hydra:member'];
 
-                $.each(finalData, function (index, value) {
-
-                    var d = moment(value.createdAt).month(); // 8
-
-                    console.log(d);
-                    if(callback) callback(d)
-
-                });
+                if (finalData.length > 0) {
+                    var total = 1;
+                    $.each(finalData, function (index, value) {
+                        var d = moment(value.createdAt).month(); // 8
+                        total++;
+                        // console.log('bulan',d,', jumlah data =',no);
+                        if (callback) callback(d, total)
+                    });
+                }
             }
         });
 
     }
-    createdAtChart(function (totalTime) {
-
-        arrayMonth[0] = totalTime;
-        arrayMonth[1] = totalTime;
-        arrayMonth[2] = totalTime;
-        arrayMonth[3] = totalTime;
-        arrayMonth[4] = totalTime;
-        arrayMonth[5] = totalTime;
-        arrayMonth[6] = totalTime;
-        arrayMonth[7] = totalTime;
-        arrayMonth[8] = totalTime;
-        arrayMonth[9] = totalTime;
-        arrayMonth[10] = totalTime;
-        arrayMonth[11] = totalTime;
+    createdAtChart(function (bulan, jml) {
+        if(bulan === 0){
+            arrayMonth[0] = jml;
+        } else if(bulan === 1){
+            arrayMonth[1] = jml;
+        } else if(bulan === 2){
+            arrayMonth[2] = jml;
+        } else if(bulan === 3){
+            arrayMonth[3] = jml;
+        } else if(bulan === 4){
+            arrayMonth[4] = jml;
+        } else if(bulan === 5){
+            arrayMonth[5] = jml;
+        } else if(bulan === 6){
+            arrayMonth[6] = jml;
+        } else if(bulan === 7){
+            arrayMonth[7] = jml;
+        } else if(bulan === 8){
+            arrayMonth[8] = jml;
+        } else if(bulan === 9){
+            arrayMonth[9] = jml;
+        } else if(bulan === 10){
+            arrayMonth[10] = jml;
+        } else if(bulan === 11){
+            arrayMonth[11] = jml;
+        }
         // ----------------------------- STATISTIK BERDASARKAN WAKTU TAMBAH TICKET (BAR CHART) ---------------------------
         var barData = {
             labels : ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"],
@@ -278,12 +292,9 @@
         var createdTicket = document.getElementById("createdTicket").getContext("2d");
 // draw bar chart
         new Chart(createdTicket).Bar(barData);
+        // Chart.destroy();
 // ----------------------------- END STATISTIK BERDASARKAN WAKTU TAMBAH TICKET (BAR CHART) ---------------------------
     });
-
-
-
-
 
 
 })(window.Bisnis || {});

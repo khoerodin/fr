@@ -230,7 +230,7 @@
             renderGrid(ticketList, renderTo, useMe);
 
             Bisnis.each(function (index, ticket) {
-                Bisnis.Helpdesk.Ticket.hasUnreadResponse(ticket.id, function (response) {
+                Bisnis.Helpdesk.Ticket.hasUnreadResponse(ticket.id, params, function (response) {
                     if (0 < response.length) {
                         Bisnis.Util.Style.bold('.' + ticket.id);
                     }
@@ -255,11 +255,20 @@
         });
     };
 
-    Bisnis.Helpdesk.Ticket.hasUnreadResponse = function (ticketId, callback) {
+    Bisnis.Helpdesk.Ticket.hasUnreadResponse = function (ticketId, filter, callback) {
+        params = {
+            'ticket.id': ticketId,
+            'read': false
+        };
+
+        if ('undefined' !== typeof filter) {
+            params = Object.assign(params, filter);
+        }
+
         Bisnis.request({
             module: 'helpdesk/ticket-responses',
             method: 'get',
-            params: [{'ticket.id': ticketId, 'read': false}]
+            params: [params]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
                 var rawData = JSON.parse(response);

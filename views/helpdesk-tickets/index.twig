@@ -1,17 +1,10 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script type="text/javascript" src="/assets/notification/push_notification.min.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Style.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Document.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Event.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Grid.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Notification/Notification.js"></script>
     <script type="text/javascript">
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
             if (0 < staff.length) {
@@ -19,8 +12,6 @@
                 Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
                 Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id, parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#staffTicketPagination');
             }
-
-            Bisnis.Notification.enableTo('/api/users/{{ me.id }}');
         }));
 
         Bisnis.Util.Event.bind('click', '.allTickets', function () {
@@ -457,7 +448,7 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Ticket Detail</h4>
+                                    <h4 class="modal-title">Detil Tiket</h4>
                                 </div>
                                 <div class="modal-body"> <!-- start modal -->
                                     <div class="row">
@@ -498,7 +489,7 @@
                                                     <div class="input-group">
                                                         <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200" style="width: 99%">
                                                         <span class="input-group-btn">
-                                                            <button type="button" class="btn btn-primary btn-flat" id="sendResponse">Send</button>
+                                                            <button type="button" class="btn btn-primary btn-flat" id="sendResponse">Kirim</button>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -512,9 +503,9 @@
 
                                 </div> <!-- end modal -->
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary pull-left" data-dismiss="modal" id="onprogressModalDetail">Mark Work On Progress</button>
-                                    <button type="button" class="btn btn-success pull-left" data-dismiss="modal" id="resolveModalDetail">Resolve</button>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalDetail">Close</button>
+                                    <button type="button" class="btn btn-primary pull-left" data-dismiss="modal" id="onprogressModalDetail">Tandai Sedang Dikerjakan</button>
+                                    <button type="button" class="btn btn-success pull-left" data-dismiss="modal" id="resolveModalDetail">Selesai</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalDetail">Tutup</button>
                                 </div>
                             </div>
                         </div>
@@ -529,7 +520,7 @@
                                         <div class="box-body row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="judul">Pilih Staff</label>
+                                                    <label for="judul">Pilih Staf</label>
                                                     <select name="staff" class="form-control" id="staff" style="width: 100%"></select>
                                                 </div>
                                             </div>
@@ -538,8 +529,8 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-flat btn-danger" id="assignTo">Assign Ticket</button>
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Tutup</button>
+                                    <button type="button" class="btn btn-flat btn-danger" id="assignTo">Delegasikan</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -570,7 +561,7 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Tutup</button>
                                     <button type="button" class="btn btn-flat btn-danger" id="changePriority">Ubah Prioritas</button>
                                 </div>
                             </div><!-- /.modal-content -->

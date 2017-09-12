@@ -36,7 +36,7 @@
                 }
             },
             error: function (response, textStatus, errorThrown) {
-                Bisnis.errorMessage(response.responseText);
+                Bisnis.errorMessage('Server bermasalah.');
                 if (Bisnis.validCallback(errorCallback)) {
                     errorCallback(response, textStatus, errorThrown);
                 }

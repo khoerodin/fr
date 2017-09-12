@@ -893,7 +893,7 @@ function getDiscountValue() {
     }
 
     var diskonPersen = ( diskonRp / biaya ) * 100;
-    $('#discountPercentage').val(diskonPersen);
+    $('#discountPercentage').val(diskonPersen.toFixed(2));
 }
 
 // menghitung diskon dalam rupiah
@@ -913,7 +913,7 @@ function getDiscountPercentage() {
     }
 
     var diskonRp = (biaya * diskonPersen) / 100;
-    $('#discountValue').val(diskonRp);
+    $('#discountValue').val(diskonRp.toFixed(2));
 
 }
 
@@ -945,7 +945,7 @@ function getSurchargeValue() {
     }
 
     var plusDiskonPersen = ( plusDiskonRp / biaya ) * 100;
-    $('#surchargePercentage').val(plusDiskonPersen);
+    $('#surchargePercentage').val(plusDiskonPersen.toFixed(2));
 }
 
 // menghitung plus diskon dalam rupiah
@@ -966,7 +966,7 @@ function getSurchargePercentage() {
     }
 
     var plusDiskonRp = (biaya * plusDiskonPersen) / 100;
-    $('#surchargeValue').val(plusDiskonRp);
+    $('#surchargeValue').val(plusDiskonRp.toFixed(2));
 }
 
 $(document).on('keyup keydown change mouseup', '#surchargeValue', function () {
@@ -997,7 +997,7 @@ function getMinDiscountValue() {
     }
 
     var minDiskonPersen = ( minDiskonRp / biaya ) * 100;
-    $('#minDiscountPercentage').val(minDiskonPersen);
+    $('#minDiscountPercentage').val(minDiskonPersen.toFixed(2));
 }
 
 // menghitung min diskon dalam rupiah
@@ -1018,7 +1018,7 @@ function getMinDiscountPercentage() {
     }
 
     var minDiskonRp = (biaya * minDiskonPersen) / 100;
-    $('#minDiscountValue').val(minDiskonRp);
+    $('#minDiscountValue').val(minDiskonRp.toFixed(2));
 }
 
 $(document).on('keyup keydown change mouseup', '#minDiscountValue', function () {
@@ -1049,7 +1049,7 @@ function getNpbDiscountValue() {
     }
 
     var npbDiskonPersen = ( npbDiskonRp / biaya ) * 100;
-    $('#npbDiscountPercentage').val(npbDiskonPersen);
+    $('#npbDiscountPercentage').val(npbDiskonPersen.toFixed(2));
 }
 
 // menghitung npb diskon dalam rupiah
@@ -1070,7 +1070,7 @@ function getNpbDiscountPercentage() {
     }
 
     var npbDiskonRp = (biaya * npbDiskonPersen) / 100;
-    $('#npbDiscountValue').val(npbDiskonRp);
+    $('#npbDiscountValue').val(npbDiskonRp.toFixed(2));
 }
 
 $(document).on('keyup keydown change mouseup', '#npbDiscountValue', function () {
@@ -1093,7 +1093,7 @@ function getTaxValue(){
     }
 
     var ppnPersen = ( ppnRp / getBiaya() ) * 100;
-    $('#taxPercentage').val(ppnPersen);
+    $('#taxPercentage').val(ppnPersen.toFixed(2));
 }
 
 // hitung pajak rupiah
@@ -1106,7 +1106,7 @@ function getTaxPercentage() {
     }
 
     var taxValue = (getBiaya() * ppnPersen) / 100;
-    $('#taxValue').val(taxValue);
+    $('#taxValue').val(taxValue.toFixed(2));
 }
 
 $(document).on('keyup keydown change mouseup', '#taxValue', function () {
@@ -1156,7 +1156,7 @@ function getCashBackValue() {
     var cashBackRp = unformatMoney($('#cashBackValue').val());
 
     var cashBackPersen = ( cashBackRp / biaya ) * 100;
-    $('#cashBackPercentage').val(cashBackPersen);
+    $('#cashBackPercentage').val(cashBackPersen.toFixed(2));
 }
 
 // hitung cashback rupiah
@@ -1196,7 +1196,7 @@ function getCashBackPercentage() {
     var cashBackPersen = parseFloat($('#cashBackPercentage').val());
 
     var cashBackRp = (biaya * cashBackPersen) / 100;
-    $('#cashBackValue').val(cashBackRp);
+    $('#cashBackValue').val(cashBackRp.toFixed(2));
 }
 
 $(document).on('keyup keydown change mouseup', '#cashBackValue', function () {
@@ -1295,7 +1295,7 @@ $(document).on('blur', '#basePrice', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="basePrice"]').val(parseFloat(unformat));
+    $('[name="basePrice"]').val(parseFloat(unformat).toFixed(2));
 });
 
 // surcharge / plus discount
@@ -1305,7 +1305,7 @@ $(document).on('blur', '#surchargeValue', function () {
 
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="surchargeValue"]').val(parseFloat(unformat));
+    $('[name="surchargeValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 $(document).on('blur', '#surchargePercentage', function () {
@@ -1313,7 +1313,7 @@ $(document).on('blur', '#surchargePercentage', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="surchargeValue"]').val(parseFloat(unformat));
+    $('[name="surchargeValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 // discount
@@ -1322,7 +1322,7 @@ $(document).on('blur', '#discountValue', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="discountValue"]').val(parseFloat(unformat));
+    $('[name="discountValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 $(document).on('blur', '#discountPercentage', function () {
@@ -1330,7 +1330,7 @@ $(document).on('blur', '#discountPercentage', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="discountValue"]').val(parseFloat(unformat));
+    $('[name="discountValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 //min discount
@@ -1339,7 +1339,7 @@ $(document).on('blur', '#minDiscountPercentage', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="minDiscountValue"]').val(parseFloat(unformat));
+    $('[name="minDiscountValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 $(document).on('blur', '#minDiscountValue', function () {
@@ -1347,7 +1347,7 @@ $(document).on('blur', '#minDiscountValue', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="minDiscountValue"]').val(parseFloat(unformat));
+    $('[name="minDiscountValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 //npb discount
@@ -1356,7 +1356,7 @@ $(document).on('blur', '#npbDiscountPercentage', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="npbDiscountValue"]').val(parseFloat(unformat));
+    $('[name="npbDiscountValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 $(document).on('blur', '#minDiscountValue', function () {
@@ -1364,7 +1364,7 @@ $(document).on('blur', '#minDiscountValue', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="npbDiscountValue"]').val(parseFloat(unformat));
+    $('[name="npbDiscountValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 // tax
@@ -1373,7 +1373,7 @@ $(document).on('blur', '#taxValue', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="taxValue"]').val(parseFloat(unformat));
+    $('[name="taxValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 $(document).on('blur', '#taxPercentage', function () {
@@ -1381,7 +1381,7 @@ $(document).on('blur', '#taxPercentage', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="taxValue"]').val(parseFloat(unformat));
+    $('[name="taxValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 // cashback
@@ -1390,7 +1390,7 @@ $(document).on('blur', '#cashBackValue', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="cashBackValue"]').val(parseFloat(unformat));
+    $('[name="cashBackValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 $(document).on('blur', '#cashBackPercentage', function () {
@@ -1398,7 +1398,7 @@ $(document).on('blur', '#cashBackPercentage', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="cashBackValue"]').val(parseFloat(unformat));
+    $('[name="cashBackValue"]').val(parseFloat(unformat).toFixed(2));
 });
 
 
@@ -1408,7 +1408,7 @@ $(document).on('blur', '#totalAmount', function () {
     var value = $this.val();
     var unformat = unformatMoney(value);
     $this.val(accounting.formatMoney(unformat));
-    $('[name="totalAmount"]').val(parseFloat(unformat));
+    $('[name="totalAmount"]').val(parseFloat(unformat).toFixed(2));
 });
 
 $(document).on('change', '#totalAmount', function () {
@@ -1416,19 +1416,24 @@ $(document).on('change', '#totalAmount', function () {
 });
 
 function hitungMundur() {
+
+    $('#minDiscountValue, #surchargeValue, #discountValue').val('')
+    $('[name="minDiscountValue"], [name="surchargeValue"], [name="discountValue"]').val('')
+
     var totalAmount =  parseFloat($('[name="totalAmount"]').val());
     var ppnRp = totalAmount / 1.1 * 10 /100;
     var basePrice = totalAmount - ppnRp;
 
-    $('#basePrice').val(basePrice.toFixed());
-    $('[name="basePrice"]').val(basePrice.toFixed());
+    $('#basePrice').val(basePrice.toFixed(2));
+    $('[name="basePrice"]').val(basePrice.toFixed(2));
 
-    $('#taxValue').val(ppnRp.toFixed());
-    $('[name="taxValue"]').val(ppnRp.toFixed());
+    $('#taxValue').val(ppnRp.toFixed(2));
+    $('[name="taxValue"]').val(ppnRp.toFixed(2));
     $('#taxPercentage').val(10);
 
-    var newTotalAmount = $('[name="totalAmount"]').val();
+    $('#hitung').click();
 
+    var newTotalAmount = $('[name="totalAmount"]').val();
     var trueTotalAmount = totalAmount;
     if (trueTotalAmount > newTotalAmount) {
         $('#surchargeValue').val(accounting.formatMoney(trueTotalAmount - newTotalAmount));

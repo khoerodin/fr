@@ -178,9 +178,7 @@ function getOrders(param) {
 
                 if("searchHistory" in localStorage){
                     var searchStorsge = localStorage.getItem('searchHistory');
-                    console.log(JSON.parse(searchStorsge));
                     var searchHistory = JSON.parse(searchStorsge).reverse();
-                    console.log(searchHistory);
                     var opt = '';
                     $.each(searchHistory, function (index, value) {
                         if (index === 0) {

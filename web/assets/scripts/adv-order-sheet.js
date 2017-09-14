@@ -1422,13 +1422,14 @@ function hitungMundur() {
 
     var totalAmount =  parseFloat($('[name="totalAmount"]').val());
     var ppnRp = totalAmount / 1.1 * 10 /100;
-    var basePrice = totalAmount - ppnRp;
+    var ppnRpFixed = ppnRp.toFixed(2);
+    var basePrice = totalAmount - ppnRpFixed;
 
     $('#basePrice').val(basePrice.toFixed(2));
     $('[name="basePrice"]').val(basePrice.toFixed(2));
 
-    $('#taxValue').val(ppnRp.toFixed(2));
-    $('[name="taxValue"]').val(ppnRp.toFixed(2));
+    $('#taxValue').val(ppnRpFixed);
+    $('[name="taxValue"]').val(ppnRpFixed);
     $('#taxPercentage').val(10);
 
     $('#hitung').click();

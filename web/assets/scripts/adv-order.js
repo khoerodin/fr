@@ -230,7 +230,7 @@ function getOrders(param, selected) {
                             if (text.startsWith('TAG')) {
                                 var selected = [{id:id, text:text}];
                                 getOrders(id, selected);
-                                $("#searchOrder").select2("close");
+                                $("#searchOrder").select2('close');
                             } else {
                                 window.location.href = '/advertising/orders/'+id;
                             }

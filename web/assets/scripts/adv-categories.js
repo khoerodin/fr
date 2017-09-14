@@ -101,13 +101,23 @@ $(document).on('click', '#addCategory #saveCategory', function () {
 
             } else if('id' in data) {
 
-                if ( $('[data-id="'+id+'"]').closest('li').hasClass('branch') ) {
-                    $('[data-id="'+id+'"]').closest('li').children('ul').append('<li style="display: list-item;"><span data-id="'+data.id+'" data-name="'+data.name+'">'+data.name+'</span></li>');
+                if (id) {
+
+                    if ( $('[data-id="'+id+'"]').closest('li').hasClass('branch') ) {
+                        $('[data-id="'+id+'"]').closest('li').children('ul').append('<li style="display: list-item;"><span data-id="'+data.id+'" data-name="'+data.name+'">'+data.name+'</span></li>');
+                    } else {
+                        $('<i class="indicator glyphicon glyphicon-folder-open"></i>').insertBefore( '[data-id="'+id+'"]' );
+                        $('[data-id="'+id+'"]').closest('li').addClass('branch')
+                            .append('<ul><li style="display: list-item;"><span data-id="'+data.id+'" data-name="'+data.name+'">'+data.name+'</span></li></ul>');
+                    }
+
                 } else {
-                    $('<i class="indicator glyphicon glyphicon-folder-open"></i>').insertBefore( '[data-id="'+id+'"]' );
-                    $('[data-id="'+id+'"]').closest('li').addClass('branch')
-                        .append('<ul><li style="display: list-item;"><span data-id="'+data.id+'" data-name="'+data.name+'">'+data.name+'</span></li></ul>');
+
+                    $('ul#categoriesTree li ul:eq(0)').append('<li style="display: list-item;"><span data-id="'+data.id+'" data-name="'+data.name+'">'+data.name+'</span></li>');
+
                 }
+
+
 
                 $('#addCategory #name').val('');
                 toastr.success('Berhasil menambahkan kategori');

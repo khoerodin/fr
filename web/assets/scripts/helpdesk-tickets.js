@@ -643,6 +643,8 @@ $(document).on('click', 'button.confirm-tic', function () {
 
             var ticketData = JSON.parse(ticketData);
 
+            console.log(ticketData);
+
             // ajax helpdesk staffs
             $.ajax({
                 url: '/api',

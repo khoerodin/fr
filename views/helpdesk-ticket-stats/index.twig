@@ -20,22 +20,41 @@
 {%- block content -%}
 
         <!-- import plugin script -->
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+        {#<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+
 
     <div class="row">
-    <div class="col-md-12">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header row">
 
-        <!-- line chart canvas element -->
-        <canvas id="statusTicket" width="600" height="400"></canvas>
+                </div>
 
-    </div>
-    <br><br>
+                <div class="box-body">
 
-    <div class="col-md-12">
-            <!-- bar chart canvas element -->
-            <canvas id="createdTicket" width="600" height="400"></canvas>
-    </div>
-    <br><br>
+                    <div class="col-md-4">
+                        <!-- line chart canvas element -->
+                        <canvas id="statusTicketChart" width="400" height="400"></canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <canvas id="staffChart" width="400" height="400"></canvas>
+                    </div>
+
+                    {#<div class="col-md-3">#}
+                        {#<!-- bar chart canvas element -->#}
+                        {#<canvas id="createdTicketChart" width="400" height="400"></canvas>#}
+                    {#</div>#}
+                    {#<div class="col-md-4">#}
+                        {#<!-- bar chart canvas element -->#}
+                        {#<canvas id="categoryTicketChart" width="400" height="400"></canvas>#}
+                    {#</div>#}
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
 {%- endblock -%}

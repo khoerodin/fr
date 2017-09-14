@@ -120,7 +120,6 @@ function getOrders(param, selected) {
 
             $("#searchOrder").select2({
                 theme: "bootstrap",
-                allowClear: true,
                 placeholder: "CARI NOMOR ORDER / NOMOR SURAT ORDER / TAG ORDER",
                 ajax: {
                     url: "/advertising/orders/search",

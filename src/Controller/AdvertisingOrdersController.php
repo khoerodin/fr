@@ -2,6 +2,7 @@
 
 namespace Bisnis\Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -146,5 +147,123 @@ class AdvertisingOrdersController extends AdminController
         }
 
         return new Response(json_encode($content));
+    }
+
+    private function searchModule(array $request)
+    {
+        $url = $request['module'];
+        $method = $request['method'];;
+        $q = $request['q'];;
+        $field = $request['field'];;
+        $params2 = $request['params2'];;
+        $label = $request['label'];;
+
+        $params = [];
+        foreach ($field as $column) {
+            $params[$column] = $q;
+        }
+
+        if (is_null($params2)) {
+            $params3 = [];
+            foreach ($params2 as $key => $value) {
+                $params3[$key] = $value;
+            }
+            $params = array_merge($params, $params3);
+        }
+
+        $response = $this->request($url, $method, $params);
+        $arr = json_decode($response->getContent(), true);
+
+        if (array_key_exists('hydra:member', $arr)) {
+            if(count($arr) > 0 ) {
+                $arr = $arr['hydra:member'];
+            } else {
+                return new JsonResponse(array());
+            }
+        } else {
+            return new JsonResponse(array());
+        }
+
+
+        $arrData = [];
+        foreach ($arr as $value) {
+            $obj = [];
+            foreach ($value as $k => $v) {
+                if($k == 'id'){
+                    $obj[$k] = $v;
+
+                }
+
+                if($k == $field[0]){
+                    $obj['field'] = $label . $v;
+                }
+            }
+            $arrData[] = $obj;
+        }
+
+        return $arrData;
+    }
+
+    private function searchTagging($q)
+    {
+        $response = $this->request('advertising/tags', 'GET', ['name' => $q ]);
+        $arr = json_decode($response->getContent(), true);
+
+        if (array_key_exists('hydra:member', $arr)) {
+            if(count($arr) > 0 ) {
+                $arr = $arr['hydra:member'];
+            } else {
+                return new JsonResponse(array());
+            }
+        } else {
+            return new JsonResponse(array());
+        }
+
+        $arrData = [];
+        foreach ($arr as $value) {
+            $obj = [];
+            foreach ($value as $k => $v) {
+                if($k == 'id'){
+                    $obj[$k] = $v;
+
+                }
+
+                if($k == 'name'){
+                    $obj['field'] = 'TAG: ' . $v;
+                }
+            }
+            $arrData[] = $obj;
+        }
+
+        return $arrData;
+
+    }
+
+    public function searchAction(Request $request)
+    {
+        $orderNumberData = [
+            'module'    => 'advertising/orders',
+            'method'    => 'GET',
+            'q'         => $request->get('q'),
+            'field'     => array('orderNumber'),
+            'params2'   => $request->get('params'),
+            'label'     => 'NO ORDER: '
+        ];
+
+        $orderLetterData = [
+            'module'    => 'advertising/orders',
+            'method'    => 'GET',
+            'q'         => $request->get('q'),
+            'field'     => array('orderLetter'),
+            'params2'   => $request->get('params'),
+            'label'     => 'NO SURAT ORDER: '
+        ];
+
+        $orderNumber = $this->searchModule($orderNumberData);
+        $orderLetter = $this->searchModule($orderLetterData);
+        $tags = $this->searchTagging($request->get('q'));
+
+        $response = array_merge($orderNumber, $orderLetter, $tags);
+        return new JsonResponse($response);
     }
 }

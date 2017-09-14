@@ -1,4 +1,5 @@
-function getOrders(param) {
+function getOrders(param, selected) {
+    var selected = selected;
     $.ajax({
         url: '/api',
         type: 'POST',
@@ -7,7 +8,7 @@ function getOrders(param) {
             method: 'get',
             params: [
                 {
-                    orderNumber: param
+                    orderTag: param
                 }
             ]
         },
@@ -21,6 +22,7 @@ function getOrders(param) {
 
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
                 tableData += '<thead><tr><th width="3%">#</th><th width="10%">NOMOR ORDER</th>';
+                tableData += '<th width="25%">NOMOR SURAT ORDER</th>';
                 tableData += '<th width="25%">Judul</th>';
                 tableData += '<th width="15%">Order Dari</th><th width="15%">Pemasang</th>';
                 tableData += '<th width="3%"><span class="pull-right">Aksi</span></th></tr></thead>';
@@ -30,6 +32,7 @@ function getOrders(param) {
                     tableData += '<tr>';
                     tableData += '<td>'+no+'</td>';
                     tableData += '<td>'+value.orderNumber+'</td>';
+                    tableData += '<td>'+value.orderLetter+'</td>';
                     tableData += '<td>'+value.title+'</td>';
 
                     if (value.orderFrom) {
@@ -111,29 +114,30 @@ function getOrders(param) {
             $('#dataList').html(tableData);
             $('#searchArea').html(searchArea);
 
+            if(selected) {
+                $("#searchOrder").html('<option '+selected[0].id+'>'+selected[0].text+'</option>');
+            }
+
             $("#searchOrder").select2({
                 theme: "bootstrap",
                 allowClear: true,
-                placeholder: "CARI NOMOR ORDER",
+                placeholder: "CARI NOMOR ORDER / NOMOR SURAT ORDER / TAG ORDER",
                 ajax: {
-                    url: "/api/search",
+                    url: "/advertising/orders/search",
                     dataType: 'json',
                     type: 'POST',
                     delay: 250,
                     data: function (params) {
                         return {
                             q: params.term,
-                            page: params.page,
-                            module: 'advertising/orders',
-                            method: 'GET',
-                            field: 'orderNumber'.split('#')
+                            page: params.page
                         };
                     },
                     processResults: function (data) {
                         if(data.length > 0) {
                             return {
                                 results: $.map(data, function(obj) {
-                                    return { id: obj.id, text: obj['orderNumber'.split('#')[0]] };
+                                    return { id: obj.id, text: obj['field'.split('#')[0]] };
                                 })
                             }
                         } else {
@@ -171,9 +175,13 @@ function getOrders(param) {
                     localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
                 }
 
-                window.location.href = '/advertising/orders/'+id;
-            }).on("select2:unselect", function () {
-                //
+                if (text.startsWith('TAG')) {
+                    var selected = [{id:id, text:text}];
+                    getOrders(id, selected);
+                } else {
+                    window.location.href = '/advertising/orders/'+id;
+                }
+
             }).on("select2:open", function (e) {
 
                 if("searchHistory" in localStorage){
@@ -219,17 +227,20 @@ function getOrders(param) {
                                 localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
                             }
 
-                            window.location.href = '/advertising/orders/'+id;
+                            if (text.startsWith('TAG')) {
+                                var selected = [{id:id, text:text}];
+                                getOrders(id, selected);
+                                $("#searchOrder").select2("close");
+                            } else {
+                                window.location.href = '/advertising/orders/'+id;
+                            }
+
                         });
 
 
                     }, 1);
                 }
 
-
-
-            }).on("select2:closing", function () {
-                //
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {

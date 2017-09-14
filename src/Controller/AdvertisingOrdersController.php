@@ -195,7 +195,7 @@ class AdvertisingOrdersController extends AdminController
                 }
 
                 if($k == $field[0]){
-                    $obj['field'] = $label . $v;
+                    $obj['field'] = '<strong>' . $label . '</strong>' . $v;
                 }
             }
             $arrData[] = $obj;
@@ -229,7 +229,7 @@ class AdvertisingOrdersController extends AdminController
                 }
 
                 if($k == 'name'){
-                    $obj['field'] = 'TAG: ' . $v;
+                    $obj['field'] = '<strong>TAG:</strong> ' . $v;
                 }
             }
             $arrData[] = $obj;

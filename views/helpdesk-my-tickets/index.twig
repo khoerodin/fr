@@ -7,6 +7,11 @@
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Category.js"></script>
     <script type="text/javascript">
+        var loadPage = function (page) {
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(page));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        };
+
         Bisnis.init(function () {
             Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
             Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#clientTicketPagination');
@@ -25,49 +30,35 @@
         });
 
         Bisnis.Util.Event.bind('click', '#clientTicketPagination .pagePrevious', function () {
-            var that = this;
-            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
-            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
         });
 
         Bisnis.Util.Event.bind('click', '#clientTicketPagination .pageNext', function () {
-            var that = this;
-            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
-            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
         });
 
         Bisnis.Util.Event.bind('click', '#clientTicketPagination .pageFirst', function () {
-            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE',  1);
-            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            loadPage(1);
         });
 
         Bisnis.Util.Event.bind('click', '#clientTicketPagination .pageLast', function () {
-            var that = this;
-            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
-            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
         });
 
         Bisnis.Util.Event.bind('click', '#closedTicketPagination .pagePrevious', function () {
-            var that = this;
-            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
-            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
         });
 
         Bisnis.Util.Event.bind('click', '#closedTicketPagination .pageNext', function () {
-            var that = this;
-            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
-            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
         });
 
         Bisnis.Util.Event.bind('click', '#closedTicketPagination .pageFirst', function () {
-            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE',  1);
-            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            loadPage(1);
         });
 
         Bisnis.Util.Event.bind('click', '#closedTicketPagination .pageLast', function () {
-            var that = this;
-            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(Bisnis.Util.Document.getDataValue(that, 'page')));
-            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
         });
 
         Bisnis.Util.Event.bind('click', '.addNew', function () {

@@ -82,6 +82,8 @@
             }
 
             row = row + createCloseButton(ticket.id) ;
+        } else {
+            row = row + createDetailButton(ticket.id);
         }
 
         row = row + '</td>';
@@ -126,6 +128,7 @@
             row = row + createCloseButton(ticket.id) ;
         } else {
             if ('undefined' !== typeof ticket.staff) {
+                row = row + createDetailButton(ticket.id);
                 row = row + createReopenButton(ticket.id);
             }
         }
@@ -420,10 +423,10 @@
     Bisnis.Helpdesk.Ticket.buildChat = function (profileImage, sender, message, date, appendTo) {
         appendTo = 'undefined' === typeof appendTo ? '' : appendTo;
 
-        return appendTo + '<div class="media"><div class="media-left"><img src="' + profileImage + '" class="media-object" style="width:60px"></div>'
+        return appendTo + '<div class="media"><div class="media-left"><img class="img-circle" src="' + profileImage + '" style="width:77px;"></div>'
             + '<div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>&nbsp;' + date + '</h6>'
-            + '<h4 class="media-heading">' + sender + '</h4>'
-            + '<p>' + message + '</p></div></div><hr>'
+            + '<h4 class="media-heading"><b>' + sender + '</b></h4>'
+            + '<blockquote>' + message + '</blockquote></div></div>'
         ;
     };
 

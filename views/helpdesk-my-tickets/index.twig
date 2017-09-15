@@ -115,6 +115,8 @@
         Bisnis.Util.Event.bind('click', '#sendResponse', function () {
             var message = Bisnis.Util.Document.getValue('#chatMessage');
             if ('' === message) {
+                Bisnis.errorMessage('Pesan tidak boleh kosong.');
+
                 return;
             }
 
@@ -122,7 +124,7 @@
             Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
                 if ('closed' === ticket.status || 'resolved' === ticket.status) {
                     Bisnis.Util.Event.triggerClick('#closeModalDetail');
-                    Bisnis.succesMessage('Tiket Anda telah ditutup atau telah selesai dikerjakan oleh Admin.');
+                    Bisnis.errorMessage('Tiket Anda telah ditutup atau telah selesai dikerjakan oleh Admin.');
 
                     return;
                 }
@@ -308,7 +310,6 @@
                 </div>
                 <div class="box direct-chat">
                     <div class="box-body">
-                        <!-- Conversations are loaded here -->
                         <div class="direct-chat-messages" id="chatHistory">
                             <div class="media">
                                 <div class="media-left">

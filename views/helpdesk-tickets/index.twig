@@ -163,11 +163,20 @@
         Bisnis.Util.Event.bind('click', '#sendResponse', function () {
             var message = Bisnis.Util.Document.getValue('#chatMessage');
             if ('' === message) {
+                Bisnis.errorMessage('Pesan tidak boleh kosong.');
+
                 return;
             }
 
             var ticketId = Bisnis.Util.Storage.fetch('ticketId');
             Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                if ('closed' === ticket.status || 'resolved' === ticket.status) {
+                    Bisnis.Util.Event.triggerClick('#closeModalDetail');
+                    Bisnis.errorMessage('Anda tidak dapat mengirimkan pesan.');
+
+                    return;
+                }
+
                 var staffId = ticket.staff.id;
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
                     if (0 < staff.length) {
@@ -479,7 +488,7 @@
                         </div>
                     </div>
                 </div>
-            </div> <!-- end modal -->
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary pull-left" data-dismiss="modal" title="Tandai Sedang Dikerjakan" id="onprogressModalDetail"><i class="fa fa-wrench"></i></button>
                 <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" title="Tandai Telah Selasai" id="resolveModalDetail"><i class="fa fa-check"></i></button>

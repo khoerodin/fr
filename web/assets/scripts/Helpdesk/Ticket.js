@@ -145,7 +145,7 @@
         var row = '';
         Bisnis.each(function (idx, ticket) {
             var bold = ' style="font-weight:bold;"';
-            if (true === ticket.read) {
+            if (true === ticket.read || 'closed' === ticket.status || 'resolved' === ticket.status) {
                 bold = '';
             }
 
@@ -232,6 +232,10 @@
             renderGrid(ticketList, renderTo, useMe);
 
             Bisnis.each(function (index, ticket) {
+                if ('closed' === ticket.status || 'resolved' === ticket.status) {
+                    return;
+                }
+
                 Bisnis.Helpdesk.Ticket.hasUnreadResponse(ticket.id, params, function (response) {
                     if (0 < response.length) {
                         Bisnis.Util.Style.bold('.' + ticket.id);
@@ -435,7 +439,10 @@
         var chat = '';
         Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
             Bisnis.Util.Document.putHtml('.chatTicketClient', ticket.client.fullname);
-            Bisnis.Util.Document.putHtml('.chatTicketStaff', ticket.staff.user.fullname);
+            if (null === typeof ticket.staff) {
+                Bisnis.Util.Document.putHtml('.chatTicketStaff', ticket.staff.user.fullname);
+            }
+
             Bisnis.Util.Document.putHtml('.chatTicketCategory', ticket.category.name);
             Bisnis.Util.Document.putHtml('.chatTicketTitle', ticket.title);
             Bisnis.Util.Document.putHtml('.chatTicketDate', moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss'));

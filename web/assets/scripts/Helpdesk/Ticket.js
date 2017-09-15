@@ -428,6 +428,8 @@
     };
 
     Bisnis.Helpdesk.Ticket.viewByTicket = function (ticketId) {
+        var responses = [];
+        var chat = '';
         Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
             Bisnis.Util.Document.putHtml('.chatTicketClient', ticket.client.fullname);
             Bisnis.Util.Document.putHtml('.chatTicketStaff', ticket.staff.user.fullname);
@@ -436,13 +438,12 @@
             Bisnis.Util.Document.putHtml('.chatTicketDate', moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss'));
 
             var profileImage = ticket.client.profileImage.split('.');
-
-            var chat = Bisnis.Helpdesk.Ticket.buildChat(
-                '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
-                ticket.client.fullname,
-                ticket.message,
-                moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss')
-            );
+            responses.push({
+                image: '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
+                name: ticket.client.fullname,
+                message: ticket.message,
+                createdAt: ticket.createdAt
+            });
 
             Bisnis.Helpdesk.Ticket.fetchReponse(ticket.id, function (ticketResponse) {
                 Bisnis.each(function (index, value) {
@@ -456,14 +457,27 @@
                         sender = value.staff.user.fullname;
                     }
 
+                    responses.push({
+                        image: '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
+                        name: sender,
+                        message: value.message,
+                        createdAt: value.createdAt
+                    });
+                }, ticketResponse);
+
+                responses.sort(function(a, b) {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                });
+
+                Bisnis.each(function (idx, value) {
                     chat = Bisnis.Helpdesk.Ticket.buildChat(
-                        '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
-                        sender,
+                        value.image,
+                        value.name,
                         value.message,
                         moment(value.createdAt).format('DD-MM-YYYY hh:mm:ss'),
                         chat
                     );
-                }, ticketResponse);
+                }, responses);
 
                 Bisnis.Util.Document.putHtml('#chatHistory', chat);
             });

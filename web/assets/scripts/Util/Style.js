@@ -10,4 +10,12 @@
             theme: 'bootstrap'
         });
     };
+
+    Bisnis.Util.Style.editor = function (selector) {
+        jQuery(selector).summernote({
+            tabsize: 4,
+            height: 170,
+            width: '100%'
+        });
+    };
 })(window.Bisnis || {});

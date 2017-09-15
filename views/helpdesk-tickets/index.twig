@@ -160,12 +160,6 @@
             });
         });
 
-        Bisnis.Util.Event.bind('keypress', '#chatMessage', function (e) {
-            if(13 === e.keyCode) {
-                Bisnis.Util.Event.triggerClick('#sendResponse');
-            }
-        });
-
         Bisnis.Util.Event.bind('click', '#sendResponse', function () {
             var message = Bisnis.Util.Document.getValue('#chatMessage');
             if ('' === message) {
@@ -174,7 +168,6 @@
 
             var ticketId = Bisnis.Util.Storage.fetch('ticketId');
             Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
-                var message = Bisnis.Util.Document.getValue('#chatMessage');
                 var staffId = ticket.staff.id;
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
                     if (0 < staff.length) {
@@ -257,7 +250,7 @@
             var ticketId = Bisnis.Util.Storage.fetch('ticketId');
             Bisnis.Util.Document.putHtml('#chatHistory', '');
             Bisnis.Helpdesk.Ticket.viewByTicket(ticketId);
-            Bisnis.Util.Document.putValue('#chatMessage', '');
+            Bisnis.Util.Document.putEditor('#chatMessage', '');
         });
 
         Bisnis.Util.Event.bind('click', '#resolveModalDetail', function () {
@@ -447,49 +440,43 @@
             <div class="modal-header">
                 <h4 class="modal-title">Detil Tiket</h4>
             </div>
-            <div class="modal-body"> <!-- start modal -->
+            <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12" >
+                    <div class="col-sm-12">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <div class="row">
-                                    <ul class="list-group listDetail">
-                                        <li class="list-group-item">Nama Klien : </span><span class="well-sm chatTicketClient">-</span></li>
-                                        <li class="list-group-item"><span>Kategori : </span><span class="well-sm chatTicketCategory">-</span></li>
-                                        <li class="list-group-item"><span>Judul : </span><span class="well-sm chatTicketTitle">-</span></li>
-                                        <li class="list-group-item"><span>Tanggal Tiket : </span><span class="well-sm chatTicketDate">-</span></li>
-                                    </ul>
+                            <ul class="list-group listDetail">
+                                <li class="list-group-item">Nama Klien : </span><span class="well-sm chatTicketClient">-</span></li>
+                                <li class="list-group-item"><span>Kategori : </span><span class="well-sm chatTicketCategory">-</span></li>
+                                <li class="list-group-item"><span>Judul : </span><span class="well-sm chatTicketTitle">-</span></li>
+                                <li class="list-group-item"><span>Tanggal Tiket : </span><span class="well-sm chatTicketDate">-</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="box direct-chat">
+                    <div class="box-body">
+                        <div class="direct-chat-messages" id="chatHistory">
+                            <div class="media">
+                                <div class="media-left">
+                                    <img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">
+                                </div>
+                                <div class="media-body">
+                                    <h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i> Hari, Tanggal dan Jam</h6>
+                                    <h4 class="media-heading">Nama Klien / Staff</h4>
+                                    <p>Isi Pesan</p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="box direct-chat">
-                            <div class="box-body">
-                                <div class="direct-chat-messages" id="chatHistory">
-                                    <div class="media">
-                                        <div class="media-left">
-                                            <img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">
-                                        </div>
-                                        <div class="media-body">
-                                            <h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i> Hari, Tanggal dan Jam</h6>
-                                            <h4 class="media-heading">Nama Klien / Staff</h4>
-                                            <p>Isi Pesan</p>
-                                        </div>
-                                    </div>
-                                    <hr>
+                            <hr>
 
-                                </div>
-                            </div>
-                            <div class="box-footer">
-                                <div class="input-group">
-                                    <input type="text" name="message" placeholder="Ketik pesan Anda ..." class="form-control not-ucase" id="chatMessage" autocomplete="off" maxlength="200" style="width: 99%">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary btn-flat" id="sendResponse">Kirim</button>
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- /.box-footer-->
                         </div>
-                        <!--/.direct-chat -->
+                    </div>
+                    <div class="box-footer">
+                        <div class="form-group">
+                            <textarea type="text" name="message" class="form-control editor" id="chatMessage"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary btn-flat pull-right" id="sendResponse">Kirim</button>
+                        </div>
                     </div>
                 </div>
             </div> <!-- end modal -->

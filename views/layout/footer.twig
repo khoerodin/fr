@@ -30,6 +30,7 @@
     <script type="text/javascript" src="/assets/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/assets/bootbox/bootbox.min.js"></script>
     <script type="text/javascript" src="/assets/bootbox/bootbox.min.js"></script>
+    <script type="text/javascript" src="/assets/summernote/summernote.min.js"></script>
     <script type="text/javascript" src="/assets/notification/push_notification.min.js"></script>
     <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
@@ -44,6 +45,8 @@
         })();
 
         Bisnis.init(function () {
+            Bisnis.Util.Style.editor('.editor');
+
             Bisnis.Notification.enableTo('/api/users/{{ me.id }}', '.notification', function () {
                 Bisnis.Util.Dialog.hideModal('.modal');
                 window.focus();

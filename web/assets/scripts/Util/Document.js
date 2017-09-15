@@ -20,4 +20,8 @@
     Bisnis.Util.Document.getValue = function (selector) {
         return jQuery(selector).val();
     };
+
+    Bisnis.Util.Document.putEditor = function (selector, value) {
+        jQuery(selector).summernote('code', value);
+    };
 })(window.Bisnis || {});

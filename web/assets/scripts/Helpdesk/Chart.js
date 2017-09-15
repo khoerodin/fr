@@ -113,7 +113,7 @@
                    statusOnProgress(function (totalOnProgress) {
                        arrayStatus[2] = totalOnProgress;
 
-                       // ---------------- STATUS TICKET (LINE CHART) ---------------------------
+                       // ---------------- STATUS TICKET (PIE CHART) ---------------------------
 
                        var statusCanvas = document.getElementById("statusTicketChart");
 
@@ -139,7 +139,7 @@
                            data: statusData
                        });
                    });
-                           // ------------ END STATUS TICKET (LINE CHART) -----------------------
+                           // ------------ END STATUS TICKET (PIE CHART) -----------------------
                    })
                })
            })
@@ -150,13 +150,14 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-01-30'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-01-01'}},{'createdAt':{'before': '2017-01-30'}}]
+            },
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -165,13 +166,13 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-02-28'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-02-01'}},{'createdAt' : {'before': '2017-02-28'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -180,13 +181,13 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-03-31'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-03-01'}},{'createdAt' : {'before': '2017-03-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -195,13 +196,13 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-04-30'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-04-01'}},{'createdAt' : {'before': '2017-04-30'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -210,13 +211,13 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-05-31'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-05-01'}},{'createdAt' : {'before': '2017-05-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -225,13 +226,13 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-06-30'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-06-01'}},{'createdAt' : {'before': '2017-06-30'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -240,13 +241,13 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-07-31'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-07-01'}},{'createdAt' : {'before': '2017-07-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -255,13 +256,13 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-08-31'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-08-01'}},{'createdAt' : {'before': '2017-08-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -270,13 +271,16 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-09-30'}}]},
+            data: {
+                module: 'helpdesk/tickets',
+                method: 'get',
+                params: [
+                    {'createdAt' : {'after': '2017-09-01'}},{'createdAt' : {'before': '2017-09-30'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -285,13 +289,13 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-10-31'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-10-01'}},{'createdAt' : {'before': '2017-10-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
-
             }
         });
 
@@ -300,11 +304,12 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-11-30'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-11-01'}},{'createdAt' : {'before': '2017-11-30'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
 
             }
@@ -315,11 +320,12 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',params: [{'createdAt' : {'before': '2017-12-31'}}]},
+            data: {module: 'helpdesk/tickets',method: 'get',
+                params: [{'createdAt' : {'after':'2017-12-01'}},{'createdAt' : {'before': '2017-12-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    // console.log(total); //4
+                    console.log(total);
                     if (callback) callback(total)
 
             }
@@ -699,7 +705,7 @@
 
 
     categoryChart0(function (total_0) {
-        arrayCatID = total_0;
+        arrayCatID[0] = total_0;
         categoryChart1(function (total_1) {
             arrayCatID[1] = total_1;
             categoryChart2(function (total_2) {
@@ -725,13 +731,15 @@
 
                                         var categoryData = {
                                             labels: [
-                                                "LDT",
-                                                "OPROD",
-                                                "H&I",
-                                                "SEKPROD",
-                                                "PUSDOKAR",
-                                                "MIS",
-                                                "MONET"
+                                                "Test",
+                                                "Coba",
+                                                "Layanan Data Tabel",
+                                                "Operasi Produksi",
+                                                "Hardware & Infrastruktur",
+                                                "Sekretariat Produksi",
+                                                "Pustaka, Arsip dan Dokumentasi",
+                                                "Management Information System",
+                                                "Monetisasi Data"
 
                                             ],
                                             datasets: [
@@ -746,7 +754,7 @@
                                                         "#DC7FFF",
                                                         "#F699FF",
                                                         "#FFB3FF",
-                                                        "#C7FFFF"
+                                                        "#DB66FF"
                                                     ]
                                                 }]
                                         };

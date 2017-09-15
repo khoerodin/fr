@@ -55,23 +55,13 @@
                     var records = [];
                     Bisnis.each(function (idx, notification) {
                         records.push([
-                            {
-                                value: notification.domain
-                            },
-                            {
-                                value: notification.message
-                            },
-                            {
-                                value: null,
-                                format: function () {
-                                    return '<button data-id="' + notification.id + '" class="btn btn-warning readNotification" title="Baca"><i class="fa fa-envelope-o"></i></button>';
-                                }
-                            }
+                            { value: notification.domain},
+                            { value: notification.message },
+                            { value: null, format: function () { return '<button data-id="' + notification.id + '" class="btn btn-warning readNotification" title="Baca"><i class="fa fa-envelope-o"></i></button>'; }}
                         ]);
                     }, notifications);
 
                     Bisnis.Util.Grid.renderRecords('#notificationBody', records);
-
                     Bisnis.Util.Dialog.showModal('#notificationModal');
                 });
             });

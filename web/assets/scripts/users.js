@@ -4,7 +4,7 @@ var columns = [
     'fullname',
     'username',
     'email',
-    'loggedIn'
+    // 'loggedIn'
 ];
 
 $( document ).ajaxComplete(function() {
@@ -178,9 +178,6 @@ $(document).on('click', '.to-roles-page', function () {
 });
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    // var activeId = $(e.target).attr('aria-controls');
-    // getModules(activeId);
-    //
     var userId = $('#userId').val();
     var activeId = $('#serviceTab .active a').attr('aria-controls');
     getRoles(userId, activeId);

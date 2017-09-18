@@ -1,0 +1,569 @@
+{% extends 'layout.twig' %}
+
+{% block js %}
+    <script type="text/javascript" src="/assets/scripts/Util/Style.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript">
+        var fetchAllTicket = function (staff) {
+            if ('{{ admin.id }}' === staff.user.id) {
+                Bisnis.Helpdesk.Ticket.fetchClosable({
+                    'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                }, '#allTicketList', false, '#allTicketPagination');
+            } else {
+                Bisnis.Helpdesk.Ticket.fetchClosable({
+                    'category.id': staff.category.id,
+                    'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                }, '#allTicketList', false, '#allTicketPagination');
+            }
+        };
+
+        var loadPage = function (page) {
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(page));
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        };
+
+        Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
+            if (0 < staff.length) {
+                Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
+                Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id, parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#staffTicketPagination');
+            }
+        }));
+
+        Bisnis.Util.Event.bind('click', '.allTickets', function () {
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+            if (null === savedStaff || 'undefined' === typeof savedStaff) {
+                Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+                    if (0 < staff.length) {
+                        fetchAllTicket(staff[0]);
+                    }
+                });
+            } else {
+                fetchAllTicket(savedStaff);
+            }
+        });
+
+        Bisnis.Util.Event.bind('click', '.closedTickets', function () {
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+            if (null === savedStaff || 'undefined' === typeof savedStaff) {
+                Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+                    if (0 < staff.length) {
+                        Bisnis.Helpdesk.Ticket.fetchClosed({
+                            'category.id': staff[0].category.id,
+                            'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                        }, '#closedTicketList', false, '#closedTicketPagination');
+                    }
+                });
+            } else {
+                Bisnis.Helpdesk.Ticket.fetchClosed({
+                    'category.id': savedStaff.category.id,
+                    'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                }, '#closedTicketList', false, '#closedTicketPagination');
+            }
+        });
+
+        Bisnis.Util.Event.bind('click', '#staffTicketPagination .pagePrevious', function () {
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#staffTicketPagination .pageNext', function () {
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#staffTicketPagination .pageFirst', function () {
+            loadPage(1);
+        });
+
+        Bisnis.Util.Event.bind('click', '#staffTicketPagination .pageLast', function () {
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#allTicketPagination .pagePrevious', function () {
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#allTicketPagination .pageNext', function () {
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#allTicketPagination .pageFirst', function () {
+            loadPage(1);
+        });
+
+        Bisnis.Util.Event.bind('click', '#allTicketPagination .pageLast', function () {
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#closedTicketPagination .pagePrevious', function () {
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#closedTicketPagination .pageNext', function () {
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#closedTicketPagination .pageFirst', function () {
+            loadPage(1);
+        });
+
+        Bisnis.Util.Event.bind('click', '#closedTicketPagination .pageLast', function () {
+            loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '.assignToMe', function () {
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+            if (null === savedStaff || 'undefined' === typeof savedStaff) {
+                Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+                    if (0 < staff.length) {
+                        Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id);
+                    }
+                });
+            } else {
+                Bisnis.Helpdesk.Ticket.fetchByStaff(savedStaff.id);
+            }
+        });
+
+        Bisnis.Util.Event.bind('click', '.assign', function () {
+            var that = this;
+
+            Bisnis.Util.Storage.store('ticketId', Bisnis.Util.Document.getDataValue(that, 'ticket-id'));
+
+            Bisnis.Helpdesk.Staff.fetchByCategory(Bisnis.Util.Document.getDataValue(that, 'ticket-category-id'), function (staffList) {
+                var staffOption = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN</option>';
+                Bisnis.each(function (index, value) {
+                    staffOption = staffOption + '<option value="/api/helpdesk/staffs/' + value.id + '">' + value.fullname + '</option>';
+                }, staffList);
+
+                Bisnis.Util.Document.putHtml('#staff', staffOption);
+                Bisnis.Util.Style.modifySelect('#staff');
+            });
+
+            Bisnis.Util.Dialog.showModal('.ticketAssignment');
+        });
+
+        Bisnis.Util.Event.bind('click', '.changePriorityTicket', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('ticketId', Bisnis.Util.Document.getDataValue(that, 'ticket-id'));
+            Bisnis.Util.Style.modifySelect('#priority');
+            Bisnis.Util.Dialog.showModal('.ticketChangePriority');
+        });
+
+        Bisnis.Util.Event.bind('click', '.detail', function () {
+            var that = this;
+            Bisnis.Util.Storage.store('ticketId', Bisnis.Util.Document.getDataValue(that, 'ticket-id'));
+            Bisnis.Helpdesk.Ticket.markRead(Bisnis.Util.Storage.fetch('ticketId'), function () {
+                Bisnis.Util.Event.triggerClick('#refreshChat');
+                Bisnis.Util.Dialog.showModal('#tiketDetail');
+                Bisnis.Helpdesk.Ticket.markReadClientResponseByTicket(Bisnis.Util.Storage.fetch('ticketId'));
+            });
+        });
+
+        Bisnis.Util.Event.bind('click', '#sendResponse', function () {
+            var message = Bisnis.Util.Document.getValue('#chatMessage');
+            if ('' === message) {
+                Bisnis.errorMessage('Pesan tidak boleh kosong.');
+
+                return;
+            }
+
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
+            Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                if ('closed' === ticket.status || 'resolved' === ticket.status) {
+                    Bisnis.Util.Event.triggerClick('#closeModalDetail');
+                    Bisnis.errorMessage('Anda tidak dapat mengirimkan pesan.');
+
+                    return;
+                }
+
+                var staffId = ticket.staff.id;
+                Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+                    if (0 < staff.length) {
+                        staffId = staff[0].id;
+                    }
+
+                    Bisnis.Helpdesk.Ticket.sendReponse([
+                        { name: 'ticket', value: '/api/helpdesk/tickets/' + ticketId },
+                        { name: 'staff', value: '/api/helpdesk/staffs/' + staffId },
+                        { name: 'message', value: message }
+                    ], function () {
+                        Bisnis.Util.Event.triggerClick('#refreshChat');
+                        Bisnis.Helpdesk.Ticket.markReadClientResponseByTicket(ticketId);
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + staffId,
+                            'Tiket Anda [' + ticket.title + '] mendapatkan response baru dari admin.'
+                        );
+                        Bisnis.succesMessage('Respon terkirim.');
+                    });
+                });
+            });
+        });
+
+        Bisnis.Util.Event.bind('click', '#assignTo', function () {
+            var staffUri = Bisnis.Util.Document.getValue('#staff');
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
+
+            if ('' === staffUri || '' === ticketId || null === staffUri || null === ticketId) {
+                console.log('invalid assignment');
+            } else {
+                Bisnis.Helpdesk.Ticket.assignTo(ticketId, staffUri, function () {
+                    Bisnis.Util.Dialog.hideModal('.ticketAssignment');
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
+                    Bisnis.succesMessage('Tiket berhasil diupdate.');
+
+                    Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + ticket.staff.id,
+                            'Tiket Anda [' + ticket.title + '] sedang ditangani oleh ' + ticket.staff.fullname + '.'
+                        );
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.staff.user.id,
+                            '/api/users/{{ me.id }}',
+                            'Tiket ' + ticket.title + ' diassign ke Anda.'
+                        );
+                    });
+                });
+            }
+        });
+
+        Bisnis.Util.Event.bind('click', '#changePriority', function () {
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
+            var priority = Bisnis.Util.Document.getValue('#priority');
+
+            Bisnis.Util.Dialog.hideModal('.ticketChangePriority');
+            Bisnis.Helpdesk.Ticket.changePriority(ticketId, priority);
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            Bisnis.succesMessage('Prioritas tiket berhasil diubah.');
+
+            Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                Bisnis.Notification.send(
+                    'HELPDESK',
+                    '/api/users/' + ticket.client.id,
+                    '/api/helpdesk/staffs/' + ticket.staff.id,
+                    'Tiket Anda [' + ticket.title + '] telah diubah prioritasnya menjadi <b>' + priority + '</b>.'
+                );
+            });
+        });
+
+        Bisnis.Util.Event.bind('click', '#closeModalDetail', function () {
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
+
+        Bisnis.Util.Event.bind('click', '#refreshChat', function () {
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
+            Bisnis.Util.Document.putHtml('#chatHistory', '');
+            Bisnis.Helpdesk.Ticket.viewByTicket(ticketId);
+            Bisnis.Util.Document.putEditor('#chatMessage', '');
+        });
+
+        Bisnis.Util.Event.bind('click', '#resolveModalDetail', function () {
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan semua pekerjaan tiket ini sudah selesai?', function (result) {
+                if (result) {
+                    Bisnis.Helpdesk.Ticket.resolve(ticketId);
+                    Bisnis.succesMessage('Tiket berhasil diupdate.');
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
+
+                    Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + ticket.staff.id,
+                            'Tiket Anda [' + ticket.title + '] telah selesai ditangani.'
+                        );
+                    });
+                }
+            });
+        });
+
+        Bisnis.Util.Event.bind('click', '#onprogressModalDetail', function () {
+            var ticketId = Bisnis.Util.Storage.fetch('ticketId');
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan mengeset tiket menjadi sedang dalam pengerjaan?', function (result) {
+                if (result) {
+                    Bisnis.Helpdesk.Ticket.markOnProgress(ticketId);
+                    Bisnis.succesMessage('Tiket berhasil diupdate.');
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
+                }
+            });
+        });
+        
+        Bisnis.Util.Event.bind('click', '.closeTicket', function () {
+            var that = this;
+            var ticketId = Bisnis.Util.Document.getDataValue(that, 'ticket-id');
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan menutup tiket ini?', function (result) {
+                if (result) {
+                    Bisnis.Helpdesk.Ticket.close(ticketId);
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
+                    Bisnis.succesMessage('Tiket berhasil ditutup.');
+
+                    Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + ticket.staff.id,
+                            'Tiket Anda [' + ticket.title + '] dinonaktifkan oleh Admin.'
+                        );
+                    });
+                }
+            });
+        });
+
+        Bisnis.Util.Event.bind('click', '.reopenTicket', function () {
+            var that = this;
+            var ticketId = Bisnis.Util.Document.getDataValue(that, 'ticket-id');
+            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan membuka kembali tiket ini?', function (result) {
+                if (result) {
+                    Bisnis.Helpdesk.Ticket.markOnProgress(ticketId);
+                    Bisnis.succesMessage('Tiket berhasil dibuka kembali.');
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
+
+                    Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
+                        Bisnis.Notification.send(
+                            'HELPDESK',
+                            '/api/users/' + ticket.client.id,
+                            '/api/helpdesk/staffs/' + ticket.staff.id,
+                            'Tiket Anda [' + ticket.title + '] diaktifkan kembali oleh Admin.'
+                        );
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{%- block content -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="panel with-nav-tabs panel-info">
+                    <div class="panel-heading">
+                        <ul id="ticketTab" class="nav nav-tabs" role="tablist">
+                            <li class="active assignToMe"><a href="#assignedTo" aria-controls="home" role="tab" data-toggle="tab">TIKETKU</a></li>
+                            <li class="closedTickets"><a href="#closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
+                            <li class="allTickets"><a href="#allTickets" aria-controls="profile" role="tab" data-toggle="tab">SEMUA TIKET</a></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div id="assignedTo" role="tabpanel" class="tab-pane fade active in">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th>Klien</th>
+                                            <th>Staff</th>
+                                            <th>Kategori</th>
+                                            <th>Judul</th>
+                                            <th>Status</th>
+                                            <th>Prioritas</th>
+                                            <th>Tanggal Buat Tiket</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="assignedToMe">
+                                            <tr>
+                                                <td colspan="9">LOADING DATA...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="box-footer clearfix">
+                                <ul id="staffTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                            </div>
+                        </div>
+                        <div id="closedTickets" role="tabpanel" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th>Klien</th>
+                                            <th>Staff</th>
+                                            <th>Kategori</th>
+                                            <th>Judul</th>
+                                            <th>Status</th>
+                                            <th>Prioritas</th>
+                                            <th>Tanggal Buat Tiket</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="closedTicketList">
+                                            <tr>
+                                                <td colspan="9">LOADING DATA...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="box-footer clearfix">
+                                <ul id="closedTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                            </div>
+                        </div>
+                        <div id="allTickets" role="tabpanel" class="tab-pane fade">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th>Klien</th>
+                                            <th>Staff</th>
+                                            <th>Kategori</th>
+                                            <th>Judul</th>
+                                            <th>Status</th>
+                                            <th>Prioritas</th>
+                                            <th>Tanggal Buat Tiket</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="allTicketList">
+                                        <tr><td colspan="9">LOADING DATA...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="box-footer clearfix">
+                                <ul id="allTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="tiketDetail" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Detil Tiket</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-12 table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <td style="width: 20%;">Nama Klien</td>
+                                    <td class="chatTicketClient">-</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Kategori</td>
+                                    <td class="chatTicketCategory">-</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Judul</td>
+                                    <td class="chatTicketTitle">-</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Tanggal</td>
+                                    <td class="chatTicketDate">-</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;">Status</td>
+                                    <td class="chatTicketStatus">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="box direct-chat">
+                    <div class="box-body">
+                        <div class="direct-chat-messages" id="chatHistory">
+                            <div class="media">
+                                <div class="media-left">
+                                    <img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">
+                                </div>
+                                <div class="media-body">
+                                    <h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i> Hari, Tanggal dan Jam</h6>
+                                    <h4 class="media-heading">Nama Klien / Staff</h4>
+                                    <p>Isi Pesan</p>
+                                </div>
+                            </div>
+                            <hr>
+
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div class="form-group">
+                            <textarea type="text" name="message" class="form-control editor" id="chatMessage"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary btn-flat pull-right" id="sendResponse">Kirim</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary pull-left" data-dismiss="modal" title="Tandai Sedang Dikerjakan" id="onprogressModalDetail"><i class="fa fa-wrench"></i></button>
+                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" title="Tandai Telah Selasai" id="resolveModalDetail"><i class="fa fa-check"></i></button>
+                <button type="button" class="btn btn-success btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalDetail">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal ticketAssignment" role="dialog" id="ticketAssignment">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="formKonfirmasiTiket">
+                    <div class="box-body row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="judul">Pilih Staf</label>
+                                <select name="staff" class="form-control" id="staff" style="width: 100%">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-flat btn-danger" id="assignTo">Delegasikan</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal ticketChangePriority" role="dialog" id="ticketChangePriority">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="formKonfirmasiTiket">
+                    <div class="box-body row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="judul">Pilih Prioritas</label>
+                                <select name="priority" class="form-control" id="priority" style="width: 100%">
+                                    <option selected disabled class="text-muted">PILIH PRIORITAS</option>
+                                    <option value="low">Kurang Mendesak</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="urgent">Mendesak</option>
+                                    <option value="very_urgent">Sangat Mendesak</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-flat btn-danger" id="changePriority">Ubah Prioritas</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{%- endblock -%}

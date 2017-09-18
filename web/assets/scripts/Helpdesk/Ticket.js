@@ -46,7 +46,7 @@
                 break;
         }
 
-        return '<button class="btn btn-' + statusButton + '" style="width: 100%;" title="' + status + '"><i class="fa ' + statusIcon + '"></i></button>';
+        return '<button class="btn btn-' + statusButton + '" title="' + status + '"><i class="fa ' + statusIcon + '"></i></button>';
     };
 
     var createPriorityButton = function (priority) {
@@ -63,7 +63,7 @@
                 break;
         }
 
-        return '<button class="btn btn-'+ priorityMark +'" style="width: 100%;" title="' + priority + '"><i class="fa fa-ambulance"></i></button>';
+        return '<button class="btn btn-'+ priorityMark +'" title="' + priority + '"><i class="fa fa-ambulance"></i></button>';
     };
 
     var renderMe = function (idx, ticket, row, style) {
@@ -82,11 +82,12 @@
             }
 
             row = row + createCloseButton(ticket.id) ;
+        } else {
+            row = row + createDetailButton(ticket.id);
         }
 
         row = row + '</td>';
         row = row + '</tr>';
-
         return row;
     };
 
@@ -127,6 +128,7 @@
             row = row + createCloseButton(ticket.id) ;
         } else {
             if ('undefined' !== typeof ticket.staff) {
+                row = row + createDetailButton(ticket.id);
                 row = row + createReopenButton(ticket.id);
             }
         }
@@ -143,7 +145,7 @@
         var row = '';
         Bisnis.each(function (idx, ticket) {
             var bold = ' style="font-weight:bold;"';
-            if (true === ticket.read) {
+            if (true === ticket.read || 'closed' === ticket.status || 'resolved' === ticket.status) {
                 bold = '';
             }
 
@@ -230,7 +232,11 @@
             renderGrid(ticketList, renderTo, useMe);
 
             Bisnis.each(function (index, ticket) {
-                Bisnis.Helpdesk.Ticket.hasUnreadResponse(ticket.id, function (response) {
+                if ('closed' === ticket.status || 'resolved' === ticket.status) {
+                    return;
+                }
+
+                Bisnis.Helpdesk.Ticket.hasUnreadResponse(ticket.id, params, function (response) {
                     if (0 < response.length) {
                         Bisnis.Util.Style.bold('.' + ticket.id);
                     }
@@ -255,11 +261,20 @@
         });
     };
 
-    Bisnis.Helpdesk.Ticket.hasUnreadResponse = function (ticketId, callback) {
+    Bisnis.Helpdesk.Ticket.hasUnreadResponse = function (ticketId, filter, callback) {
+        params = {
+            'ticket.id': ticketId,
+            'read': false
+        };
+
+        if ('undefined' !== typeof filter) {
+            params = Object.assign(params, filter);
+        }
+
         Bisnis.request({
             module: 'helpdesk/ticket-responses',
             method: 'get',
-            params: [{'ticket.id': ticketId, 'read': false}]
+            params: [params]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
                 var rawData = JSON.parse(response);
@@ -412,28 +427,34 @@
     Bisnis.Helpdesk.Ticket.buildChat = function (profileImage, sender, message, date, appendTo) {
         appendTo = 'undefined' === typeof appendTo ? '' : appendTo;
 
-        return appendTo + '<div class="media"><div class="media-left"><img src="' + profileImage + '" class="media-object" style="width:60px"></div>'
+        return appendTo + '<div class="media"><div class="media-left"><img class="img-circle" src="' + profileImage + '" style="width:77px;"></div>'
             + '<div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>&nbsp;' + date + '</h6>'
-            + '<h4 class="media-heading">' + sender + '</h4>'
-            + '<p>' + message + '</p></div></div><hr>'
+            + '<h4 class="media-heading"><b>' + sender + '</b></h4>'
+            + '<blockquote>' + message + '</blockquote></div></div>'
         ;
     };
 
     Bisnis.Helpdesk.Ticket.viewByTicket = function (ticketId) {
+        var responses = [];
+        var chat = '';
         Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
             Bisnis.Util.Document.putHtml('.chatTicketClient', ticket.client.fullname);
+            if (null !== ticket.staff) {
+                Bisnis.Util.Document.putHtml('.chatTicketStaff', ticket.staff.user.fullname);
+            }
+
             Bisnis.Util.Document.putHtml('.chatTicketCategory', ticket.category.name);
             Bisnis.Util.Document.putHtml('.chatTicketTitle', ticket.title);
             Bisnis.Util.Document.putHtml('.chatTicketDate', moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss'));
+            Bisnis.Util.Document.putHtml('.chatTicketStatus', createStatusButton(ticket.status));
 
             var profileImage = ticket.client.profileImage.split('.');
-
-            var chat = Bisnis.Helpdesk.Ticket.buildChat(
-                '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
-                ticket.client.fullname,
-                ticket.message,
-                moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss')
-            );
+            responses.push({
+                image: '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
+                name: ticket.client.fullname,
+                message: ticket.message,
+                createdAt: ticket.createdAt
+            });
 
             Bisnis.Helpdesk.Ticket.fetchReponse(ticket.id, function (ticketResponse) {
                 Bisnis.each(function (index, value) {
@@ -447,17 +468,31 @@
                         sender = value.staff.user.fullname;
                     }
 
+                    responses.push({
+                        image: '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
+                        name: sender,
+                        message: value.message,
+                        createdAt: value.createdAt
+                    });
+                }, ticketResponse);
+
+                responses.sort(function(a, b) {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                });
+
+                Bisnis.each(function (idx, value) {
                     chat = Bisnis.Helpdesk.Ticket.buildChat(
-                        '/api/images/' + profileImage[0] + '?ext=' + profileImage[1],
-                        sender,
+                        value.image,
+                        value.name,
                         value.message,
                         moment(value.createdAt).format('DD-MM-YYYY hh:mm:ss'),
                         chat
                     );
-                }, ticketResponse);
+                }, responses);
 
                 Bisnis.Util.Document.putHtml('#chatHistory', chat);
             });
         });
     };
+
 })(window.Bisnis || {});

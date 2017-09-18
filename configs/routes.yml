@@ -71,3 +71,4 @@ app:
 
         #jangan di hapus,
         - { path: '/dummy', controller: 'Bisnis:Dummy@index', methods: ['GET'] }
+        - { path: '/coba', controller: 'Bisnis:Coba@index', methods: ['GET'] }

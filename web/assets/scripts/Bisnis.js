@@ -36,7 +36,6 @@
                 }
             },
             error: function (response, textStatus, errorThrown) {
-                Bisnis.errorMessage('Server bermasalah.');
                 if (Bisnis.validCallback(errorCallback)) {
                     errorCallback(response, textStatus, errorThrown);
                 }
@@ -55,16 +54,56 @@
         }
     };
 
-    Bisnis.errorMessage = function (message) {
-        toastr.error(message);
-    };
+    Bisnis.getQueryVariable = function (variable, query = decodeURIComponent(window.location.search.substring(1))) {
+        var vars = query.split("&");
+        if(typeof variable !== 'undefined') {
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+        } else {
+            var keys = [];
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                var param = {};
+                param[pair[0]] = pair[1];
 
-    Bisnis.succesMessage = function (message) {
-        toastr.success(message);
+                keys.push(param);
+            }
+            return keys;
+        }
+        return(false);
+    }
+
+    Bisnis.getUrlParamValue = function(name) {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+    }
+
+    Bisnis.changeUrlParam = function (param, value) {
+        var currentURL = window.location.href+'&';
+        currentURL = currentURL.replace('#','');
+        var change = new RegExp('('+param+')=(.*)&', 'g');
+        var newURL = currentURL.replace(change, '$1='+value+'&');
+
+        if (Bisnis.getUrlParamValue(param) !== null){
+            try {
+                window.history.replaceState('', '', newURL.slice(0, - 1) );
+            } catch (e) {
+
+            }
+        } else {
+            var currURL = window.location.href;
+            if (currURL.indexOf("?") !== -1){
+                window.history.replaceState('', '', currentURL.slice(0, - 1) + '&' + param + '=' + value);
+            } else {
+                window.history.replaceState('', '', currentURL.slice(0, - 1) + '?' + param + '=' + value);
+            }
+        }
     };
 
     /** Module List */
     Bisnis.Helpdesk = {};
+    Bisnis.Advertising = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
 

@@ -7,50 +7,50 @@ var columns = [
     // 'loggedIn'
 ];
 
-$( document ).ajaxComplete(function() {
-    $('.loginState').bootstrapToggle({
-        size: 'mini',
-        onstyle: 'success'
-    });
-});
-
-$(document).on('change', '.loginState', function () {
-    userId = $(this).attr('data-id');
-
-    if ($(this).is(':checked')){
-        checkValue = true;
-    } else {
-        checkValue = false;
-    }
-
-    var check = {
-        'name' : 'loggedIn',
-        'value' : checkValue
-    };
-
-    params = [
-        check
-    ];
-
-    var data = {
-        module : 'users/'+userId,
-        method : 'put',
-        params : params
-    };
-
-    $.ajax({
-        url: "/api",
-        type: "POST",
-        data: data,
-        beforeSend: function () {},
-        success: function (data, textStatus, jqXHR) {
-            toastr.success('Login status changed successfully')
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            toastr.error('Error change login status')
-        }
-    });
-});
+// $( document ).ajaxComplete(function() {
+//     $('.loginState').bootstrapToggle({
+//         size: 'mini',
+//         onstyle: 'success'
+//     });
+// });
+//
+// $(document).on('change', '.loginState', function () {
+//     userId = $(this).attr('data-id');
+//
+//     if ($(this).is(':checked')){
+//         checkValue = true;
+//     } else {
+//         checkValue = false;
+//     }
+//
+//     var check = {
+//         'name' : 'loggedIn',
+//         'value' : checkValue
+//     };
+//
+//     params = [
+//         check
+//     ];
+//
+//     var data = {
+//         module : 'users/'+userId,
+//         method : 'put',
+//         params : params
+//     };
+//
+//     $.ajax({
+//         url: "/api",
+//         type: "POST",
+//         data: data,
+//         beforeSend: function () {},
+//         success: function (data, textStatus, jqXHR) {
+//             toastr.success('Login status changed successfully')
+//         },
+//         error: function (jqXHR, textStatus, errorThrown) {
+//             toastr.error('Error change login status')
+//         }
+//     });
+// });
 
 jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function (e) {
     jQuery('tbody#roles-check').html('<tr><td colspan="6">Loading...</td></tr>');

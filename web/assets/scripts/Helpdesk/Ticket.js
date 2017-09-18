@@ -46,7 +46,7 @@
                 break;
         }
 
-        return '<button class="btn btn-' + statusButton + '" style="width: 100%;" title="' + status + '"><i class="fa ' + statusIcon + '"></i></button>';
+        return '<button class="btn btn-' + statusButton + '" title="' + status + '"><i class="fa ' + statusIcon + '"></i></button>';
     };
 
     var createPriorityButton = function (priority) {
@@ -63,7 +63,7 @@
                 break;
         }
 
-        return '<button class="btn btn-'+ priorityMark +'" style="width: 100%;" title="' + priority + '"><i class="fa fa-ambulance"></i></button>';
+        return '<button class="btn btn-'+ priorityMark +'" title="' + priority + '"><i class="fa fa-ambulance"></i></button>';
     };
 
     var renderMe = function (idx, ticket, row, style) {
@@ -439,13 +439,14 @@
         var chat = '';
         Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
             Bisnis.Util.Document.putHtml('.chatTicketClient', ticket.client.fullname);
-            if (null === typeof ticket.staff) {
+            if (null !== ticket.staff) {
                 Bisnis.Util.Document.putHtml('.chatTicketStaff', ticket.staff.user.fullname);
             }
 
             Bisnis.Util.Document.putHtml('.chatTicketCategory', ticket.category.name);
             Bisnis.Util.Document.putHtml('.chatTicketTitle', ticket.title);
             Bisnis.Util.Document.putHtml('.chatTicketDate', moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss'));
+            Bisnis.Util.Document.putHtml('.chatTicketStatus', createStatusButton(ticket.status));
 
             var profileImage = ticket.client.profileImage.split('.');
             responses.push({

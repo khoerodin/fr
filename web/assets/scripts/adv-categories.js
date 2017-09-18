@@ -68,7 +68,9 @@ new BootstrapMenu('#categoriesTree li span', {
     }]
 });
 
-$(document).on('click', '#addCategory #saveCategory', function () {
+$(document).on('click', '#addCategory #saveCategory', function (e) {
+
+    e.preventDefault();
 
     $('div .has-error').removeClass('has-error');
     $('p.help-block').remove();
@@ -141,7 +143,9 @@ $(document).on('click', '#addCategory #saveCategory', function () {
 
 });
 
-$(document).on('click', '#editCategory #updateCategory', function () {
+$(document).on('click', '#editCategory #updateCategory', function (e) {
+
+    e.preventDefault();
 
     $('div .has-error').removeClass('has-error');
     $('p.help-block').remove();
@@ -213,3 +217,12 @@ function deleteCategory(id) {
     });
 
 }
+
+$(document).ready(function() {
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+});

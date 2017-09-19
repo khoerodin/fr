@@ -39,27 +39,21 @@ Bisnis.init(function () {
     Bisnis.Advertising.Coba.fetch(pageParams, null,
         function (data) {
             // is has result
-            if (data === false) {
-                document.getElementById('aeGridAddBtn').removeAttribute("disabled");
-            } else {
-                document.getElementById('aeGridAddBtn').setAttribute("disabled", "disabled");
-            }
+            // boolean
         },
         function (data) {
-            // selected callback
-            console.log(data)
+            // selected data callback
+            // object
+            // data.id
+            // data.text
         },
         function (data) {
             // open input callback
-            if (data) {
-                document.getElementById('aeGridAddBtn').setAttribute("disabled", "disabled");
-            }
+            // boolean
         },
         function (data) {
             // close input callback
-            if (data) {
-                document.getElementById('aeGridAddBtn').setAttribute("disabled", "disabled");
-            }
+            // boolean
         }
     );
 });

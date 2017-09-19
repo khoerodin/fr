@@ -60,8 +60,15 @@
                 if (Bisnis.validCallback(hasResultCallback)) {
                     hasResultCallback(data);
                 }
+
+                if (data === false) {
+                    document.getElementById('aeGridAddBtn').removeAttribute("disabled");
+                } else {
+                    document.getElementById('aeGridAddBtn').setAttribute("disabled", "disabled");
+                }
+
             }, function (data) {
-                // selected callback
+                // selected data callback
                 if (Bisnis.validCallback(selectedSearchCallback)) {
                     selectedSearchCallback(data);
                 }
@@ -70,10 +77,18 @@
                 if (Bisnis.validCallback(openSearchCallback)) {
                     openSearchCallback(data);
                 }
+
+                if (data) {
+                    document.getElementById('aeGridAddBtn').setAttribute("disabled", "disabled");
+                }
             }, function (data) {
                 // close search input callback
                 if (Bisnis.validCallback(closeSearchCallback)) {
                     closeSearchCallback(data);
+                }
+
+                if (data) {
+                    document.getElementById('aeGridAddBtn').setAttribute("disabled", "disabled");
                 }
             });
 
@@ -203,7 +218,7 @@
             currentSeq = ( 1 - 1 ) * 17 + idx +1;
         }
 
-        row = row + '<tr class="' + value.id + '">';
+        row = row + '<tr id="' + value.id + '">';
         row = row + '<td>' + currentSeq + '</td>';
         row = row + renderColumns(value, columns);
         row = row + '<td><span class="pull-right">';

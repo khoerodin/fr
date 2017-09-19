@@ -61,10 +61,12 @@
                     hasResultCallback(data);
                 }
 
+                var id = elm.replace('#', '').replace('.', '') + 'AddBtn';
+
                 if (data === false) {
-                    document.getElementById('aeGridAddBtn').removeAttribute("disabled");
+                    document.getElementById(id).removeAttribute("disabled");
                 } else {
-                    document.getElementById('aeGridAddBtn').setAttribute("disabled", "disabled");
+                    document.getElementById(id).setAttribute("disabled", "disabled");
                 }
 
             }, function (data) {
@@ -79,8 +81,10 @@
                 }
 
                 if (data) {
-                    document.getElementById('aeGridAddBtn').setAttribute("disabled", "disabled");
+                    var id = elm.replace('#', '').replace('.', '') + 'AddBtn';
+                    document.getElementById(id).setAttribute("disabled", "disabled");
                 }
+
             }, function (data) {
                 // close search input callback
                 if (Bisnis.validCallback(closeSearchCallback)) {
@@ -88,7 +92,8 @@
                 }
 
                 if (data) {
-                    document.getElementById('aeGridAddBtn').setAttribute("disabled", "disabled");
+                    var id = elm.replace('#', '').replace('.', '') + 'AddBtn';
+                    document.getElementById(id).setAttribute("disabled", "disabled");
                 }
             });
 

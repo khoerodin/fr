@@ -56,18 +56,22 @@
                 fields: search.fields,
                 minimumInputLength: 2,
             }, function (data) {
+                // is has result callback
                 if (Bisnis.validCallback(hasResultCallback)) {
                     hasResultCallback(data);
                 }
             }, function (data) {
+                // selected callback
                 if (Bisnis.validCallback(selectedSearchCallback)) {
                     selectedSearchCallback(data);
                 }
             }, function (data) {
+                // open search input callback
                 if (Bisnis.validCallback(openSearchCallback)) {
                     openSearchCallback(data);
                 }
             }, function (data) {
+                // close search input callback
                 if (Bisnis.validCallback(closeSearchCallback)) {
                     closeSearchCallback(data);
                 }

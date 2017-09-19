@@ -38,7 +38,7 @@ Bisnis.init(function () {
 
     Bisnis.Advertising.Coba.fetch(pageParams, null,
         function (data) {
-            // if has result
+            // is has result
             if (data === false) {
                 document.getElementById('aeGridAddBtn').removeAttribute("disabled");
             } else {

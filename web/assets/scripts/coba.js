@@ -2,7 +2,7 @@ Bisnis.init(function () {
 
     var pageParams = {
         module: 'users',
-        elm: '#aeGrid',
+        elm: '#usersGrid',
         columns: [
             {
                 header: 'Nama',

@@ -7,6 +7,7 @@ app:
         - { path: '/api/images/{path}', controller: 'Bisnis:Api@callImage', methods: ['GET'], requirements: {'path': '.+' } }
         - { path: '/api', controller: 'Bisnis:Api@call', methods: ['POST'] }
         - { path: '/api/search', controller: 'Bisnis:Api@search', methods: ['POST'] }
+        - { path: '/api/searchGrid', controller: 'Bisnis:Api@searchGrid', methods: ['POST'] }
         - { path: '/api/roles', controller: 'Bisnis:Api@getRole', methods: ['POST'] }
         - { path: '/api/menus', controller: 'Bisnis:Api@menus', methods: ['POST'] }
         - { path: '/api/adv-spec-detail', controller: 'Bisnis:Api@advDetail', methods: ['POST'] }
@@ -71,3 +72,4 @@ app:
 
         #jangan di hapus,
         - { path: '/dummy', controller: 'Bisnis:Dummy@index', methods: ['GET'] }
+        - { path: '/coba', controller: 'Bisnis:Coba@index', methods: ['GET'] }

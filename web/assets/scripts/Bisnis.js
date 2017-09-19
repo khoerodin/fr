@@ -36,7 +36,6 @@
                 }
             },
             error: function (response, textStatus, errorThrown) {
-                Bisnis.errorMessage('Server bermasalah.');
                 if (Bisnis.validCallback(errorCallback)) {
                     errorCallback(response, textStatus, errorThrown);
                 }
@@ -44,27 +43,9 @@
         });
     };
 
-    Bisnis.getQueryParam = function (paramKey, url) {
-        var sPageURL = 'undefined' === url ? window.location.search.substring(1) : url;
-        var sURLVariables = sPageURL.split('&');
-        for (var i = 0; i < sURLVariables.length; i++) {
-            var sParameterName = sURLVariables[i].split('=');
-            if (sParameterName[0] === paramKey) {
-                return sParameterName[1];
-            }
-        }
-    };
-
-    Bisnis.errorMessage = function (message) {
-        toastr.error(message);
-    };
-
-    Bisnis.succesMessage = function (message) {
-        toastr.success(message);
-    };
-
     /** Module List */
     Bisnis.Helpdesk = {};
+    Bisnis.Advertising = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
 

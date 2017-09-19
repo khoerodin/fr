@@ -62,22 +62,22 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
             if ($url != 'helpdesk/ticket-responses') {
                 if ($url != 'advertising/publish-ads') {
-                    $temps = array_merge($temps, array('order[createdAt]' => 'DESC'));
+                    $temps = array_merge($temps, array('order' => array('createdAt' => 'DESC')));
                 } else {
-                    $temps = array_merge($temps, array('order[publishDate]' => 'ASC'));
+                    $temps = array_merge($temps, array('order' => array('publishDate' => 'ASC')));
                 }
             } else {
-                $temps = array_merge($temps, array('order[createdAt]' => 'ASC'));
+                $temps = array_merge($temps, array('order' => array('createdAt' => 'ASC')));
             }
-
-
-
         } else {
             $temps = [];
         }
 
         $response = $this->request($url, $method, $temps);
+
         return new Response($response->getContent());
+
+//        return new Response($response->getContent(), $response->getStatusCode(), $response->headers->all());
     }
 
     /**

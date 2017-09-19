@@ -282,4 +282,64 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $response = $this->request('advertising/specification-details', 'get', $params);
         return new JsonResponse(json_decode($response->getContent(), true));
     }
+
+    private function searchByField($module, Array $data)
+    {
+        $url = $module;
+        $q = $data['q'];
+        $field = $data['field'];
+
+        $response = $this->request($url, 'GET', [$field => $q]);
+        $arr = json_decode($response->getContent(), true);
+
+        if (array_key_exists('hydra:member', $arr)) {
+            if(count($arr) > 0 ) {
+                $arr = $arr['hydra:member'];
+            } else {
+                return new JsonResponse(array());
+            }
+        } else {
+            return new JsonResponse(array());
+        }
+
+
+        $arrData = [];
+        foreach ($arr as $value) {
+            $obj = [];
+            foreach ($value as $k => $v) {
+                if($k == 'id'){
+                    $obj['id'] = $v;
+                }
+
+                if($k == $field){
+                    $obj['value'] = $v . ' ~ <i>' . $field . '</i>';
+                }
+
+                $obj['field'] = $field;
+
+            }
+            $arrData[] = $obj;
+        }
+
+        return $arrData;
+    }
+
+    public function searchGridAction (Request $request)
+    {
+        $module = $request->get('module');
+        $fields = $request->get('fields');
+
+        $response = [];
+        foreach ($fields as $value) {
+            $data = [
+                'q' => $request->get('q'),
+                'field' => $value
+            ];
+
+            $response = array_merge($response, $this->searchByField($module, $data));
+        }
+
+        return new JsonResponse($response);
+    }
 }
+

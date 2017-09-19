@@ -1,37 +1,12 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Document.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Grid.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Event.js"></script>
+    <script type="text/javascript" src="/assets/scripts/SimpleGrid.js"></script>
     <script type="text/javascript" src="/assets/scripts/coba.js"></script>
 {% endblock %}
 
 {%- block content -%}
     <div class="row">
-        <div class="col-md-12">
-            <div class="box">
-                <div class="box-body">
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th width="5%">NO</th>
-                                <th>LAYOUT</th>
-                                <th width="7%">AKSI</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="cobaGrid"></tbody>
-
-                    </table>
-                </div>
-
-                <div class="box-footer">
-                    <ul class="pagination pull-right" id="cobaPagination"></ul>
-                </div>
-            </div>
-        </div>
+        <div class="col-md-12" id="aeGrid"></div>
     </div>
 {%- endblock -%}

@@ -118,7 +118,7 @@
                        var statusCanvas = document.getElementById("statusTicketChart");
 
                        Chart.defaults.global.defaultFontFamily = "Lato";
-                       Chart.defaults.global.defaultFontSize = 12;
+                       Chart.defaults.global.defaultFontSize = 14;
 
                        var statusData = {
                            labels: ["Open", "Assignment", "On Progress", "Resolved", "Closed"],
@@ -126,18 +126,58 @@
                                {
                                    data: [arrayStatus[0],arrayStatus[1],arrayStatus[2],arrayStatus[3],arrayStatus[4]],
                                    backgroundColor: [
-                                       "#145293",
-                                       "#2E6CAD",
-                                       "#7AB8F9",
-                                       "#93D1FF",
-                                       "#C7FFFF"
+                                       "#DBDBDB",
+                                       "#3c8dbc",
+                                       "#f39c12",
+                                       "#00a65a",
+                                       "#d73925"
                                    ]
-                               }]
+                               }],
+                           options: {
+                               layout: {
+                                   padding: {
+                                       left: 50,
+                                       right: 0,
+                                       top: 50,
+                                       bottom: 0
+                                   }
+                               },
+                               legend: {
+                                   display: true,
+                                   labels: {
+                                       fontColor: 'rgb(255, 99, 132)'
+                                   }
+                               }
+                           }
                        };
                        var pieChart = new Chart(statusCanvas, {
                            type: 'pie',
                            data: statusData
                        });
+
+                       statusCanvas.onclick = function(evt) {
+                           var activePoints = pieChart.getElementsAtEvent(evt);
+                           if (activePoints[0]) {
+                               var chartData = activePoints[0]['_chart'].config.data;
+                               var idx = activePoints[0]['_index'];
+
+                               var label = chartData.labels[idx];
+                               var value = chartData.datasets[0].data[idx];
+
+                               var url = "http://example.com/?label=" + label + "&value=" + value;
+                               console.log(url);
+                               alert(url);
+                               if(label === "Closed" && label === "Resolved") {
+                                   // var href = '<a target="_blank" href="/admin/#tab2">View Tab 2</a>';
+                                   location.href = "/helpdesk/tickets#closedTickets";
+                                   $('#closedTickets a[href="' + window.location.hash + '"]').tab('show')
+                                   // $('#closedTickets').trigger('click');
+                               } else {
+                                   location.href = "/helpdesk/tickets";
+                                   // $('#assignedTo').trigger('click');
+                               }
+                           }
+                       };
                    });
                            // ------------ END STATUS TICKET (PIE CHART) -----------------------
                    })
@@ -151,12 +191,12 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-01-01'}},{'createdAt':{'before': '2017-01-30'}}]
+                params: [{'createdAt' : {'after':'2017-01-01','before': '2017-01-31'}}]
             },
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
             }
         });
@@ -167,11 +207,11 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-02-01'}},{'createdAt' : {'before': '2017-02-28'}}]},
+                params: [{'createdAt' : {'after':'2017-02-01','before': '2017-02-28'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
             }
         });
@@ -182,11 +222,11 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-03-01'}},{'createdAt' : {'before': '2017-03-31'}}]},
+                params: [{'createdAt' : {'after':'2017-03-01','before': '2017-03-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
             }
         });
@@ -197,11 +237,11 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-04-01'}},{'createdAt' : {'before': '2017-04-30'}}]},
+                params: [{'createdAt' : {'after':'2017-04-01','before': '2017-04-30'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
             }
         });
@@ -212,11 +252,11 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-05-01'}},{'createdAt' : {'before': '2017-05-31'}}]},
+                params: [{'createdAt' : {'after':'2017-05-01','before': '2017-05-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
             }
         });
@@ -227,11 +267,11 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-06-01'}},{'createdAt' : {'before': '2017-06-30'}}]},
+                params: [{'createdAt' : {'after':'2017-06-01','before': '2017-06-30'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
             }
         });
@@ -242,11 +282,11 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-07-01'}},{'createdAt' : {'before': '2017-07-31'}}]},
+                params: [{'createdAt' : {'after':'2017-07-01','before': '2017-07-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
             }
         });
@@ -256,14 +296,16 @@
         $.ajax({
             url: '/api',
             type: 'POST',
-            data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-08-01'}},{'createdAt' : {'before': '2017-08-31'}}]},
-            success: function (data, textStatus, jqXHR) {
-                var data = JSON.parse(data);
-                var total = data['hydra:totalItems'];
-                    console.log(total);
-                    if (callback) callback(total)
-            }
+            data: {
+                module: 'helpdesk/tickets',
+                method: 'get',
+                params: [{'createdAt' : {'after':'2017-08-01','before': '2017-08-31'}}]},
+                    success: function (data, textStatus, jqXHR) {
+                    var data = JSON.parse(data);
+                    var total = data['hydra:totalItems'];
+                        // console.log(total);
+                        if (callback) callback(total)
+                }
         });
 
     }
@@ -274,12 +316,11 @@
             data: {
                 module: 'helpdesk/tickets',
                 method: 'get',
-                params: [
-                    {'createdAt' : {'after': '2017-09-01'}},{'createdAt' : {'before': '2017-09-30'}}]},
+                params: [{'createdAt' : {'after':'2017-09-01','before': '2017-09-30'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
             }
         });
@@ -290,11 +331,11 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-10-01'}},{'createdAt' : {'before': '2017-10-31'}}]},
+                params: [{'createdAt' : {'after':'2017-10-01','before': '2017-10-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
             }
         });
@@ -305,11 +346,11 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-11-01'}},{'createdAt' : {'before': '2017-11-30'}}]},
+            params: [{'createdAt' : {'after':'2017-11-01','before': '2017-11-30'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
 
             }
@@ -321,11 +362,11 @@
             url: '/api',
             type: 'POST',
             data: {module: 'helpdesk/tickets',method: 'get',
-                params: [{'createdAt' : {'after':'2017-12-01'}},{'createdAt' : {'before': '2017-12-31'}}]},
+            params: [{'createdAt' : {'after':'2017-12-01', 'before': '2017-12-31'}}]},
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
                 var total = data['hydra:totalItems'];
-                    console.log(total);
+                    // console.log(total);
                     if (callback) callback(total)
 
             }
@@ -356,42 +397,93 @@
                                                 arrayMonth[10] = total_10;
                                                 createdAtChartDes(function (total_11) {
                                                     arrayMonth[11] = total_11;
-                                                    // ------- STATISTIK BERDASARKAN WAKTU TAMBAH TICKET (PIE CHART) -------------
+                                                    // ------- STATISTIK BERDASARKAN WAKTU TAMBAH TICKET (LINE CHART) -------------
 
                                                     var createdAtCanvas = document.getElementById("createdTicketChart");
 
                                                     Chart.defaults.global.defaultFontFamily = "Lato";
-                                                    Chart.defaults.global.defaultFontSize = 12;
+                                                    Chart.defaults.global.defaultFontSize = 14;
 
-                                                    var createData = {
-                                                        labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
-                                                        datasets: [
-                                                            {
+                                                    createdAtCanvas.onclick = function(evt) {
+                                                        var activePoints = barChartMonth.getElementsAtEvent(evt);
+                                                        if (activePoints[0]) {
+                                                            var chartData = activePoints[0]['_chart'].config.data;
+                                                            var idx = activePoints[0]['_index'];
+
+                                                            var label = chartData.labels[idx];
+                                                            var value = chartData.datasets[0].data[idx];
+
+                                                            // var url = "label=" + label + " dan value=" + value;
+                                                            // console.log(url);
+                                                            // alert(url);
+                                                            console.log($('#currentUser'));
+
+                                                            $('#modalDetailMonth #bulan').html('bulan ' + label);
+                                                            $('#modalDetailMonth #open').html(arrayStatus[0]);
+                                                            $('#modalDetailMonth #assignment').html(arrayStatus[1]);
+                                                            $('#modalDetailMonth #onprogress').html(arrayStatus[2]);
+                                                            $('#modalDetailMonth #resolved').html(arrayStatus[3]);
+                                                            $('#modalDetailMonth #closed').html(arrayStatus[4]);
+                                                            $('#modalDetailMonth #total').html(value);
+
+
+
+                                                            $('#modalDetailMonth').modal({show: true, backdrop: 'static'});
+                                                        }
+                                                    };
+
+                                                    var ctx = document.getElementById("createdTicketChart").getContext('2d');
+                                                    var barChartMonth = new Chart(ctx, {
+                                                        type: 'bar',
+                                                        data: {
+                                                            labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
+                                                            datasets: [{
+                                                                // label: '# of Votes',
                                                                 data: [arrayMonth[0], arrayMonth[1], arrayMonth[2], arrayMonth[3], arrayMonth[4], arrayMonth[5], arrayMonth[6], arrayMonth[7], arrayMonth[8], arrayMonth[9], arrayMonth[10], arrayMonth[11]],
                                                                 backgroundColor: [
-                                                                    "#e6194b",
-                                                                    "#3cb44b",
-                                                                    "#ffe119",
-                                                                    "#0082c8",
-                                                                    "#f58231",
-                                                                    "#911eb4",
-                                                                    "#46f0f0",
-                                                                    "#f032e6",
-                                                                    "#d2f53c",
-                                                                    "#fabebe",
-                                                                    "#008080",
-                                                                    "#e6beff",
-                                                                    "#aa6e28"
-                                                                ]
+                                                                    'rgb(230, 25, 75)',
+                                                                    'rgb(60, 180, 75)',
+                                                                    'rgb(255, 225, 25)',
+                                                                    'rgb(0, 130, 200)',
+                                                                    'rgb(245, 130, 49)',
+                                                                    'rgb(145, 30, 180)',
+                                                                    'rgb(70, 240, 240)',
+                                                                    'rgb(240, 50, 230)',
+                                                                    'rgb(210, 245, 60)',
+                                                                    'rgb(250, 190, 190)',
+                                                                    'rgb(0, 128, 128)',
+                                                                    'rgb(230, 190, 255)',
+                                                                    'rgb(170, 110, 40)'
+                                                                ],
+                                                                borderColor: [
+                                                                    'rgb(255, 140, 190)',
+                                                                    'rgb(137, 255, 152)',
+                                                                    'rgb(255, 255, 140)',
+                                                                    'rgb(115, 245, 255)',
+                                                                    'rgb(255, 207, 126)',
+                                                                    'rgb(255, 145, 255)',
+                                                                    'rgb(185, 255, 255)',
+                                                                    'rgb(255, 165, 255)',
+                                                                    'rgb(255, 255, 175)',
+                                                                    'rgb(255, 228, 228)',
+                                                                    'rgb(115, 243, 243)',
+                                                                    'rgb(255, 228, 255)'
+                                                                ],
+                                                                borderWidth: 1
                                                             }]
-                                                    };
-                                                    if (window.bar !== undefined) {
-                                                        window.bar.destroy();
-                                                    }
-                                                    window.bar = new Chart(createdAtCanvas, {
-                                                        type: 'pie',
-                                                        data: createData
-                                                    // --- END STATISTIK BERDASARKAN WAKTU TAMBAH TICKET (PIE CHART) ---
+                                                        },
+                                                        options: {
+                                                            scales: {
+                                                                yAxes: [{
+                                                                    ticks: {
+                                                                        beginAtZero:true
+                                                                    }
+                                                                }]
+                                                            },
+                                                            legend: {
+                                                                display: false
+                                                            }
+                                                        }
                                                     });
                                                 });
                                             })
@@ -527,7 +619,7 @@
                             var staffCanvas = document.getElementById("staffChart");
 
                             Chart.defaults.global.defaultFontFamily = "Lato";
-                            Chart.defaults.global.defaultFontSize = 12;
+                            Chart.defaults.global.defaultFontSize = 14;
 
                             var staffData = {
                                 labels: [
@@ -549,7 +641,17 @@
                                             "#FFE089",
                                             "#FFFFAD"
                                         ]
-                                    }]
+                                    }],
+                                options: {
+                                    layout: {
+                                        padding: {
+                                            left: 50,
+                                            right: 0,
+                                            top: 50,
+                                            bottom: 0
+                                        }
+                                    }
+                                }
                             };
                             // if (window.bar !== undefined) {
                             //     window.bar.destroy();
@@ -727,7 +829,7 @@
                                         var categoryCanvas = document.getElementById("categoryTicketChart");
 
                                         Chart.defaults.global.defaultFontFamily = "Lato";
-                                        Chart.defaults.global.defaultFontSize = 10;
+                                        Chart.defaults.global.defaultFontSize = 14;
 
                                         var categoryData = {
                                             labels: [
@@ -756,7 +858,17 @@
                                                         "#FFB3FF",
                                                         "#DB66FF"
                                                     ]
-                                                }]
+                                                }],
+                                            options: {
+                                                layout: {
+                                                    padding: {
+                                                        left: 50,
+                                                        right: 0,
+                                                        top: 50,
+                                                        bottom: 0
+                                                    }
+                                                }
+                                            }
                                         };
                                         // if (window.bar !== undefined) {
                                         //     window.bar.destroy();

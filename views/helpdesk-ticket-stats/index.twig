@@ -23,7 +23,7 @@
         {#<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>#}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
 
-
+    <div class="hidden" id="currentUser">{{ me.id }}</div>
     <div class="row">
         <div class="col-md-12">
             <div class="box">
@@ -60,7 +60,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
 
-                                        <div class="col-md-4">
+                                        <div class="col-md-7">
                                             <canvas id="createdTicketChart" width="400" height="400"></canvas>
                                         </div>
 
@@ -91,6 +91,30 @@
                                     </div>
                                 </div>
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {#modal detail#}
+                <div class="modal fade" id="modalDetailMonth" role="dialog">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Jumlah Status</h4>
+                                <h4 class="modal-title" id="bulan"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="panel">Open<span class="pull-right" id="open"></span></div>
+                                <div class="panel">Assignment<span class="pull-right" id="assignment"></span></div>
+                                <div class="panel">On Progress<span class="pull-right" id="onprogress"></span></div>
+                                <div class="panel">Resolved<span class="pull-right" id="resolved"></span></div>
+                                <div class="panel">Closed<span class="pull-right" id="closed"></span></div>
+                                <div class="panel"><b>TOTAL</b><span class="pull-right" id="total"></span></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>

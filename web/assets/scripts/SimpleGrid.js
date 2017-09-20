@@ -41,8 +41,7 @@
             Bisnis.Util.Event.bind('click', elm+'Pagination li span', function () {
                 var $this = this;
                 var pageNum = parseInt(Bisnis.Util.Document.getDataValue($this, 'page'));
-                console.log(pageNum);
-                Bisnis.Advertising.Coba.fetch(pageParams, pageNum);
+                Bisnis.Advertising.SimpleGrid.fetch(pageParams, pageNum);
             });
 
             Bisnis.Util.Style.ajaxSelect(elm+'Search', {

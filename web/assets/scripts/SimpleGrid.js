@@ -4,7 +4,6 @@
     Bisnis.Advertising.Coba.fetch = function (pageParams, pageNum, hasResultCallback, selectedSearchCallback, openSearchCallback, closeSearchCallback) {
         var module = pageParams.module;
         var elm = pageParams.elm;
-        var buttons = pageParams.buttons;
         var columns = pageParams.columns;
         var search = pageParams.search;
 
@@ -26,7 +25,6 @@
             var gridParams = {
                 'memberData': memberData,
                 'elm': elm,
-                'buttons': buttons,
                 'columns': columns,
                 'search': search
             };
@@ -106,7 +104,6 @@
 
         var memberData = gridParams.memberData;
         var elm = gridParams.elm;
-        var buttons = gridParams.buttons;
         var columns = gridParams.columns;
         var search = gridParams.search;
 
@@ -116,7 +113,6 @@
                 'idx': idx,
                 'value': value,
                 'row': row,
-                'buttons': buttons,
                 'columns': columns
             }
 
@@ -150,7 +146,6 @@
         grid = grid + '<tr>';
         grid = grid + '<th width="3%">NO</th>';
         grid = grid + renderRowHeader(columns);
-        grid = grid + '<th width="5%" class="text-right">AKSI</th>';
         grid = grid + '</tr>';
         grid = grid + '</thead>';
         grid = grid + '<tbody>';
@@ -164,19 +159,13 @@
     var renderRowHeader = function (columns) {
         var headers = '';
         Bisnis.each(function (idx, value) {
-            headers = headers + '<th>'+value.header+'</th>';
+
+            var width = 'undefined' !== typeof value.width ? 'width="' + value.width + '"' : '';
+
+            headers = headers + '<th '+width+'>'+value.header+'</th>';
         }, columns);
 
         return headers;
-    };
-
-    var renderButtons = function (buttons) {
-        var btns = '';
-        Bisnis.each(function (idx, value) {
-            btns = btns + '<button class="'+value.btnClass+'">'+value.btnContent+'</button>';
-        }, buttons);
-
-        return btns;
     };
 
     var renderColumns = function (value, columns) {
@@ -186,6 +175,7 @@
         Bisnis.each(function (idx, val) {
 
             var type = val.type;
+            var custom = val.custom;
             switch(type) {
                 case 'text':
                     columnValue = '<td>' + value[val.field] + '</td>';
@@ -201,7 +191,37 @@
                     columnValue = '<td>' + value[val.field] + '</td>';
             }
 
-            cols = cols + columnValue;
+
+
+            if ( custom ) {
+
+                // https://stackoverflow.com/questions/5334380/replacing-text-inside-of-curley-braces-javascript
+
+                var customVal = val.custom;
+                var replaceArray = [];
+                var replaceWith = [];
+                var hasBraces = val.custom.match(/{{\s*[\w\.]+\s*}}/g);
+
+                if (hasBraces) {
+                    hasBraces.match(/{{\s*[\w\.]+\s*}}/g)
+                        .map(function(x) {
+                            var bracketStr = x.match(/[\w\.]+/)[0];
+                            replaceArray.push(bracketStr);
+                            replaceWith.push(value[bracketStr]);
+                        });
+
+                    for(var i = 0; i < replaceArray.length; i++) {
+                        var customValStr = customVal.replace(new RegExp('{{ ' + replaceArray[i] + ' }}', 'gi'), replaceWith[i]);
+                    }
+
+                    cols = cols + '<td>' + customValStr + '</td>';
+                } else {
+                    cols = cols + '<td>' + customVal + '</td>';
+                }
+
+            } else {
+                cols = cols + columnValue;
+            }
         }, columns);
 
         return cols;
@@ -212,7 +232,6 @@
         var idx = rowParams.idx;
         var value = rowParams.value;
         var row = rowParams.row;
-        var buttons = rowParams.buttons;
         var columns = rowParams.columns;
 
         var currentPage = Bisnis.Util.Url.getQueryVariable('page');
@@ -226,9 +245,6 @@
         row = row + '<tr id="' + value.id + '">';
         row = row + '<td>' + currentSeq + '</td>';
         row = row + renderColumns(value, columns);
-        row = row + '<td><span class="pull-right">';
-        row = row + renderButtons(buttons);
-        row = row + '</span></td>';
         row = row + '</tr>';
 
         return row;

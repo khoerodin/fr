@@ -1,14 +1,14 @@
 (function (Bisnis) {
-    Bisnis.Advertising.Coba = {};
+    Bisnis.Advertising.SimpleGrid = {};
 
-    Bisnis.Advertising.Coba.fetch = function (pageParams, pageNum, hasResultCallback, selectedSearchCallback, openSearchCallback, closeSearchCallback) {
+    Bisnis.Advertising.SimpleGrid.fetch = function (pageParams, pageNum, hasResultCallback, selectedSearchCallback, openSearchCallback, closeSearchCallback) {
         var module = pageParams.module;
         var elm = pageParams.elm;
         var columns = pageParams.columns;
         var search = pageParams.search;
 
+        var pageNum = (typeof pageNum === 'undefined' || typeof pageNum === null || typeof pageNum === '') ? 1 : pageNum;
         var params = [];
-        var pageNum = (null !== pageNum && undefined !== typeof pageNum && '' !== pageNum) ? 1 : pageNum;
         params.push({
             page: pageNum
         });
@@ -29,7 +29,7 @@
                 'search': search
             };
 
-            renderGrid(gridParams);
+            renderGrid(gridParams, pageNum);
 
             if ('undefined' !== typeof viewData['hydra:last']) {
 
@@ -41,7 +41,7 @@
             Bisnis.Util.Event.bind('click', elm+'Pagination li span', function () {
                 var $this = this;
                 var pageNum = parseInt(Bisnis.Util.Document.getDataValue($this, 'page'));
-                Bisnis.Util.Url.changeUrlParam('page', pageNum);
+                console.log(pageNum);
                 Bisnis.Advertising.Coba.fetch(pageParams, pageNum);
             });
 
@@ -100,7 +100,7 @@
         });
     };
 
-    var renderGrid = function (gridParams) {
+    var renderGrid = function (gridParams, pageNum) {
 
         var memberData = gridParams.memberData;
         var elm = gridParams.elm;
@@ -116,7 +116,7 @@
                 'columns': columns
             }
 
-            row = renderRows(rowParams);
+            row = renderRows(rowParams, pageNum);
         }, memberData);
 
         var grid = '<div class="box">';
@@ -227,17 +227,16 @@
         return cols;
     };
 
-    var renderRows = function (rowParams) {
+    var renderRows = function (rowParams, pageNum) {
 
         var idx = rowParams.idx;
         var value = rowParams.value;
         var row = rowParams.row;
         var columns = rowParams.columns;
 
-        var currentPage = Bisnis.Util.Url.getQueryVariable('page');
         var currentSeq;
-        if (currentPage) {
-            currentSeq = ( currentPage - 1 ) * 17 + idx +1;
+        if (pageNum) {
+            currentSeq = ( pageNum - 1 ) * 17 + idx +1;
         } else {
             currentSeq = ( 1 - 1 ) * 17 + idx +1;
         }

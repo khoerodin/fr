@@ -1,22 +1,17 @@
 Bisnis.init(function () {
 
     var pageParams = {
-        module: 'users',
+        module: 'advertising/account-executives',
         elm: '#usersGrid',
         columns: [
             {
+                header: 'Kode',
+                field: 'code',
+                type: 'text'
+            },
+            {
                 header: 'Nama',
-                field: 'fullname',
-                type: 'text'
-            },
-            {
-                header: 'Username',
-                field: 'username',
-                type: 'text'
-            },
-            {
-                header: 'Email',
-                field: 'email',
+                field: 'name',
                 type: 'text'
             },
             {
@@ -30,11 +25,11 @@ Bisnis.init(function () {
         ],
         search: {
             placeholder: 'CARI USERNAME / EMAIL',
-            fields: ['username', 'email']
+            fields: ['name', 'code']
         }
     };
 
-    Bisnis.Advertising.Coba.fetch(pageParams, null,
+    Bisnis.Advertising.SimpleGrid.fetch(pageParams, null,
         function (data) {
             // is has result
             // boolean

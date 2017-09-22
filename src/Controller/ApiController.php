@@ -60,15 +60,6 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 $temps = [];
             }
 
-            /*if ($url != 'helpdesk/ticket-responses') {
-                if ($url != 'advertising/publish-ads') {
-                    $temps = array_merge($temps, array('order' => array('createdAt' => 'DESC')));
-                } else {
-                    $temps = array_merge($temps, array('order' => array('publishDate' => 'ASC')));
-                }
-            } else {
-                $temps = array_merge($temps, array('order' => array('createdAt' => 'ASC')));
-            }*/
         } else {
             $temps = [];
         }

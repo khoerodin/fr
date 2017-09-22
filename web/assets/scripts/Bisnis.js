@@ -25,6 +25,12 @@
         url = 'undefined' === typeof url ? '/api' : url;
         method = 'undefined' === typeof method ? 'post' : method;
 
+        params = Object.assign(params, {
+            order: {
+                createdAt: 'DESC'
+            }
+        });
+
         jQuery.ajax({
             url: url,
             type: method.toUpperCase(),

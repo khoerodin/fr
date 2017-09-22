@@ -1638,7 +1638,10 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
             method: 'get',
             params: [
                 {
-                    'order.id': orderId
+                    'order.id': orderId,
+                    order: {
+                        orderNumber: 'DESC'
+                    }
                 }
             ]
         },

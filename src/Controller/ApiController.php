@@ -59,7 +59,6 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
             } else {
                 $temps = [];
             }
-
         } else {
             $temps = [];
         }

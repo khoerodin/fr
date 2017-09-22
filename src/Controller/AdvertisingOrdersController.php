@@ -195,7 +195,7 @@ class AdvertisingOrdersController extends AdminController
                 }
 
                 if($k == $field[0]){
-                    $obj['field'] = $label . $v;
+                    $obj['field'] = $v . $label;
                 }
             }
             $arrData[] = $obj;
@@ -229,7 +229,7 @@ class AdvertisingOrdersController extends AdminController
                 }
 
                 if($k == 'name'){
-                    $obj['field'] = "TAG: " . $v;
+                    $obj['field'] = $v . ' ~ Tag';
                 }
             }
             $arrData[] = $obj;
@@ -247,7 +247,7 @@ class AdvertisingOrdersController extends AdminController
             'q'         => $request->get('q'),
             'field'     => array('orderNumber'),
             'params2'   => $request->get('params'),
-            'label'     => 'NO ORDER: '
+            'label'     => ' ~ No Order'
         ];
 
         $orderLetterData = [
@@ -256,7 +256,7 @@ class AdvertisingOrdersController extends AdminController
             'q'         => $request->get('q'),
             'field'     => array('orderLetter'),
             'params2'   => $request->get('params'),
-            'label'     => 'NO SURAT ORDER: '
+            'label'     => ' ~ No Surat Order'
         ];
 
         $orderNumber = $this->searchModule($orderNumberData);

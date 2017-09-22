@@ -177,7 +177,7 @@ function getOrders(param, selected) {
                     localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
                 }
 
-                if (text.startsWith('TAG')) {
+                if (text.endsWith('Tag')) {
                     var selected = [{id:id, text:text}];
                     getOrders(id, selected);
                 } else {
@@ -229,7 +229,7 @@ function getOrders(param, selected) {
                                 localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
                             }
 
-                            if (text.startsWith('TAG')) {
+                            if (text.endsWith('Tag')) {
                                 var selected = [{id:id, text:text}];
                                 getOrders(id, selected);
                                 $("#searchOrder").select2('close');

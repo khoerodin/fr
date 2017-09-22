@@ -60,7 +60,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 $temps = [];
             }
 
-            if ($url != 'helpdesk/ticket-responses') {
+            /*if ($url != 'helpdesk/ticket-responses') {
                 if ($url != 'advertising/publish-ads') {
                     $temps = array_merge($temps, array('order' => array('createdAt' => 'DESC')));
                 } else {
@@ -68,7 +68,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 }
             } else {
                 $temps = array_merge($temps, array('order' => array('createdAt' => 'ASC')));
-            }
+            }*/
         } else {
             $temps = [];
         }
@@ -77,7 +77,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
         return new Response($response->getContent());
 
-//        return new Response($response->getContent(), $response->getStatusCode(), $response->headers->all());
+        //return new Response($response->getContent(), $response->getStatusCode(), $response->headers->all());
     }
 
     /**

@@ -1,7 +1,7 @@
 (function (Bisnis) {
-    Bisnis.Advertising.SimpleGrid = {};
+    Bisnis.SimpleGrid = {};
 
-    Bisnis.Advertising.SimpleGrid.fetch = function (pageParams, pageNum, hasResultCallback, selectedSearchCallback, openSearchCallback, closeSearchCallback) {
+    Bisnis.SimpleGrid.fetch = function (pageParams, pageNum, hasResultCallback, selectedSearchCallback, openSearchCallback, closeSearchCallback) {
         var module = pageParams.module;
         var elm = pageParams.elm;
         var columns = pageParams.columns;
@@ -41,7 +41,7 @@
             Bisnis.Util.Event.bind('click', elm+'Pagination li span', function () {
                 var $this = this;
                 var pageNum = parseInt(Bisnis.Util.Document.getDataValue($this, 'page'));
-                Bisnis.Advertising.SimpleGrid.fetch(pageParams, pageNum);
+                Bisnis.SimpleGrid.fetch(pageParams, pageNum);
             });
 
             Bisnis.Util.Style.ajaxSelect(elm+'Search', {
@@ -202,8 +202,7 @@
                 var hasBraces = val.custom.match(/{{\s*[\w\.]+\s*}}/g);
 
                 if (hasBraces) {
-                    hasBraces.match(/{{\s*[\w\.]+\s*}}/g)
-                        .map(function(x) {
+                    hasBraces.map(function(x) {
                             var bracketStr = x.match(/[\w\.]+/)[0];
                             replaceArray.push(bracketStr);
                             replaceWith.push(value[bracketStr]);

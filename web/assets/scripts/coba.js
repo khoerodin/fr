@@ -18,7 +18,7 @@ Bisnis.init(function () {
                 header: '<span class="pull-right">Aksi</span>',
                 custom: '<span class="pull-right">' +
                 '<button class="btn btn-xs btn-flat btn-default"><i class="fa fa-pencil"></i></button>' +
-                '<button class="btn btn-xs btn-flat btn-default"><i class="fa fa-times"></i></button>' +
+                '<button data-id="{{ id }}" class="btn-delete btn btn-xs btn-flat btn-default"><i class="fa fa-times"></i></button>' +
                 '</span>',
                 width: '5%'
             }
@@ -29,7 +29,7 @@ Bisnis.init(function () {
         }
     };
 
-    Bisnis.Advertising.SimpleGrid.fetch(pageParams, null,
+    Bisnis.SimpleGrid.fetch(pageParams, null,
         function (data) {
             // is has result
             // boolean
@@ -49,4 +49,11 @@ Bisnis.init(function () {
             // boolean
         }
     );
+
+    Bisnis.Util.Event.bind('click', '.btn-delete', function (e) {
+        var btnId = this.getAttribute('data-id');
+        Bisnis.SimpleGrid.detailModal(
+
+        );
+    })
 });

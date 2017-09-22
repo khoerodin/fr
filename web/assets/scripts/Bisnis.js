@@ -25,7 +25,7 @@
         url = 'undefined' === typeof url ? '/api' : url;
         method = 'undefined' === typeof method ? 'post' : method;
 
-        params = Object.assign(params, {
+        params.params.push({
             order: {
                 createdAt: 'DESC'
             }

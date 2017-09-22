@@ -454,24 +454,22 @@
                         <div class="col-sm-12 table-responsive">
                             <table class="table table-bordered table-striped">
                                 <tr>
-                                    <td style="width: 20%;">Nama Klien</td>
-                                    <td class="chatTicketClient">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 20%;">Kategori</td>
-                                    <td class="chatTicketCategory">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 20%;">Judul</td>
+                                    <td><b>Nama Staf:</b></td>
+                                    <td class="chatTicketStaff">-</td>
+                                    <td><b>Judul:</b></td>
                                     <td class="chatTicketTitle">-</td>
                                 </tr>
                                 <tr>
-                                    <td style="width: 20%;">Tanggal</td>
-                                    <td class="chatTicketDate">-</td>
+                                    <td><b>Tipe:</b></td>
+                                    <td class="chatTicketType">-</td>
+                                    <td><b>Kategori:</b></td>
+                                    <td class="chatTicketCategory">-</td>
                                 </tr>
                                 <tr>
-                                    <td style="width: 20%;">Status</td>
+                                    <td><b>Status:</b></td>
                                     <td class="chatTicketStatus">-</td>
+                                    <td><b>Tanggal:</b></td>
+                                    <td class="chatTicketDate">-</td>
                                 </tr>
                             </table>
                         </div>
@@ -486,20 +484,13 @@
                                 </div>
                                 <div class="media-body">
                                     <h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i> Hari, Tanggal dan Jam</h6>
-                                    <h4 class="media-heading">Nama Klien / Staff</h4>
+                                    <h4 class="media-heading">Nama Klien / Staf</h4>
                                     <p>Isi Pesan</p>
                                 </div>
                             </div>
-                            <hr>
-
                         </div>
-                    </div>
-                    <div class="box-footer">
-                        <div class="form-group">
+                        <div>
                             <textarea type="text" name="message" class="form-control editor" id="chatMessage"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="btn btn-primary btn-flat pull-right" id="sendResponse">Kirim</button>
                         </div>
                     </div>
                 </div>
@@ -508,6 +499,7 @@
                 <button type="button" class="btn btn-primary pull-left" data-dismiss="modal" title="Tandai Sedang Dikerjakan" id="onprogressModalDetail"><i class="fa fa-wrench"></i></button>
                 <button type="button" class="btn btn-danger pull-left" data-dismiss="modal" title="Tandai Telah Selasai" id="resolveModalDetail"><i class="fa fa-check"></i></button>
                 <button type="button" class="btn btn-success btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
+                <button type="button" class="btn btn-primary btn-flat pull-right" id="sendResponse">Kirim</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalDetail">Tutup</button>
             </div>
         </div>

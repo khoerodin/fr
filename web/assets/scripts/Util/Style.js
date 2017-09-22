@@ -95,4 +95,11 @@
             width: '100%'
         });
     };
+
+    Bisnis.Util.Style.changeStyle = function (selector, css) {
+        var element = jQuery(selector);
+        Bisnis.each(function (idx, value) {
+            element.css(value);
+        }, css);
+    };
 })(window.Bisnis || {});

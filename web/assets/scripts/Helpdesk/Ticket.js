@@ -194,10 +194,10 @@
             var viewData = rawData['hydra:view'];
 
             if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.getQueryParam('page', viewData['@id']);
+                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
 
                 Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', currentPage);
-                Bisnis.Util.Grid.createPagination(paginationSelector, Bisnis.getQueryParam('page', viewData['hydra:last']), currentPage);
+                Bisnis.Util.Grid.createPagination(paginationSelector, Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
             }
 
             renderGrid(ticketList, renderTo, useMe);
@@ -223,10 +223,10 @@
             var viewData = rawData['hydra:view'];
 
             if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.getQueryParam('page', viewData['@id']);
+                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
 
                 Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', currentPage);
-                Bisnis.Util.Grid.createPagination(paginationSelector, Bisnis.getQueryParam('page', viewData['hydra:last']), currentPage);
+                Bisnis.Util.Grid.createPagination(paginationSelector, Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
             }
 
             renderGrid(ticketList, renderTo, useMe);
@@ -448,6 +448,7 @@
             }
 
             Bisnis.Util.Document.putHtml('.chatTicketCategory', ticket.category.name);
+            Bisnis.Util.Document.putHtml('.chatTicketType', ticket.type);
             Bisnis.Util.Document.putHtml('.chatTicketTitle', ticket.title);
             Bisnis.Util.Document.putHtml('.chatTicketDate', moment(ticket.createdAt).format('DD-MM-YYYY hh:mm:ss'));
             Bisnis.Util.Document.putHtml('.chatTicketStatus', createStatusButton(ticket.status));

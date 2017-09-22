@@ -195,7 +195,7 @@
                             '/api/helpdesk/staffs/' + staffId,
                             'Tiket Anda [' + ticket.title + '] mendapatkan response baru dari admin.'
                         );
-                        Bisnis.succesMessage('Respon terkirim.');
+                        Bisnis.successMessage('Respon terkirim.');
                     });
                 });
             });
@@ -211,7 +211,7 @@
                 Bisnis.Helpdesk.Ticket.assignTo(ticketId, staffUri, function () {
                     Bisnis.Util.Dialog.hideModal('.ticketAssignment');
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
-                    Bisnis.succesMessage('Tiket berhasil diupdate.');
+                    Bisnis.successMessage('Tiket berhasil diupdate.');
 
                     Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
                         Bisnis.Notification.send(
@@ -238,7 +238,7 @@
             Bisnis.Util.Dialog.hideModal('.ticketChangePriority');
             Bisnis.Helpdesk.Ticket.changePriority(ticketId, priority);
             Bisnis.Util.Event.triggerClick('#ticketTab .active');
-            Bisnis.succesMessage('Prioritas tiket berhasil diubah.');
+            Bisnis.successMessage('Prioritas tiket berhasil diubah.');
 
             Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
                 Bisnis.Notification.send(
@@ -266,7 +266,7 @@
             Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan semua pekerjaan tiket ini sudah selesai?', function (result) {
                 if (result) {
                     Bisnis.Helpdesk.Ticket.resolve(ticketId);
-                    Bisnis.succesMessage('Tiket berhasil diupdate.');
+                    Bisnis.successMessage('Tiket berhasil diupdate.');
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
 
                     Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
@@ -286,7 +286,7 @@
             Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan mengeset tiket menjadi sedang dalam pengerjaan?', function (result) {
                 if (result) {
                     Bisnis.Helpdesk.Ticket.markOnProgress(ticketId);
-                    Bisnis.succesMessage('Tiket berhasil diupdate.');
+                    Bisnis.successMessage('Tiket berhasil diupdate.');
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
                 }
             });
@@ -299,7 +299,7 @@
                 if (result) {
                     Bisnis.Helpdesk.Ticket.close(ticketId);
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
-                    Bisnis.succesMessage('Tiket berhasil ditutup.');
+                    Bisnis.successMessage('Tiket berhasil ditutup.');
 
                     Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
                         Bisnis.Notification.send(
@@ -319,7 +319,7 @@
             Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan membuka kembali tiket ini?', function (result) {
                 if (result) {
                     Bisnis.Helpdesk.Ticket.markOnProgress(ticketId);
-                    Bisnis.succesMessage('Tiket berhasil dibuka kembali.');
+                    Bisnis.successMessage('Tiket berhasil dibuka kembali.');
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
 
                     Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {

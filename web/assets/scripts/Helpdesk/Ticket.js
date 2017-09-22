@@ -37,11 +37,11 @@
                 statusButton = 'warning';
                 break;
             case 'resolved':
-                statusIcon = statusIcon + '4';
+                statusIcon = 'fa-check';
                 statusButton = 'success';
                 break;
             default:
-                statusIcon = statusIcon + '4';
+                statusIcon = 'fa-close';
                 statusButton = 'danger';
                 break;
         }

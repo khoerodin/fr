@@ -49,6 +49,14 @@
         });
     };
 
+    Bisnis.errorMessage = function (message) {
+        toastr.error(message);
+    };
+
+    Bisnis.successMessage = function (message) {
+        toastr.success(message);
+    };
+
     /** Module List */
     Bisnis.Helpdesk = {};
     Bisnis.SimpleGrid = {};

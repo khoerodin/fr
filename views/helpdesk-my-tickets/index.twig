@@ -90,7 +90,7 @@
                     clientId,
                     'Tiket ' + title + ' baru saja dibuat.'
                 );
-                Bisnis.succesMessage('Tiket baru berhasil dibuat.');
+                Bisnis.successMessage('Tiket baru berhasil dibuat.');
 
                 Bisnis.Util.Document.putValue('#ticketCategory', '');
                 Bisnis.Util.Document.putValue('#ticketTitle', '');
@@ -149,7 +149,7 @@
                             '/api/users/{{ me.id }}',
                             'Tiket ' + ticket.title + ' mendapatkan response baru dari user.'
                         );
-                        Bisnis.succesMessage('Respon terkirim.');
+                        Bisnis.successMessage('Respon terkirim.');
                     });
                 });
             });
@@ -173,7 +173,7 @@
                 if (result) {
                     Bisnis.Helpdesk.Ticket.close(ticketId);
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
-                    Bisnis.succesMessage('Tiket berhasil ditutup.');
+                    Bisnis.successMessage('Tiket berhasil ditutup.');
                 }
             });
         });

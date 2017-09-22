@@ -8,7 +8,10 @@ function getOrders(param, selected) {
             method: 'get',
             params: [
                 {
-                    orderTag: param
+                    orderTag: param,
+                    order: {
+                        orderNumber: 'ASC'
+                    }
                 }
             ]
         },

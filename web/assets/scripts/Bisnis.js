@@ -45,7 +45,7 @@
 
     /** Module List */
     Bisnis.Helpdesk = {};
-    Bisnis.Advertising = {};
+    Bisnis.SimpleGrid = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
 

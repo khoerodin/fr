@@ -1640,7 +1640,7 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                 {
                     'order.id': orderId,
                     order: {
-                        orderNumber: 'DESC'
+                        createdAt: 'DESC'
                     }
                 }
             ]

@@ -343,7 +343,7 @@
         });
     };
 
-    Bisnis.Helpdesk.Ticket.createNew = function (clientId, categoryId, title, message, callback) {
+    Bisnis.Helpdesk.Ticket.createNew = function (clientId, categoryId, ticketType, title, message, callback) {
         Bisnis.request({
             module: 'helpdesk/tickets',
             method: 'post',
@@ -355,6 +355,10 @@
                 {
                     name: 'category',
                     value: categoryId
+                },
+                {
+                    name: 'ticketType',
+                    value: ticketType
                 },
                 {
                     name: 'title',

@@ -76,10 +76,11 @@
         Bisnis.Util.Event.bind('click', '#btnSave', function () {
             var clientId = '/api/users/{{ me.id }}';
             var categoryId = Bisnis.Util.Document.getValue('#ticketCategory');
+            var ticketType = Bisnis.Util.Document.getValue('#ticketType');
             var title = Bisnis.Util.Document.getValue('#ticketTitle');
             var message = Bisnis.Util.Document.getValue('#ticketMessage');
 
-            Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, title, message, function () {
+            Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, ticketType, title, message, function () {
                 Bisnis.Util.Event.triggerClick('.assignToMe');
                 Bisnis.Util.Dialog.hideModal('#newTicketModal');
                 Bisnis.Notification.send(
@@ -260,8 +261,17 @@
             <div class="modal-body">
                 <form id="formTiket">
                     <div class="form-group">
-                        <label for="judul">Kategori</label>
+                        <label for="judul">Bagian</label>
                         <select name="category" class="form-control" id="ticketCategory" style="width: 100%">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Tipe</label>
+                        <select name="category" class="form-control" id="ticketType" style="width: 100%">
+                            <option selected disabled class="text-muted">PILIH TIPE</option>
+                            <option value="bug">Bug</option>
+                            <option value="request">Request</option>
+                            <option value="guide">Guide/Tutorial</option>
                         </select>
                     </div>
                     <div class="form-group">

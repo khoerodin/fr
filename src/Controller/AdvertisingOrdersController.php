@@ -270,4 +270,18 @@ class AdvertisingOrdersController extends AdminController
         $response = array_merge($orderNumber, $orderLetter, $tags);
         return new JsonResponse($response);
     }
+
+    public function invoicesAction()
+    {
+        $meta = [
+            'parentMenu' => 'Iklan',
+            'title' => 'Order Iklan',
+        ];
+
+        $data = [
+            'meta' => $meta
+        ];
+
+        return $this->view('advertising-orders/invoices.twig', $data);
+    }
 }

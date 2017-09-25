@@ -85,13 +85,17 @@ class AdvertisingOrdersController extends AdminController
             ];
         }
 
+        $orderRefference = $this->request('advertising/orders/' . $order['orderRefference'], 'get');
+        $orderRefference = json_decode($orderRefference->getContent(), true);
+
         $data = [
             'meta' => $meta,
             'order' => $order,
             'representatives' => $representatives,
             'paymentMethod' => $paymentMethod,
             'categories' => $this->getTreeParents($order['category']['id'],$categories),
-            'tags' => $tags
+            'tags' => $tags,
+            'orderRefference' => $orderRefference['orderNumber']
         ];
 
         return $this->view('advertising-orders/detail.twig', $data);

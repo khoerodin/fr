@@ -23,60 +23,25 @@ function getOrders(param, selected) {
                 var memberData = JSON.parse(data)['hydra:member'];
                 var no = 1;
                 var searchArea;
-                var searchArea;
 
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
                 tableData += '<thead><tr><th width="3%">#</th><th width="10%">NOMOR ORDER</th>';
-                tableData += '<th width="">NOMOR SURAT ORDER</th>';
-                tableData += '<th width="">Judul</th>';
-                tableData += '<th width="">Order Dari</th><th width="">Pemasang</th>';
-                tableData += '<th>Status</th>';
+                tableData += '<th>Judul</th>';
+                tableData += '<th>Faktur</th>';
                 tableData += '<th width="3%"><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
 
                 $.each(memberData, function (index, value) {
-                    var status;
-                    switch (value.status) {
-                        case 'a':
-                            status = "<span class='label label-success'>Active</span>";
-                            break;
-                        case 'i':
-                            status = "<span class='label label-warning'>Invoice</span>";
-                            break;
-                        case 'v':
-                            status = "<span class='label label-danger'>Void</span>";
-                            break;
-                        case 'c':
-                            status = "<span class='label label-default'>Closed</span>";
-                            break;
-                        default:
-                            status = "<span class='label label-success'>Active</span>";
-                    }
 
                     tableData += '<tr>';
                     tableData += '<td>'+no+'</td>';
                     tableData += '<td>'+value.orderNumber+'</td>';
-                    tableData += '<td>'+value.orderLetter+'</td>';
                     tableData += '<td>'+value.title+'</td>';
-
-                    if (value.orderFrom) {
-                        tableData += '<td>'+value.orderFrom.name+'</td>';
-                    } else {
-                        tableData += '<td>-</td>';
-                    }
-
-                    if (value.customer) {
-                        tableData += '<td>'+value.customer.name+'</td>';
-                    } else {
-                        tableData += '<td>-</td>';
-                    }
-
-                    tableData += '<td>'+status+'</td>';
+                    tableData += '<td><label class="label label-success">faktur</label></td>';
 
                     tableData += '<td>';
                     tableData += '<span class="pull-right" data-id="'+value.id+'">';
-                    tableData += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                    // tableData += '<button class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+                    tableData += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="GENERATE INVOICES"><i class="fa fa-file-text-o"></i></button>';
                     tableData += '</span>';
                     tableData += '</td>';
                     tableData += '</tr>';
@@ -88,57 +53,18 @@ function getOrders(param, selected) {
                 tableData += '';
 
                 searchArea  = '<div class="col-md-12 search-area">';
-                searchArea += '<select class="form-control" id="searchOrder"></select>';
-                searchArea += '</div>';
-
-                searchArea += '<div id="searchOrderBtnArea" class="button-area transition">';
-                searchArea += '<a id="addOrder" href="/advertising/orders/new"style="visibility: hidden;" class="add-btn h btn btn-flat btn-block btn-danger">Add</a>';
+                searchArea += '<select class="form-control" id="searchInvoices"></select>';
                 searchArea += '</div>';
 
                 if (memberData.length < 1) {
-                    tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                    tableData += '<thead><tr><th width="5%">#</th><th width="10%">NOMOR ORDER</th>';
-                    tableData += '<th width="15%">Judul</th>';
-                    tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
-                    tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
-                    tableData += '<tbody>';
-
-                    tableData += '<tr><td colspan="5" class="text-danger">TIDAK ADA DATA</td></tr>';
-                    tableData += '</tbody>';
-                    tableData += '<tbody>';
-
-                    searchArea  = '<div class="col-md-12 search-area">';
-                    searchArea += '<select class="form-control" id="searchOrder"></select>';
-                    searchArea += '</div>';
-
-                    searchArea += '<div id="searchOrderBtnArea" class="button-area transition">';
-                    searchArea += '<a id="addOrder" href="/advertising/orders/new" style="visibility: hidden;" class="add-btn h btn btn-flat btn-block btn-danger">Add</a>';
-                    searchArea += '</div>';
+                    tableData  = 'NO DATA';
                 }
 
             } else {
-                tableData  = '<table class="table table-bordered table-responsive table-hover">';
-                tableData += '<thead><tr><th width="5%">#</th><th width="10%">NOMOR ORDER</th>';
-                tableData += '<th width="15%">Judul</th>';
-                tableData += '<th width="25%">Order Dari</th><th width="25%">Pemasang</th>';
-                tableData += '<th><span class="pull-right">Aksi</span></th></tr></thead>';
-                tableData += '<tbody>';
-
-                tableData += '<tr><td colspan="5" class="text-danger">ERROR KETIKA MENGAMBIL DATA</td></tr>';
-                tableData += '</tbody>';
-                tableData += '<tbody>';
-
-                searchArea  = '<div class="col-md-12 search-area">';
-                searchArea += '<select class="form-control" id="searchOrder"></select>';
-                searchArea += '</div>';
-
-                searchArea += '<div id="searchOrderBtnArea" class="button-area transition">';
-                searchArea += '<a id="addOrder" href="/advertising/orders/new" style="visibility: hidden;" class="add-btn h btn btn-flat btn-block btn-danger">Add</a>';
-                searchArea += '</div>';
+                tableData  = 'ERROR';
             }
 
             $('#dataList').html(tableData);
-            $('#searchArea').html(searchArea);
 
             if(selected) {
                 $("#searchOrder").html('<option '+selected[0].id+'>'+selected[0].text+'</option>');
@@ -291,34 +217,3 @@ function getOrders(param, selected) {
         }
     });
 }
-
-getOrders();
-
-//localStorage.removeItem('searchHistory');
-
-function removeDuplicates(arr) {
-    var hashTable = {};
-
-    return arr.filter(function (el) {
-        var key = JSON.stringify(el);
-        var match = Boolean(hashTable[key]);
-
-        return (match ? false : hashTable[key] = true);
-    });
-}
-
-$(document).on('click', '#newOrder', function () {
-    window.location.href = '/advertising/orders/new';
-});
-
-$(document).on('click', '.detail-btn', function () {
-    var href = $(this).closest('span').data('id');
-    window.location.href = '/advertising/orders/' + href;
-});
-
-$(document).on('keyup', '.select2-search__field', function (e) {
-    if (e.which === 13) {
-        window.location.href = '/advertising/orders/new';
-        return false;
-    }
-});

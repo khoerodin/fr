@@ -39,7 +39,7 @@ $(document).on('click', '#sign-in', function (e) {
                 $('#login-error').removeClass('hidden');
                 $('#username').focus();
             } else {
-                // console.log(data);
+                console.log(data);
                 location.href = '/';
             }
         }

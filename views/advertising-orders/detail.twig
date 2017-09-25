@@ -179,15 +179,13 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-md-6">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Judul Iklan</label>
                                     <input type="text" name="title" value="{{ order.title }}" id="title" class="form-control">
                                 </div>
                             </div>
+
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Ukuran</label>
@@ -210,6 +208,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="row">
@@ -234,9 +233,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <hr>
-                            </div>
+
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="row">
@@ -266,6 +263,10 @@
                                     </div>
                                 </div>
                             </div>
+
+                        </div>
+
+                        <div class="col-md-6">
 
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -455,7 +456,7 @@
                                 <div class="form-group">
                                     <label for="">Sisipan</label>
                                     <div class="input-group" id="sisipan" style="position: relative;">
-                                        <button id="clearText" class="btn btn-xs btn-danger" style="position: absolute; right: 44px; top: 6px; z-index: 1041;">clear</button>
+                                        <button id="clearText" class="btn btn-flat btn-xs btn-danger" style="position: absolute; right: 44px; top: 6px; z-index: 1041;">clear</button>
                                         <input type="text" readonly name="sisipan" value="{{ order.sirculationArea.name }}" class="form-control">
                                         <input type="hidden" id="sirculationArea" value="{% if order.sirculationArea.id is defined %}/api/cities/{{ order.sirculationArea.id }}"{% endif %} name="sirculationArea">
                                         <span class="input-group-btn">
@@ -497,6 +498,14 @@
                                     </select>
                                 </div>
                             </div>
+                            {% if orderRefference|default is not empty %}
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="orderRefference">Ref. Order</label>
+                                    <input type="text" readonly class="form-control" value="{{ orderRefference }}">
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </form>
                 </div>

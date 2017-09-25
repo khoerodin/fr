@@ -20,6 +20,7 @@
                                 <th width="3%">NO.</th>
                                 <th width="15%">NOMOR ORDER</th>
                                 <th width="25%">JUDUL IKLAN</th>
+                                <th>STATUS DETAIL</th>
                                 <th>FAKTUR</th>
                                 <th width="3%"><span class="pull-right">AKSI</span></th>
                             </tr>
@@ -32,4 +33,26 @@
             <!-- /.box -->
         </div>
     </div>
+
+    {#Modal#}
+    <div id="invoicesModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">MEMBUAT FAKTUR ORDER: <span class="text-muted">NO-ORDER-HERE</span></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#Modal#}
 {%- endblock -%}

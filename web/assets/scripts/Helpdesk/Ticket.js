@@ -500,4 +500,41 @@
         });
     };
 
+    Bisnis.Helpdesk.Ticket.fetchStatistic = function (params, callback) {
+        Bisnis.request({
+            module: 'helpdesk/tickets/category.json',
+            method: 'get',
+            params: [params]
+        }, function (response) {
+            if (Bisnis.validCallback(callback)) {
+                var statistics = {
+                    'assignment': [],
+                    'closed': [],
+                    'onprogress': [],
+                    'open': [],
+                    'resolved': []
+                };
+
+                Bisnis.each(function (idx, value) {
+                    var index = idx - 1;
+
+                    statistics['assignment'][index] = 0;
+                    statistics['closed'][index] = 0;
+                    statistics['onprogress'][index] = 0;
+                    statistics['open'][index] = 0;
+                    statistics['resolved'][index] = 0;
+
+                    if (0 < value.length) {
+                        Bisnis.each(function (i, stat) {
+                            statistics[stat['status']][index] = parseInt(stat['total']);
+                        }, value);
+                    }
+                }, JSON.parse(response));
+
+                callback(statistics);
+            }
+        }, function () {
+            console.log('KO');
+        });
+    };
 })(window.Bisnis || {});

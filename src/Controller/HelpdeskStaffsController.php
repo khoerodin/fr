@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mispc3
- * Date: 14/06/17
- * Time: 9:42
- */
 
 namespace Bisnis\Controller;
 

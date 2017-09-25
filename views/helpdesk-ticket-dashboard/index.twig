@@ -1,0 +1,144 @@
+{% extends 'layout.twig' %}
+
+{% block js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Bar.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Area.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Pie.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/scripts/User/User.js"></script>
+    <script type="text/javascript">
+        var bar = {};
+        var area = {};
+        var pie = {};
+
+        Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+            if (0 < staff.length) {
+                Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
+            } else {
+                return null;
+            }
+
+            var params = {};
+            if ('{{ me.id }}' === '{{ admin.id }}') {
+                params = {
+                    'year': {{ year }}
+                };
+            } else {
+                var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+
+                params = {
+                    'year': {{ year }},
+                    'category_id': savedStaff.category.id
+                }
+            }
+
+            Bisnis.Helpdesk.Ticket.fetchStatistic(params, function (response) {
+                var chartData = {
+                    labels: ['Junuari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+                    datasets: [{
+                        label: 'Open',
+                        backgroundColor: '#dddddd',
+                        data: response['open']
+                    }, {
+                        label: 'Assignment',
+                        backgroundColor: '#337ab7',
+                        data: response['assignment']
+                    }, {
+                        label: 'Onprogress',
+                        backgroundColor: '#f0ad4e',
+                        data: response['onprogress']
+                    }, {
+                        label: 'Closed',
+                        backgroundColor: '#d73925',
+                        data: response['closed']
+                    }, {
+                        label: 'Solved',
+                        backgroundColor: '#5cb85c',
+                        data: response['resolved']
+                    }]
+                };
+
+                Bisnis.Util.Storage.store('__HELPDESK_CHARTDATA__', JSON.stringify(chartData));
+                Bisnis.Util.Event.triggerClick('.barChart');
+            });
+
+            Bisnis.Util.Event.bind('click', '.barChart', function () {
+                if (Object.keys(area).length !== 0) {
+                    area.destroy();
+                }
+
+                if (Object.keys(pie).length !== 0) {
+                    console.log('destroy pie');
+                    pie.destroy();
+                }
+
+                bar = Bisnis.Chart.Bar.stacked(document.getElementById('chart'), JSON.parse(Bisnis.Util.Storage.fetch('__HELPDESK_CHARTDATA__')), 'STATISTIK HELPDESK TAHUN {{ year }}', 'Bulan', 'Jumlah');
+            });
+
+            Bisnis.Util.Event.bind('click', '.areaChart', function () {
+                if (Object.keys(bar).length !== 0) {
+                    bar.destroy();
+                }
+
+                if (Object.keys(pie).length !== 0) {
+                    console.log('destroy pie');
+                    pie.destroy();
+                }
+
+                Bisnis.Chart.Area.stacked(document.getElementById('chart'), JSON.parse(Bisnis.Util.Storage.fetch('__HELPDESK_CHARTDATA__')), 'STATISTIK HELPDESK TAHUN {{ year }}', 'Bulan', 'Jumlah');
+            });
+
+            Bisnis.Util.Event.bind('click', '.pieChart', function () {
+                if (Object.keys(area).length !== 0) {
+                    area.destroy();
+                }
+
+                if (Object.keys(bar).length !== 0) {
+                    bar.destroy();
+                }
+
+                var monthlyData = JSON.parse(Bisnis.Util.Storage.fetch('__HELPDESK_CHARTDATA__'));
+                var labels = [];
+                var backgroundColor = [];
+                var data = [];
+
+                Bisnis.each(function (idx, value) {
+                    labels.push(value.label);
+                    backgroundColor.push(value.backgroundColor);
+                    data.push(value.data.reduce(function (accumulator, currentValue) { return accumulator + currentValue; }));
+                }, monthlyData.datasets);
+
+                var chartData = {
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColor,
+                        label: 'HELPDESK'
+                    }],
+                    labels: labels
+                };
+
+                pie = Bisnis.Chart.Pie.render(document.getElementById('chart'),chartData , 'STATISTIK HELPDESK TAHUN {{ year }}');
+            });
+        }));
+    </script>
+{% endblock %}
+
+{%- block content -%}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <canvas id="chart"></canvas>
+                </div>
+                <div class="box-footer">
+                    <button type="button" class="btn btn-success pull-right barChart"><i class="fa fa-bar-chart"></i></button>
+                    <button type="button" class="btn btn-success pull-right margin-r-5 areaChart"><i class="fa fa-area-chart"></i></button>
+                    <button type="button" class="btn btn-success pull-right margin-r-5 pieChart"><i class="fa fa-pie-chart"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endblock -%}

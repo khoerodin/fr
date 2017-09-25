@@ -62,6 +62,7 @@
     Bisnis.SimpleGrid = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
+    Bisnis.Chart = {};
 
     window.Bisnis = Bisnis;
 })(window);

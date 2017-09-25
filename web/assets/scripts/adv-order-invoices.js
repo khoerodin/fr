@@ -59,7 +59,7 @@
     });
 
     Bisnis.Util.Event.bind('click', '.btn-invoices', function () {
-        Bisnis.Util.Dialog.yesNo('GO TO INVOICE', 'KE HALAMAN FAKTUR');
+        Bisnis.Util.Dialog.alert('GO TO INVOICE', 'KE HALAMAN FAKTUR');
     });
 
 })(window.Bisnis || {});

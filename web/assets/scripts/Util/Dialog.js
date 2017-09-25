@@ -24,6 +24,25 @@
         });
     };
 
+    Bisnis.Util.Dialog.alert = function (title, message, callback) {
+        bootbox.alert({
+            title: title,
+            message: message,
+            animate: false,
+            buttons: {
+                ok: {
+                    label: '<i class="fa fa-check"></i> OK',
+                    className: "btn btn-danger btn-flat"
+                }
+            },
+            callback: function(result){
+                if (Bisnis.validCallback(callback)) {
+                    callback(result);
+                }
+            }
+        })
+    };
+
     Bisnis.Util.Dialog.showModal = function (selector) {
         jQuery(selector).modal({show: true, backdrop: 'static'});
     };

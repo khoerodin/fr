@@ -275,7 +275,7 @@ class AdvertisingOrdersController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Iklan',
-            'title' => 'Order Iklan',
+            'title' => 'Faktur Iklan',
         ];
 
         $data = [

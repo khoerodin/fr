@@ -24,6 +24,7 @@
     Bisnis.request = function (params, successCallback, errorCallback, url, method) {
         url = 'undefined' === typeof url ? '/api' : url;
         method = 'undefined' === typeof method ? 'post' : method;
+        params.params = 'undefined' === typeof params.params ? [] : params.params;
 
         params.params.push({
             order: {
@@ -62,6 +63,7 @@
     Bisnis.SimpleGrid = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
+    Bisnis.Advertising = {};
 
     window.Bisnis = Bisnis;
 })(window);

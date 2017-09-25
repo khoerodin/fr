@@ -1,7 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/adv-invoices.js"></script>
+    <script src="/assets/scripts/adv-order-invoices.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -14,7 +14,17 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div id="dataList"></div>
+                    <table class="table table-bordered table-responsive table-hover">
+                        <thead>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th>NOMOR ORDER</th>
+                                <th>JUDUL IKLAN</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoicesList"></tbody>
+                    </table>
                 </div>
                 <div class="box-footer clearfix"></div>
             </div>

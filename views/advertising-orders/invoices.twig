@@ -1,7 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/adv-invoices.js"></script>
+    <script src="/assets/scripts/adv-order-invoices.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -14,11 +14,45 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div id="dataList"></div>
+                    <table class="table table-bordered table-responsive table-hover">
+                        <thead>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th width="15%">NOMOR ORDER</th>
+                                <th width="25%">JUDUL IKLAN</th>
+                                <th width="7%">STATUS DETAIL</th>
+                                <th>FAKTUR</th>
+                                <th width="3%"><span class="pull-right">AKSI</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoicesList"></tbody>
+                    </table>
                 </div>
                 <div class="box-footer clearfix"></div>
             </div>
             <!-- /.box -->
         </div>
     </div>
+
+    {#Modal#}
+    <div id="invoicesModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">MEMBUAT FAKTUR ORDER: <span class="text-muted">NO-ORDER-HERE</span></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#Modal#}
 {%- endblock -%}

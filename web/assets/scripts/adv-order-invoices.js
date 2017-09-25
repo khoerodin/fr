@@ -25,7 +25,7 @@
                 { value: memberData.orderNumber },
                 { value: memberData.title },
                 { value: memberData.id, format: function (id) {
-                    return '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title=""><i class="fa fa-pencil"></i></button>';
+                    return '<span class="pull-right"><button data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title=""><i class="fa fa-file-text-o"></i></button></span>';
                 }}
             ]);
         }, memberData);

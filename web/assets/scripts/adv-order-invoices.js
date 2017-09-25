@@ -25,6 +25,9 @@
                 { value: memberData.orderNumber },
                 { value: memberData.title },
                 { value: memberData.id, format: function (id) {
+                    return '<label class="label label-success">no faktur</label>';
+                }},
+                { value: memberData.id, format: function (id) {
                     return '<span class="pull-right"><button data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title=""><i class="fa fa-file-text-o"></i></button></span>';
                 }}
             ]);

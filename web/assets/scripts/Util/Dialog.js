@@ -5,12 +5,15 @@
         bootbox.confirm({
             title: title,
             message: message,
+            animate: false,
             buttons: {
                 cancel: {
-                    label: '<i class="fa fa-times"></i> Cancel'
+                    label: '<i class="fa fa-times"></i> Cancel',
+                    className: "btn btn-default btn-flat"
                 },
                 confirm: {
-                    label: '<i class="fa fa-check"></i> Yes'
+                    label: '<i class="fa fa-check"></i> Yes',
+                    className: "btn btn-danger btn-flat"
                 }
             },
             callback: function (result) {

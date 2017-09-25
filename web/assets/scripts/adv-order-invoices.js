@@ -47,15 +47,19 @@
                         '<button class="btn btn-xs btn-flat btn-success btn-invoices">no faktur</button>';
                 }},
                 { value: memberData.id, format: function (id) {
-                    return '<span class="pull-right"><button data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title=""><i class="fa fa-file-text-o"></i></button></span>';
+                    return '<span class="pull-right"><button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-generate-invoices" title=""><i class="fa fa-file-text-o"></i></button></span>';
                 }}
             ]);
         }, memberData);
         Bisnis.Util.Grid.renderRecords('#invoicesList', records);
     });
 
-    Bisnis.Util.Event.bind('click', '.btn-invoices', function () {
+    Bisnis.Util.Event.bind('click', '.btn-generate-invoices', function () {
         Bisnis.Util.Dialog.showModal('#invoicesModal');
+    });
+
+    Bisnis.Util.Event.bind('click', '.btn-invoices', function () {
+        Bisnis.Util.Dialog.yesNo('GO TO INVOICE', 'KE HALAMAN FAKTUR');
     });
 
 })(window.Bisnis || {});

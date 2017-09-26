@@ -192,7 +192,7 @@
                     Bisnis.Util.Document.putHtml('.totalOpen', '<b>' + response['open_category']['name'] + '(' + response['open_category']['total'] + ')</b>');
                     Bisnis.Util.Document.putHtml('.mostActiveStaff', '<b>' + response['active_staff']['fullname'] + '(' + response['active_staff']['total'] + ')</b>');
                     Bisnis.Util.Document.putHtml('.mostActiveCategory', '<b>' + response['active_category']['name'] + '(' + response['active_category']['total'] + ')</b>');
-                    Bisnis.Util.Document.putHtml('.mostActiveType', '<b>' + response['active_type']['type'] + '(' + response['active_type']['total'] + ')</b>');
+                    Bisnis.Util.Document.putHtml('.mostActiveType', '<b>' + response['active_type']['type'].toUpperCase() + '(' + response['active_type']['total'] + ')</b>');
                     Bisnis.Util.Document.putHtml('.mostActiveClient', '<b>' + response['active_client']['fullname'] + '(' + response['active_client']['total'] + ')</b>');
                     Bisnis.Util.Document.putHtml('.totalWorkDuration', '<b>' + formatted + '</b>');
                     Bisnis.Util.Document.putHtml('.totalResolved', '<b>' + response['total_resolved']['total'] + ' DARI ' + response['total_ticket']['total'] + '</b>');

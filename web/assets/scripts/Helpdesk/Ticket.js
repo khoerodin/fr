@@ -500,7 +500,7 @@
         });
     };
 
-    Bisnis.Helpdesk.Ticket.fetchStatistic = function (params, callback) {
+    Bisnis.Helpdesk.Ticket.fetchStatisticByCategory = function (params, callback) {
         Bisnis.request({
             module: 'helpdesk/tickets/category.json',
             method: 'get',
@@ -532,6 +532,63 @@
                 }, JSON.parse(response));
 
                 callback(statistics);
+            }
+        }, function () {
+            console.log('KO');
+        });
+    };
+
+    Bisnis.Helpdesk.Ticket.fetchStatisticPerStaff = function (params, callback) {
+        Bisnis.request({
+            module: 'helpdesk/tickets/staff.json',
+            method: 'get',
+            params: [params]
+        }, function (response) {
+            if (Bisnis.validCallback(callback)) {
+                var statistics = {};
+                Bisnis.each(function (idx, value) {
+                    var index = idx - 1;
+                    if (0 < value.length) {
+                        Bisnis.each(function (i, stat) {
+                            if (null !== stat['fullname']) {
+                                statistics[stat['fullname']] = [];
+                            } else {
+                                if ('undefined' === typeof statistics['NONAME']) {
+                                    statistics['NONAME'] = [];
+                                }
+                            }
+
+                            if (null !== stat['fullname']) {
+                                statistics[stat['fullname']][index] = parseInt(stat['total']);
+                            } else {
+                                statistics['NONAME'][index] = parseInt(stat['total']);
+                            }
+                        }, value);
+                    }
+                }, JSON.parse(response));
+
+                Bisnis.each(function (i) {
+                    for (var j = 0; j <= 12; j++ ) {
+                        if ('undefined' === typeof statistics[i][j]) {
+                            statistics[i][j] = 0;
+                        }
+                    }
+                }, statistics);
+
+                callback(statistics);
+            }
+        }, function () {
+            console.log('KO');
+        });
+    };
+
+    Bisnis.Helpdesk.Ticket.fetchStatistic = function (callback) {
+        Bisnis.request({
+            module: 'helpdesk/tickets/statistic.json',
+            method: 'get'
+        }, function (response) {
+            if (Bisnis.validCallback(callback)) {
+                callback(JSON.parse(response));
             }
         }, function () {
             console.log('KO');

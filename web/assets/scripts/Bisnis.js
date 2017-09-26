@@ -64,6 +64,7 @@
     Bisnis.Util = {};
     Bisnis.Notification = {};
     Bisnis.Advertising = {};
+    Bisnis.Chart = {};
 
     window.Bisnis = Bisnis;
 })(window);

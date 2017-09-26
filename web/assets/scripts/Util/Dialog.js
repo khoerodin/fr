@@ -40,7 +40,8 @@
                     callback(result);
                 }
             }
-        })
+        });
+        jQuery('.bootbox-alert button').focus();
     };
 
     Bisnis.Util.Dialog.showModal = function (selector) {

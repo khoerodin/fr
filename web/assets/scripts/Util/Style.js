@@ -11,7 +11,7 @@
         });
     };
 
-    Bisnis.Util.Style.ajaxSelect = function (selector, params, hasResultCallback, selectedCallback, openCallback, closeCallback, selectedHistory) {
+    Bisnis.Util.Style.ajaxSelect = function (selector, params, hasResultCallback, selectedCallback, openCallback, closeCallback) {
         var placeholder = typeof params.placeholder !== 'undefined' ? params.placeholder : 'CARI';
         var allowClear = typeof params.allowClear !== 'undefined' ? params.allowClear : false;
         var url = typeof params.url !== 'undefined' ? params.url : '/api/searchGrid';
@@ -96,8 +96,8 @@
                 openCallback(true);
             }
             showHistory(selector, function (selectedHistoryData) {
-                if (Bisnis.validCallback(selectedHistory)) {
-                    selectedHistory(selectedHistoryData);
+                if (Bisnis.validCallback(selectedCallback)) {
+                    selectedCallback(selectedHistoryData);
                 }
             });
         }).on('select2:closing', function () {

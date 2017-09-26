@@ -35,17 +35,22 @@
     <div id="detailModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
-            <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">DETAIL MODAL</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Some text in the modal.</p>
+                    <form id="detailForm">
+                        <div class="form-group">
+                            <label for="name">Layout</label>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Nama Layout">
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">TUTUP</button>
+                    <button type="button" id="btn-update" class="btn btn-danger btn-flat">SIMPAN</button>
                 </div>
             </div>
 

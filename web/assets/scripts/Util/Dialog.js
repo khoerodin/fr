@@ -50,4 +50,5 @@
     Bisnis.Util.Dialog.hideModal = function (selector) {
         jQuery(selector).modal('hide');
     };
+
 })(window.Bisnis || {});

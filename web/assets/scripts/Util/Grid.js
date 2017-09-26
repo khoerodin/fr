@@ -78,13 +78,13 @@
             hasLast = false;
         }
 
-        if (hasPrevious) {
-            paging = paging + '<li><span class="pagePrevious" data-page="' + (current - 1) + '" title="Halaman Sebelumnya">SEBELUMNYA</span></li>';
-        }
-
         paging = paging + '<li><span class="pageFirst" data-page="1" title="Halaman Pertama">PERTAMA</span></li>';
         if (hasNext) {
             paging = paging + '<li><span class="pageNext" data-page="' + (current + 1) + '" title="Halaman Selanjutnya">SELANJUTNYA</span></li>';
+        }
+
+        if (hasPrevious) {
+            paging = paging + '<li><span class="pagePrevious" data-page="' + (current - 1) + '" title="Halaman Sebelumnya">SEBELUMNYA</span></li>';
         }
 
         if (hasLast) {

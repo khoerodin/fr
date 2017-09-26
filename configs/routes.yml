@@ -31,7 +31,7 @@ app:
         - { path: '/representatives', controller: 'Bisnis:Representatives@index', methods: ['GET'] }
         - { path: '/services', controller: 'Bisnis:Services@index', methods: ['GET'] }
 
-        #Advertising
+        #Adv
         #Master
         - { path: '/advertising/ads', controller: 'Bisnis:AdvertisingAds@index', methods: ['GET'] }
         - { path: '/advertising/categories', controller: 'Bisnis:AdvertisingCategories@index', methods: ['GET'] }

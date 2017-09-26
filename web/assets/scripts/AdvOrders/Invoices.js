@@ -22,7 +22,7 @@
                 callback(memberData);
             }
         }, function () {
-            console.log('Oo');
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi keslahan sistem');
         });
     };
 
@@ -91,7 +91,7 @@
     });
 
     var params = {
-        placeholder: 'CARI NO FAKTUR / NO ORDER / JUDUL IKLAN',
+        placeholder: 'CARI NO FAKTUR / NO ORDER / NO SURAT ORDER',
         module: 'advertising/orders',
         fields: [
             {

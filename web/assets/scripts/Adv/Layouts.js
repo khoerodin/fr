@@ -21,7 +21,7 @@
                 callback(memberData);
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi keslahan sistem');
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
         });
     };
 

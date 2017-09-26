@@ -62,10 +62,10 @@
 
     /** Module List */
     Bisnis.Helpdesk = {};
-    Bisnis.SimpleGrid = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
     Bisnis.Adv = {};
+    Bisnis.Billing = {};
 
     window.Bisnis = Bisnis;
 })(window);

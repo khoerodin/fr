@@ -26,7 +26,7 @@
         method = 'undefined' === typeof method ? 'post' : method;
         params.params = 'undefined' === typeof params.params ? [] : params.params;
 
-        if (method.toUpperCase() === 'post') {
+        if (params.method.toLowerCase() === 'get') {
             params.params.push({
                 order: {
                     createdAt: 'DESC'

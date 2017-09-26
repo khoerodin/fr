@@ -1,8 +1,8 @@
 (function (Bisnis) {
     Bisnis.Chart.Pie = {};
 
-    Bisnis.Chart.Pie.render = function (elemet, data, title) {
-        return new Chart(elemet, {
+    Bisnis.Chart.Pie.render = function (element, data, title, callback) {
+        return new Chart(element, {
             type: 'pie',
             data: data,
             options: {
@@ -10,7 +10,8 @@
                     display:true,
                     text: title
                 },
-                responsive: true
+                responsive: true,
+                onClick: callback
             }
         });
     };

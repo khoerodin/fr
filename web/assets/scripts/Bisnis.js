@@ -67,6 +67,7 @@
     Bisnis.Adv = {};
     Bisnis.Billing = {};
     Bisnis.Admin = {};
+    Bisnis.Chart = {};
 
     window.Bisnis = Bisnis;
 })(window);

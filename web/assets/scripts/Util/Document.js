@@ -24,4 +24,8 @@
     Bisnis.Util.Document.putEditor = function (selector, value) {
         jQuery(selector).summernote('code', value);
     };
+
+    Bisnis.Util.Document.hide = function (selector) {
+        jQuery(selector).hide();
+    };
 })(window.Bisnis || {});

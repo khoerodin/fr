@@ -26,11 +26,13 @@
         method = 'undefined' === typeof method ? 'post' : method;
         params.params = 'undefined' === typeof params.params ? [] : params.params;
 
-        params.params.push({
-            order: {
-                createdAt: 'DESC'
-            }
-        });
+        if (method.toUpperCase() === 'post') {
+            params.params.push({
+                order: {
+                    createdAt: 'DESC'
+                }
+            });
+        }
 
         jQuery.ajax({
             url: url,
@@ -63,7 +65,7 @@
     Bisnis.SimpleGrid = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
-    Bisnis.Advertising = {};
+    Bisnis.Adv = {};
 
     window.Bisnis = Bisnis;
 })(window);

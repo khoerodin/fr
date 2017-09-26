@@ -1,7 +1,7 @@
 (function (Bisnis) {
-    Bisnis.Advertising.Invoices = {};
+    Bisnis.Adv.OrdersInvoices = {};
 
-    Bisnis.Advertising.Invoices.fetchAll = function (params, callback) {
+    Bisnis.Adv.OrdersInvoices.fetchAll = function (params, callback) {
         Bisnis.request({
             module: 'advertising/orders',
             method: 'get',
@@ -22,12 +22,12 @@
                 callback(memberData);
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi keslahan sistem');
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
         });
     };
 
     var loadPage = function (pageNum) {
-        Bisnis.Advertising.Invoices.fetchAll([{page: pageNum}], function (memberData) {
+        Bisnis.Adv.OrdersInvoices.fetchAll([{page: pageNum}], function (memberData) {
             var records = [];
             Bisnis.each(function (idx, memberData) {
 

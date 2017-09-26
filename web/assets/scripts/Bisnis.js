@@ -66,6 +66,7 @@
     Bisnis.Notification = {};
     Bisnis.Adv = {};
     Bisnis.Billing = {};
+    Bisnis.Admin = {};
 
     window.Bisnis = Bisnis;
 })(window);

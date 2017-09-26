@@ -89,17 +89,20 @@
             } else {
                 btn.disabled = false;
             }
-        }, function (selectedCallback) {
+        },
+        function (selectedCallback) {
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
-        }, function (openCallback) {
+        },
+        function (openCallback) {
             var btn = document.getElementById('btnAddAccountExecutive');
             if (openCallback === false) {
                 btn.disabled = false;
             } else {
                 btn.disabled = true;
             }
-        }, function (closeCallback) {
+        },
+        function (closeCallback) {
             var btn = document.getElementById('btnAddAccountExecutive');
             setTimeout(function () {
                 if (closeCallback === false) {

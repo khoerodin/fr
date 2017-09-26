@@ -25,7 +25,7 @@
         });
     };
 
-    var loadPage = function (pageNum) {
+    var loadGrid = function (pageNum) {
         var pageNum = 'undefined' === typeof pageNum ? 1 : pageNum;
         Bisnis.Util.Storage.store('LAYOUTS_CURRENT_PAGE', pageNum);
         Bisnis.Adv.Layouts.fetchAll([{page: pageNum}], function (memberData) {
@@ -45,24 +45,26 @@
         });
     };
 
-    loadPage(1);
+    loadGrid(1);
 
     Bisnis.Util.Event.bind('click', '#layoutsPagination .pagePrevious', function () {
-        loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
     Bisnis.Util.Event.bind('click', '#layoutsPagination .pageNext', function () {
-        loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
     Bisnis.Util.Event.bind('click', '#layoutsPagination .pageFirst', function () {
-        loadPage(1);
+        loadGrid(1);
     });
 
     Bisnis.Util.Event.bind('click', '#layoutsPagination .pageLast', function () {
-        loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
+    // end fetch grid and pagination
 
+    // search box
     var params = {
         placeholder: 'CARI NAMA LAYOUT',
         module: 'advertising/layouts',
@@ -76,22 +78,76 @@
 
     Bisnis.Util.Style.ajaxSelect('#searchLayouts', params,
         function (hasResultCallback) {
-
+            var btn = document.getElementById('btnAddLayout');
+            if (hasResultCallback) {
+                btn.disabled = true;
+            } else {
+                btn.disabled = false;
+            }
         }, function (selectedCallback) {
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
         }, function (openCallback) {
-
+            var btn = document.getElementById('btnAddLayout');
+            if (openCallback === false) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
         }, function (closeCallback) {
-
+            var btn = document.getElementById('btnAddLayout');
+            setTimeout(function () {
+                if (closeCallback === false) {
+                    btn.disabled = false;
+                } else {
+                    btn.disabled = true;
+                }
+            }, 300);
         }
     );
+    // end search box
+
+    // add modal
+    Bisnis.Util.Event.bind('click', '#btnAddLayout', function () {
+        Bisnis.Util.Dialog.showModal('#addModal');
+        document.getElementById('addName').focus();
+    });
+
+    Bisnis.Util.Event.bind('click', '#btn-add', function () {
+        var id = Bisnis.Util.Storage.fetch('LAYOUTS_ID');
+        var params = Bisnis.Util.Form.serializeArray('#addForm');
+        var thisBtn = this;
+        thisBtn.disabled = true;
+
+        Bisnis.Adv.Layouts.add(params, function () {
+            Bisnis.Util.Dialog.hideModal('#addModal');
+            loadGrid(1);
+            thisBtn.disabled = false;
+        });
+    });
+
+    Bisnis.Adv.Layouts.add = function (params, callback) {
+        Bisnis.request({
+            module: 'advertising/layouts',
+            method: 'post',
+            params: params
+        }, function (dataResponse, textStatus, response) {
+            var rawData = JSON.parse(dataResponse);
+
+            if (Bisnis.validCallback(callback)) {
+                callback(rawData);
+            }
+        }, function () {
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        });
+    };
+    // end add modal
 
     // detail modal
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Storage.store('LAYOUTS_ID', id);
         Bisnis.Adv.Layouts.fetchById(id, function (callback) {
-            var nameElem = document.getElementById('name');
+            var nameElem = document.getElementById('detailName');
             nameElem.value = callback.name;
             nameElem.focus();
         });
@@ -124,8 +180,6 @@
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
             }
-
-            Bisnis.successMessage('Berhasil meperbarui data');
         }, function () {
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
         });
@@ -138,11 +192,45 @@
         thisBtn.disabled = true;
 
         Bisnis.Adv.Layouts.updateById(id, params, function () {
+            Bisnis.successMessage('Berhasil memperbarui data');
             Bisnis.Util.Dialog.hideModal('#detailModal');
             var page = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE');
-            loadPage(page);
+            loadGrid(page);
             thisBtn.disabled = false;
         });
     });
+    // end detail modal
+
+    // delete layout
+    Bisnis.Util.Event.bind('click', '.btn-delete', function () {
+        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+        Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
+            if (result) {
+                Bisnis.Adv.Layouts.delete(id, function (textStatus) {
+                    if (textStatus === 'success') {
+                        Bisnis.successMessage('Berhasil menghapus data');
+                        var page = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE');
+                        loadGrid(page);
+                    } else {
+                        Bisnis.errorMessage('Gagal menghapus data');
+                    }
+                })
+            }
+        });
+    });
+
+    Bisnis.Adv.Layouts.delete = function (id, callback) {
+        Bisnis.request({
+            module: 'advertising/layouts/' + id,
+            method: 'delete'
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(callback)) {
+                callback(textStatus);
+            }
+        }, function () {
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        });
+    };
+    // end delete layout
 
 })(window.Bisnis || {});

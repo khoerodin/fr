@@ -26,11 +26,13 @@
         method = 'undefined' === typeof method ? 'post' : method;
         params.params = 'undefined' === typeof params.params ? [] : params.params;
 
-        params.params.push({
-            order: {
-                createdAt: 'DESC'
-            }
-        });
+        if (params.method.toLowerCase() === 'get') {
+            params.params.push({
+                order: {
+                    createdAt: 'DESC'
+                }
+            });
+        }
 
         jQuery.ajax({
             url: url,
@@ -60,10 +62,11 @@
 
     /** Module List */
     Bisnis.Helpdesk = {};
-    Bisnis.SimpleGrid = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
-    Bisnis.Advertising = {};
+    Bisnis.Adv = {};
+    Bisnis.Billing = {};
+    Bisnis.Admin = {};
     Bisnis.Chart = {};
 
     window.Bisnis = Bisnis;

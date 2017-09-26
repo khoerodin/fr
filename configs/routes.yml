@@ -31,7 +31,7 @@ app:
         - { path: '/representatives', controller: 'Bisnis:Representatives@index', methods: ['GET'] }
         - { path: '/services', controller: 'Bisnis:Services@index', methods: ['GET'] }
 
-        #Advertising
+        #Adv
         #Master
         - { path: '/advertising/ads', controller: 'Bisnis:AdvertisingAds@index', methods: ['GET'] }
         - { path: '/advertising/categories', controller: 'Bisnis:AdvertisingCategories@index', methods: ['GET'] }
@@ -69,7 +69,3 @@ app:
         - { path: '/helpdesk/clients', controller: 'Bisnis:HelpdeskClients@index', methods: ['GET'] }
         - { path: '/helpdesk/my-tickets', controller: 'Bisnis:HelpdeskMyTickets@index', methods: ['GET'] }
         - { path: '/helpdesk/dashboard', controller: 'Bisnis:HelpdeskTicketDashboard@index', methods: ['GET'] }
-
-        #jangan di hapus,
-        - { path: '/dummy', controller: 'Bisnis:Dummy@index', methods: ['GET'] }
-        - { path: '/coba', controller: 'Bisnis:Coba@index', methods: ['GET'] }

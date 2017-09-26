@@ -8,11 +8,11 @@
             animate: false,
             buttons: {
                 cancel: {
-                    label: '<i class="fa fa-times"></i> Cancel',
+                    label: 'Batal',
                     className: "btn btn-default btn-flat"
                 },
                 confirm: {
-                    label: '<i class="fa fa-check"></i> Yes',
+                    label: 'Ya',
                     className: "btn btn-danger btn-flat"
                 }
             },
@@ -31,7 +31,7 @@
             animate: false,
             buttons: {
                 ok: {
-                    label: '<i class="fa fa-check"></i> OK',
+                    label: 'OKE',
                     className: "btn btn-danger btn-flat"
                 }
             },
@@ -40,7 +40,8 @@
                     callback(result);
                 }
             }
-        })
+        });
+        jQuery('.bootbox-alert button').focus();
     };
 
     Bisnis.Util.Dialog.showModal = function (selector) {
@@ -50,4 +51,5 @@
     Bisnis.Util.Dialog.hideModal = function (selector) {
         jQuery(selector).modal('hide');
     };
+
 })(window.Bisnis || {});

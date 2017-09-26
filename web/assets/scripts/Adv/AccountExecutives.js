@@ -111,9 +111,6 @@
                     btn.disabled = true;
                 }
             }, 300);
-        },
-        function (selectedHistory) {
-            console.log(selectedHistory);
         }
     );
     // end search box

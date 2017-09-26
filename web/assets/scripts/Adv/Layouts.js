@@ -86,6 +86,7 @@
             }
         }, function (selectedCallback) {
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
+            loadDetail(selectedCallback.id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddLayout');
             if (openCallback === false) {
@@ -143,8 +144,7 @@
     // end add modal
 
     // detail modal
-    Bisnis.Util.Event.bind('click', '.btn-detail', function () {
-        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+    var loadDetail = function (id) {
         Bisnis.Util.Storage.store('LAYOUTS_ID', id);
         Bisnis.Adv.Layouts.fetchById(id, function (callback) {
             var nameElem = document.getElementById('detailName');
@@ -152,6 +152,11 @@
             nameElem.focus();
         });
         Bisnis.Util.Dialog.showModal('#detailModal');
+    };
+
+    Bisnis.Util.Event.bind('click', '.btn-detail', function () {
+        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+        loadDetail(id);
     });
 
     Bisnis.Adv.Layouts.fetchById = function (id, callback) {

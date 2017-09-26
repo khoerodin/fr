@@ -62,4 +62,32 @@
         Bisnis.Util.Dialog.alert('GO TO INVOICE', 'KE HALAMAN FAKTUR');
     });
 
+    var params = {
+        placeholder: 'CARI NO FAKTUR / NO ORDER / JUDUL IKLAN',
+        module: 'advertising/orders',
+        fields: [
+            {
+                field: 'orderNumber',
+                label: 'No. Order'
+            },
+            {
+                field: 'orderLetter',
+                label: 'No. Surat Order'
+            },
+        ]
+    };
+
+    Bisnis.Util.Style.ajaxSelect('#searchInvoices', params,
+        function (hasResultCallback) {
+
+        }, function (selectedCallback) {
+            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
+            console.log(selectedCallback)
+        }, function (openCallback) {
+
+        }, function (closeCallback) {
+
+        }
+    );
+
 })(window.Bisnis || {});

@@ -273,11 +273,12 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         return new JsonResponse(json_decode($response->getContent(), true));
     }
 
-    private function searchByField($module, Array $data)
+    private function searchByField($module, $data)
     {
         $url = $module;
         $q = $data['q'];
         $field = $data['field'];
+        $label = $data['label'];
 
         $response = $this->request($url, 'GET', [$field => $q]);
         $arr = json_decode($response->getContent(), true);
@@ -302,11 +303,10 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 }
 
                 if($k == $field){
-                    $obj['value'] = $v . ' ~ <i>' . $field . '</i>';
+                    $obj['text'] = $v;
                 }
 
-                $obj['field'] = $field;
-
+                $obj['label'] = $label;
             }
             $arrData[] = $obj;
         }
@@ -323,7 +323,8 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         foreach ($fields as $value) {
             $data = [
                 'q' => $request->get('q'),
-                'field' => $value
+                'field' => $value['field'],
+                'label' => $value['label']
             ];
 
             $response = array_merge($response, $this->searchByField($module, $data));

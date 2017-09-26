@@ -79,7 +79,7 @@
                         'year': year
                     };
                 } else {
-                    Bisnis.Util.Document.hide('#chartCategoryBox');
+                    Bisnis.Util.Document.hide('.chartCategoryBox');
 
                     var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
                     params = {
@@ -163,6 +163,29 @@
                 detail = Bisnis.Chart.Bar.renderMultibar(document.getElementById('chart'), chartData, title, 'Helpdesk Staf', 'Jumlah');
             });
         }
+        
+        function getCategory() {
+            var categoryOption = Bisnis.Util.Document.getValue('#chartCategory');
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+
+            var category = {
+                'id': null,
+                'name': null
+            };
+            if (null === savedStaff) {
+                if (null !== categoryOption && '' !== categoryOption) {
+                    var split = categoryOption.split('#');
+
+                    category.id = split[0];
+                    category.name = split[1];
+                }
+            } else {
+                category.id = savedStaff.category.id;
+                category.name = savedStaff.category.name;
+            }
+
+            return category;
+        }
 
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
             if (0 < staff.length) {
@@ -215,10 +238,11 @@
                 var data = activePoint._chart.data;
                 var datasetIndex = activePoint._datasetIndex;
                 var label = data.datasets[datasetIndex].label;
+                var category = getCategory();
                 var params = {};
-                if (null !== optionValue && '' !== optionValue) {
+                if (null !== category.id) {
                     params = {
-                        'category_id': optionValue[0],
+                        'category_id': category.id,
                         'year': {{ year }},
                         'status': label
                     }
@@ -248,10 +272,11 @@
                 var data = activePoint._chart.data;
                 var datasetIndex = activePoint._datasetIndex;
                 var label = data.datasets[datasetIndex].label;
+                var category = getCategory();
                 var params = {};
-                if (null !== optionValue && '' !== optionValue) {
+                if (null !== category.id) {
                     params = {
-                        'category_id': optionValue[0],
+                        'category_id': category.id,
                         'year': {{ year }},
                         'status': label
                     }
@@ -290,10 +315,11 @@
                 var activePoint = pie.getElementAtEvent(e)[0];
                 var data = activePoint._chart.data;
                 var label = data.labels[activePoint._index];
+                var category = getCategory();
                 var params = {};
-                if (null !== optionValue && '' !== optionValue) {
+                if (null !== category.id) {
                     params = {
-                        'category_id': optionValue[0],
+                        'category_id': category.id,
                         'year': {{ year }},
                         'status': label
                     }
@@ -318,16 +344,14 @@
         });
 
         Bisnis.Util.Event.bind('click', '.perStaff', function () {
-            var params = {};
-            var optionValue = Bisnis.Util.Document.getValue('#chartCategory');
             var title = 'STATISTIK HELPDESK TAHUN {{ year }} PER STAFF';
-
-            if (null !== optionValue && '' !== optionValue) {
-                optionValue = optionValue.split('#');
-                title = 'STATISTIK HELPDESK BAGIAN ' + optionValue[1] + ' TAHUN {{ year }} PER STAFF';
+            var category = getCategory();
+            var params = {};
+            if (null !== category.id) {
+                title = 'STATISTIK HELPDESK BAGIAN ' + category.name + ' TAHUN {{ year }} PER STAFF';
 
                 params = {
-                    'category_id': optionValue[0],
+                    'category_id': category.id,
                     'year': {{ year }}
                 }
             } else {

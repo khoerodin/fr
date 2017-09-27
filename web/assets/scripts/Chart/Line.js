@@ -8,8 +8,8 @@
             options: {
                 responsive: true,
                 title:{
-                    display:true,
-                    text: title
+                    display :true,
+                    text: title.toUpperCase()
                 },
                 tooltips: {
                     mode: 'index',

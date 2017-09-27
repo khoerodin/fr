@@ -7,8 +7,8 @@
             data: data,
             options: {
                 title:{
-                    display:true,
-                    text: title
+                    display: true,
+                    text: title.toUpperCase()
                 },
                 responsive: true,
                 onClick: callback

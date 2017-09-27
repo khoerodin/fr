@@ -7,8 +7,8 @@
             data: data,
             options: {
                 title:{
-                    display:true,
-                    text: title
+                    display: true,
+                    text: title.toUpperCase()
                 },
                 tooltips: {
                     mode: 'index',
@@ -46,8 +46,8 @@
             data: data,
             options: {
                 title:{
-                    display:true,
-                    text: title
+                    display: true,
+                    text: title.toUpperCase()
                 },
                 tooltips: {
                     mode: 'index',

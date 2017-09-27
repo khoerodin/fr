@@ -65,14 +65,14 @@
             var params = {};
             var type = getType();
             var category = getCategory();
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
             if (null === category.id) {
-                if ('{{ me.id }}' === '{{ admin.id }}') {
+                if (savedStaff.admin) {
                     params = {
                         'year': year,
                         'type': type
                     };
                 } else {
-                    var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
                     params = {
                         'year': {{ year }},
                         'type': type,
@@ -165,7 +165,7 @@
                 'name': null
             };
 
-            if ('{{ me.id }}' === '{{ admin.id }}') {
+            if (savedStaff.admin) {
                 if (null !== categoryOption && '' !== categoryOption) {
                     var split = categoryOption.split('#');
 
@@ -192,7 +192,7 @@
         }
 
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
-            if ('{{ me.id }}' === '{{ admin.id }}') {
+            if (staff.admin) {
                 Bisnis.Helpdesk.Category.fetchAll(function (categoryList) {
                     var categoryOption = '<option selected value="">PILIH BAGIAN</option>';
                     Bisnis.each(function (index, value) {

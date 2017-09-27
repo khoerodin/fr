@@ -86,7 +86,7 @@
                 Bisnis.Util.Dialog.hideModal('#newTicketModal');
                 Bisnis.Notification.send(
                     'HELPDESK',
-                    '/api/users/{{ admin.id }}',
+                    '/api/users/{{ me.id }}',
                     clientId,
                     'Tiket ' + title + ' baru saja dibuat.'
                 );

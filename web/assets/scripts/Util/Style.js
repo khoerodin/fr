@@ -179,7 +179,7 @@
                     var text = jQuery(this).data('text');
                     var label = jQuery(this).data('label');
 
-                    if("searchHistory" in localStorage){
+                    if(selector+"searchHistory" in localStorage){
                         var searchStorage = localStorage.getItem(selector+'searchHistory');
                         var searchHistory = JSON.parse(searchStorage);
                         searchHistory.push({id: id, text: text, label: label});
@@ -193,6 +193,8 @@
                         searchHistory.push({id: id, text: text, label: label});
                         localStorage.setItem(selector+'searchHistory', JSON.stringify(searchHistory));
                     }
+
+                    jQuery(selector).select2('close');
 
                     if (Bisnis.validCallback(callback)) {
                         var data = {

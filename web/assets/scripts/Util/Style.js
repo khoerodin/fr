@@ -18,6 +18,8 @@
         var method = typeof params.method !== 'undefined' ? params.method : 'POST';
         var module = typeof params.module !== 'undefined' ? params.module : '';
         var fields = typeof params.fields !== 'undefined' ? params.fields : '';
+        var tags = typeof params.tags !== 'undefined' ? params.tags : false;
+        var tokenSeparators = typeof params.tokenSeparators !== 'undefined' ? params.tokenSeparators : null;
         var minimumInputLength = typeof params.minimumInputLength !== 'undefined' ? params.minimumInputLength : 2;
 
         var optionTemplate = function (data) {
@@ -36,6 +38,27 @@
             placeholder: placeholder.toUpperCase(),
             allowClear: allowClear,
             templateResult: optionTemplate,
+            tags: tags,
+            tokenSeparators: tokenSeparators,
+            createTag: function (tag) {
+
+                // Check if the option is already there
+                var found = false;
+                jQuery(selector+" option").each(function() {
+                    if ($.trim(tag.term).toUpperCase() === $.trim($(this).text()).toUpperCase()) {
+                        found = true;
+                    }
+                });
+
+                // Show the suggestion only if a match was not found
+                if (!found) {
+                    return {
+                        id: tag.term,
+                        text: tag.term.toUpperCase(),
+                        isNew: true
+                    };
+                }
+            },
             ajax: {
                 url: url,
                 dataType: 'json',

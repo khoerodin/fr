@@ -52,4 +52,12 @@
         jQuery(selector).modal('hide');
     };
 
+    Bisnis.Util.Dialog.shownModal = function (selector, callback) {
+        $(selector).on('shown.bs.tab', function (e) {
+            if (Bisnis.validCallback(callback)) {
+                callback(e);
+            }
+        });
+    };
+
 })(window.Bisnis || {});

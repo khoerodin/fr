@@ -10,10 +10,10 @@
             <div class="box">
                 <div class="box-header row" style="margin-bottom: 0px;">
                     <div class="col-md-10">
-                        <select class="form-control" id="searchBanks" style="width: 100%"></select>
+                        <select class="form-control" id="searchModules" style="width: 100%"></select>
                     </div>
                     <div class="col-md-2">
-                        <button disabled id="btnAddBank" class="btn btn-danger btn-flat btn-block">TAMBAH</button>
+                        <button disabled id="btnAddModule" class="btn btn-danger btn-flat btn-block">TAMBAH</button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -41,12 +41,12 @@
                                                 <th width="20%">Nama</th>
                                                 <th width="20%">Grup</th>
                                                 <th>Path</th>
-                                                <th width="7%">Menu Display</th>
-                                                <th width="5%"><span class="pull-right">Action</span></th>
+                                                <th width="7%">Menu</th>
+                                                <th width="5%"><span class="pull-right">Aksi</span></th>
                                             </tr>
                                             </thead>
 
-                                            <tbody></tbody>
+                                            <tbody id="modulesList{{ service.id }}"></tbody>
 
                                         </table>
                                     </div>
@@ -64,4 +64,67 @@
             <!-- /.box -->
         </div>
     </div>
+
+    {#Add Modal#}
+    <div id="addModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">TAMBAH MODUL</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="addForm">
+                        <div class="form-group">
+                            <label for="addName">NAMA</label>
+                            <input type="text" name="name" id="addName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="addDescription">DESKRIPSI</label>
+                            <input type="text" name="description" id="addDescription" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="addGroupName">GRUP</label>
+                            <input type="text" name="groupName" id="addGroupName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="addPath">PATH</label>
+                            <input type="text" name="path" id="addPath" class="form-control not-ucase">
+                        </div>
+                        <div class="form-group">
+                            <label for="addIconCls">CLASS IKON</label>
+                            <input type="text" name="iconCls" id="addIconCls" class="form-control not-ucase">
+                        </div>
+                        <div class="form-group">
+                            <label for="addMenuOrder">URUTAN MENU</label>
+                            <input type="number" name="menuOrder" id="addMenuOrder" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="addService">SERVIS</label>
+                            <select multiple name="service" id="addService" class="form-control" style="width: 100%;">
+                                {% for service in services %}
+                                    <option value="{{ service.id }}">{{ service.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="AddMenuDisplay">JUGA SEBAGAI MENU?</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="menuDisplay" id="AddMenuDisplay"> Ya
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">TUTUP</button>
+                    <button type="button" id="btn-add" class="btn btn-danger btn-flat">SIMPAN</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Add Modal#}
 {%- endblock -%}

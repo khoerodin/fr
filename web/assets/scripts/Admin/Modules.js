@@ -67,8 +67,13 @@
         });
     };
 
-    Bisnis.Admin.Modules.loadGrid = function (serviceId, params) {
+    Bisnis.Admin.Modules.loadGrid = function (serviceId, pageNum, params) {
         var params = 'undefined' !== typeof params ? params : [];
+
+        var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : pageNum;
+        Bisnis.Util.Storage.store('LAYOUTS_CURRENT_PAGE'+serviceId, pageNum);
+
+        params.push({page: pageNum});
 
         if (typeof serviceId !== 'undefined') {
             params.push({service: serviceId});
@@ -82,7 +87,11 @@
                     { value: memberData.groupName },
                     { value: memberData.path },
                     { value: memberData.menuDisplay, format: function (menuDisplay) {
-                        return '<i class="fa fa-check text-success"></i>'
+                        if (memberData.menuDisplay) {
+                            return '<i class="fa fa-check text-success"></i>'
+                        } else {
+                            return '<i class="fa fa-times text-danger"></i>'
+                        }
                     }},
                     { value: memberData.id, format: function (id) {
                         return '<span class="pull-right">' +
@@ -101,12 +110,14 @@
         .getElementsByTagName('a')[0]
         .getAttribute('aria-controls');
 
-    Bisnis.Admin.Modules.loadGrid(activeId);
+    var pageNum = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE'+activeId);
+    Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
 
     Bisnis.Util.Dialog.shownModal('a[data-toggle="tab"]', function (e) {
         var activeId = e.target.getAttribute('aria-controls');
-        Bisnis.Admin.Modules.loadGrid(activeId);
-    })
+        var pageNum = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE'+activeId);
+        Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
+    });
     // end fetch grid
 
     // add modal
@@ -144,7 +155,8 @@
                     .getElementsByClassName("active")[0]
                     .getElementsByTagName('a')[0]
                     .getAttribute('aria-controls');
-                Bisnis.Admin.Modules.loadGrid(activeId);
+                var pageNum = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE'+activeId);
+                Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
             }
 
             $this.disabled = false;
@@ -165,8 +177,94 @@
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
         });
     };
-
-
     // end add modal
+
+    // detail modal
+    var loadDetail = function (id) {
+        Bisnis.Util.Storage.store('MODULES_ID', id);
+        Bisnis.Admin.Modules.fetchById(id, function (callback) {
+            var nameElem = document.getElementById('detailName');
+            var descriptionElem = document.getElementById('detailDescription');
+            var groupNameElem = document.getElementById('detailGroupName');
+            var pathElem = document.getElementById('detailPath');
+            var iconClsElem = document.getElementById('detailIconCls');
+            var menuOrderElem = document.getElementById('detailMenuOrder');
+            var menuDisplayElem = document.getElementById('detailMenuDisplay');
+            var serviceElem = document.getElementById('detailService');
+
+            nameElem.value = callback.name;
+            nameElem.focus();
+
+            descriptionElem.value = callback.description;
+            groupNameElem.value = callback.groupName;
+            pathElem.value = callback.path;
+            iconClsElem.value = callback.iconCls;
+            menuOrderElem.value = callback.menuOrder;
+            menuDisplayElem.checked = callback.menuDisplay;
+
+            var service = callback.service.split(',');
+            console.log(serviceElem.childNodes);
+            console.log(Bisnis.Util.Document.inArray(service, '1dcda595-816e-11e7-bcb2-f0921c15b764'));
+        });
+
+        Bisnis.Util.Style.modifySelect('#detailService');
+        Bisnis.Util.Dialog.showModal('#detailModal');
+    };
+
+    Bisnis.Util.Event.bind('click', '.btn-detail', function () {
+        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+        loadDetail(id);
+    });
+
+    Bisnis.Admin.Modules.fetchById = function (id, callback) {
+        Bisnis.request({
+            module: 'modules/' + id,
+            method: 'get'
+        }, function (dataResponse, textStatus, response) {
+            var rawData = JSON.parse(dataResponse);
+
+            if (Bisnis.validCallback(callback)) {
+                callback(rawData);
+            }
+        }, function () {
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        });
+    };
+
+    Bisnis.Admin.Modules.updateById = function (id, params, callback) {
+        Bisnis.request({
+            module: 'modules/' + id,
+            method: 'put',
+            params: params
+        }, function (dataResponse, textStatus, response) {
+            var rawData = JSON.parse(dataResponse);
+
+            if (Bisnis.validCallback(callback)) {
+                callback(rawData);
+            }
+        }, function () {
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        });
+    };
+
+    Bisnis.Util.Event.bind('click', '#btn-update', function () {
+        var id = Bisnis.Util.Storage.fetch('MODULES_ID');
+        var params = Bisnis.Util.Form.serializeArray('#detailForm');
+        var $this = this;
+        $this.disabled = true;
+
+        Bisnis.Admin.Modules.updateById(id, params, function (callback) {
+            if (callback.violations) {
+                Bisnis.Util.Grid.validate('detailForm', callback.violations);
+            } else {
+                Bisnis.successMessage('Berhasil memperbarui data');
+                Bisnis.Util.Dialog.hideModal('#detailModal');
+                var page = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE');
+                loadGrid(page);
+            }
+            $this.disabled = false;
+        });
+    });
+    // end detail modal
 
 })(window.Bisnis || {});

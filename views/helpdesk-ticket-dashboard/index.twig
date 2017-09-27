@@ -61,36 +61,29 @@
             });
         }
 
-        function loadStatisticData(year, callback, category) {
+        function loadStatisticData(year, callback) {
             var params = {};
-            if ('undefined' === typeof category) {
+            var type = getType();
+            var category = getCategory();
+            if (null === category.id) {
                 if ('{{ me.id }}' === '{{ admin.id }}') {
-                    Bisnis.Helpdesk.Category.fetchAll(function (categoryList) {
-                        var categoryOption = '<option selected value="">PILIH BAGIAN</option>';
-                        Bisnis.each(function (index, value) {
-                            categoryOption = categoryOption + '<option value="' + value.id + '#' + value.name + '">' + value.name + '</option>';
-                        }, categoryList);
-
-                        Bisnis.Util.Document.putHtml('#chartCategory', categoryOption);
-                        Bisnis.Util.Style.modifySelect('#chartCategory');
-                    });
-
                     params = {
-                        'year': year
+                        'year': year,
+                        'type': type
                     };
                 } else {
-                    Bisnis.Util.Document.hide('.chartCategoryBox');
-
                     var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
                     params = {
                         'year': {{ year }},
+                        'type': type,
                         'category_id': savedStaff.category.id
                     }
                 }
             } else {
                 params = {
                     'year': {{ year }},
-                    'category_id': category
+                    'type': type,
+                    'category_id': category.id
                 }
             }
 
@@ -117,8 +110,7 @@
 
         function clearMainCanvas() {
             if (null === Bisnis.Util.Storage.fetch('__HELPDESK_CHARTDATA__')) {
-                var optionValue = Bisnis.Util.Document.getValue('#chartCategory').split('#');
-                loadStatisticData({{ year }}, function () {}, optionValue[0]);
+                loadStatisticData({{ year }});
             }
 
             if (Object.keys(line).length !== 0) {
@@ -172,7 +164,8 @@
                 'id': null,
                 'name': null
             };
-            if (null === savedStaff) {
+
+            if ('{{ me.id }}' === '{{ admin.id }}') {
                 if (null !== categoryOption && '' !== categoryOption) {
                     var split = categoryOption.split('#');
 
@@ -180,14 +173,39 @@
                     category.name = split[1];
                 }
             } else {
-                category.id = savedStaff.category.id;
-                category.name = savedStaff.category.name;
+                if (null !== savedStaff) {
+                    category.id = savedStaff.category.id;
+                    category.name = savedStaff.category.name;
+                }
             }
 
             return category;
         }
 
+        function getType() {
+            var type = Bisnis.Util.Document.getValue('#chartType');
+            if ('' === type || null === type) {
+                return null;
+            }
+
+            return type;
+        }
+
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+            if ('{{ me.id }}' === '{{ admin.id }}') {
+                Bisnis.Helpdesk.Category.fetchAll(function (categoryList) {
+                    var categoryOption = '<option selected value="">PILIH BAGIAN</option>';
+                    Bisnis.each(function (index, value) {
+                        categoryOption = categoryOption + '<option value="' + value.id + '#' + value.name + '">' + value.name + '</option>';
+                    }, categoryList);
+
+                    Bisnis.Util.Document.putHtml('#chartCategory', categoryOption);
+                    Bisnis.Util.Style.modifySelect('#chartCategory');
+                });
+            } else {
+                Bisnis.Util.Document.hide('.chartCategoryBox');
+            }
+
             if (0 < staff.length) {
                 Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
             } else {
@@ -226,11 +244,26 @@
         Bisnis.Util.Event.bind('click', '.barChart', function () {
             clearMainCanvas();
 
-            var optionValue = Bisnis.Util.Document.getValue('#chartCategory');
+            var category = getCategory();
+            var type = getType();
+            var params = {};
             var title = 'STATISTIK HELPDESK TAHUN {{ year }} ';
-            if (null !== optionValue && '' !== optionValue) {
-                optionValue = optionValue.split('#');
-                title = 'STATISTIK HELPDESK BAGIAN ' + optionValue[1] + ' TAHUN {{ year }}';
+            if (null !== category.id) {
+                title = 'STATISTIK HELPDESK BAGIAN ' + category.name + ' TAHUN {{ year }}';
+                params = {
+                    'category_id': category.id,
+                    'type': type,
+                    'year': {{ year }}
+                };
+            } else {
+                params = {
+                    'year': {{ year }},
+                    'type': type
+                };
+            }
+
+            if (null !== type) {
+                title = title + ' TIPE ' + type;
             }
 
             bar = Bisnis.Chart.Bar.renderStack(document.getElementById('chart'), JSON.parse(Bisnis.Util.Storage.fetch('__HELPDESK_CHARTDATA__')), title, 'Bulan', 'Jumlah', function (e) {
@@ -238,33 +271,35 @@
                 var data = activePoint._chart.data;
                 var datasetIndex = activePoint._datasetIndex;
                 var label = data.datasets[datasetIndex].label;
-                var category = getCategory();
-                var params = {};
-                if (null !== category.id) {
-                    params = {
-                        'category_id': category.id,
-                        'year': {{ year }},
-                        'status': label
-                    }
-                } else {
-                    params = {
-                        'year': {{ year }},
-                        'status': label
-                    }
-                }
+                params['status'] = label;
 
-                loadChartPerStaff(params, title + ' STATUS ' + label.toUpperCase());
+                loadChartPerStaff(params, title + ' STATUS ' + label);
             });
         });
 
         Bisnis.Util.Event.bind('click', '.lineChart', function () {
             clearMainCanvas();
 
-            var optionValue = Bisnis.Util.Document.getValue('#chartCategory');
+            var category = getCategory();
+            var type = getType();
+            var params = {};
             var title = 'STATISTIK HELPDESK TAHUN {{ year }} ';
-            if (null !== optionValue && '' !== optionValue) {
-                optionValue = optionValue.split('#');
-                title = 'STATISTIK HELPDESK BAGIAN ' + optionValue[1] + ' TAHUN {{ year }}';
+            if (null !== category.id) {
+                title = 'STATISTIK HELPDESK BAGIAN ' + category.name + ' TAHUN {{ year }}';
+                params = {
+                    'category_id': category.id,
+                    'type': type,
+                    'year': {{ year }}
+                };
+            } else {
+                params = {
+                    'year': {{ year }},
+                    'type': type
+                };
+            }
+
+            if (null !== type) {
+                title = title + ' TIPE ' + type;
             }
 
             line = Bisnis.Chart.Line.render(document.getElementById('chart'), JSON.parse(Bisnis.Util.Storage.fetch('__HELPDESK_CHARTDATA__')), title, 'Bulan', 'Jumlah', function (e) {
@@ -272,22 +307,9 @@
                 var data = activePoint._chart.data;
                 var datasetIndex = activePoint._datasetIndex;
                 var label = data.datasets[datasetIndex].label;
-                var category = getCategory();
-                var params = {};
-                if (null !== category.id) {
-                    params = {
-                        'category_id': category.id,
-                        'year': {{ year }},
-                        'status': label
-                    }
-                } else {
-                    params = {
-                        'year': {{ year }},
-                        'status': label
-                    }
-                }
+                params['status'] = label;
 
-                loadChartPerStaff(params, title + ' STATUS ' + label.toUpperCase());
+                loadChartPerStaff(params, title + ' STATUS ' + label);
             });
         });
 
@@ -304,60 +326,75 @@
                 labels: pieData['labels']
             };
 
-            var optionValue = Bisnis.Util.Document.getValue('#chartCategory');
+            var category = getCategory();
+            var type = getType();
+            var params = {};
             var title = 'STATISTIK HELPDESK TAHUN {{ year }} ';
-            if (null !== optionValue && '' !== optionValue) {
-                optionValue = optionValue.split('#');
-                title = 'STATISTIK HELPDESK BAGIAN ' + optionValue[1] + ' TAHUN {{ year }}';
+            if (null !== category.id) {
+                title = 'STATISTIK HELPDESK BAGIAN ' + category.name + ' TAHUN {{ year }}';
+                params = {
+                    'category_id': category.id,
+                    'type': type,
+                    'year': {{ year }}
+                };
+            } else {
+                params = {
+                    'year': {{ year }},
+                    'type': type
+                };
+            }
+
+            if (null !== type) {
+                title = title + ' TIPE ' + type;
             }
 
             pie = Bisnis.Chart.Pie.render(document.getElementById('chart'), chartData , title, function (e) {
                 var activePoint = pie.getElementAtEvent(e)[0];
                 var data = activePoint._chart.data;
                 var label = data.labels[activePoint._index];
-                var category = getCategory();
-                var params = {};
-                if (null !== category.id) {
-                    params = {
-                        'category_id': category.id,
-                        'year': {{ year }},
-                        'status': label
-                    }
-                } else {
-                    params = {
-                        'year': {{ year }},
-                        'status': label
-                    }
-                }
+                params['status'] = label;
 
-                loadChartPerStaff(params, title + ' STATUS ' + label.toUpperCase());
+                loadChartPerStaff(params, title + ' STATUS ' + label);
             });
         });
 
         Bisnis.Util.Event.bind('change', '#chartCategory', function () {
-            var optionValue = Bisnis.Util.Document.getValue(this).split('#');
             loadStatisticData({{ year }}, function () {
                 clearMainCanvas();
 
                 Bisnis.Util.Event.triggerClick('.barChart');
-            }, optionValue[0]);
+            });
+        });
+
+        Bisnis.Util.Event.bind('change', '#chartType', function () {
+            loadStatisticData({{ year }}, function () {
+                clearMainCanvas();
+
+                Bisnis.Util.Event.triggerClick('.barChart');
+            });
         });
 
         Bisnis.Util.Event.bind('click', '.perStaff', function () {
             var title = 'STATISTIK HELPDESK TAHUN {{ year }} PER STAFF';
             var category = getCategory();
+            var type = getType();
             var params = {};
             if (null !== category.id) {
                 title = 'STATISTIK HELPDESK BAGIAN ' + category.name + ' TAHUN {{ year }} PER STAFF';
-
                 params = {
                     'category_id': category.id,
+                    'type': type,
                     'year': {{ year }}
                 }
             } else {
                 params = {
-                    'year': {{ year }}
+                    'year': {{ year }},
+                    'type': type
                 }
+            }
+
+            if (null !== type) {
+                title = title + ' TIPE ' + type;
             }
 
             loadChartPerStaff(params, title);
@@ -369,9 +406,19 @@
     <div class="row">
         <div class="col-md-8">
             <div class="box">
-                <div class="box-header chartCategoryBox">
-                    <select name="category" class="form-control" id="chartCategory" style="width: 100%">
-                    </select>
+                <div class="box-header row">
+                    <div class="col-md-6 chartCategoryBox">
+                        <select name="category" class="form-control" id="chartCategory" style="width: 100%">
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <select name="type" class="form-control" id="chartType" style="width: 100%">
+                            <option selected value="">PILIH TIPE</option>
+                            <option value="bug">BUG</option>
+                            <option value="request">REQUEST</option>
+                            <option value="guide">GUIDE/TUTORIAL</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="box-body">
                     <canvas id="chart"></canvas>

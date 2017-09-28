@@ -26,7 +26,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum = 'undefined' === typeof pageNum ? 1 : pageNum;
+        var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('PAYMENT_METHODS_CURRENT_PAGE', pageNum);
         Bisnis.Billing.PaymentMethods.fetchAll([{page: pageNum}], function (memberData) {
             var records = [];

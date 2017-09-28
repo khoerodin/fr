@@ -2,68 +2,73 @@
     Bisnis.Helpdesk.Ticket = {};
 
     var createAssignButton = function (ticketId, categoryId) {
-        return '<button class="assign btn btn-primary fa fa-reply" style="margin-right: 5px;" title="Assign" data-ticket-id="' + ticketId + '" data-ticket-category-id="' + categoryId + '" type="button"></button>';
+        return '<button class="assign btn btn-xs btn-primary fa fa-user-plus" style="margin-right: 5px;" title="Assign" data-ticket-id="' + ticketId + '" data-ticket-category-id="' + categoryId + '" type="button"></button>';
     };
 
     var createDetailButton = function (ticketId) {
-        return '<button class="detail btn btn-warning fa fa-wifi" style="margin-right: 5px;" title="Detail" data-ticket-id="' + ticketId + '" type="button"></button>';
+        return '<button class="detail btn btn-xs btn-warning fa fa-eye" style="margin-right: 5px;" title="Detail" data-ticket-id="' + ticketId + '" type="button"></button>';
     };
 
     var createChangePriorityButton = function (ticketId) {
-        return '<button class="changePriorityTicket btn btn-info fa fa-rocket" style="margin-right: 5px;" title="Change priority" data-ticket-id="' + ticketId + '" type="button"></button>';
+        return '<button class="changePriorityTicket btn btn-xs btn-info fa fa-pencil" style="margin-right: 5px;" title="Change priority" data-ticket-id="' + ticketId + '" type="button"></button>';
     };
 
     var createCloseButton = function (ticketId) {
-        return '<button class="closeTicket btn btn-danger fa fa-thumbs-down" title="Close" data-ticket-id="' + ticketId + '" type="button"></button>';
+        return '<button class="closeTicket btn btn-xs btn-danger fa fa-times" title="Close" data-ticket-id="' + ticketId + '" type="button"></button>';
     };
 
     var createReopenButton = function (ticketId) {
-        return '<button class="reopenTicket btn btn-success fa fa-recycle" title="Close" data-ticket-id="' + ticketId + '" type="button"></button>';
+        return '<button class="reopenTicket btn btn-xs btn-success fa fa-folder-open" title="Close" data-ticket-id="' + ticketId + '" type="button"></button>';
     };
 
     var createStatusButton = function (status) {
-        var statusIcon = 'fa-battery-';
-        var statusButton = 'default';
+        var statusText;
+        var statusColor;
         switch (status) {
             case 'open':
-                statusIcon = statusIcon + '0';
+                statusText = 'OPEN';
+                statusColor = 'default';
                 break;
             case 'assignment':
-                statusIcon = statusIcon + '2';
-                statusButton = 'primary';
+                statusText = 'ASSIGNMENT';
+                statusColor = 'primary';
                 break;
             case 'onprogress':
-                statusIcon = statusIcon + '3';
-                statusButton = 'warning';
+                statusText = 'ON PROGRESS';
+                statusColor = 'warning';
                 break;
             case 'resolved':
-                statusIcon = 'fa-check';
-                statusButton = 'success';
+                statusText = 'RESOLVED';
+                statusColor = 'success';
                 break;
             default:
-                statusIcon = 'fa-close';
-                statusButton = 'danger';
+                statusText = 'NOT DEFINED';
+                statusColor = 'default';
                 break;
         }
 
-        return '<button class="btn btn-' + statusButton + '" title="' + status + '"><i class="fa ' + statusIcon + '"></i></button>';
+        return '<span class="label label-' + statusColor + '" title="' + statusText + '">' + statusText + '</span>';
     };
 
     var createPriorityButton = function (priority) {
-        var priorityMark = 'danger';
+        var priorityMark = 'default';
+        var priorityText = 'LOW';
         switch (priority) {
             case 'low':
                 priorityMark = 'default';
+                priorityText = 'LOW';
                 break;
             case 'normal':
                 priorityMark = 'primary';
+                priorityText = 'NORMAL';
                 break;
             case 'urgent':
                 priorityMark = 'warning';
+                priorityText = 'URGENT';
                 break;
         }
 
-        return '<button class="btn btn-'+ priorityMark +'" title="' + priority + '"><i class="fa fa-ambulance"></i></button>';
+        return '<label class="label label-'+ priorityMark +'" title="' + priority + '">'+priorityText+'</label>';
     };
 
     var renderMe = function (idx, ticket, row, style) {
@@ -157,7 +162,7 @@
         }, ticketList);
 
         if ('' === row) {
-            Bisnis.Util.Document.putHtml(selector, '<p style="font-weight: bold; padding-left: 17px; font-size: 11px;">Belum ada data</p>');
+            Bisnis.Util.Document.putHtml(selector, '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
         } else {
             Bisnis.Util.Document.putHtml(selector, row);
         }

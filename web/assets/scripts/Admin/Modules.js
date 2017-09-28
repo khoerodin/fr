@@ -23,6 +23,7 @@
             }
         }, function (selectedCallback) {
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
+            console.log(selectedCallback)
             var id = selectedCallback.id;
             loadDetail(id);
         }, function (openCallback) {
@@ -202,10 +203,6 @@
             menuDisplayElem.checked = callback.menuDisplay;
 
             var service = callback.service.split(',');
-            service.map(function (value) {
-                document.getElementById('detailService')
-                    .querySelectorAll('option[value="'+value+'"]')[0].selected = true;
-            });
             Bisnis.Util.Document.putValue('#detailService', service);
             Bisnis.Util.Event.bind('change', '#detailService');
             Bisnis.Util.Style.modifySelect('#detailService');
@@ -324,6 +321,24 @@
         });
     };
     // end delete module
+
+    // prevent submit form on enter
+    document.getElementById("addForm").onkeypress = function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+            e.preventDefault();
+        }
+    };
+
+    document.getElementById("detailForm").onkeypress = function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+            e.preventDefault();
+        }
+    };
+    // end prevent submit form on enter
 
     // reset modal form on modal hidden
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {

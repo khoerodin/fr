@@ -26,7 +26,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum = 'undefined' === typeof pageNum ? 1 : pageNum;
+        var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('MEDIA_CURRENT_PAGE', pageNum);
         Bisnis.Adv.Media.fetchAll([{page: pageNum}], function (memberData) {
             var records = [];
@@ -270,5 +270,14 @@
         }
     }
     // end prevent submit form on enter
+
+    // reset modal form on modal hidden
+    Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
+        document.getElementById("addForm").reset();
+    });
+    Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
+        document.getElementById("detailForm").reset();
+    });
+    // end reset modal form on modal hidden
 
 })(window.Bisnis || {});

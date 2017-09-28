@@ -1,7 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/Adv/TeamWorks.js"></script>
+    <script src="/assets/scripts/Advertising/AccountExecutiveManagers.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -10,27 +10,28 @@
             <div class="box">
                 <div class="box-header row" style="margin-bottom: 0px;">
                     <div class="col-md-10">
-                        <select class="form-control" id="searchTeamWorks" style="width: 100%"></select>
+                        <select class="form-control" id="searchAccountExecutiveManagers" style="width: 100%"></select>
                     </div>
                     <div class="col-md-2">
-                        <button disabled id="btnAddTeamWork" class="btn btn-danger btn-flat btn-block">TAMBAH</button>
+                        <button disabled id="btnAccountExecutiveManager" class="btn btn-danger btn-flat btn-block">TAMBAH</button>
                     </div>
                 </div>
                 <div class="box-body">
                     <table class="table table-bordered table-responsive table-hover">
                         <thead>
-                        <tr>
-                            <th width="3%">NO.</th>
-                            <th width="7%">KODE</th>
-                            <th>TIM KERJA</th>
-                            <th width="4%"><span class="pull-right">AKSI</span></th>
-                        </tr>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th width="15%">TIM KERJA</th>
+                                <th width="7%">KODE</th>
+                                <th>MANAJER</th>
+                                <th width="4%"><span class="pull-right">AKSI</span></th>
+                            </tr>
                         </thead>
-                        <tbody id="teamWorksList"></tbody>
+                        <tbody id="accountExecutiveManagersList"></tbody>
                     </table>
                 </div>
                 <div class="box-footer clearfix">
-                    <ul id="teamWorksPagination" class="pagination pagination-sm pull-right"></ul>
+                    <ul id="accountExecutiveManagersPagination" class="pagination pagination-sm pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->
@@ -44,16 +45,20 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">TAMBAH TIM KEJA</h4>
+                    <h4 class="modal-title">TAMBAH MANAJER AKUN EKSEKUTIF</h4>
                 </div>
                 <div class="modal-body">
                     <form id="addForm">
+                        <div class="form-group">
+                            <label for="addTeamWork">TIM KERJA</label>
+                            <select type="text" name="teamWork" id="addTeamWork" class="form-control" style="width: 100%;"></select>
+                        </div>
                         <div class="form-group">
                             <label for="addCode">KODE</label>
                             <input type="text" name="code" id="addCode" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="addName">TIM KEJA</label>
+                            <label for="addName">BANK</label>
                             <input type="text" name="name" id="addName" class="form-control">
                         </div>
                     </form>
@@ -75,16 +80,20 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">DETAIL TIM KEJA</h4>
+                    <h4 class="modal-title">DETAIL MANAJER AKUN EKSEKUTIF</h4>
                 </div>
                 <div class="modal-body">
                     <form id="detailForm">
+                        <div class="form-group">
+                            <label for="detailTeamWork">TIM KERJA</label>
+                            <select type="text" name="teamWork" id="detailTeamWork" class="form-control" style="width: 100%;"></select>
+                        </div>
                         <div class="form-group">
                             <label for="detailCode">KODE</label>
                             <input type="text" name="code" id="detailCode" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="detailName">TIM KEJA</label>
+                            <label for="detailName">BANK</label>
                             <input type="text" name="name" id="detailName" class="form-control">
                         </div>
                     </form>

@@ -545,37 +545,8 @@
             params: [params]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                var statistics = {};
-                Bisnis.each(function (idx, value) {
-                    var index = idx - 1;
-                    if (0 < value.length) {
-                        Bisnis.each(function (i, stat) {
-                            if (null !== stat['fullname']) {
-                                statistics[stat['fullname']] = [];
-                            } else {
-                                if ('undefined' === typeof statistics['NONAME']) {
-                                    statistics['NONAME'] = [];
-                                }
-                            }
-
-                            if (null !== stat['fullname']) {
-                                statistics[stat['fullname']][index] = parseInt(stat['total']);
-                            } else {
-                                statistics['NONAME'][index] = parseInt(stat['total']);
-                            }
-                        }, value);
-                    }
-                }, JSON.parse(response));
-
-                Bisnis.each(function (i) {
-                    for (var j = 0; j <= 12; j++ ) {
-                        if ('undefined' === typeof statistics[i][j]) {
-                            statistics[i][j] = 0;
-                        }
-                    }
-                }, statistics);
-
-                callback(statistics);
+                Bisnis.Util.Storage.store('__HELPDESK_CHARTDATA_DETAIL__', response);
+                callback();
             }
         }, function () {
             console.log('KO');

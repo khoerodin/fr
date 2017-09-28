@@ -7,7 +7,8 @@
         window.field = 'name';
         var columns = [
             'user.fullname',
-            'category.name'
+            'category.name',
+            'isAdmin'
         ];
     </script>
 {% endblock %}
@@ -36,6 +37,7 @@
                             <th width="5%">#</th>
                             <th width="30%">User</th>
                             <th>Kategori</th>
+                            <th>Admin?</th>
                             <th width="5%"><span class="pull-right">Aksi</span></th>
                         </tr>
                         </thead>

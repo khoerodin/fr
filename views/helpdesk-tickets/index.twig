@@ -6,7 +6,7 @@
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
     <script type="text/javascript">
         var fetchAllTicket = function (staff) {
-            if ('{{ admin.id }}' === staff.user.id) {
+            if (staff.isAdmin) {
                 Bisnis.Helpdesk.Ticket.fetchClosable({
                     'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
                 }, '#allTicketList', false, '#allTicketPagination');
@@ -24,6 +24,7 @@
         };
 
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+            Bisnis.Util.Storage.remove('staff');
             Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
             if (0 < staff.length) {
                 Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));

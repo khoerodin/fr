@@ -183,18 +183,15 @@
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('MODULES_ID', id);
         Bisnis.Admin.Modules.fetchById(id, function (callback) {
-            var nameElem = document.getElementById('detailName');
-            var descriptionElem = document.getElementById('detailDescription');
-            var groupNameElem = document.getElementById('detailGroupName');
-            var pathElem = document.getElementById('detailPath');
-            var iconClsElem = document.getElementById('detailIconCls');
-            var menuOrderElem = document.getElementById('detailMenuOrder');
-            var menuDisplayElem = document.getElementById('detailMenuDisplay');
-            var serviceElem = document.getElementById('detailService');
+            var nameElem = document.getElementById('detailModal').getElementById('detailName');
+            var descriptionElem = document.getElementById('detailModal').getElementById('detailDescription');
+            var groupNameElem = document.getElementById('detailModal').getElementById('detailGroupName');
+            var pathElem = document.getElementById('detailModal').getElementById('detailPath');
+            var iconClsElem = document.getElementById('detailModal').getElementById('detailIconCls');
+            var menuOrderElem = document.getElementById('detailModal').getElementById('detailMenuOrder');
+            var menuDisplayElem = document.getElementById('detailModal').getElementById('detailMenuDisplay');
 
-            nameElem.value = callback.name;
-            nameElem.focus();
-
+            nameElem.value = callback.name; nameElem.focus();
             descriptionElem.value = callback.description;
             groupNameElem.value = callback.groupName;
             pathElem.value = callback.path;
@@ -203,8 +200,11 @@
             menuDisplayElem.checked = callback.menuDisplay;
 
             var service = callback.service.split(',');
-            console.log(serviceElem.childNodes);
-            console.log(Bisnis.Util.Document.inArray(service, '1dcda595-816e-11e7-bcb2-f0921c15b764'));
+            service.map(function (value) {
+                document.getElementById('detailModal')
+                    .getElementById('detailService')
+                    .querySelectorAll('option[value="'+value+'"]')[0].selected = true;
+            });
         });
 
         Bisnis.Util.Style.modifySelect('#detailService');

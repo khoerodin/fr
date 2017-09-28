@@ -275,4 +275,13 @@
     }
     // end prevent submit form on enter
 
+    // reset modal form on modal hidden
+    Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
+        document.getElementById("addForm").reset();
+    });
+    Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
+        document.getElementById("detailForm").reset();
+    });
+    // end reset modal form on modal hidden
+
 })(window.Bisnis || {});

@@ -94,12 +94,16 @@
         Bisnis.Util.Document.putHtml(selector, paging);
     };
 
-    Bisnis.Util.Grid.validate = function (formId, violations) {
+    Bisnis.Util.Grid.removeErrorForm = function (formId) {
         let helpElm = document.getElementById(formId).getElementsByClassName('help-block');
         while (helpElm.length > 0) helpElm[0].remove();
 
         let errorElm = document.getElementById(formId).getElementsByClassName('has-error');
         while (errorElm.length > 0) errorElm[0].classList.remove('has-error');
+    };
+
+    Bisnis.Util.Grid.validate = function (formId, violations) {
+        Bisnis.Util.Grid.removeErrorForm(formId);
 
         violations.map(function (value) {
             var property = document.getElementById(formId).querySelectorAll('[name='+value.propertyPath+']');

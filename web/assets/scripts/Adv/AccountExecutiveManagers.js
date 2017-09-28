@@ -34,6 +34,7 @@
                 var records = [];
                 Bisnis.each(function (idx, memberData) {
                     records.push([
+                        { value: memberData.teamWork.name },
                         { value: memberData.code },
                         { value: memberData.name },
                         { value: memberData.id, format: function (id) {
@@ -81,7 +82,7 @@
             },
             {
                 field: 'name',
-                label: 'Manajer Akun Eksekutif'
+                label: 'Manajer'
             }
         ]
     };
@@ -119,8 +120,25 @@
 
     // add modal
     Bisnis.Util.Event.bind('click', '#btnAddAccountExecutiveManager', function () {
+        var params = {
+            placeholder: 'CARI KODE / NAMA TIM KERJA',
+            module: 'advertising/team-works',
+            prependText: '/api/advertising/team-works/',
+            fields: [
+                {
+                    field: 'code',
+                    label: 'Kode'
+                },
+                {
+                    field: 'name',
+                    label: 'Tim Kerja'
+                },
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addTeamWork', params);
+
         Bisnis.Util.Dialog.showModal('#addModal');
-        document.getElementById('addCode').focus();
+        document.getElementById('addTeamWork').focus();
     });
 
     Bisnis.Util.Event.bind('click', '#btn-add', function () {
@@ -160,9 +178,30 @@
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_MANAGER_ID', id);
         Bisnis.Adv.AccountExecutiveManagers.fetchById(id, function (callback) {
+            var teamWorkElem = document.getElementById('detailTeamWork');
+            teamWorkElem.innerHTML = '<option value="/api/advertising/team-works/'+callback.teamWork.id+'">'+callback.teamWork.name+'</option>';
+
+            Bisnis.Util.Event.bind('change', '#detailTeamWork');
+            Bisnis.Util.Style.modifySelect('#detailTeamWork');
+            var params = {
+                placeholder: 'CARI KODE / NAMA TIM KERJA',
+                module: 'advertising/team-works',
+                prependText: '/api/advertising/team-works/',
+                fields: [
+                    {
+                        field: 'code',
+                        label: 'Kode'
+                    },
+                    {
+                        field: 'name',
+                        label: 'Tim Kerja'
+                    },
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailTeamWork', params);
+
             var codeElem = document.getElementById('detailCode');
             codeElem.value = callback.code;
-            codeElem.focus();
 
             var nameElem = document.getElementById('detailName');
             nameElem.value = callback.name;
@@ -278,9 +317,11 @@
 
     // reset modal form on modal hidden
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('addForm');
         document.getElementById("addForm").reset();
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
     });
     // end reset modal form on modal hidden

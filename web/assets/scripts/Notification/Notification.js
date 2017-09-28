@@ -159,5 +159,14 @@
                 }
             });
         }, 7000);
+        // var conn = new WebSocket('ws://localhost:8080');
+        // conn.onopen = function(e) {
+        //     console.log(e);
+        //     conn.send(userId);
+        // };
+        //
+        // conn.onmessage = function(e) {
+        //     console.log(e.data);
+        // };
     };
 })(window.Bisnis || {});

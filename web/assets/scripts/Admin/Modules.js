@@ -83,28 +83,32 @@
         }
 
         Bisnis.Admin.Modules.fetchByService(params, function (memberData) {
-            var records = [];
-            Bisnis.each(function (idx, memberData) {
-                records.push([
-                    { value: memberData.name },
-                    { value: memberData.groupName },
-                    { value: memberData.path },
-                    { value: memberData.menuDisplay, format: function (menuDisplay) {
-                        if (memberData.menuDisplay) {
-                            return '<i class="fa fa-check text-success"></i>'
-                        } else {
-                            return '<i class="fa fa-times text-danger"></i>'
-                        }
-                    }},
-                    { value: memberData.id, format: function (id) {
-                        return '<span class="pull-right">' +
-                            '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
-                            '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                            '</span>';
-                    }}
-                ]);
-            }, memberData);
-            Bisnis.Util.Grid.renderRecords('#modulesList'+serviceId, records);
+            if (memberData.length > 0) {
+                var records = [];
+                Bisnis.each(function (idx, memberData) {
+                    records.push([
+                        { value: memberData.name },
+                        { value: memberData.groupName },
+                        { value: memberData.path },
+                        { value: memberData.menuDisplay, format: function (menuDisplay) {
+                            if (memberData.menuDisplay) {
+                                return '<i class="fa fa-check text-success"></i>'
+                            } else {
+                                return '<i class="fa fa-times text-danger"></i>'
+                            }
+                        }},
+                        { value: memberData.id, format: function (id) {
+                            return '<span class="pull-right">' +
+                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                '</span>';
+                        }}
+                    ]);
+                }, memberData);
+                Bisnis.Util.Grid.renderRecords('#modulesList'+serviceId, records);
+            } else {
+                Bisnis.Util.Document.putHtml('#modulesList'+serviceId, '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+            }
         });
     }
 

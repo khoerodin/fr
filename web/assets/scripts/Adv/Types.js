@@ -29,19 +29,23 @@
         var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('TYPES_CURRENT_PAGE', pageNum);
         Bisnis.Adv.Types.fetchAll([{page: pageNum}], function (memberData) {
-            var records = [];
-            Bisnis.each(function (idx, memberData) {
-                records.push([
-                    { value: memberData.name },
-                    { value: memberData.id, format: function (id) {
-                        return '<span class="pull-right">' +
-                            '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
-                            '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                            '</span>';
-                    }}
-                ]);
-            }, memberData);
-            Bisnis.Util.Grid.renderRecords('#typesList', records);
+            if (memberData.length > 0) {
+                var records = [];
+                Bisnis.each(function (idx, memberData) {
+                    records.push([
+                        { value: memberData.name },
+                        { value: memberData.id, format: function (id) {
+                            return '<span class="pull-right">' +
+                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                '</span>';
+                        }}
+                    ]);
+                }, memberData);
+                Bisnis.Util.Grid.renderRecords('#typesList', records);
+            } else {
+                Bisnis.Util.Document.putHtml('#typesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+            }
         });
     };
 

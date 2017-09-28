@@ -148,7 +148,7 @@
             var rawData = JSON.parse(dataResponse);
 
             if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+                callback(rawData);addForm
             }
         }, function () {
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
@@ -278,9 +278,11 @@
 
     // reset modal form on modal hidden
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('addForm');
         document.getElementById("addForm").reset();
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
     });
     // end reset modal form on modal hidden

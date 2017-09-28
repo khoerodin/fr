@@ -336,9 +336,11 @@
 
     // reset modal form on modal hidden
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('addForm');
         document.getElementById("addForm").reset();
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('detailFrom');
         document.getElementById("detailForm").reset();
     });
     // end reset modal form on modal hidden

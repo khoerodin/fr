@@ -29,7 +29,7 @@
         var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('TEAM_WORKS_CURRENT_PAGE', pageNum);
         Bisnis.Adv.TeamWorks.fetchAll([{page: pageNum}], function (memberData) {
-            if (memberData.length > 1) {
+            if (memberData.length > 0) {
                 var records = [];
                 Bisnis.each(function (idx, memberData) {
                     records.push([

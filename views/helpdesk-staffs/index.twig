@@ -67,6 +67,14 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="AddIsAdmin">SEBAGAI ADMIN?</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="isAdmin" id="AddIsAdmin"> Ya
+                                </label>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -107,6 +115,14 @@
                                     <option value="/api/helpdesk/categories/{{ category.id }}">{{ category.name }}</option>
                                 {% endfor %}
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="detailIsAdmin">SEBAGAI ADMIN?</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="isAdmin" id="detailIsAdmin"> Ya
+                                </label>
+                            </div>
                         </div>
                     </form>
                 </div>

@@ -67,7 +67,7 @@
             var category = getCategory();
             var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
             if (null === category.id) {
-                if (savedStaff.admin) {
+                if (savedStaff.isAdmin) {
                     params = {
                         'year': year,
                         'type': type
@@ -165,7 +165,7 @@
                 'name': null
             };
 
-            if (savedStaff.admin) {
+            if (savedStaff.isAdmin) {
                 if (null !== categoryOption && '' !== categoryOption) {
                     var split = categoryOption.split('#');
 
@@ -192,7 +192,9 @@
         }
 
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
-            if (staff.admin) {
+            Bisnis.Util.Storage.remove('staff');
+            Bisnis.Util.Style.modifySelect('#chartType');
+            if (staff[0].isAdmin) {
                 Bisnis.Helpdesk.Category.fetchAll(function (categoryList) {
                     var categoryOption = '<option selected value="">PILIH BAGIAN</option>';
                     Bisnis.each(function (index, value) {

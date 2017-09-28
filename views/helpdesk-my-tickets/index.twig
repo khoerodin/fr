@@ -84,12 +84,6 @@
             Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, ticketType, title, message, function () {
                 Bisnis.Util.Event.triggerClick('.assignToMe');
                 Bisnis.Util.Dialog.hideModal('#newTicketModal');
-                Bisnis.Notification.send(
-                    'HELPDESK',
-                    '/api/users/{{ me.id }}',
-                    clientId,
-                    'Tiket ' + title + ' baru saja dibuat.'
-                );
                 Bisnis.successMessage('Tiket baru berhasil dibuat.');
 
                 Bisnis.Util.Document.putValue('#ticketCategory', '');
@@ -270,7 +264,6 @@
                         <label for="name">Tipe</label>
                         <select name="category" class="form-control" id="ticketType" style="width: 100%">
                             <option selected disabled class="text-muted">PILIH TIPE</option>
-                            <option selected value="">PILIH TIPE</option>
                             <option value="bug">BUG</option>
                             <option value="request">REQUEST</option>
                             <option value="guide">GUIDE/TUTORIAL</option>

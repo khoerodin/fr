@@ -47,7 +47,6 @@ app:
         - { path: '/advertising/media', controller: 'Bisnis:AdvertisingMedia@index', methods: ['GET'] }
         - { path: '/advertising/team-works', controller: 'Bisnis:AdvertisingTeamWorks@index', methods: ['GET'] }
         - { path: '/advertising/account-executive-managers', controller: 'Bisnis:AdvertisingAccountExecutiveManagers@index', methods: ['GET'] }
-        - { path: '/advertising/account-executive-categories', controller: 'Bisnis:AdvertisingAccountExecutiveCategories@index', methods: ['GET'] }
         - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
 
         - { path: '/advertising/orders', controller: 'Bisnis:AdvertisingOrders@index', methods: ['GET'] }

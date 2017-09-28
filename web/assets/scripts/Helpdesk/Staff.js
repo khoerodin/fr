@@ -184,6 +184,8 @@
                 });
             });
             Bisnis.Util.Style.modifySelect('#detailCategory');
+
+            document.getElementById('detailIsAdmin').checked = callback.isAdmin;
         });
     };
 

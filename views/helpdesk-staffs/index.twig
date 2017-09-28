@@ -50,7 +50,7 @@
                 <div class="modal-body">
                     <form id="addForm">
                         <div class="form-group">
-                            <label for="name">PENGGUNA</label>
+                            <label for="addUser">STAFF</label>
                             <select name="user" id="addUser" class="form-control" style="width: 100%">
                                 <option selected disabled>PILIH STAFF</option>
                                 {% for user in users %}
@@ -59,7 +59,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="category">BAGIAN</label>
+                            <label for="addCategory">BAGIAN</label>
                             <select name="category" id="addCategory" class="form-control" style="width: 100%">
                                 <option selected disabled>PILIH BAGIAN</option>
                                 {% for category in categories %}
@@ -99,7 +99,7 @@
                 <div class="modal-body">
                     <form id="detailForm">
                         <div class="form-group">
-                            <label for="name">PENGGUNA</label>
+                            <label for="detailUser">STAFF</label>
                             <select name="user" id="detailUser" class="form-control">
                                 <option selected disabled>PILIH STAFF</option>
                                 {% for user in users %}
@@ -108,7 +108,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="category">BAGIAN</label>
+                            <label for="detailCategory">BAGIAN</label>
                             <select name="category" id="detailCategory" class="form-control">
                                 <option selected disabled>PILIH BAGIAN</option>
                                 {% for category in categories %}

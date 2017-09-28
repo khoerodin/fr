@@ -27,8 +27,6 @@
     };
 
     var loadPage = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Adv.OrdersInvoices.fetchAll([{page: pageNum}], function (memberData) {
             var records = [];
             Bisnis.each(function (idx, memberData) {

@@ -21,6 +21,8 @@
         var tags = typeof params.tags !== 'undefined' ? params.tags : false;
         var tokenSeparators = typeof params.tokenSeparators !== 'undefined' ? params.tokenSeparators : null;
         var minimumInputLength = typeof params.minimumInputLength !== 'undefined' ? params.minimumInputLength : 2;
+        var prependText = typeof params.prependText !== 'undefined' ? params.prependText : '';
+        var appendText = typeof params.appendText !== 'undefined' ? params.appendText : '';
 
         var optionTemplate = function (data) {
             if (!data.id) {
@@ -83,7 +85,7 @@
 
                         return {
                             results: jQuery.map(data, function(obj) {
-                                return { id: obj.id, text: obj['text'], label: obj['label'] };
+                                return { id: prependText+obj.id+appendText, text: obj['text'], label: obj['label'] };
                             })
                         }
                     } else {

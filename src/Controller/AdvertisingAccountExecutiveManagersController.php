@@ -8,7 +8,7 @@ class AdvertisingAccountExecutiveManagersController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Iklan',
-            'title' => 'Akun Eksekutif Manajer',
+            'title' => 'Manajer Akun Eksekutif',
         ];
 
         $data = [

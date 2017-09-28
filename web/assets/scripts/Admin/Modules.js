@@ -23,6 +23,8 @@
             }
         }, function (selectedCallback) {
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
+            var id = selectedCallback.id;
+            loadDetail(id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddModule');
             if (openCallback === false) {

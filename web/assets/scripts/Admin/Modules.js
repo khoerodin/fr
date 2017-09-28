@@ -286,6 +286,43 @@
     });
     // end detail modal
 
+    // delete module
+    Bisnis.Util.Event.bind('click', '.btn-delete', function () {
+        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+        Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
+            if (result) {
+                Bisnis.Admin.Modules.delete(id, function (textStatus) {
+                    if (textStatus === 'success') {
+                        Bisnis.successMessage('Berhasil menghapus data');
+
+                        var activeId = document.getElementById("serviceTab")
+                            .getElementsByClassName("active")[0]
+                            .getElementsByTagName('a')[0]
+                            .getAttribute('aria-controls');
+                        var pageNum = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE'+activeId);
+                        Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
+                    } else {
+                        Bisnis.errorMessage('Gagal menghapus data');
+                    }
+                })
+            }
+        });
+    });
+
+    Bisnis.Admin.Modules.delete = function (id, callback) {
+        Bisnis.request({
+            module: 'modules/' + id,
+            method: 'delete'
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(callback)) {
+                callback(textStatus);
+            }
+        }, function () {
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        });
+    };
+    // end delete module
+
     // reset modal form on modal hidden
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
         document.getElementById("addForm").reset();

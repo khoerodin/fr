@@ -28,4 +28,23 @@
     Bisnis.Util.Document.hide = function (selector) {
         jQuery(selector).hide();
     };
+
+    Bisnis.Util.Document.inArray = function (array, value) {
+        Array.prototype.inArray = function (value)
+        {
+            // Returns true if the passed value is found in the
+            // array. Returns false if it is not.
+            var i;
+            for (i=0; i < this.length; i++)
+            {
+                if (this[i] == value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        return array.inArray(value);
+    };
 })(window.Bisnis || {});

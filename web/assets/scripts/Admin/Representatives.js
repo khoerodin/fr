@@ -124,9 +124,13 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Admin.Representatives.add(params, function () {
-            Bisnis.Util.Dialog.hideModal('#addModal');
-            loadGrid(1);
+        Bisnis.Admin.Representatives.add(params, function (callback) {
+            if (callback.violations) {
+                Bisnis.Util.Grid.validate('addForm', callback.violations);
+            } else {
+                Bisnis.Util.Dialog.hideModal('#addModal');
+                loadGrid(1);
+            }
             thisBtn.disabled = false;
         });
     });
@@ -207,11 +211,15 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Admin.Representatives.updateById(id, params, function () {
-            Bisnis.successMessage('Berhasil memperbarui data');
-            Bisnis.Util.Dialog.hideModal('#detailModal');
-            var page = Bisnis.Util.Storage.fetch('REPRESENTATIVES_CURRENT_PAGE');
-            loadGrid(page);
+        Bisnis.Admin.Representatives.updateById(id, params, function (callback) {
+            if (callback.violations) {
+                Bisnis.Util.Grid.validate('detailForm', callback.violations);
+            } else {
+                Bisnis.successMessage('Berhasil memperbarui data');
+                Bisnis.Util.Dialog.hideModal('#detailModal');
+                var page = Bisnis.Util.Storage.fetch('REPRESENTATIVES_CURRENT_PAGE');
+                loadGrid(page);
+            }
             thisBtn.disabled = false;
         });
     });

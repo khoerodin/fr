@@ -93,4 +93,26 @@
 
         Bisnis.Util.Document.putHtml(selector, paging);
     };
+
+    Bisnis.Util.Grid.validate = function (formId, violations) {
+        let helpElm = document.getElementById(formId).getElementsByClassName('help-block');
+        while (helpElm.length > 0) helpElm[0].remove();
+
+        let errorElm = document.getElementById(formId).getElementsByClassName('has-error');
+        while (errorElm.length > 0) errorElm[0].classList.remove('has-error');
+
+        violations.map(function (value) {
+            var property = document.getElementById(formId).querySelectorAll('[name='+value.propertyPath+']');
+            var parent = property[0].parentNode;
+            parent.classList.add('has-error');
+
+            var p = document.createElement('p');
+            var t = document.createTextNode(value.message);
+            p.appendChild(t);
+            p.className = 'help-block';
+
+            parent.appendChild(p);
+        });
+        Bisnis.errorMessage('Ups, mohon lengkapi data Anda');
+    };
 })(window.Bisnis || {});

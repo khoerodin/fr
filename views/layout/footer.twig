@@ -41,6 +41,7 @@
     <script type="text/javascript" src="/assets/scripts/Util/Url.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Form.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/WebSocket.js"></script>
     <script type="text/javascript" src="/assets/scripts/Notification/Notification.js"></script>
     <script>
         (function() {
@@ -53,14 +54,14 @@
             Bisnis.Util.Style.changeStyle('.direct-chat', [{'margin-bottom': '0px'}]);
             Bisnis.Util.Style.changeStyle('.note-frame', [{'margin-bottom': '0px'}]);
 
-            Bisnis.Notification.enableTo('/api/users/{{ me.id }}', '.notification', function () {
+            Bisnis.Notification.enableTo('{{ me.id }}', '.userNotification', '.userOnline', function () {
                 Bisnis.Util.Dialog.hideModal('.modal');
-                window.focus();
-                Bisnis.Util.Event.triggerClick('a.notif_notification');
+                window.focus(this);
+                Bisnis.Util.Event.triggerClick('a.notif_userNotification');
             });
 
-            Bisnis.Util.Event.bind('click', 'a.notif_notification', function () {
-                Bisnis.Notification.unread('/api/users/{{ me.id }}', function (notifications) {
+            Bisnis.Util.Event.bind('click', 'a.notif_userNotification', function () {
+                Bisnis.Notification.unread('{{ me.id }}', function (notifications) {
                     var records = [];
                     Bisnis.each(function (idx, notification) {
                         records.push([

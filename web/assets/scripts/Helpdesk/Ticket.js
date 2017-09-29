@@ -375,6 +375,7 @@
                 }
             ]
         }, function () {
+            Bisnis.WebSocket.ping();
             if (Bisnis.validCallback(callback)) {
                 callback();
             }

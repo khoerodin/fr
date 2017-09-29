@@ -139,7 +139,7 @@
                         Bisnis.Util.Event.triggerClick('#refreshChat');
                         Bisnis.Notification.send(
                             'HELPDESK',
-                            '/api/users/' + ticket.staff.user.id,
+                            ticket.staff.user.id,
                             '/api/users/{{ me.id }}',
                             'Tiket ' + ticket.title + ' mendapatkan response baru dari user.'
                         );

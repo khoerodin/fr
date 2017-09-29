@@ -191,7 +191,7 @@
                         Bisnis.Helpdesk.Ticket.markReadClientResponseByTicket(ticketId);
                         Bisnis.Notification.send(
                             'HELPDESK',
-                            '/api/users/' + ticket.client.id,
+                            ticket.client.id,
                             '/api/helpdesk/staffs/' + staffId,
                             'Tiket Anda [' + ticket.title + '] mendapatkan response baru dari admin.'
                         );
@@ -216,13 +216,13 @@
                     Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
                         Bisnis.Notification.send(
                             'HELPDESK',
-                            '/api/users/' + ticket.client.id,
+                            ticket.client.id,
                             '/api/helpdesk/staffs/' + ticket.staff.id,
                             'Tiket Anda [' + ticket.title + '] sedang ditangani oleh ' + ticket.staff.fullname + '.'
                         );
                         Bisnis.Notification.send(
                             'HELPDESK',
-                            '/api/users/' + ticket.staff.user.id,
+                            ticket.staff.user.id,
                             '/api/users/{{ me.id }}',
                             'Tiket ' + ticket.title + ' diassign ke Anda.'
                         );
@@ -243,7 +243,7 @@
             Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
                 Bisnis.Notification.send(
                     'HELPDESK',
-                    '/api/users/' + ticket.client.id,
+                    ticket.client.id,
                     '/api/helpdesk/staffs/' + ticket.staff.id,
                     'Tiket Anda [' + ticket.title + '] telah diubah prioritasnya menjadi <b>' + priority + '</b>.'
                 );
@@ -272,7 +272,7 @@
                     Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
                         Bisnis.Notification.send(
                             'HELPDESK',
-                            '/api/users/' + ticket.client.id,
+                            ticket.client.id,
                             '/api/helpdesk/staffs/' + ticket.staff.id,
                             'Tiket Anda [' + ticket.title + '] telah selesai ditangani.'
                         );
@@ -304,7 +304,7 @@
                     Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
                         Bisnis.Notification.send(
                             'HELPDESK',
-                            '/api/users/' + ticket.client.id,
+                            ticket.client.id,
                             '/api/helpdesk/staffs/' + ticket.staff.id,
                             'Tiket Anda [' + ticket.title + '] dinonaktifkan oleh Admin.'
                         );
@@ -325,7 +325,7 @@
                     Bisnis.Helpdesk.Ticket.fetch(ticketId, function (ticket) {
                         Bisnis.Notification.send(
                             'HELPDESK',
-                            '/api/users/' + ticket.client.id,
+                            ticket.client.id,
                             '/api/helpdesk/staffs/' + ticket.staff.id,
                             'Tiket Anda [' + ticket.title + '] diaktifkan kembali oleh Admin.'
                         );

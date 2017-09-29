@@ -68,6 +68,7 @@
     Bisnis.Billing = {};
     Bisnis.Admin = {};
     Bisnis.Chart = {};
+    Bisnis.WebSocket = {};
 
     window.Bisnis = Bisnis;
 })(window);

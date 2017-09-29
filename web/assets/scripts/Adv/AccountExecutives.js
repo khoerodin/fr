@@ -38,6 +38,7 @@
                         { value: memberData.name },
                         { value: memberData.id, format: function (id) {
                             return '<span class="pull-right">' +
+                                '<button data-id="' + id + '" data-code="' + memberData.code + '" data-name="' + memberData.name + '" class="btn btn-xs btn-default btn-flat btn-categories" title="KATEGORI"><i class="fa fa-list-ol"></i></button>' +
                                 '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
                                 '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
                                 '</span>';
@@ -119,6 +120,135 @@
         }
     );
     // end search box
+
+    // categories modal
+    Bisnis.Util.Event.bind('click', '.btn-categories', function () {
+        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+        var accountExecutiveId = id;
+        var code = Bisnis.Util.Document.getDataValue(this, 'code');
+        var name = Bisnis.Util.Document.getDataValue(this, 'name');
+
+        document.getElementById('categoriesCode').textContent = code;
+        document.getElementById('categoriesName').textContent = name;
+
+        Bisnis.Util.TreeCategories.fetch('#accountExecutiveCategoriesTree', function (dblClickCallback) {
+            var category = dblClickCallback;
+            Bisnis.Util.Dialog.yesNo('PERHATIAN', '<p class="text-primary">'+dblClickCallback.list+'</p>KATEGORI DI ATAS AKAN ANDA TAMBAHKAN?', function (result) {
+                if (result) {
+                    var params = [
+                        {
+                            name: 'accountExecutive',
+                            value: '/api/advertising/account-executives/'+accountExecutiveId
+                        },
+                        {
+                            name: 'category',
+                            value: '/api/advertising/categories/'+category.id
+                        }
+                    ];
+                    Bisnis.Adv.AccountExecutives.addCategory(params, function (callback) {
+                        if (callback.violations) {
+                            Bisnis.Util.Dialog.alert(JSON.stringify(callback.violations));
+                            Bisnis.errorMessage('Gagal menambahkan kategori');
+                        } else {
+                            var pageNum = Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_CATEGORIES_CURRENT_PAGE');
+                            loadCategoriesGrid(accountExecutiveId, pageNum);
+                        }
+                    });
+                }
+            });
+        });
+
+        loadCategoriesGrid(accountExecutiveId, 1);
+        Bisnis.Util.Dialog.showModal('#categoriesModal');
+    });
+
+    Bisnis.Adv.AccountExecutives.addCategory = function (params, callback) {
+        Bisnis.request({
+            module: 'advertising/account-executive-categories',
+            method: 'post',
+            params: params
+        }, function (dataResponse, textStatus, response) {
+            var rawData = JSON.parse(dataResponse);
+
+            if (Bisnis.validCallback(callback)) {
+                callback(rawData);
+            }
+        }, function () {
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        });
+    };
+
+    Bisnis.Adv.AccountExecutives.fetchCategories = function (params, callback) {
+        params.push({
+            order: {
+                createdAt: 'ASC'
+            }
+        });
+
+        Bisnis.request({
+            module: 'advertising/account-executive-categories',
+            method: 'get',
+            params: params
+        }, function (dataResponse, textStatus, response) {
+            var rawData = JSON.parse(dataResponse);
+            var memberData = rawData['hydra:member'];
+            var viewData = rawData['hydra:view'];
+
+            if ('undefined' !== typeof viewData['hydra:last']) {
+                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                Bisnis.Util.Grid.createPagination('#accountExecutiveCategoriesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+            }
+
+            if (Bisnis.validCallback(callback)) {
+                callback(memberData);
+            }
+        }, function () {
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        });
+    };
+
+    var loadCategoriesGrid = function (accountExecutiveId, pageNum) {
+        var pageNum =
+            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_CATEGORIES_CURRENT_PAGE', pageNum);
+        Bisnis.Adv.AccountExecutives.fetchCategories([{page: pageNum},{'accountExecutive.id': accountExecutiveId}], function (memberData) {
+            if (memberData.length > 0) {
+                var records = [];
+                Bisnis.Adv.Categories.fetchAll([], function (categoriesData) {
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            { value: renderCategoryParents(memberData.category.id, categoriesData) },
+                            { value: memberData.id, format: function (id) {
+                                return '<span class="pull-right">' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete-category" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                    '</span>';
+                            }}
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#accountExecutiveCategoriesList', records);
+                });
+            } else {
+                Bisnis.Util.Document.putHtml('#accountExecutiveCategoriesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+            }
+        });
+    };
+
+    var renderCategoryParents = function (categoryId, memberData) {
+        var str = '';
+        memberData.forEach(function(value) {
+            if (categoryId === value.id) {
+                if ( value.parent ) {
+                    str += renderCategoryParents( value.parent.id, memberData );
+                    if ( typeof value.parent.id !== 'undefined' ) {
+                        str += ' ➤ ';
+                    }
+                }
+                str += value.name;
+            }
+        });
+        return str;
+    };
+    // end categories modal
 
     // add modal
     Bisnis.Util.Event.bind('click', '#btnAddAccountExecutive', function () {
@@ -287,6 +417,9 @@
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
         Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
+    });
+    Bisnis.Util.Dialog.hiddenModal('#categoriesModal', function () {
+        Bisnis.Util.Document.putHtml('#accountExecutiveCategoriesTree', '<i class="fa fa-refresh fa-spin fa-2x fa-fw text-primary"></i>');
     });
     // end reset modal form on modal hidden
 

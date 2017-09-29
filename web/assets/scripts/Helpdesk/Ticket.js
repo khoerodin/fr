@@ -122,6 +122,8 @@
 
         if ('open' === ticket.status || 'assignment' === ticket.status) {
             row = row + createAssignButton(ticket.id, ticket.category.id);
+        } else {
+            row = row + '<span></span>';
         }
 
         if ('closed' !== ticket.status && 'resolved' !== ticket.status) {

@@ -1,10 +1,10 @@
 (function (Bisnis) {
-    Bisnis.Adv.TeamWorks = {};
+    Bisnis.Adv.AccountExecutiveManagers= {};
 
     // fetch grid and pagination
-    Bisnis.Adv.TeamWorks.fetchAll = function (params, callback) {
+    Bisnis.Adv.AccountExecutiveManagers.fetchAll = function (params, callback) {
         Bisnis.request({
-            module: 'advertising/team-works',
+            module: 'advertising/account-executive-managers',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -14,7 +14,7 @@
 
             if ('undefined' !== typeof viewData['hydra:last']) {
                 var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#teamWorksPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                Bisnis.Util.Grid.createPagination('#accountExecutiveManagersPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
             }
 
             if (Bisnis.validCallback(callback)) {
@@ -28,12 +28,13 @@
     var loadGrid = function (pageNum) {
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
-        Bisnis.Util.Storage.store('TEAM_WORKS_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.TeamWorks.fetchAll([{page: pageNum}], function (memberData) {
+        Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_MANAGERS_CURRENT_PAGE', pageNum);
+        Bisnis.Adv.AccountExecutiveManagers.fetchAll([{page: pageNum}], function (memberData) {
             if (memberData.length > 0) {
                 var records = [];
                 Bisnis.each(function (idx, memberData) {
                     records.push([
+                        { value: memberData.teamWork.name },
                         { value: memberData.code },
                         { value: memberData.name },
                         { value: memberData.id, format: function (id) {
@@ -44,36 +45,36 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#teamWorksList', records);
+                Bisnis.Util.Grid.renderRecords('#accountExecutiveManagersList', records);
             } else {
-                Bisnis.Util.Document.putHtml('#teamWorksList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                Bisnis.Util.Document.putHtml('#accountExecutiveManagersList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }
         });
     };
 
     loadGrid(1);
 
-    Bisnis.Util.Event.bind('click', '#teamWorksPagination .pagePrevious', function () {
+    Bisnis.Util.Event.bind('click', '#accountExecutiveManagersPagination .pagePrevious', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#teamWorksPagination .pageNext', function () {
+    Bisnis.Util.Event.bind('click', '#accountExecutiveManagersPagination .pageNext', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#teamWorksPagination .pageFirst', function () {
+    Bisnis.Util.Event.bind('click', '#accountExecutiveManagersPagination .pageFirst', function () {
         loadGrid(1);
     });
 
-    Bisnis.Util.Event.bind('click', '#teamWorksPagination .pageLast', function () {
+    Bisnis.Util.Event.bind('click', '#accountExecutiveManagersPagination .pageLast', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
     // end fetch grid and pagination
 
     // search box
     var params = {
-        placeholder: 'CARI KODE / NAMA TIM KERJA',
-        module: 'advertising/team-works',
+        placeholder: 'CARI KODE / NAMA MANAJER AKUN EKSEKUTIF',
+        module: 'advertising/account-executive-managers',
         fields: [
             {
                 field: 'code',
@@ -81,14 +82,14 @@
             },
             {
                 field: 'name',
-                label: 'Tim Kerja'
+                label: 'Manajer'
             }
         ]
     };
 
-    Bisnis.Util.Style.ajaxSelect('#searchTeamWorks', params,
+    Bisnis.Util.Style.ajaxSelect('#searchAccountExecutiveManagers', params,
         function (hasResultCallback) {
-            var btn = document.getElementById('btnAddTeamWork');
+            var btn = document.getElementById('btnAddAccountExecutiveManager');
             if (hasResultCallback) {
                 btn.disabled = true;
             } else {
@@ -98,14 +99,14 @@
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
-            var btn = document.getElementById('btnAddTeamWork');
+            var btn = document.getElementById('btnAddAccountExecutiveManager');
             if (openCallback === false) {
                 btn.disabled = false;
             } else {
                 btn.disabled = true;
             }
         }, function (closeCallback) {
-            var btn = document.getElementById('btnAddTeamWork');
+            var btn = document.getElementById('btnAddAccountExecutiveManager');
             setTimeout(function () {
                 if (closeCallback === false) {
                     btn.disabled = false;
@@ -118,9 +119,26 @@
     // end search box
 
     // add modal
-    Bisnis.Util.Event.bind('click', '#btnAddTeamWork', function () {
+    Bisnis.Util.Event.bind('click', '#btnAddAccountExecutiveManager', function () {
+        var params = {
+            placeholder: 'CARI KODE / NAMA TIM KERJA',
+            module: 'advertising/team-works',
+            prependText: '/api/advertising/team-works/',
+            fields: [
+                {
+                    field: 'code',
+                    label: 'Kode'
+                },
+                {
+                    field: 'name',
+                    label: 'Tim Kerja'
+                },
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addTeamWork', params);
+
         Bisnis.Util.Dialog.showModal('#addModal');
-        document.getElementById('addCode').focus();
+        document.getElementById('addTeamWork').focus();
     });
 
     Bisnis.Util.Event.bind('click', '#btn-add', function () {
@@ -128,7 +146,7 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.TeamWorks.add(params, function (callback) {
+        Bisnis.Adv.AccountExecutiveManagers.add(params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('addForm', callback.violations);
             } else {
@@ -139,16 +157,16 @@
         });
     });
 
-    Bisnis.Adv.TeamWorks.add = function (params, callback) {
+    Bisnis.Adv.AccountExecutiveManagers.add = function (params, callback) {
         Bisnis.request({
-            module: 'advertising/team-works',
+            module: 'advertising/account-executive-managers',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
 
             if (Bisnis.validCallback(callback)) {
-                callback(rawData);addForm
+                callback(rawData);
             }
         }, function () {
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
@@ -158,11 +176,32 @@
 
     // detail modal
     var loadDetail = function (id) {
-        Bisnis.Util.Storage.store('TEAM_WORK_ID', id);
-        Bisnis.Adv.TeamWorks.fetchById(id, function (callback) {
+        Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_MANAGER_ID', id);
+        Bisnis.Adv.AccountExecutiveManagers.fetchById(id, function (callback) {
+            var teamWorkElem = document.getElementById('detailTeamWork');
+            teamWorkElem.innerHTML = '<option value="/api/advertising/team-works/'+callback.teamWork.id+'">'+callback.teamWork.name+'</option>';
+
+            Bisnis.Util.Event.bind('change', '#detailTeamWork');
+            Bisnis.Util.Style.modifySelect('#detailTeamWork');
+            var params = {
+                placeholder: 'CARI KODE / NAMA TIM KERJA',
+                module: 'advertising/team-works',
+                prependText: '/api/advertising/team-works/',
+                fields: [
+                    {
+                        field: 'code',
+                        label: 'Kode'
+                    },
+                    {
+                        field: 'name',
+                        label: 'Tim Kerja'
+                    },
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailTeamWork', params);
+
             var codeElem = document.getElementById('detailCode');
             codeElem.value = callback.code;
-            codeElem.focus();
 
             var nameElem = document.getElementById('detailName');
             nameElem.value = callback.name;
@@ -175,9 +214,9 @@
         loadDetail(id);
     });
 
-    Bisnis.Adv.TeamWorks.fetchById = function (id, callback) {
+    Bisnis.Adv.AccountExecutiveManagers.fetchById = function (id, callback) {
         Bisnis.request({
-            module: 'advertising/team-works/' + id,
+            module: 'advertising/account-executive-managers/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
@@ -190,9 +229,9 @@
         });
     };
 
-    Bisnis.Adv.TeamWorks.updateById = function (id, params, callback) {
+    Bisnis.Adv.AccountExecutiveManagers.updateById = function (id, params, callback) {
         Bisnis.request({
-            module: 'advertising/team-works/' + id,
+            module: 'advertising/account-executive-managers/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -207,18 +246,18 @@
     };
 
     Bisnis.Util.Event.bind('click', '#btn-update', function () {
-        var id = Bisnis.Util.Storage.fetch('TEAM_WORK_ID');
+        var id = Bisnis.Util.Storage.fetch('ACCOUNT_EXECUTIVE_MANAGER_ID');
         var params = Bisnis.Util.Form.serializeArray('#detailForm');
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.TeamWorks.updateById(id, params, function (callback) {
+        Bisnis.Adv.AccountExecutiveManagers.updateById(id, params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('detailForm', callback.violations);
             } else {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
-                var page = Bisnis.Util.Storage.fetch('TEAM_WORKS_CURRENT_PAGE');
+                var page = Bisnis.Util.Storage.fetch('ACCOUNT_EXECUTIVE_MANAGERS_CURRENT_PAGE');
                 loadGrid(page);
             }
             thisBtn.disabled = false;
@@ -226,15 +265,15 @@
     });
     // end detail modal
 
-    // delete team work
+    // delete account executive manager
     Bisnis.Util.Event.bind('click', '.btn-delete', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Adv.TeamWorks.delete(id, function (textStatus) {
+                Bisnis.Adv.AccountExecutiveManagers.delete(id, function (textStatus) {
                     if (textStatus === 'success') {
                         Bisnis.successMessage('Berhasil menghapus data');
-                        var page = Bisnis.Util.Storage.fetch('TEAM_WORKS_CURRENT_PAGE');
+                        var page = Bisnis.Util.Storage.fetch('ACCOUNT_EXECUTIVE_MANAGERS_CURRENT_PAGE');
                         loadGrid(page);
                     } else {
                         Bisnis.errorMessage('Gagal menghapus data');
@@ -244,9 +283,9 @@
         });
     });
 
-    Bisnis.Adv.TeamWorks.delete = function (id, callback) {
+    Bisnis.Adv.AccountExecutiveManagers.delete = function (id, callback) {
         Bisnis.request({
-            module: 'advertising/team-works/' + id,
+            module: 'advertising/account-executive-managers/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
             if (Bisnis.validCallback(callback)) {
@@ -256,7 +295,7 @@
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
         });
     };
-    // end delete team work
+    // end delete account executive manager
 
     // prevent submit form on enter
     document.getElementById("addForm").onkeypress = function(e) {

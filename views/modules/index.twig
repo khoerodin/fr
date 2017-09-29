@@ -38,10 +38,10 @@
                                             <thead>
                                             <tr>
                                                 <th width="3%">NO</th>
-                                                <th width="20%">Nama</th>
-                                                <th width="20%">Grup</th>
+                                                <th width="20%">MODUL</th>
+                                                <th width="20%">GRUP</th>
                                                 <th>Path</th>
-                                                <th width="7%">Sbg Menu?</th>
+                                                <th width="10%">SEBAGAI MENU?</th>
                                                 <th width="5%"><span class="pull-right">Aksi</span></th>
                                             </tr>
                                             </thead>
@@ -77,7 +77,7 @@
                 <div class="modal-body">
                     <form id="addForm">
                         <div class="form-group">
-                            <label for="addName">NAMA</label>
+                            <label for="addName">MODUL</label>
                             <input type="text" name="name" id="addName" class="form-control">
                         </div>
                         <div class="form-group">
@@ -140,31 +140,31 @@
                 <div class="modal-body">
                     <form id="detailForm">
                         <div class="form-group">
-                            <label for="addName">NAMA</label>
+                            <label for="detailName">MODUL</label>
                             <input type="text" name="name" id="detailName" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="addDescription">DESKRIPSI</label>
+                            <label for="detailDescription">DESKRIPSI</label>
                             <input type="text" name="description" id="detailDescription" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="addGroupName">GRUP</label>
+                            <label for="detailGroupName">GRUP</label>
                             <input type="text" name="groupName" id="detailGroupName" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="addPath">PATH</label>
+                            <label for="detailPath">PATH</label>
                             <input type="text" name="path" id="detailPath" class="form-control not-ucase">
                         </div>
                         <div class="form-group">
-                            <label for="addIconCls">CLASS IKON</label>
+                            <label for="detailIconCls">CLASS IKON</label>
                             <input type="text" name="iconCls" id="detailIconCls" class="form-control not-ucase">
                         </div>
                         <div class="form-group">
-                            <label for="addMenuOrder">URUTAN MENU</label>
+                            <label for="detailMenuOrder">URUTAN MENU</label>
                             <input type="number" name="menuOrder" id="detailMenuOrder" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="addService">SERVIS</label>
+                            <label for="detailService">SERVIS</label>
                             <select multiple name="service" id="detailService" class="form-control" style="width: 100%;">
                                 {% for service in services %}
                                     <option value="{{ service.id }}">{{ service.name }}</option>

@@ -5383,14 +5383,14 @@ tr.active {
   margin:0;
   padding:0 1em;
   line-height:2em;
-  color:#369;
+  color:#337ab7;
   position:relative
 }
 .tree li span:hover{
   cursor: pointer;
 }
 .tree li span.active {
-  background-color: #369;
+  background-color: #337ab7;
   color: #fff;
 }
 .tree ul li:before {
@@ -5416,11 +5416,11 @@ tr.active {
 }
 .tree li a {
   text-decoration: none;
-  color:#369;
+  color:#337ab7;
 }
 .tree li button, .tree li button:active, .tree li button:focus {
   text-decoration: none;
-  color:#369;
+  color:#337ab7;
   border:none;
   background:transparent;
   margin:0px 0px 0px 0px;

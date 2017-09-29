@@ -2,6 +2,7 @@
 
 {% block js %}
     <script src="/assets/scripts/Adv/AccountExecutives.js"></script>
+    <script src="/assets/scripts/Adv/Categories.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -23,7 +24,7 @@
                             <th width="3%">NO.</th>
                             <th width="5%">KODE</th>
                             <th>AKUN EKSEKUTIF</th>
-                            <th width="4%"><span class="pull-right">AKSI</span></th>
+                            <th width="6%"><span class="pull-right">AKSI</span></th>
                         </tr>
                         </thead>
                         <tbody id="accountExecutivesList"></tbody>
@@ -49,11 +50,11 @@
                 <div class="modal-body">
                     <form id="addForm">
                         <div class="form-group">
-                            <label for="name">KODE</label>
+                            <label for="addCode">KODE</label>
                             <input type="text" name="code" id="addCode" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="name">AKUN EKSEKUTIF</label>
+                            <label for="addName">AKUN EKSEKUTIF</label>
                             <input type="text" name="name" id="addName" class="form-control">
                         </div>
                     </form>
@@ -80,11 +81,11 @@
                 <div class="modal-body">
                     <form id="detailForm">
                         <div class="form-group">
-                            <label for="name">KODE</label>
+                            <label for="detailCode">KODE</label>
                             <input type="text" name="code" id="detailCode" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="name">AKUN EKSEKUTIF</label>
+                            <label for="detailName">AKUN EKSEKUTIF</label>
                             <input type="text" name="name" id="detailName" class="form-control">
                         </div>
                     </form>
@@ -98,4 +99,56 @@
         </div>
     </div>
     {#End Detail Modal#}
+
+    {#Categories Modal#}
+    <div id="categoriesModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">KATEGORI AKUN EKSEKUTIF
+                        <small><span id="categoriesCode"></span> -
+                        <span id="categoriesName"></span></small>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-responsive">
+                                <tr><td>DOBEL KLIK KATEGORI UNTUK MENAMBAHKAN</td></tr>
+                                <tr><td id="accountExecutiveCategoriesTree"><i class="fa fa-refresh fa-spin fa-3x fa-fw text-primary"></i></td></tr>
+                            </table>
+                        </div>
+
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-responsive table-hover">
+                                <thead>
+                                <tr>
+                                    <th width="3%">NO.</th>
+                                    <th>KATEGORI</th>
+                                    <th width="6%"><span class="pull-right">HAPUS</span></th>
+                                </tr>
+                                </thead>
+                                <tbody id="accountExecutiveCategoriesList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul id="accountExecutiveCategoriesPagination" class="pagination pagination-sm pull-right"></ul>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">TUTUP</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Categories Modal#}
 {%- endblock -%}

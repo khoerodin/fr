@@ -26,7 +26,14 @@
         method = 'undefined' === typeof method ? 'post' : method;
         params.params = 'undefined' === typeof params.params ? [] : params.params;
 
-        if (params.method.toLowerCase() === 'get') {
+        var order = false;
+        params.params.forEach(function (value) {
+            if (value.order) {
+                order = true;
+            }
+        });
+
+        if (params.method.toLowerCase() === 'get' && order === false) {
             params.params.push({
                 order: {
                     createdAt: 'DESC'

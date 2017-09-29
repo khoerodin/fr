@@ -73,8 +73,9 @@
     Bisnis.Admin.Modules.loadGrid = function (serviceId, pageNum, params) {
         var params = 'undefined' !== typeof params ? params : [];
 
-        var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : parseInt(pageNum);
-        Bisnis.Util.Storage.store('LAYOUTS_CURRENT_PAGE'+serviceId, pageNum);
+        var pageNum =
+            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        Bisnis.Util.Storage.store('MODULES_CURRENT_PAGE'+serviceId, pageNum);
 
         params.push({page: pageNum});
 
@@ -117,12 +118,12 @@
         .getElementsByTagName('a')[0]
         .getAttribute('aria-controls');
 
-    var pageNum = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE'+activeId);
+    var pageNum = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE'+activeId);
     Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
 
     Bisnis.Util.Dialog.shownTab('a[data-toggle="tab"]', function (e) {
         var activeId = e.target.getAttribute('aria-controls');
-        var pageNum = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE'+activeId);
+        var pageNum = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE'+activeId);
         Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
     });
     // end fetch grid
@@ -162,7 +163,7 @@
                     .getElementsByClassName("active")[0]
                     .getElementsByTagName('a')[0]
                     .getAttribute('aria-controls');
-                var pageNum = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE'+activeId);
+                var pageNum = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE'+activeId);
                 Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
             }
 
@@ -281,7 +282,7 @@
                     .getElementsByClassName("active")[0]
                     .getElementsByTagName('a')[0]
                     .getAttribute('aria-controls');
-                var pageNum = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE'+activeId);
+                var pageNum = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE'+activeId);
                 Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
             }
             $this.disabled = false;
@@ -302,7 +303,7 @@
                             .getElementsByClassName("active")[0]
                             .getElementsByTagName('a')[0]
                             .getAttribute('aria-controls');
-                        var pageNum = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE'+activeId);
+                        var pageNum = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE'+activeId);
                         Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
                     } else {
                         Bisnis.errorMessage('Gagal menghapus data');
@@ -346,9 +347,11 @@
 
     // reset modal form on modal hidden
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('addForm');
         document.getElementById("addForm").reset();
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
     });
     // end reset modal form on modal hidden

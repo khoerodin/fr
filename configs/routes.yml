@@ -45,10 +45,9 @@ app:
         - { path: '/advertising/types', controller: 'Bisnis:AdvertisingTypes@index', methods: ['GET'] }
         - { path: '/advertising/prices', controller: 'Bisnis:AdvertisingPrices@index', methods: ['GET'] }
         - { path: '/advertising/media', controller: 'Bisnis:AdvertisingMedia@index', methods: ['GET'] }
-        - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
         - { path: '/advertising/team-works', controller: 'Bisnis:AdvertisingTeamWorks@index', methods: ['GET'] }
         - { path: '/advertising/account-executive-managers', controller: 'Bisnis:AdvertisingAccountExecutiveManagers@index', methods: ['GET'] }
-        - { path: '/advertising/account-executive-categories', controller: 'Bisnis:AdvertisingAccountExecutiveCategories@index', methods: ['GET'] }
+        - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
 
         - { path: '/advertising/orders', controller: 'Bisnis:AdvertisingOrders@index', methods: ['GET'] }
         - { path: '/advertising/orders/new', controller: 'Bisnis:AdvertisingOrders@new', methods: ['GET'] }

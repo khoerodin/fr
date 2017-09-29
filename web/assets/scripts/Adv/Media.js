@@ -26,7 +26,8 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : parseInt(pageNum);
+        var pageNum =
+            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('MEDIA_CURRENT_PAGE', pageNum);
         Bisnis.Adv.Media.fetchAll([{page: pageNum}], function (memberData) {
             if (memberData.length > 0) {
@@ -277,9 +278,11 @@
 
     // reset modal form on modal hidden
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('addForm');
         document.getElementById("addForm").reset();
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
     });
     // end reset modal form on modal hidden

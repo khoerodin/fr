@@ -11,7 +11,16 @@ class LoginController extends AbstractController
 {
     public function indexAction()
     {
-        return $this->renderResponse('login.twig');
+        $meta = [
+            'parentMenu' => 'Home',
+            'title' => 'Masuk',
+        ];
+
+        $data = [
+            'meta' => $meta
+        ];
+
+        return $this->renderResponse('login.twig', $data);
     }
 
     public function processLoginAction(Request $request)

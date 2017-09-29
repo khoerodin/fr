@@ -68,9 +68,6 @@ class AdvertisingOrdersController extends AdminController
         $paymentMethod = $this->request('billing/payment-methods', 'get');
         $paymentMethod = json_decode($paymentMethod->getContent(), true)['hydra:member'];
 
-        $categories = $this->request('advertising/categories', 'get');
-        $categories = json_decode($categories->getContent(), true)['hydra:member'];
-
         $tagStrings = explode(',', $order['orderTag']);
 
         $allTags = $this->request('advertising/tags', 'get');
@@ -88,12 +85,15 @@ class AdvertisingOrdersController extends AdminController
         $orderRefference = $this->request('advertising/orders/' . $order['orderRefference'], 'get');
         $orderRefference = json_decode($orderRefference->getContent(), true);
 
+        $categories = $this->request('advertising/categories', 'get');
+        $categories = json_decode($categories->getContent(), true)['hydra:member'];
+
         $data = [
             'meta' => $meta,
             'order' => $order,
             'representatives' => $representatives,
             'paymentMethod' => $paymentMethod,
-            'categories' => $this->getTreeParents($order['category']['id'],$categories),
+            'categories' => $this->getTreeParents($order['category']['id'], $categories),
             'tags' => $tags,
             'orderRefference' => $orderRefference['orderNumber']
         ];
@@ -101,13 +101,13 @@ class AdvertisingOrdersController extends AdminController
         return $this->view('advertising-orders/detail.twig', $data);
     }
 
-    private function getTreeParents($childId, $array)
+    private function getTreeParents($categoryId, $categories)
     {
         $str = '';
-        foreach ($array as $value) {
-            if ( $childId == $value['id'] ) {
+        foreach ($categories as $value) {
+            if ( $categoryId == $value['id'] ) {
 
-                $str .= $this->getTreeParents( $value['parent']['id'], $array);
+                $str .= $this->getTreeParents( $value['parent']['id'], $categories);
                 if ( $value['parent']['id'] != null) {
                     $str .= ' ➤ ';
                 }

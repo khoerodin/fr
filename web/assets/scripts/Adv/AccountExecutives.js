@@ -161,6 +161,23 @@
         });
 
         loadCategoriesGrid(accountExecutiveId, 1);
+
+        Bisnis.Util.Event.bind('click', '#accountExecutiveCategoriesPagination .pagePrevious', function () {
+            loadCategoriesGrid(accountExecutiveId, Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#accountExecutiveCategoriesPagination .pageNext', function () {
+            loadCategoriesGrid(accountExecutiveId, Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#accountExecutiveCategoriesPagination .pageFirst', function () {
+            loadCategoriesGrid(accountExecutiveId, 1);
+        });
+
+        Bisnis.Util.Event.bind('click', '#accountExecutiveCategoriesPagination .pageLast', function () {
+            loadCategoriesGrid(accountExecutiveId, Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
         Bisnis.Util.Dialog.showModal('#categoriesModal');
     });
 
@@ -168,7 +185,16 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_CATEGORIES_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.AccountExecutiveCategories.fetchAll([{page: pageNum},{'accountExecutive.id': accountExecutiveId}], function (memberData) {
+        Bisnis.Adv.AccountExecutiveCategories.fetchAll([{page: pageNum},{'accountExecutive.id': accountExecutiveId}], function (rawData) {
+
+            var memberData = rawData['hydra:member'];
+            var viewData = rawData['hydra:view'];
+
+            if ('undefined' !== typeof viewData['hydra:last']) {
+                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                Bisnis.Util.Grid.createPagination('#accountExecutiveCategoriesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+            }
+
             if (memberData.length > 0) {
                 var records = [];
                 Bisnis.Adv.Categories.fetchAll([], function (categoriesData) {

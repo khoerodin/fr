@@ -122,11 +122,13 @@
     // end search box
 
     // categories modal
+    // fetch categories
     Bisnis.Util.Event.bind('click', '.btn-categories', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         var accountExecutiveId = id;
         var code = Bisnis.Util.Document.getDataValue(this, 'code');
         var name = Bisnis.Util.Document.getDataValue(this, 'name');
+        Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_ID_FOR_CATEGORIES', accountExecutiveId);
 
         document.getElementById('categoriesCode').textContent = code;
         document.getElementById('categoriesName').textContent = name;
@@ -145,7 +147,7 @@
                             value: '/api/advertising/categories/'+category.id
                         }
                     ];
-                    Bisnis.Adv.AccountExecutives.addCategory(params, function (callback) {
+                    Bisnis.Adv.AccountExecutiveCategories.add(params, function (callback) {
                         if (callback.violations) {
                             Bisnis.Util.Dialog.alert(JSON.stringify(callback.violations));
                             Bisnis.errorMessage('Gagal menambahkan kategori');
@@ -162,56 +164,11 @@
         Bisnis.Util.Dialog.showModal('#categoriesModal');
     });
 
-    Bisnis.Adv.AccountExecutives.addCategory = function (params, callback) {
-        Bisnis.request({
-            module: 'advertising/account-executive-categories',
-            method: 'post',
-            params: params
-        }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
-            }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
-        });
-    };
-
-    Bisnis.Adv.AccountExecutives.fetchCategories = function (params, callback) {
-        params.push({
-            order: {
-                createdAt: 'ASC'
-            }
-        });
-
-        Bisnis.request({
-            module: 'advertising/account-executive-categories',
-            method: 'get',
-            params: params
-        }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
-
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#accountExecutiveCategoriesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
-
-            if (Bisnis.validCallback(callback)) {
-                callback(memberData);
-            }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
-        });
-    };
-
     var loadCategoriesGrid = function (accountExecutiveId, pageNum) {
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_CATEGORIES_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.AccountExecutives.fetchCategories([{page: pageNum},{'accountExecutive.id': accountExecutiveId}], function (memberData) {
+        Bisnis.Adv.AccountExecutiveCategories.fetchAll([{page: pageNum},{'accountExecutive.id': accountExecutiveId}], function (memberData) {
             if (memberData.length > 0) {
                 var records = [];
                 Bisnis.Adv.Categories.fetchAll([], function (categoriesData) {
@@ -248,6 +205,27 @@
         });
         return str;
     };
+    // end fetch categories
+
+    // delete category
+    Bisnis.Util.Event.bind('click', '.btn-delete-category', function () {
+        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+        Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
+            if (result) {
+                Bisnis.Adv.AccountExecutiveCategories.delete(id, function (textStatus) {
+                    if (textStatus === 'success') {
+                        Bisnis.successMessage('Berhasil menghapus data');
+                        var pageNum = Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_CATEGORIES_CURRENT_PAGE');
+                        var accountExecutiveId = Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_ID_FOR_CATEGORIES');
+                        loadCategoriesGrid(accountExecutiveId, pageNum);
+                    } else {
+                        Bisnis.errorMessage('Gagal menghapus data');
+                    }
+                })
+            }
+        });
+    });
+    // end delete category
     // end categories modal
 
     // add modal
@@ -419,6 +397,7 @@
         document.getElementById("detailForm").reset();
     });
     Bisnis.Util.Dialog.hiddenModal('#categoriesModal', function () {
+        Bisnis.Util.Document.putHtml('#accountExecutiveCategoriesList', '<tr><td colspan="10">MEMUAT...</td></tr>');
         Bisnis.Util.Document.putHtml('#accountExecutiveCategoriesTree', '<i class="fa fa-refresh fa-spin fa-2x fa-fw text-primary"></i>');
     });
     // end reset modal form on modal hidden

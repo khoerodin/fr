@@ -9,16 +9,9 @@
             params: params
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
-
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#representativesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
 
             if (Bisnis.validCallback(callback)) {
-                callback(memberData);
+                callback(rawData);
             }
         }, function () {
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
@@ -29,7 +22,15 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('REPRESENTATIVES_CURRENT_PAGE', pageNum);
-        Bisnis.Admin.Representatives.fetchAll([{page: pageNum}], function (memberData) {
+        Bisnis.Admin.Representatives.fetchAll([{page: pageNum}], function (rawData) {
+            var memberData = rawData['hydra:member'];
+            var viewData = rawData['hydra:view'];
+
+            if ('undefined' !== typeof viewData['hydra:last']) {
+                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                Bisnis.Util.Grid.createPagination('#representativesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+            }
+
             if (memberData.length > 0) {
                 var records = [];
                 Bisnis.each(function (idx, memberData) {

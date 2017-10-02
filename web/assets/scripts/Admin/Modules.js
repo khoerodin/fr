@@ -54,16 +54,9 @@
             params: params
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
-
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#modulesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
 
             if (Bisnis.validCallback(callback)) {
-                callback(memberData);
+                callback(rawData);
             }
         }, function () {
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
@@ -83,7 +76,15 @@
             params.push({service: serviceId});
         }
 
-        Bisnis.Admin.Modules.fetchByService(params, function (memberData) {
+        Bisnis.Admin.Modules.fetchByService(params, function (rawData) {
+            var memberData = rawData['hydra:member'];
+            var viewData = rawData['hydra:view'];
+
+            if ('undefined' !== typeof viewData['hydra:last']) {
+                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                Bisnis.Util.Grid.createPagination('#modulesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+            }
+
             if (memberData.length > 0) {
                 var records = [];
                 Bisnis.each(function (idx, memberData) {

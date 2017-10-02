@@ -137,7 +137,21 @@
 
     Bisnis.Adv.Types.add = function (params, callback) {
         Bisnis.request({
-            module: 'advertising/types',
+            module: 'advertising/types',document.getElementById("addForm").onkeypress = function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+            e.preventDefault();
+        }
+    };
+
+    document.getElementById("detailForm").onkeypress = function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+            e.preventDefault();
+        }
+    };
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -252,21 +266,23 @@
     // end delete type
 
     // prevent submit form on enter
-    document.getElementById("addForm").onkeypress = function(e) {
-        var key = e.charCode || e.keyCode || 0;
-        if (key == 13) {
-            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
-            e.preventDefault();
-        }
-    }
+    window.onload = function() {
+        document.getElementById("addForm").onkeypress = function(e) {
+            var key = e.charCode || e.keyCode || 0;
+            if (key == 13) {
+                Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+                e.preventDefault();
+            }
+        };
 
-    document.getElementById("detailForm").onkeypress = function(e) {
-        var key = e.charCode || e.keyCode || 0;
-        if (key == 13) {
-            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
-            e.preventDefault();
-        }
-    }
+        document.getElementById("detailForm").onkeypress = function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            if (key == 13) {
+                Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+                e.preventDefault();
+            }
+        };
+    };
     // end prevent submit form on enter
 
     // reset modal form on modal hidden

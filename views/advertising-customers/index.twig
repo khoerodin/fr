@@ -1,60 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/global-crud.js"></script>
-    <script>
-        window.module = 'advertising/customers';
-        window.field = 'name';
-        var columns = [
-            'code',
-            'name',
-            'representative.name',
-            'city.name',
-            'postalCode',
-            'phoneNumber'
-        ];
-
-        function paddy(number, pad, char) {
-            var pad_char = typeof char !== 'undefined' ? char : '0';
-            var pad = new Array(1 + pad).join(pad_char);
-            return (pad + number).slice(-pad.length);
-        }
-
-        $('[data-modal-add="advertising/customers"] select[name="representative"]').on('change', function () {
-
-            var module = $(this).val().replace('/api/','');
-
-            $.ajax({
-                url: '/api',
-                type: 'POST',
-                data: {
-                    module: module,
-                    method: 'get'
-                },
-                success: function (repData) {
-                    var repData = JSON.parse(repData);
-
-                    $.ajax({
-                        url: '/api',
-                        type: 'POST',
-                        data: {
-                            module: 'last-id/adv-customers',
-                            method: 'get'
-                        },
-                        success: function (data) {
-                            var data = JSON.parse(data);
-                            var urutan = paddy(data.id, 4);
-
-                            $('[data-modal-add="advertising/customers"] #code').val(repData.code+urutan);
-                        }
-                    });
-                }
-            });
-
-
-
-        });
-    </script>
+    <script src="/assets/scripts/Adv/Customers.js"></script>
 {% endblock %}
 
 {%- block content -%}

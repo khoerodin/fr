@@ -60,6 +60,9 @@
                 Bisnis.Util.Dialog.hideModal('.modal');
                 window.focus(this);
                 Bisnis.Util.Event.triggerClick('a.notif_userNotification');
+                window.addEventListener('beforeunload', function(event) {
+                    Bisnis.WebSocket.close();
+                });
             });
 
             Bisnis.Util.Event.bind('click', 'a.notif_userNotification', function () {

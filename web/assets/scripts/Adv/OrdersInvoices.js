@@ -8,6 +8,17 @@
             params: params
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
+
+            if (Bisnis.validCallback(callback)) {
+                callback(rawData);
+            }
+        }, function () {
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        });
+    };
+
+    var loadPage = function (pageNum) {
+        Bisnis.Adv.OrdersInvoices.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
             var viewData = rawData['hydra:view'];
 
@@ -18,16 +29,6 @@
                 Bisnis.Util.Grid.createPagination('#invoicePagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
             }
 
-            if (Bisnis.validCallback(callback)) {
-                callback(memberData);
-            }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
-        });
-    };
-
-    var loadPage = function (pageNum) {
-        Bisnis.Adv.OrdersInvoices.fetchAll([{page: pageNum}], function (memberData) {
             var records = [];
             Bisnis.each(function (idx, memberData) {
 

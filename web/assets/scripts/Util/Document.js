@@ -29,6 +29,10 @@
         jQuery(selector).hide();
     };
 
+    Bisnis.Util.Document.hasClass = function (element, className) {
+        return element.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className);
+    };
+
     Bisnis.Util.Document.inArray = function (array, value) {
         Array.prototype.inArray = function (value)
         {

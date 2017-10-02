@@ -9,16 +9,9 @@
             params: params
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
-
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#accountExecutivesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
 
             if (Bisnis.validCallback(callback)) {
-                callback(memberData);
+                callback(rawData);
             }
         }, function () {
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
@@ -29,7 +22,15 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.AccountExecutives.fetchAll([{page: pageNum}], function (memberData) {
+        Bisnis.Adv.AccountExecutives.fetchAll([{page: pageNum}], function (rawData) {
+            var memberData = rawData['hydra:member'];
+            var viewData = rawData['hydra:view'];
+
+            if ('undefined' !== typeof viewData['hydra:last']) {
+                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                Bisnis.Util.Grid.createPagination('#accountExecutivesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+            }
+
             if (memberData.length > 0) {
                 var records = [];
                 Bisnis.each(function (idx, memberData) {
@@ -133,7 +134,7 @@
         document.getElementById('categoriesCode').textContent = code;
         document.getElementById('categoriesName').textContent = name;
 
-        Bisnis.Util.TreeCategories.fetch('#accountExecutiveCategoriesTree', function (dblClickCallback) {
+        Bisnis.Adv.Categories.tree('#accountExecutiveCategoriesTree', function (dblClickCallback) {
             var category = dblClickCallback;
             Bisnis.Util.Dialog.yesNo('PERHATIAN', '<p class="text-primary">'+dblClickCallback.list+'</p>KATEGORI DI ATAS AKAN ANDA TAMBAHKAN?', function (result) {
                 if (result) {
@@ -161,6 +162,23 @@
         });
 
         loadCategoriesGrid(accountExecutiveId, 1);
+
+        Bisnis.Util.Event.bind('click', '#accountExecutiveCategoriesPagination .pagePrevious', function () {
+            loadCategoriesGrid(accountExecutiveId, Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#accountExecutiveCategoriesPagination .pageNext', function () {
+            loadCategoriesGrid(accountExecutiveId, Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
+        Bisnis.Util.Event.bind('click', '#accountExecutiveCategoriesPagination .pageFirst', function () {
+            loadCategoriesGrid(accountExecutiveId, 1);
+        });
+
+        Bisnis.Util.Event.bind('click', '#accountExecutiveCategoriesPagination .pageLast', function () {
+            loadCategoriesGrid(accountExecutiveId, Bisnis.Util.Document.getDataValue(this, 'page'));
+        });
+
         Bisnis.Util.Dialog.showModal('#categoriesModal');
     });
 
@@ -168,10 +186,21 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_CATEGORIES_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.AccountExecutiveCategories.fetchAll([{page: pageNum},{'accountExecutive.id': accountExecutiveId}], function (memberData) {
+        Bisnis.Adv.AccountExecutiveCategories.fetchAll([{page: pageNum},{'accountExecutive.id': accountExecutiveId}], function (rawData) {
+
+            var memberData = rawData['hydra:member'];
+            var viewData = rawData['hydra:view'];
+
+            if ('undefined' !== typeof viewData['hydra:last']) {
+                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                Bisnis.Util.Grid.createPagination('#accountExecutiveCategoriesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+            }
+
             if (memberData.length > 0) {
                 var records = [];
-                Bisnis.Adv.Categories.fetchAll([], function (categoriesData) {
+                Bisnis.Adv.Categories.fetchAll([], function (rawCategoriesData) {
+                    var categoriesData = rawCategoriesData['hydra:member'];
+
                     Bisnis.each(function (idx, memberData) {
                         records.push([
                             { value: renderCategoryParents(memberData.category.id, categoriesData) },

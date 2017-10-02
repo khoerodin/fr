@@ -253,4 +253,5 @@
 
         return color;
     };
+
 })(window.Bisnis || {});

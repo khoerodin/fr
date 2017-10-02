@@ -1,9 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/vendor/treeview/treed.js"></script>
-    <script src="/assets/vendor/bootstrap-menu/BootstrapMenu.min.js"></script>
-    <script src="/assets/scripts/adv-categories.js"></script>
+    <script src="/assets/scripts/Adv/Categories.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -15,24 +13,19 @@
                 <!-- /.box-header -->
                 <div class="box-body">
 
-                    <div class="col-md-6">
-                        <ul id="categoriesTree" style="font-size: 16px;" class="hidden">
-                            <li><span>KATEGORI IKLAN</span></a>
-                                <ul>{{ categories|raw }}</ul>
-                            </li>
-                        </ul>
-                    </div>
+                    <div class="col-md-6" id="categoriesTree"></div>
 
                     <div class="col-md-6">
-                        <div class="well well-lg">
-                            <h3 class="text-success">Info!</h3>
-                            <h4><i class="fa fa-caret-right"></i> Klik kanan pada kategori yang diinginkan untuk menambah, meng<em>edit</em> dan menghapus kategori<br>
-                                <i class="fa fa-caret-right"></i> Klik ikon <em>folder</em> untuk membuka/menutup anak kategori</h4>
+                        <div class="callout callout-success">
+                            <h4>Tips!</h4>
+
+                            <p><i class="fa fa-caret-right"></i> Klik kanan pada kategori yang diinginkan untuk menambah, meng<em>edit</em> dan menghapus kategori<br>
+                                <i class="fa fa-caret-right"></i> Klik ikon <em>folder</em> untuk membuka/menutup anak kategori</p>
                         </div>
                     </div>
 
                     {#ADD MODAL#}
-                    <div id="addCategory" class="modal" role="dialog">
+                    <div id="addModal" class="modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -40,20 +33,19 @@
                                     <h4 class="modal-title">Tambah Kategori Iklan</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form">
+                                    <form role="form" id="addForm">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="name">Kategori</label>
                                                 <input type="text" name="name" class="form-control" id="name" placeholder="Nama Kategori">
                                             </div>
-                                            <input type="hidden" name="parent" id="parent">
                                         </div>
                                         <!-- /.box-body -->
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
-                                    <button type="button" id="saveCategory" class="btn btn-flat btn-danger">SIMPAN</button>
+                                    <button type="button" id="btn-add" class="btn btn-flat btn-danger">SIMPAN</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -61,7 +53,7 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div id="editCategory" class="detail-modal modal" role="dialog">
+                    <div id="detailModal" class="detail-modal modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -69,20 +61,19 @@
                                     <h4 class="modal-title">Edit Kategori Iklan</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="detail form">
+                                    <form role="form" id="detailForm">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label for="name">Kategori</label>
                                                 <input type="text" name="name" class="form-control" id="name">
                                             </div>
                                         </div>
-                                        <input type="hidden" name="id" id="id">
                                         <!-- /.box-body -->
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" id="updateCategory" class="btn btn-flat btn-danger">Update</button>
+                                    <button type="button" id="btn-update" class="btn btn-flat btn-danger">Update</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -91,9 +82,7 @@
 
                 </div>
                 <!-- /.box-body -->
-                <div class="box-footer clearfix">
-                    <ul data-paging="advertising/categories" class="clients pagination pagination-sm no-margin pull-right"></ul>
-                </div>
+                <div class="box-footer clearfix"></div>
             </div>
             <!-- /.box -->
         </div>

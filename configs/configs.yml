@@ -3,7 +3,7 @@ app:
 #        base_url: 'http://10.1.1.197:8000/api/'
 #        api_key: '29913925d7c6bf9c8f1f4d3ca58f098382975c18'
         base_url: 'http://10.5.5.206:8000/api/'
-        api_key: '2c5c73d28375176046344bbc018e408890d67c2c'
+        api_key: 'e10db52336fc4a71e4b36bd8acb39209f132c7e8'
         param_key: 'api_key'
     http: ~
     template:

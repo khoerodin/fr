@@ -67,6 +67,8 @@
         toastr.success(message);
     };
 
+    Bisnis.BACKEND_HOST = '';
+
     /** Module List */
     Bisnis.Helpdesk = {};
     Bisnis.Util = {};

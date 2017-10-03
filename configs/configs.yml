@@ -1,7 +1,7 @@
 app:
     api:
         base_url: 'http://10.1.1.197:8000/api/'
-        api_key: '29913925d7c6bf9c8f1f4d3ca58f098382975c18'
+        api_key: '7ec2c42f26ae6d8e684a40cb19d603ddac45ca43'
 #        base_url: 'http://10.5.5.206:8000/api/'
 #        api_key: '2c5c73d28375176046344bbc018e408890d67c2c'
         param_key: 'api_key'

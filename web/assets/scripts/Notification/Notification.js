@@ -143,6 +143,6 @@
             }
 
             createOnlineBadge(data.online, onlineSelector);
-        }, '10.5.5.206:7777');
+        }, '10.1.1.197:7777');
     };
 })(window.Bisnis || {});

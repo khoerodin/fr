@@ -22,4 +22,38 @@
 
         return jQuery(selector).serializeArray();
     };
+
+    Bisnis.Util.Form.hashPrepand = function (serializeArrayData) {
+        var params = [];
+        var prepend;
+        serializeArrayData.forEach(function (value) {
+            switch (value.name) {
+                case 'postalCode':
+                    prepend = "#";
+                    break;
+                case 'phoneNumber':
+                    prepend = "#";
+                    break;
+                case 'faxNumber':
+                    prepend = "#";
+                    break;
+                case 'taxNumber':
+                    prepend = "#";
+                    break;
+                case 'taxPhoneNumber':
+                    prepend = "#";
+                    break;
+                case 'taxFaxNumber':
+                    prepend = "#";
+                    break;
+                case 'bankAccountNumber':
+                    prepend = "#";
+                    break;
+                default:
+                    prepend = "";
+            }
+            params.push({name: value.name, value: prepend+value.value});
+        });
+        return params;
+    };
 })(window.Bisnis || {});

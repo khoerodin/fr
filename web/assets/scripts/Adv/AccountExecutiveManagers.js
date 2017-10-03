@@ -124,7 +124,7 @@
         var params = {
             placeholder: 'CARI KODE / NAMA TIM KERJA',
             module: 'advertising/team-works',
-            prependText: '/api/advertising/team-works/',
+            prependValue: '/api/advertising/team-works/',
             fields: [
                 {
                     field: 'code',
@@ -187,7 +187,7 @@
             var params = {
                 placeholder: 'CARI KODE / NAMA TIM KERJA',
                 module: 'advertising/team-works',
-                prependText: '/api/advertising/team-works/',
+                prependValue: '/api/advertising/team-works/',
                 fields: [
                     {
                         field: 'code',

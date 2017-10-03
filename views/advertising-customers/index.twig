@@ -56,8 +56,8 @@
                                                 <input type="text" name="Code" id="addCode" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">NAMA</label>
-                                                <input type="text" name="name" class="form-control" id="name">
+                                                <label for="addName">NAMA</label>
+                                                <input type="text" name="name" id="addName" class="form-control">
                                             </div>
                                             <div class="form-group">
                                                 <label for="addAddress">ALAMAT</label>
@@ -105,7 +105,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="addPresidentDirectorName">NAMA PRESIDEN DIREKTUR</label>
-                                                <input type="text" name="addPresidentDirectorName" id="addPresidentDirectorName" class="form-control">
+                                                <input type="text" name="presidentDirectorName" id="addPresidentDirectorName" class="form-control">
                                             </div>
                                             <div class="form-group">
                                                 <label for="addMediaManagerName">NAMA MANAJER MEDIA</label>
@@ -156,108 +156,96 @@
                                     <form role="form" id="detailForm">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Perwakilan</label>
-                                                <select disabled name="representative" data-object="representatives#name" data-selected="representative#name" class="form-control select-edit-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="detailRepresentative">PERWAKILAN</label>
+                                                <select name="representative" id="detailRepresentative" class="form-control" style="width: 100%"></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="code">Kode</label>
-                                                <input readonly type="text" name="code" class="form-control" id="code" placeholder="Kode">
+                                                <label for="detailCode">KODE</label>
+                                                <input type="text" name="Code" id="detailCode" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Nama</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Nama">
+                                                <label for="detailName">NAMA</label>
+                                                <input type="text" name="name" id="detailName" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="address">Alamat</label>
-                                                <textarea name="address" class="form-control" id="address" placeholder="Alamat"></textarea>
+                                                <label for="detailAddress">ALAMAT</label>
+                                                <textarea name="address" id="detailAddress" class="form-control"></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label>Kota</label>
-                                                <select name="city" data-object="cities#name" data-selected="city#name" class="form-control select-edit-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="detailCity">KOTA</label>
+                                                <select name="city" id="detailCity" class="form-control" style="width:100%"></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="postalCode">Kode Pos</label>
-                                                <input type="text" name="postalCode" class="form-control" id="postalCode" placeholder="Kode Pos">
+                                                <label for="detailPostalCode">KODE POS</label>
+                                                <input type="text" name="postalCode" id="detailPostalCode" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="phoneNumber">No. Telepon</label>
-                                                <input type="text" name="phoneNumber" class="form-control" id="phoneNumber" placeholder="No. Telepon">
+                                                <label for="detailPhoneNumber">NO. TELEPON</label>
+                                                <input type="text" name="phoneNumber" id="detailPhoneNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="faxNumber">No. Fax</label>
-                                                <input type="text" name="faxNumber" class="form-control" id="faxNumber" placeholder="No. Fax">
+                                                <label for="detailFaxNumber">NO. FAX</label>
+                                                <input type="text" name="faxNumber" id="detailFaxNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="partnershipDate">Tanggal Registrasi</label>
-                                                <input type="text" class="form-control edit-datetime" id="partnershipDate" placeholder="Tanggal Registrasi">
-                                                <input type="hidden" id="partnershipDateOk" class="edit" name="partnershipDate">
+                                                <label for="detailPartnershipDate">TANGGAL REGISTRASI</label>
+                                                <input type="text" name="partnershipDate" id="detailPartnershipDate" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="taxNumber">DATA PAJAK: NPWP</label>
-                                                <input type="text" name="taxNumber" class="form-control" id="taxNumber" placeholder="DATA PAJAK: NPWP">
+                                                <label for="detailTaxNumber">DATA PAJAK: NPWP</label>
+                                                <input type="text" name="taxNumber" id="detailTaxNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="taxAddress">DATA PAJAK: Alamat</label>
-                                                <textarea name="taxAddress" class="form-control" id="taxAddress" placeholder="DATA PAJAK: Alamat"></textarea>
+                                                <label for="detailTaxAddress">DATA PAJAK: ALAMAT</label>
+                                                <textarea name="taxAddress" id="detailTaxAddress" class="form-control"></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label>DATA PAJAK: Kota</label>
-                                                <select name="taxCity" data-object="cities#name" data-selected="taxCity#name" class="form-control select-edit-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="detailTaxCity">DATA PAJAK: KOTA</label>
+                                                <select name="taxCity" id="detailTaxCity" class="form-control" style="width:100%"></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="taxPhoneNumber">DATA PAJAK: No. Telepon</label>
-                                                <input type="text" name="taxPhoneNumber" class="form-control" id="taxPhoneNumber" placeholder="DATA PAJAK: No. Telepon">
+                                                <label for="detailTaxPhoneNumber">DATA PAJAK: NO. TELEPON</label>
+                                                <input type="text" name="taxPhoneNumber" id="detailTaxPhoneNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="taxFaxNumber">DATA PAJAK: No. Fax</label>
-                                                <input type="text" name="taxFaxNumber" class="form-control" id="taxFaxNumber" placeholder="DATA PAJAK: No. Fax">
+                                                <label for="detailTaxFaxNumber">DATA PAJAK: NO. FAX</label>
+                                                <input type="text" name="taxFaxNumber" id="detailTaxFaxNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="presidentDirectorName">Nama Presiden Direktur</label>
-                                                <input type="text" name="presidentDirectorName" class="form-control" id="presidentDirectorName" placeholder="Nama Presiden Direktur">
+                                                <label for="detailPresidentDirectorName">NAMA PRESIDEN DIREKTUR</label>
+                                                <input type="text" name="presidentDirectorName" id="detailPresidentDirectorName" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="mediaManagerName">Nama Manajer Media</label>
-                                                <input type="text" name="mediaManagerName" class="form-control" id="mediaManagerName" placeholder="Nama Manajer Media">
+                                                <label for="detailMediaManagerName">NAMA MANAJER MEDIA</label>
+                                                <input type="text" name="mediaManagerName" id="detailMediaManagerName" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="bankAccountNumber">Nomor Rekening</label>
-                                                <input type="text" name="bankAccountNumber" class="form-control" id="bankAccountNumber" placeholder="Nomor Rekening">
+                                                <label for="detailBankAccountNumber">NO. REKENING</label>
+                                                <input type="text" name="bankAccountNumber" class="form-control" id="detailBankAccountNumber">
                                             </div>
                                             <div class="form-group">
-                                                <label>Nama Bank</label>
-                                                <select name="bank" data-object="banks#name" data-selected="bank#name" class="form-control select-edit-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="detailBank">BANK</label>
+                                                <select name="bank" id="detailBank" class="form-control" style="width:100%"></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="remark">Catatan</label>
-                                                <input type="text" name="remark" class="form-control" id="remark" placeholder="Catatan">
+                                                <label for="detailRemark">CATATAN</label>
+                                                <input type="text" name="remark" id="detailRemark" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="creditLimit">Limit Kredit</label>
-                                                <input type="text" name="creditLimit" class="form-control" id="creditLimit" placeholder="Limit Kredit">
+                                                <label for="detailCreditLimit">LIMIT KREDIT</label>
+                                                <input type="text" name="creditLimit" id="detailCreditLimit" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label>Grup Tagihan</label>
-                                                <select name="billingGroup" data-object="billing/groups#name" data-selected="billingGroup#name" class="form-control select-edit-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="detailBillingGroup">GRUP TAGIHAN</label>
+                                                <select name="billingGroup" id="detailBillingGroup" class="form-control" style="width:100%"></select>
                                             </div>
                                         </div>
-                                        <input type="hidden" name="id" id="id">
                                         <!-- /.box-body -->
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="edit btn btn-flat btn-danger">Update</button>
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
+                                    <button type="button" id="btn-update" class="btn btn-flat btn-danger">SIMPAN</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -267,7 +255,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <ul data-paging="advertising/customers" class="pagination pagination-sm no-margin pull-right"></ul>
+                    <ul id="customersPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->

@@ -213,7 +213,17 @@
 
     Bisnis.Adv.Customers.add = function (params, callback) {
         // di filter pake hash, agar tidak terdeteksi sebagai int
-        var params = Bisnis.Util.Form.hashPrepand(params);
+        var fields = [
+            'postalCode',
+            'phoneNumber',
+            'faxNumber',
+            'taxNumber',
+            'taxPhoneNumber',
+            'taxFaxNumber',
+            'bankAccountNumber'
+        ];
+
+        var params = Bisnis.Util.Form.hashPrepand(fields, params);
 
         Bisnis.request({
             module: 'advertising/customers',

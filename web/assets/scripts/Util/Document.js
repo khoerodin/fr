@@ -33,7 +33,7 @@
         return element.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className);
     };
 
-    Bisnis.Util.Document.inArray = function (array, value) {
+    Bisnis.Util.Document.inArray = function (value, array) {
         Array.prototype.inArray = function (value)
         {
             // Returns true if the passed value is found in the

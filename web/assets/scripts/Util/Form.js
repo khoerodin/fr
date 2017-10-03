@@ -22,4 +22,16 @@
 
         return jQuery(selector).serializeArray();
     };
+
+    Bisnis.Util.Form.hashPrepand = function (fieldsArray, serializeArray) {
+        var params = [];
+        serializeArray.forEach(function (value) {
+            if (Bisnis.Util.Document.inArray(value.name, fieldsArray)) {
+                params.push({name: value.name, value: '#'+value.value});
+            } else {
+                params.push({name: value.name, value: value.value});
+            }
+        });
+        return params;
+    };
 })(window.Bisnis || {});

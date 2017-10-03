@@ -143,6 +143,6 @@
             }
 
             createOnlineBadge(data.online, onlineSelector);
-        }, '10.1.1.197:7777');
+        }, Bisnis.BACKEND_HOST + ':7777');
     };
 })(window.Bisnis || {});

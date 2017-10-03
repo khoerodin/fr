@@ -43,6 +43,12 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
             /** @var Session $session */
             $session = $this->container['internal.session_storage'];
             $token = $session->get('token');
+
+            if (!$session->has('BACKEND_HOST')) {
+                $url = parse_url($this->container['api']['base_url']);
+                $session->set('BACKEND_HOST', $url['host']);
+            }
+
             if (!$token) {
                return new RedirectResponse('/logout');
             } else {

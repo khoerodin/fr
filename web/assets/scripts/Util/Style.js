@@ -14,17 +14,53 @@
     Bisnis.Util.Style.ajaxSelect = function (selector, params, hasResultCallback, selectedCallback, openCallback, closeCallback) {
         var placeholder = typeof params.placeholder !== 'undefined' ? params.placeholder : 'CARI';
         var allowClear = typeof params.allowClear !== 'undefined' ? params.allowClear : false;
-        var url = typeof params.url !== 'undefined' ? params.url : '';
+        var url = typeof params.url !== 'undefined' ? params.url : '/api/searchGrid';
         var method = typeof params.method !== 'undefined' ? params.method : 'POST';
         var module = typeof params.module !== 'undefined' ? params.module : '';
-        var field = typeof params.field !== 'undefined' ? params.field : '';
         var fields = typeof params.fields !== 'undefined' ? params.fields : '';
+        var tags = typeof params.tags !== 'undefined' ? params.tags : false;
+        var tokenSeparators = typeof params.tokenSeparators !== 'undefined' ? params.tokenSeparators : null;
         var minimumInputLength = typeof params.minimumInputLength !== 'undefined' ? params.minimumInputLength : 2;
+        var prependValue = typeof params.prependValue !== 'undefined' ? params.prependValue : '';
+        var appendValue = typeof params.appendValue !== 'undefined' ? params.appendValue : '';
+
+        var optionTemplate = function (data) {
+            if (!data.id) {
+                return data.text;
+            }
+
+            var $state = $(
+                '<span>' + data.text + ' ~ <em>' + data.label + '</em></span>'
+            );
+            return $state;
+        };
 
         jQuery(selector).select2({
             theme: "bootstrap",
             placeholder: placeholder.toUpperCase(),
             allowClear: allowClear,
+            templateResult: optionTemplate,
+            tags: tags,
+            tokenSeparators: tokenSeparators,
+            createTag: function (tag) {
+
+                // Check if the option is already there
+                var found = false;
+                jQuery(selector+" option").each(function() {
+                    if ($.trim(tag.term).toUpperCase() === $.trim($(this).text()).toUpperCase()) {
+                        found = true;
+                    }
+                });
+
+                // Show the suggestion only if a match was not found
+                if (!found) {
+                    return {
+                        id: tag.term,
+                        text: tag.term.toUpperCase(),
+                        isNew: true
+                    };
+                }
+            },
             ajax: {
                 url: url,
                 dataType: 'json',
@@ -36,7 +72,6 @@
                         page: params.page,
                         module: module,
                         method: 'get',
-                        field: field,
                         fields: fields
                     };
                 },
@@ -49,8 +84,8 @@
                         }
 
                         return {
-                            results: $.map(data, function(obj) {
-                                return { id: obj.id, text: obj[field] };
+                            results: jQuery.map(data, function(obj) {
+                                return { id: prependValue+obj.id+appendValue, text: obj['text'], label: obj['label'] };
                             })
                         }
                     } else {
@@ -71,16 +106,25 @@
             minimumInputLength: minimumInputLength
         }).on('select2:select', function () {
             if (Bisnis.validCallback(selectedCallback)) {
-                var e = jQuery(selector + ' option:selected');
-                var id = e.val();
-                var text = e.text().split('~')[0].trim();
-                var data = {id: id, text: text};
-                selectedCallback(data);
+                var e = jQuery(selector).select2('data')[0];
+                // e = {disabled, element, id, label, selected, text, _resultId}
+                selectedCallback(e);
+                var data = {
+                    id: e.id,
+                    text: e.text,
+                    label: e.label
+                };
+                createHistory(selector, data);
             }
         }).on('select2:open', function () {
             if (Bisnis.validCallback(openCallback)) {
                 openCallback(true);
             }
+            showHistory(selector, function (selectedHistoryData) {
+                if (Bisnis.validCallback(selectedCallback)) {
+                    selectedCallback(selectedHistoryData);
+                }
+            });
         }).on('select2:closing', function () {
             if (Bisnis.validCallback(closeCallback)) {
                 closeCallback(true);
@@ -96,10 +140,118 @@
         });
     };
 
+    var removeDuplicate = function (arr) {
+        var hashTable = {};
+
+        return arr.filter(function (el) {
+            var key = JSON.stringify(el);
+            var match = Boolean(hashTable[key]);
+
+            return (match ? false : hashTable[key] = true);
+        });
+    };
+
+    var createHistory = function (selector, data, callback) {
+        var id = data.id, text = data.text, label = data.label;
+
+        if(selector+"searchHistory" in localStorage){
+            var searchStorage = localStorage.getItem(selector+'searchHistory');
+            var searchHistory = JSON.parse(searchStorage);
+            searchHistory.push({id: id, text: text, label: label});
+
+            searchHistory = removeDuplicate(searchHistory);
+
+            if (searchHistory.length > 5) searchHistory.splice(0, searchHistory.length - 5);
+            localStorage.setItem(selector+'searchHistory', JSON.stringify(searchHistory));
+        } else {
+            var searchHistory = ( typeof searchHistory != 'undefined' && searchHistory instanceof Array ) ? searchHistory : [];
+            searchHistory.push({id: id, text: text, label: label});
+            localStorage.setItem(selector+'searchHistory', JSON.stringify(searchHistory));
+        }
+
+        if (Bisnis.validCallback(callback)) {
+            callback();
+        }
+    };
+
+    var showHistory = function (selector, callback) {
+        if(selector+"searchHistory" in localStorage){
+            var searchStorsge = localStorage.getItem(selector+'searchHistory');
+            var searchHistory = JSON.parse(searchStorsge).reverse();
+            var opt = '';
+            jQuery.each(searchHistory, function (index, value) {
+                if (index === 0) {
+                    var selected = 'selected';
+                }
+                opt += '<li class="optionHistory '+selected+' select2-results__option" data-id="'+value.id+'" data-text="'+value.text+'" data-label="'+value.label+'">'+value.text+' ~ <em>'+value.label+'</em></li>';
+            });
+
+            setTimeout(function(){
+                jQuery('.select2-results__options').html(opt);
+
+                jQuery('.optionHistory').hover(
+                    function () {
+                        jQuery(this).addClass('selected');
+                    },
+
+                    function () {
+                        jQuery(this).removeClass('selected');
+                    },
+                );
+
+                jQuery('.optionHistory').click(function (e) {
+                    var id = jQuery(this).data('id');
+                    var text = jQuery(this).data('text');
+                    var label = jQuery(this).data('label');
+
+                    if(selector+"searchHistory" in localStorage){
+                        var searchStorage = localStorage.getItem(selector+'searchHistory');
+                        var searchHistory = JSON.parse(searchStorage);
+                        searchHistory.push({id: id, text: text, label: label});
+
+                        searchHistory = removeDuplicate(searchHistory);
+
+                        if (searchHistory.length > 5) searchHistory.splice(0, searchHistory.length - 5);
+                        localStorage.setItem(selector+'searchHistory', JSON.stringify(searchHistory));
+                    } else {
+                        var searchHistory = ( typeof searchHistory != 'undefined' && searchHistory instanceof Array ) ? searchHistory : [];
+                        searchHistory.push({id: id, text: text, label: label});
+                        localStorage.setItem(selector+'searchHistory', JSON.stringify(searchHistory));
+                    }
+
+                    jQuery(selector).select2('close');
+
+                    if (Bisnis.validCallback(callback)) {
+                        var data = {
+                            id: id,
+                            text: text,
+                            label: label,
+                        };
+                        callback(data);
+                    }
+                });
+
+
+            }, 1);
+        }
+    };
+
     Bisnis.Util.Style.changeStyle = function (selector, css) {
         var element = jQuery(selector);
         Bisnis.each(function (idx, value) {
             element.css(value);
         }, css);
     };
+
+    Bisnis.Util.Style.randomColor = function () {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+
+        return color;
+    };
+
 })(window.Bisnis || {});

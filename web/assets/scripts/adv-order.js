@@ -1,5 +1,6 @@
 function getOrders(param, selected) {
     var selected = selected;
+    var tableData = '';
     $.ajax({
         url: '/api',
         type: 'POST',
@@ -22,16 +23,36 @@ function getOrders(param, selected) {
                 var memberData = JSON.parse(data)['hydra:member'];
                 var no = 1;
                 var searchArea;
+                var searchArea;
 
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
                 tableData += '<thead><tr><th width="3%">#</th><th width="10%">NOMOR ORDER</th>';
-                tableData += '<th width="25%">NOMOR SURAT ORDER</th>';
-                tableData += '<th width="25%">Judul</th>';
-                tableData += '<th width="15%">Order Dari</th><th width="15%">Pemasang</th>';
+                tableData += '<th width="">NOMOR SURAT ORDER</th>';
+                tableData += '<th width="">Judul</th>';
+                tableData += '<th width="">Order Dari</th><th width="">Pemasang</th>';
+                tableData += '<th>Status</th>';
                 tableData += '<th width="3%"><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
 
                 $.each(memberData, function (index, value) {
+                    var status;
+                    switch (value.status) {
+                        case 'a':
+                            status = "<span class='label label-success'>Active</span>";
+                            break;
+                        case 'i':
+                            status = "<span class='label label-warning'>Invoice</span>";
+                            break;
+                        case 'v':
+                            status = "<span class='label label-danger'>Void</span>";
+                            break;
+                        case 'c':
+                            status = "<span class='label label-default'>Closed</span>";
+                            break;
+                        default:
+                            status = "<span class='label label-success'>Active</span>";
+                    }
+
                     tableData += '<tr>';
                     tableData += '<td>'+no+'</td>';
                     tableData += '<td>'+value.orderNumber+'</td>';
@@ -49,6 +70,8 @@ function getOrders(param, selected) {
                     } else {
                         tableData += '<td>-</td>';
                     }
+
+                    tableData += '<td>'+status+'</td>';
 
                     tableData += '<td>';
                     tableData += '<span class="pull-right" data-id="'+value.id+'">';

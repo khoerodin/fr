@@ -16,23 +16,11 @@
          Bisnis.Util.Document.putHtml(selector, badge);
     };
 
-    var needToNotify = function (userId, callback) {
-        Bisnis.request({
-            module: 'notifications',
-            method: 'get',
-            params: [{
-                'receiver': userId,
-                'notify': false,
-                'read': false
-            }]
-        }, function (response) {
-            if (Bisnis.validCallback(callback)) {
-                var rawData = JSON.parse(response);
-                callback(rawData['hydra:member']);
-            }
-        }, function () {
-            console.log('KO');
-        });
+    var createOnlineBadge = function (totalOnline, selector) {
+        var targetSelector = selector.replace('.', '_');
+        targetSelector = targetSelector.replace('#', '_');
+        var badge = '<a href="#" class="notif' + targetSelector + '"><i class="fa fa-user-o"></i><span class="label label-primary">' + totalOnline + ' User Online</span></a>';
+        Bisnis.Util.Document.putHtml(selector, badge);
     };
 
     var unReadNotification = function (userId, callback) {
@@ -53,23 +41,8 @@
         });
     };
 
-    Bisnis.Notification.send = function (domain, receiver, sender, message, callback) {
-        Bisnis.request({
-            module: 'notifications',
-            method: 'post',
-            params: [
-                { name: 'domain', value: domain },
-                { name: 'receiver', value: receiver },
-                { name: 'sender', value: sender },
-                { name: 'message', value: message }
-            ]
-        }, function (response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(JSON.parse(response));
-            }
-        }, function () {
-            console.log('KO');
-        });
+    Bisnis.Notification.send = function (domain, receiver, sender, message) {
+        Bisnis.WebSocket.push('MESSAGE:' + domain + '#' + receiver + '#' + sender + '#' + message);
     };
 
     Bisnis.Notification.read = function(notificationId, callback) {
@@ -80,6 +53,7 @@
                 { name: 'read', value: true }
             ]
         }, function () {
+            Bisnis.WebSocket.ping();
             if (Bisnis.validCallback(callback)) {
                 callback();
             }
@@ -124,6 +98,7 @@
             method: 'put',
             params: []
         }, function () {
+            Bisnis.WebSocket.ping();
             if (Bisnis.validCallback(callback)) {
                 callback();
             }
@@ -140,24 +115,34 @@
         });
     };
 
-    Bisnis.Notification.enableTo = function (userId, badgeSelector, clickNotificationCallback) {
-        setInterval(function() {
-            needToNotify(userId, function (notifications) {
-                Bisnis.each(function (idx, notification) {
-                    notify(notification.domain, notification.message, function () {
-                        Bisnis.Notification.notify(notification.id);
-                    }, clickNotificationCallback);
-                }, notifications);
-            });
+    Bisnis.Notification.enableTo = function (userId, notificationSelector, onlineSelector, clickNotificationCallback) {
+        var totalUnread = 0;
+        Bisnis.WebSocket.serve(function () {
+            Bisnis.WebSocket.push('START:'+ userId);
+        }, function (data) {
+            Bisnis.each(function (idx, notification) {
+                if (notification.receiver === userId) {
+                    if (false === notification.notify) {
+                        console.log(notification.id);
+                        notify(notification.domain, notification.message, function () {
+                            Bisnis.Notification.notify(notification.id);
+                        }, clickNotificationCallback);
+                    }
 
-            unReadNotification(userId, function (response) {
-                var totalUnRead = response['hydra:totalItems'];
-                if (0 < totalUnRead) {
-                    createNotificationBadge(totalUnRead, badgeSelector);
-                } else {
-                    Bisnis.Util.Document.putHtml(badgeSelector, '');
+                    if (false === notification.read) {
+                        totalUnread = totalUnread + 1;
+                    }
                 }
-            });
-        }, 7000);
+            }, data.messages);
+
+            if (0 < totalUnread) {
+                createNotificationBadge(totalUnread, notificationSelector);
+                totalUnread = 0;
+            } else {
+                Bisnis.Util.Document.putHtml(notificationSelector, '');
+            }
+
+            createOnlineBadge(data.online, onlineSelector);
+        }, '10.5.5.206:7777');
     };
 })(window.Bisnis || {});

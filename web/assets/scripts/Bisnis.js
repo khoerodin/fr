@@ -24,12 +24,22 @@
     Bisnis.request = function (params, successCallback, errorCallback, url, method) {
         url = 'undefined' === typeof url ? '/api' : url;
         method = 'undefined' === typeof method ? 'post' : method;
+        params.params = 'undefined' === typeof params.params ? [] : params.params;
 
-        params.params.push({
-            order: {
-                createdAt: 'DESC'
+        var order = false;
+        params.params.forEach(function (value) {
+            if (value.order) {
+                order = true;
             }
         });
+
+        if (params.method.toLowerCase() === 'get' && order === false) {
+            params.params.push({
+                order: {
+                    createdAt: 'DESC'
+                }
+            });
+        }
 
         jQuery.ajax({
             url: url,
@@ -59,9 +69,13 @@
 
     /** Module List */
     Bisnis.Helpdesk = {};
-    Bisnis.SimpleGrid = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
+    Bisnis.Adv = {};
+    Bisnis.Billing = {};
+    Bisnis.Admin = {};
+    Bisnis.Chart = {};
+    Bisnis.WebSocket = {};
 
     window.Bisnis = Bisnis;
 })(window);

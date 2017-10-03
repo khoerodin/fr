@@ -27,7 +27,7 @@ $(document).on('click', '#sign-in', function (e) {
             password:password
         },
         beforeSend: function () {
-            $('#sign-in').text('SIGNING IN...').prop('disabled', true);
+            $('#sign-in').html('<i class="fa fa-sign-in"></i> MASUK...').prop('disabled', true);
             $('#login-error').addClass('hidden');
         },
         success: function (data, textStatus, jqXHR) {
@@ -35,11 +35,11 @@ $(document).on('click', '#sign-in', function (e) {
                 $('#username').val('');
                 $('#password').val('');
                 $('#login-error').val('');
-                $('#sign-in').text('SIGN IN').prop('disabled', false);
+                $('#sign-in').html('<i class="fa fa-sign-in"></i> MASUK').prop('disabled', false);
                 $('#login-error').removeClass('hidden');
                 $('#username').focus();
             } else {
-                // console.log(data);
+                console.log(data);
                 location.href = '/';
             }
         }

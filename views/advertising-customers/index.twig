@@ -1,213 +1,143 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/global-crud.js"></script>
-    <script>
-        window.module = 'advertising/customers';
-        window.field = 'name';
-        var columns = [
-            'code',
-            'name',
-            'representative.name',
-            'city.name',
-            'postalCode',
-            'phoneNumber'
-        ];
-
-        function paddy(number, pad, char) {
-            var pad_char = typeof char !== 'undefined' ? char : '0';
-            var pad = new Array(1 + pad).join(pad_char);
-            return (pad + number).slice(-pad.length);
-        }
-
-        $('[data-modal-add="advertising/customers"] select[name="representative"]').on('change', function () {
-
-            var module = $(this).val().replace('/api/','');
-
-            $.ajax({
-                url: '/api',
-                type: 'POST',
-                data: {
-                    module: module,
-                    method: 'get'
-                },
-                success: function (repData) {
-                    var repData = JSON.parse(repData);
-
-                    $.ajax({
-                        url: '/api',
-                        type: 'POST',
-                        data: {
-                            module: 'last-id/adv-customers',
-                            method: 'get'
-                        },
-                        success: function (data) {
-                            var data = JSON.parse(data);
-                            var urutan = paddy(data.id, 4);
-
-                            $('[data-modal-add="advertising/customers"] #code').val(repData.code+urutan);
-                        }
-                    });
-                }
-            });
-
-
-
-        });
-    </script>
+    <script src="/assets/scripts/Adv/Customers.js"></script>
 {% endblock %}
 
 {%- block content -%}
     <div class="row">
         <div class="col-md-12">
             <div class="box">
-                <div class="box-header row">
-                    <div class="col-md-12 search-area transition">
-                        <select data-placeholder="CARI NAMA PELANGGAN" class="search-name form-control select2" style="width: 100%;">
-                            <option></option>
-                        </select>
+                <div class="box-header row" style="margin-bottom: 0px;">
+                    <div class="col-md-10">
+                        <select class="form-control" id="searchCustomers" style="width: 100%"></select>
                     </div>
-
-                    <div class="button-area transition">
-                        <a href="JavaScript:Void(0);" data-btn-add="advertising/customers" style="visibility: hidden;" class="clients add-btn h btn btn-flat btn-block btn-danger">Add</a>
+                    <div class="col-md-2">
+                        <button disabled id="btnAddCustomer" class="btn btn-danger btn-flat btn-block">TAMBAH</button>
                     </div>
-                    &nbsp;&nbsp;&nbsp;
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th width="5%">#</th>
-                            <th>Kode</th>
-                            <th>Nama</th>
-                            <th>Perwakilan</th>
-                            <th>Kota</th>
-                            <th>Kode Pos</th>
-                            <th>No. Telepon</th>
-                            <th width="5%"><span class="pull-right">Aksi</span></th>
+                            <th width="3%">NO.</th>
+                            <th>KODE</th>
+                            <th>NAMA</th>
+                            <th>PERWAKILAN</th>
+                            <th>KOTA</th>
+                            <th>KODE POS</th>
+                            <th>NO. TELEPON</th>
+                            <th width="5%"><span class="pull-right">AKSI</span></th>
                         </tr>
                         </thead>
 
-                        <tbody data-list="advertising/customers">
-                            <tr><td colspan="7">...</td></tr>
-                        </tbody>
+                        <tbody id="customersList"></tbody>
 
                     </table>
 
                     {#ADD MODAL#}
-                    <div data-modal-add="advertising/customers" class="clients add-modal modal" role="dialog">
+                    <div id="addModal" class="modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Tambah Pelanggan Iklan</h4>
+                                    <h4 class="modal-title">TAMBAH PELANGGAN IKLAN</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="clients add form">
+                                    <form role="form" id="addForm">
                                         <div class="box-body">
                                             <div class="form-group">
-                                                <label>Perwakilan</label>
-                                                <select name="representative" data-object="representatives#name" class="form-control select-add-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="addRepresentative">PERWAKILAN</label>
+                                                <select name="representative" id="addRepresentative" class="form-control" style="width: 100%"></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="code">Kode</label>
-                                                <input readonly type="text" name="code" class="form-control" id="code" placeholder="Kode">
+                                                <label for="addCode">KODE</label>
+                                                <input type="text" name="Code" id="addCode" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Nama</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Nama">
+                                                <label for="name">NAMA</label>
+                                                <input type="text" name="name" class="form-control" id="name">
                                             </div>
                                             <div class="form-group">
-                                                <label for="address">Alamat</label>
-                                                <textarea name="address" class="form-control" id="address" placeholder="Alamat"></textarea>
+                                                <label for="addAddress">ALAMAT</label>
+                                                <textarea name="address" id="addAddress" class="form-control"></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label>Kota</label>
-                                                <select name="city" data-object="cities#name" class="form-control select-add-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="addCity">KOTA</label>
+                                                <select name="city" id="addCity" class="form-control" style="width:100%"></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="postalCode">Kode Pos</label>
-                                                <input type="text" name="postalCode" class="form-control" id="postalCode" placeholder="Kode Pos">
+                                                <label for="addPostalCode">KODE POS</label>
+                                                <input type="text" name="postalCode" id="addPostalCode" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="phoneNumber">No. Telepon</label>
-                                                <input type="text" name="phoneNumber" class="form-control" id="phoneNumber" placeholder="No. Telepon">
+                                                <label for="addPhoneNumber">NO. TELEPON</label>
+                                                <input type="text" name="phoneNumber" id="addPhoneNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="faxNumber">No. Fax</label>
-                                                <input type="text" name="faxNumber" class="form-control" id="faxNumber" placeholder="No. Fax">
+                                                <label for="addFaxNumber">NO. FAX</label>
+                                                <input type="text" name="faxNumber" id="addFaxNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="partnershipDate">Tanggal Registrasi</label>
-                                                <input type="text" class="form-control add-datetime" id="partnershipDate" placeholder="Tanggal Registrasi">
-                                                <input type="hidden" id="partnershipDateOk" class="add" name="partnershipDate">
+                                                <label for="addPartnershipDate">TANGGAL REGISTRASI</label>
+                                                <input type="text" name="partnershipDate" id="addPartnershipDate" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="taxNumber">DATA PAJAK: NPWP</label>
-                                                <input type="text" name="taxNumber" class="form-control" id="taxNumber" placeholder="DATA PAJAK: NPWP">
+                                                <label for="addTaxNumber">DATA PAJAK: NPWP</label>
+                                                <input type="text" name="taxNumber" id="addTaxNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="taxAddress">DATA PAJAK: Alamat</label>
-                                                <textarea name="taxAddress" class="form-control" id="taxAddress" placeholder="DATA PAJAK: Alamat"></textarea>
+                                                <label for="addTaxAddress">DATA PAJAK: ALAMAT</label>
+                                                <textarea name="taxAddress" id="addTaxAddress" class="form-control"></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label>DATA PAJAK: Kota</label>
-                                                <select name="taxCity" data-object="cities#name" class="form-control select-add-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="addTaxCity">DATA PAJAK: KOTA</label>
+                                                <select name="taxCity" id="addTaxCity" class="form-control" style="width:100%"></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="taxPhoneNumber">DATA PAJAK: No. Telepon</label>
-                                                <input type="text" name="taxPhoneNumber" class="form-control" id="taxPhoneNumber" placeholder="DATA PAJAK: No. Telepon">
+                                                <label for="addTaxPhoneNumber">DATA PAJAK: NO. TELEPON</label>
+                                                <input type="text" name="taxPhoneNumber" id="addTaxPhoneNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="taxCity">DATA PAJAK: No. Fax</label>
-                                                <input type="text" name="taxFaxNumber" class="form-control" id="taxFaxNumber" placeholder="DATA PAJAK: No. Fax">
+                                                <label for="addTaxFaxNumber">DATA PAJAK: NO. FAX</label>
+                                                <input type="text" name="taxFaxNumber" id="addTaxFaxNumber" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="presidentDirectorName">Nama Presiden Direktur</label>
-                                                <input type="text" name="presidentDirectorName" class="form-control" id="presidentDirectorName" placeholder="Nama Presiden Direktur">
+                                                <label for="addPresidentDirectorName">NAMA PRESIDEN DIREKTUR</label>
+                                                <input type="text" name="addPresidentDirectorName" id="addPresidentDirectorName" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="mediaManagerName">Nama Manajer Media</label>
-                                                <input type="text" name="mediaManagerName" class="form-control" id="mediaManagerName" placeholder="Nama Manajer Media">
+                                                <label for="addMediaManagerName">NAMA MANAJER MEDIA</label>
+                                                <input type="text" name="mediaManagerName" id="addMediaManagerName" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="bankAccountNumber">Nomor Rekening</label>
-                                                <input type="text" name="bankAccountNumber" class="form-control" id="bankAccountNumber" placeholder="Nomor Rekening">
+                                                <label for="addBankAccountNumber">NO. REKENING</label>
+                                                <input type="text" name="bankAccountNumber" class="form-control" id="addBankAccountNumber">
                                             </div>
                                             <div class="form-group">
-                                                <label>Nama Bank</label>
-                                                <select name="bank" data-object="banks#name" class="form-control select-add-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="addBank">BANK</label>
+                                                <select name="bank" id="addBank" class="form-control" style="width:100%"></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="remark">Catatan</label>
-                                                <input type="text" name="remark" class="form-control" id="remark" placeholder="Catatan">
+                                                <label for="addRemark">CATATAN</label>
+                                                <input type="text" name="remark" id="addRemark" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label for="creditLimit">Limit Kredit</label>
-                                                <input type="text" name="creditLimit" class="form-control" id="creditLimit" placeholder="Limit Kredit">
+                                                <label for="addCreditLimit">LIMIT KREDIT</label>
+                                                <input type="text" name="creditLimit" id="addCreditLimit" class="form-control">
                                             </div>
                                             <div class="form-group">
-                                                <label>Grup Tagihan</label>
-                                                <select name="billingGroup" data-object="billing/groups#name" class="form-control select-add-modal">
-                                                    <option></option>
-                                                </select>
+                                                <label for="addBillingGroup">GRUP TAGIHAN</label>
+                                                <select name="billingGroup" id="addBillingGroup" class="form-control" style="width:100%"></select>
                                             </div>
                                         </div>
                                         <!-- /.box-body -->
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="save btn btn-flat btn-danger">Save</button>
+                                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
+                                    <button type="button" id="btn-add" class="btn btn-flat btn-danger">SIMPAN</button>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -215,7 +145,7 @@
                     {#END ADD MODAL#}
 
                     {#DETAIL MODAL#}
-                    <div data-modal-detail="advertising/customers" class="clients detail-modal modal" role="dialog">
+                    <div id="detailModal" class="modal" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -223,7 +153,7 @@
                                     <h4 class="modal-title">Detail Pelanggan Iklan</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form" class="clients detail form">
+                                    <form role="form" id="detailForm">
                                         <div class="box-body">
                                             <div class="form-group">
                                                 <label>Perwakilan</label>

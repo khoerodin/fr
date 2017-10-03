@@ -5,33 +5,35 @@
     </footer>
     <!-- ./wrapper -->
     <!-- jQuery 2.2.3 -->
-    <script type="text/javascript" src="/assets/jquery/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/jquery/jquery-2.2.3.min.js"></script>
     <!-- Bootstrap 3.3.6 -->
-    <script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/assets/moment/moment.js"></script>
-    <script type="text/javascript" src="/assets/moment/moment-range.js"></script>
+    <script type="text/javascript" src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/moment/moment.js"></script>
+    <script type="text/javascript" src="/assets/vendor/moment/moment-range.js"></script>
     <script>
         window['moment-range'].extendMoment(moment);
     </script>
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/id.js"></script>
+    <script type="text/javascript" src="/assets/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="/assets/vendor/bootstrap-datetimepicker/id.js"></script>
 
-    <script type="text/javascript" src="/assets/datepicker/js/bootstrap-datepicker.min.js"></script>
-    <script type="text/javascript" src="/assets/datepicker/locales/bootstrap-datepicker.id.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/datepicker/locales/bootstrap-datepicker.id.min.js"></script>
 
     <!-- FastClick -->
-    <script type="text/javascript" src="/assets/fastclick/fastclick.js"></script>
+    <script type="text/javascript" src="/assets/vendor/fastclick/fastclick.js"></script>
     <!-- AdminLTE App -->
-    <script type="text/javascript" src="/assets/adminlte/js/app.js"></script>
+    <script type="text/javascript" src="/assets/vendor/adminlte/js/app.js"></script>
     <script type="text/javascript" src="/assets/scripts/scripts.js"></script>
 
-    <script type="text/javascript" src="/assets/select2/js/select2.full.min.js"></script>
-    <script type="text/javascript" src="/assets/bootstrap-toggle/bootstrap-toggle.min.js"></script>
-    <script type="text/javascript" src="/assets/toastr/toastr.min.js"></script>
-    <script type="text/javascript" src="/assets/bootbox/bootbox.min.js"></script>
-    <script type="text/javascript" src="/assets/bootbox/bootbox.min.js"></script>
-    <script type="text/javascript" src="/assets/summernote/summernote.min.js"></script>
-    <script type="text/javascript" src="/assets/notification/push_notification.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/select2/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/bootbox/bootbox.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/bootbox/bootbox.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/summernote/summernote.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/notification/push_notification.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/treeview/treed.js"></script>
+    <script type="text/javascript" src="/assets/vendor/bootstrap-menu/BootstrapMenu.min.js"></script>
     <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Document.js"></script>
@@ -39,6 +41,11 @@
     <script type="text/javascript" src="/assets/scripts/Util/Grid.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Style.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Url.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Form.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/WebSocket.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/ContextMenu.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Treed.js"></script>
     <script type="text/javascript" src="/assets/scripts/Notification/Notification.js"></script>
     <script>
         (function() {
@@ -51,14 +58,14 @@
             Bisnis.Util.Style.changeStyle('.direct-chat', [{'margin-bottom': '0px'}]);
             Bisnis.Util.Style.changeStyle('.note-frame', [{'margin-bottom': '0px'}]);
 
-            Bisnis.Notification.enableTo('/api/users/{{ me.id }}', '.notification', function () {
+            Bisnis.Notification.enableTo('{{ me.id }}', '.userNotification', '.userOnline', function () {
                 Bisnis.Util.Dialog.hideModal('.modal');
-                window.focus();
-                Bisnis.Util.Event.triggerClick('a.notif_notification');
+                window.focus(this);
+                Bisnis.Util.Event.triggerClick('a.notif_userNotification');
             });
 
-            Bisnis.Util.Event.bind('click', 'a.notif_notification', function () {
-                Bisnis.Notification.unread('/api/users/{{ me.id }}', function (notifications) {
+            Bisnis.Util.Event.bind('click', 'a.notif_userNotification', function () {
+                Bisnis.Notification.unread('{{ me.id }}', function (notifications) {
                     var records = [];
                     Bisnis.each(function (idx, notification) {
                         records.push([

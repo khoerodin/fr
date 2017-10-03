@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mispc3
- * Date: 14/06/17
- * Time: 9:42
- */
 
 namespace Bisnis\Controller;
 
@@ -18,8 +12,16 @@ class HelpdeskStaffsController extends AdminController
             'title' => 'Staff Helpdesk',
         ];
 
+        $users = $this->request('users', 'get');
+        $users = json_decode($users->getContent(), true)['hydra:member'];
+
+        $categories = $this->request('helpdesk/categories', 'get');
+        $categories = json_decode($categories->getContent(), true)['hydra:member'];
+
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
+            'users' => $users,
+            'categories' => $categories
         ];
 
         return $this->view('helpdesk-staffs/index.twig', $data);

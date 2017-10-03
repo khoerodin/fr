@@ -31,7 +31,7 @@ app:
         - { path: '/representatives', controller: 'Bisnis:Representatives@index', methods: ['GET'] }
         - { path: '/services', controller: 'Bisnis:Services@index', methods: ['GET'] }
 
-        #Advertising
+        #Adv
         #Master
         - { path: '/advertising/ads', controller: 'Bisnis:AdvertisingAds@index', methods: ['GET'] }
         - { path: '/advertising/categories', controller: 'Bisnis:AdvertisingCategories@index', methods: ['GET'] }
@@ -44,11 +44,14 @@ app:
         - { path: '/advertising/specification-details', controller: 'Bisnis:AdvertisingSpecificationDetails@index', methods: ['GET'] }
         - { path: '/advertising/types', controller: 'Bisnis:AdvertisingTypes@index', methods: ['GET'] }
         - { path: '/advertising/prices', controller: 'Bisnis:AdvertisingPrices@index', methods: ['GET'] }
-        - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
         - { path: '/advertising/media', controller: 'Bisnis:AdvertisingMedia@index', methods: ['GET'] }
+        - { path: '/advertising/team-works', controller: 'Bisnis:AdvertisingTeamWorks@index', methods: ['GET'] }
+        - { path: '/advertising/account-executive-managers', controller: 'Bisnis:AdvertisingAccountExecutiveManagers@index', methods: ['GET'] }
+        - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
 
         - { path: '/advertising/orders', controller: 'Bisnis:AdvertisingOrders@index', methods: ['GET'] }
         - { path: '/advertising/orders/new', controller: 'Bisnis:AdvertisingOrders@new', methods: ['GET'] }
+        - { path: '/advertising/orders/invoices', controller: 'Bisnis:AdvertisingOrders@invoices', methods: ['GET'] }
         - { path: '/advertising/orders/{id}', controller: 'Bisnis:AdvertisingOrders@detail', methods: ['GET'] }
         - { path: '/advertising/orders/publish-ads', controller: 'Bisnis:AdvertisingOrders@publishAds', methods: ['POST'] }
         - { path: '/advertising/orders/publish-ads/update', controller: 'Bisnis:AdvertisingOrders@updatePublishAds', methods: ['POST'] }
@@ -64,12 +67,7 @@ app:
         - { path: '/helpdesk/categories', controller: 'Bisnis:HelpdeskCategories@index', methods: ['GET'] }
         - { path: '/helpdesk/notifications', controller: 'Bisnis:HelpdeskNotifications@index', methods: ['GET'] }
         - { path: '/helpdesk/staffs', controller: 'Bisnis:HelpdeskStaffs@index', methods: ['GET'] }
-        - { path: '/helpdesk/ticket-responses', controller: 'Bisnis:HelpdeskTicketResponses@index', methods: ['GET'] }
         - { path: '/helpdesk/tickets', controller: 'Bisnis:HelpdeskTickets@index', methods: ['GET'] }
         - { path: '/helpdesk/clients', controller: 'Bisnis:HelpdeskClients@index', methods: ['GET'] }
         - { path: '/helpdesk/my-tickets', controller: 'Bisnis:HelpdeskMyTickets@index', methods: ['GET'] }
-        - { path: '/helpdesk/ticket-stats', controller: 'Bisnis:HelpdeskTicketStats@index', methods: ['GET'] }
-
-        #jangan di hapus,
-        - { path: '/dummy', controller: 'Bisnis:Dummy@index', methods: ['GET'] }
-        - { path: '/coba', controller: 'Bisnis:Coba@index', methods: ['GET'] }
+        - { path: '/helpdesk/dashboard', controller: 'Bisnis:HelpdeskTicketDashboard@index', methods: ['GET'] }

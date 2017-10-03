@@ -14,24 +14,56 @@ $('#invoicedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'));
 $('#inputBookedAt').val(moment().format('dddd, DD MMMM YYYY'));
 $('#bookedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'));
 
-// $('#dtBookedAt, #inputBookedAt').datetimepicker({
-//     locale: 'id',
-//     format: "dddd, DD MMMM YYYY",
-//     ignoreReadonly: true,
-//     defaultDate: moment()
-// }).on('dp.change', function(e){
-//     var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-//     $('#bookedAt').val(tgl);
-// });
+$("#orderFrom").select2({
+    theme: 'bootstrap'
+});
 
 $("#orderFrom").select2('open');
 
-$(document).on('click', '#btn-order', function () {
+function paddy(number, pad, char) {
+    var pad_char = typeof char !== 'undefined' ? char : '0';
+    var pad = new Array(1 + pad).join(pad_char);
+    return (pad + number).slice(-pad.length);
+}
+
+function getOrderId() {
+
+    var id = $("#orderFrom option:selected").val();
+    var text = $("#orderFrom option:selected").text();
+    var code = text.split(" ")[0];
+
+    var currentTime = new Date();
+    var month = paddy(currentTime.getMonth() + 1, 2);
+    var year = currentTime.getFullYear();
+
+    $.ajax({
+        url: '/api',
+        type: 'POST',
+        data: {
+            module: 'last-id/order'+month+year,
+            method: 'get'
+        },
+        success: function (data) {
+            var data = JSON.parse(data);
+            var urutan = paddy(data.id, 3);
+            var orderNumber = 'OI/'+urutan+'/'+code+'/'+month+'/'+year;
+            $('#orderNumber').val(orderNumber);
+
+            saveOrder(orderNumber);
+        }
+    });
+}
+
+function saveOrder(orderNumber) {
     var params = $('#orderForm').serializeArray();
     var tags = String($('#orderTag').val());
+
     params.push({
         name: 'orderTag',
         value: tags
+    }, {
+        name: 'orderNumber',
+        value: orderNumber
     });
 
     $.ajax({
@@ -101,6 +133,10 @@ $(document).on('click', '#btn-order', function () {
             $('#btn-order').text('ORDER SEKARANG').prop('disabled', false);
         }
     });
+}
+
+$(document).on('click', '#btn-order', function () {
+    getOrderId();
 });
 
 function saveByDates(orderId) {

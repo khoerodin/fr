@@ -62,6 +62,7 @@
 
         Bisnis.Util.Event.bind('click', '.addNew', function () {
             Bisnis.Helpdesk.Category.fetchAll(function (categoryList) {
+
                 var categoryOption = '<option selected disabled class="text-muted">PILIH TOPIK HELPDESK</option>';
                 Bisnis.each(function (index, value) {
                     categoryOption = categoryOption + '<option value="/api/helpdesk/categories/' + value.id + '">' + value.name + '</option>';
@@ -84,12 +85,6 @@
             Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, ticketType, title, message, function () {
                 Bisnis.Util.Event.triggerClick('.assignToMe');
                 Bisnis.Util.Dialog.hideModal('#newTicketModal');
-                Bisnis.Notification.send(
-                    'HELPDESK',
-                    '/api/users/{{ admin.id }}',
-                    clientId,
-                    'Tiket ' + title + ' baru saja dibuat.'
-                );
                 Bisnis.successMessage('Tiket baru berhasil dibuat.');
 
                 Bisnis.Util.Document.putValue('#ticketCategory', '');
@@ -145,7 +140,7 @@
                         Bisnis.Util.Event.triggerClick('#refreshChat');
                         Bisnis.Notification.send(
                             'HELPDESK',
-                            '/api/users/' + ticket.staff.user.id,
+                            ticket.staff.user.id,
                             '/api/users/{{ me.id }}',
                             'Tiket ' + ticket.title + ' mendapatkan response baru dari user.'
                         );
@@ -270,9 +265,9 @@
                         <label for="name">Tipe</label>
                         <select name="category" class="form-control" id="ticketType" style="width: 100%">
                             <option selected disabled class="text-muted">PILIH TIPE</option>
-                            <option value="bug">Bug</option>
-                            <option value="request">Request</option>
-                            <option value="guide">Guide/Tutorial</option>
+                            <option value="bug">BUG</option>
+                            <option value="request">REQUEST</option>
+                            <option value="guide">GUIDE/TUTORIAL</option>
                         </select>
                     </div>
                     <div class="form-group">

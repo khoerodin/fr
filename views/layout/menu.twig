@@ -45,14 +45,30 @@
                         {#</ul>#}
                     {#</li>#}
                 {#{% endfor %}#}
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i> <span>DASHBOARD</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="/helpdesk/dashboard" title="HELPDESK"><i class="fa fa-circle-o"></i>HELPDESK</a></li>
+                    </ul>
+                </li>
 
                 <li class="treeview active"><a href="javascript:void(0)" title="MASTER"><i class="fa fa-files-o"></i><span>MASTER</span></a>
                     <ul class="treeview-menu">
                         <li class="treeview active"><a href="javascript:void(0)" title="IKLAN"><i class="fa fa-circle-o"></i> IKLAN
                                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                             <ul class="treeview-menu">
-                                <li><a href="/advertising/account-executives" title="ACCOUNT EXECUTIVE"><i class="fa fa-circle-o"></i>
-                                        ACCOUNT EXECUTIVE
+                                <li><a href="/advertising/team-works" title="TIM KERJA"><i class="fa fa-circle-o"></i>TIM KERJA</a></li>
+                                <li><a href="/advertising/account-executive-managers" title="MANAJER AKUN EKSEKUTIF"><i class="fa fa-circle-o"></i>
+                                        MANAJER AKUN EKSEKUTIF
+                                    </a>
+                                </li>
+                                <li><a href="/advertising/account-executives" title="AKUN EKSEKUTIF"><i class="fa fa-circle-o"></i>
+                                        AKUN EKSEKUTIF
                                     </a>
                                 </li>
                                 <li><a href="/advertising/customers" title="PELANGGAN IKLAN"><i class="fa fa-circle-o"></i>
@@ -101,7 +117,7 @@
                                     </a>
                                 </li>
                                 <li><a href="/billing/payment-methods" title="METODE PEMBAYARAN"><i class="fa fa-circle-o"></i>
-                                        METODE PEMBAYARAN
+                                        MTD PEMBAYARAN
                                     </a>
                                 </li>
                             </ul>
@@ -109,18 +125,9 @@
                         <li class="treeview"><a href="javascript:void(0)" title="ADMIN"><i class="fa fa-circle-o"></i> ADMIN
                                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
                             <ul class="treeview-menu">
-                                <li><a href="/banks" title="BANK"><i class="fa fa-circle-o"></i>
-                                        BANK
-                                    </a>
-                                </li>
-                                <li><a href="/cities" title="KOTA"><i class="fa fa-circle-o"></i>
-                                        KOTA
-                                    </a>
-                                </li>
-                                <li><a href="/representatives" title="PERWAKILAN"><i class="fa fa-circle-o"></i>
-                                        PERWAKILAN
-                                    </a>
-                                </li>
+                                <li><a href="/banks" title="BANK"><i class="fa fa-circle-o"></i>BANK</a></li>
+                                <li><a href="/cities" title="KOTA"><i class="fa fa-circle-o"></i>KOTA</a></li>
+                                <li><a href="/representatives" title="PERWAKILAN"><i class="fa fa-circle-o"></i>PERWAKILAN</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -161,24 +168,10 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="/helpdesk/tickets" title="TIKET HELPDESK"><i class="fa fa-circle-o"></i>
-                                TIKET HELPDESK
-                            </a>
-                        </li>
-                        <li><a href="/helpdesk/staffs" title="STAF HELPDESK"><i class="fa fa-circle-o"></i>
-                                STAF HELPDESK
-                            </a>
-                        </li>
-                        <li><a href="/helpdesk/categories" title="KATEGORI HELPDESK"><i class="fa fa-circle-o"></i>
-                                KATEGORI HELPDESK
-                            </a>
-                        </li>
-                        </li>
-                        <li><a href="/helpdesk/ticket-stats" title="STATISTIK TIKET HELPDESK"><i class="fa fa-circle-o"></i>
-                        STATISTIK TIKET HELPDESK
-                        </a>
-                        </li>
-
+                        <li><a href="/helpdesk/tickets" title="TIKET HELPDESK"><i class="fa fa-circle-o"></i>TIKET</a></li>
+                        <li><a href="/helpdesk/staffs" title="STAF HELPDESK"><i class="fa fa-circle-o"></i>STAF</a></li>
+                        <li><a href="/helpdesk/categories" title="KATEGORI HELPDESK"><i class="fa fa-circle-o"></i>KATEGORI</a></li></li>
+                        <li><a href="/helpdesk/ticket-stats" title="STATISTIK TIKET HELPDESK"><i class="fa fa-circle-o"></i>STATISTIK TIKET</a></li>
                     </ul>
                 </li>
                 <li class="treeview">
@@ -189,8 +182,9 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="/advertising/orders"><i class="fa fa-circle-o"></i> LIST IKLAN</a></li>
                         <li><a href="/advertising/orders/new"><i class="fa fa-circle-o"></i> ORDER BARU</a></li>
+                        <li><a href="/advertising/orders"><i class="fa fa-circle-o"></i> LIST IKLAN</a></li>
+                        <li><a href="/advertising/orders/invoices"><i class="fa fa-circle-o"></i> LIST FAKTUR</a></li>
                     </ul>
                 </li>
             </ul>

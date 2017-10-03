@@ -78,13 +78,13 @@
             hasLast = false;
         }
 
-        if (hasPrevious) {
-            paging = paging + '<li><span class="pagePrevious" data-page="' + (current - 1) + '" title="Halaman Sebelumnya">SEBELUMNYA</span></li>';
-        }
-
         paging = paging + '<li><span class="pageFirst" data-page="1" title="Halaman Pertama">PERTAMA</span></li>';
         if (hasNext) {
             paging = paging + '<li><span class="pageNext" data-page="' + (current + 1) + '" title="Halaman Selanjutnya">SELANJUTNYA</span></li>';
+        }
+
+        if (hasPrevious) {
+            paging = paging + '<li><span class="pagePrevious" data-page="' + (current - 1) + '" title="Halaman Sebelumnya">SEBELUMNYA</span></li>';
         }
 
         if (hasLast) {
@@ -92,5 +92,31 @@
         }
 
         Bisnis.Util.Document.putHtml(selector, paging);
+    };
+
+    Bisnis.Util.Grid.removeErrorForm = function (formId) {
+        let helpElm = document.getElementById(formId).getElementsByClassName('help-block');
+        while (helpElm.length > 0) helpElm[0].remove();
+
+        let errorElm = document.getElementById(formId).getElementsByClassName('has-error');
+        while (errorElm.length > 0) errorElm[0].classList.remove('has-error');
+    };
+
+    Bisnis.Util.Grid.validate = function (formId, violations) {
+        Bisnis.Util.Grid.removeErrorForm(formId);
+
+        violations.map(function (value) {
+            var property = document.getElementById(formId).querySelectorAll('[name='+value.propertyPath+']');
+            var parent = property[0].parentNode;
+            parent.classList.add('has-error');
+
+            var p = document.createElement('p');
+            var t = document.createTextNode(value.message);
+            p.appendChild(t);
+            p.className = 'help-block';
+
+            parent.appendChild(p);
+        });
+        Bisnis.errorMessage('Ups, mohon lengkapi data Anda');
     };
 })(window.Bisnis || {});

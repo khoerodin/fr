@@ -1,8 +1,9 @@
 app:
     api:
-        base_url: 'http://10.5.5.206:8000/api/'
-#        base_url: 'https://82600595.ngrok.io/api/'
-        api_key: '2c5c73d28375176046344bbc018e408890d67c2c'
+        base_url: 'http://10.1.1.197:8000/api/'
+        api_key: '29913925d7c6bf9c8f1f4d3ca58f098382975c18'
+#        base_url: 'http://10.5.5.206:8000/api/'
+#        api_key: '2c5c73d28375176046344bbc018e408890d67c2c'
         param_key: 'api_key'
     http: ~
     template:

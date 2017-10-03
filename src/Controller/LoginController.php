@@ -11,7 +11,16 @@ class LoginController extends AbstractController
 {
     public function indexAction()
     {
-        return $this->renderResponse('login.twig');
+        $meta = [
+            'parentMenu' => 'Home',
+            'title' => 'Masuk',
+        ];
+
+        $data = [
+            'meta' => $meta
+        ];
+
+        return $this->renderResponse('login.twig', $data);
     }
 
     public function processLoginAction(Request $request)
@@ -32,12 +41,12 @@ class LoginController extends AbstractController
         return new Response($response->getStatusCode());
     }
 
-    public function logoutAction()
+    public function logoutAction(Request $request)
     {
         $response = $this->request('logout', 'put', []);
         $this->client->removeAll();
 
-        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        if (strtolower($request->getMethod()) == 'get') {
             return new RedirectResponse('/login');
         }
 

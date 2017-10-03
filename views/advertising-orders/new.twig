@@ -1,10 +1,9 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/accountingjs/accounting.min.js"></script>
-    <script src="/assets/treeview/treed.js"></script>
+    <script src="/assets/vendor/accountingjs/accounting.min.js"></script>
     <script src="/assets/scripts/adv-order-sheet.js"></script>
-    <script src="/assets/listjs/list.min.js"></script>
+    <script src="/assets/vendor/listjs/list.min.js"></script>
     <script src="/assets/scripts/adv-order-new.js"></script>
 {% endblock %}
 
@@ -28,8 +27,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Nomor Order</label>
-                                    <input type="text" readonly name="orderNumber" id="orderNumber" class="form-control">
+                                    <label for="orderNumber">Nomor Order</label>
+                                    <input type="text" readonly id="orderNumber" class="form-control" value="###">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -172,9 +171,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-md-6">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Judul Iklan</label>
@@ -227,9 +223,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <hr>
-                            </div>
+
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="row">
@@ -259,6 +253,10 @@
                                     </div>
                                 </div>
                             </div>
+
+                        </div>
+
+                        <div class="col-md-6">
 
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -444,7 +442,7 @@
                                 <div class="form-group">
                                     <label for="">Sisipan</label>
                                     <div class="input-group" id="sisipan" style="position: relative;">
-                                        <button id="clearText" class="btn btn-xs btn-danger" style="position: absolute; right: 44px; top: 6px; z-index: 1041;">clear</button>
+                                        <button id="clearText" class="btn btn-xs btn-flat btn-danger" style="position: absolute; right: 44px; top: 6px; z-index: 1041;">clear</button>
                                         <input type="text" readonly name="sisipan" class="form-control">
                                         <input type="hidden" id="sirculationArea" name="sirculationArea">
                                         <span class="input-group-btn">

@@ -23,36 +23,14 @@
         return jQuery(selector).serializeArray();
     };
 
-    Bisnis.Util.Form.hashPrepand = function (serializeArrayData) {
+    Bisnis.Util.Form.hashPrepand = function (fieldsArray, serializeArray) {
         var params = [];
-        var prepend;
-        serializeArrayData.forEach(function (value) {
-            switch (value.name) {
-                case 'postalCode':
-                    prepend = "#";
-                    break;
-                case 'phoneNumber':
-                    prepend = "#";
-                    break;
-                case 'faxNumber':
-                    prepend = "#";
-                    break;
-                case 'taxNumber':
-                    prepend = "#";
-                    break;
-                case 'taxPhoneNumber':
-                    prepend = "#";
-                    break;
-                case 'taxFaxNumber':
-                    prepend = "#";
-                    break;
-                case 'bankAccountNumber':
-                    prepend = "#";
-                    break;
-                default:
-                    prepend = "";
+        serializeArray.forEach(function (value) {
+            if (Bisnis.Util.Document.inArray(value.name, fieldsArray)) {
+                params.push({name: value.name, value: '#'+value.value});
+            } else {
+                params.push({name: value.name, value: value.value});
             }
-            params.push({name: value.name, value: prepend+value.value});
         });
         return params;
     };

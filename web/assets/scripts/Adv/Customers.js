@@ -127,7 +127,7 @@
         var representativesParams = {
             placeholder: 'CARI NAMA PERWAKILAN',
             module: 'representatives',
-            prependText: '/api/representatives/',
+            prependValue: '/api/representatives/',
             fields: [
                 {
                     field: 'name',
@@ -140,7 +140,7 @@
         var citiesParams = {
             placeholder: 'CARI NAMA KOTA',
             module: 'cities',
-            prependText: '/api/cities/',
+            prependValue: '/api/cities/',
             fields: [
                 {
                     field: 'name',
@@ -155,7 +155,7 @@
         var taxCitiesParams = {
             placeholder: 'CARI NAMA KOTA',
             module: 'cities',
-            prependText: '/api/cities/',
+            prependValue: '/api/cities/',
             fields: [
                 {
                     field: 'name',
@@ -168,7 +168,7 @@
         var banksParams = {
             placeholder: 'CARI NAMA BANK',
             module: 'banks',
-            prependText: '/api/banks/',
+            prependValue: '/api/banks/',
             fields: [
                 {
                     field: 'name',
@@ -181,7 +181,7 @@
         var billingGroupsParams = {
             placeholder: 'CARI NAMA GRUP TAGIHAN',
             module: 'billing/groups',
-            prependText: '/api/billing/groups/',
+            prependValue: '/api/billing/groups/',
             fields: [
                 {
                     field: 'name',
@@ -213,7 +213,17 @@
 
     Bisnis.Adv.Customers.add = function (params, callback) {
         // di filter pake hash, agar tidak terdeteksi sebagai int
-        var params = Bisnis.Util.Form.hashPrepand(params);
+        var fields = [
+            'postalCode',
+            'phoneNumber',
+            'faxNumber',
+            'taxNumber',
+            'taxPhoneNumber',
+            'taxFaxNumber',
+            'bankAccountNumber'
+        ];
+
+        var params = Bisnis.Util.Form.hashPrepand(fields, params);
 
         Bisnis.request({
             module: 'advertising/customers',
@@ -233,37 +243,99 @@
 
     // detail modal
     var loadDetail = function (id) {
-        Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_MANAGER_ID', id);
+        Bisnis.Util.Storage.store('ADV_CUSTOMERS_ID', id);
         Bisnis.Adv.Customers.fetchById(id, function (callback) {
-            var teamWorkElem = document.getElementById('detailTeamWork');
-            teamWorkElem.innerHTML = '<option value="/api/advertising/team-works/'+callback.teamWork.id+'">'+callback.teamWork.name+'</option>';
+            var representativeElem = document.getElementById('detailRepresentative');
+            var cityElem = document.getElementById('detailCity');
+            var taxCityElem = document.getElementById('detailTaxCity');
+            var bankElem = document.getElementById('detailBank');
+            var billingGroupElem = document.getElementById('detailBillingGroup');
 
-            Bisnis.Util.Event.bind('change', '#detailTeamWork');
-            Bisnis.Util.Style.modifySelect('#detailTeamWork');
-            var params = {
-                placeholder: 'CARI KODE / NAMA TIM KERJA',
-                module: 'advertising/team-works',
-                prependText: '/api/advertising/team-works/',
+
+            representativeElem.innerHTML = '<option value="/api/advertising/representatives/'+callback.representative.id+'">'+callback.representative.name+'</option>';
+            cityElem.innerHTML = '<option value="/api/cities/'+callback.representative.id+'">'+callback.representative.name+'</option>';
+            taxCityElem.innerHTML = '<option value="/api/cities/'+callback.representative.id+'">'+callback.representative.name+'</option>';
+            bankElem.innerHTML = '<option value="/api/banks/'+callback.representative.id+'">'+callback.representative.name+'</option>';
+            billingGroupElem.innerHTML = '<option value="/api/billing/groups/'+callback.representative.id+'">'+callback.representative.name+'</option>';
+
+            Bisnis.Util.Event.bind('change', '#detailRepresentative');
+            Bisnis.Util.Style.modifySelect('#detailRepresentative');
+            var representativesParams = {
+                placeholder: 'CARI NAMA PERWAKILAN',
+                module: 'representatives',
+                prependValue: '/api/representatives/',
                 fields: [
                     {
-                        field: 'code',
-                        label: 'Kode'
-                    },
-                    {
                         field: 'name',
-                        label: 'Tim Kerja'
+                        label: 'Perwakilan'
                     },
                 ]
             };
-            Bisnis.Util.Style.ajaxSelect('#detailTeamWork', params);
+            Bisnis.Util.Style.ajaxSelect('#detailRepresentative', representativesParams);
 
-            var codeElem = document.getElementById('detailCode');
-            codeElem.value = callback.code;
+            Bisnis.Util.Event.bind('change', '#detailCity');
+            Bisnis.Util.Style.modifySelect('#detailCity');
+            var citiesParams = {
+                placeholder: 'CARI NAMA KOTA',
+                module: 'cities',
+                prependValue: '/api/cities/',
+                fields: [
+                    {
+                        field: 'name',
+                        label: 'Kota'
+                    },
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailCity', citiesParams);
 
-            var nameElem = document.getElementById('detailName');
-            nameElem.value = callback.name;
+            Bisnis.Util.Event.bind('change', '#detailTaxCity');
+            Bisnis.Util.Style.modifySelect('#detailTaxCity');
+            var taxCitiesParams = {
+                placeholder: 'CARI NAMA KOTA',
+                module: 'cities',
+                prependValue: '/api/cities/',
+                fields: [
+                    {
+                        field: 'name',
+                        label: 'Kota'
+                    },
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailTaxCity', taxCitiesParams);
+
+            Bisnis.Util.Event.bind('change', '#detailBank');
+            Bisnis.Util.Style.modifySelect('#detailBank');
+            var banksParams = {
+                placeholder: 'CARI NAMA BANK',
+                module: 'banks',
+                prependValue: '/api/banks/',
+                fields: [
+                    {
+                        field: 'name',
+                        label: 'Bank'
+                    },
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailBank', banksParams);
+
+            Bisnis.Util.Event.bind('change', '#detailBillingGroup');
+            Bisnis.Util.Style.modifySelect('#detailBillingGroup');
+            var billingGroupsParams = {
+                placeholder: 'CARI NAMA GRUP TAGIHAN',
+                module: 'billing/groups',
+                prependValue: '/api/billing/groups/',
+                fields: [
+                    {
+                        field: 'name',
+                        label: 'Grup Tagihan'
+                    },
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailBillingGroup', billingGroupsParams);
         });
+
         Bisnis.Util.Dialog.showModal('#detailModal');
+        document.getElementById('detailRepresentative').focus();
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -287,6 +359,19 @@
     };
 
     Bisnis.Adv.Customers.updateById = function (id, params, callback) {
+        // di filter pake hash, agar tidak terdeteksi sebagai int
+        var fields = [
+            'postalCode',
+            'phoneNumber',
+            'faxNumber',
+            'taxNumber',
+            'taxPhoneNumber',
+            'taxFaxNumber',
+            'bankAccountNumber'
+        ];
+
+        var params = Bisnis.Util.Form.hashPrepand(fields, params);
+
         Bisnis.request({
             module: 'advertising/customers/' + id,
             method: 'put',
@@ -303,7 +388,7 @@
     };
 
     Bisnis.Util.Event.bind('click', '#btn-update', function () {
-        var id = Bisnis.Util.Storage.fetch('ACCOUNT_EXECUTIVE_MANAGER_ID');
+        var id = Bisnis.Util.Storage.fetch('ADV_CUSTOMERS_ID');
         var params = Bisnis.Util.Form.serializeArray('#detailForm');
         var thisBtn = this;
         thisBtn.disabled = true;

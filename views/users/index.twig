@@ -146,7 +146,7 @@
                                                     <ul id="serviceTab" class="nav nav-tabs" role="tablist">
                                                         {% for service in services %}
                                                             <li class="{% if loop.index == 1 %}active{% endif %}">
-                                                                <a href="#{{ service.id }}" aria-controls="{{ service.id }}" role="tab" data-toggle="tab">{{ service.name }}</a>
+                                                                <a href="#{{ service.code }}" aria-controls="{{ service.code }}" role="tab" data-toggle="tab">{{ service.name }}</a>
                                                             </li>
                                                         {% endfor %}
                                                     </ul>
@@ -158,7 +158,7 @@
                                                         <input type="hidden" id="userId">
 
                                                         {% for service in services %}
-                                                            <div role="tabpanel" class="tab-pane {% if loop.index == 1 %}active{% endif %}" id="{{ service.id }}">
+                                                            <div role="tabpanel" class="tab-pane {% if loop.index == 1 %}active{% endif %}" id="{{ service.code }}">
 
                                                                 <table class="table table-striped table-bordered">
                                                                     <thead>

@@ -15,6 +15,10 @@
         webSocket.send('PING:PING');
     };
 
+    Bisnis.WebSocket.close = function () {
+        webSocket.close();
+    };
+
     Bisnis.WebSocket.handle = function (openCallback, messageCallback) {
         webSocket.onopen = function (e) {
             if (Bisnis.validCallback(openCallback)) {

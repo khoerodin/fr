@@ -23,7 +23,7 @@
                             <ul id="serviceTab" class="nav nav-tabs" role="tablist">
                                 {% for service in services %}
                                     <li class="{% if loop.index == 1 %}active{% endif %}">
-                                        <a href="#{{ service.id }}" aria-controls="{{ service.id }}" role="tab" data-toggle="tab">{{ service.name }}</a>
+                                        <a href="#{{ service.code }}" aria-controls="{{ service.code }}" role="tab" data-toggle="tab">{{ service.name }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -33,20 +33,20 @@
                             <div class="tab-content">
 
                                 {% for service in services %}
-                                    <div role="tabpanel" class="tab-pane {% if loop.index == 1 %}active{% endif %}" id="{{ service.id }}">
+                                    <div role="tabpanel" class="tab-pane {% if loop.index == 1 %}active{% endif %}" id="{{ service.code }}">
                                         <table class="table table-striped table-bordered table-hover">
                                             <thead>
                                             <tr>
-                                                <th width="3%">NO</th>
+                                                <th width="3%">NO.</th>
                                                 <th width="20%">MODUL</th>
                                                 <th width="20%">GRUP</th>
                                                 <th>Path</th>
                                                 <th width="10%">SEBAGAI MENU?</th>
-                                                <th width="5%"><span class="pull-right">Aksi</span></th>
+                                                <th width="5%"><span class="pull-right">AKSI</span></th>
                                             </tr>
                                             </thead>
 
-                                            <tbody id="modulesList{{ service.id }}"></tbody>
+                                            <tbody id="modulesList{{ service.code }}"></tbody>
 
                                         </table>
                                     </div>

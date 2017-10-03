@@ -88,4 +88,17 @@
             }
         });
     };
+
+    Bisnis.User.logout = function (callback) {
+        Bisnis.request({
+            module: 'logout',
+            method: 'put'
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(callback)) {
+                callback(textStatus);
+            }
+        }, function () {
+            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        });
+    };
 })(window.Bisnis || {});

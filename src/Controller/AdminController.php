@@ -11,6 +11,7 @@ class AdminController extends AbstractController
         $autoLoad = [
             'me' => json_decode($this->fetch('me')),
             'menus' => $this->fetch('menus'),
+            'BACKEND_HOST' => $this->fetch('BACKEND_HOST'),
         ];
 
         return $this->renderResponse($view, array_merge($autoLoad, $variables));

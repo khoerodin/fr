@@ -15,7 +15,8 @@
         webSocket.send('PING:PING');
     };
 
-    Bisnis.WebSocket.close = function () {
+    Bisnis.WebSocket.close = function (userId) {
+        Bisnis.WebSocket.push('CLOSE:' + userId);
         webSocket.close();
     };
 

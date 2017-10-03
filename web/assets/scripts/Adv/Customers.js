@@ -124,25 +124,75 @@
 
     // add modal
     Bisnis.Util.Event.bind('click', '#btnAddCustomer', function () {
-        var params = {
-            placeholder: 'CARI KODE / NAMA PELANGGAN',
-            module: 'advertising/team-works',
-            prependText: '/api/advertising/team-works/',
+        var representativesParams = {
+            placeholder: 'CARI NAMA PERWAKILAN',
+            module: 'representatives',
+            prependText: '/api/representatives/',
             fields: [
                 {
-                    field: 'code',
-                    label: 'Kode'
-                },
-                {
                     field: 'name',
-                    label: 'Tim Kerja'
+                    label: 'Perwakilan'
                 },
             ]
         };
-        Bisnis.Util.Style.ajaxSelect('#addTeamWork', params);
+        Bisnis.Util.Style.ajaxSelect('#addRepresentative', representativesParams);
+
+        var citiesParams = {
+            placeholder: 'CARI NAMA KOTA',
+            module: 'cities',
+            prependText: '/api/cities/',
+            fields: [
+                {
+                    field: 'name',
+                    label: 'Kota'
+                },
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addCity', citiesParams, null, function (selectedData) {
+            console.log(selectedData);
+        });
+
+        var taxCitiesParams = {
+            placeholder: 'CARI NAMA KOTA',
+            module: 'cities',
+            prependText: '/api/cities/',
+            fields: [
+                {
+                    field: 'name',
+                    label: 'Kota'
+                },
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addTaxCity', taxCitiesParams);
+
+        var banksParams = {
+            placeholder: 'CARI NAMA BANK',
+            module: 'banks',
+            prependText: '/api/banks/',
+            fields: [
+                {
+                    field: 'name',
+                    label: 'Bank'
+                },
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addBank', banksParams);
+
+        var billingGroupsParams = {
+            placeholder: 'CARI NAMA GRUP TAGIHAN',
+            module: 'billing/groups',
+            prependText: '/api/billing/groups/',
+            fields: [
+                {
+                    field: 'name',
+                    label: 'Grup Tagihan'
+                },
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addBillingGroup', billingGroupsParams);
 
         Bisnis.Util.Dialog.showModal('#addModal');
-        document.getElementById('addTeamWork').focus();
+        document.getElementById('addRepresentative').focus();
     });
 
     Bisnis.Util.Event.bind('click', '#btn-add', function () {
@@ -162,6 +212,19 @@
     });
 
     Bisnis.Adv.Customers.add = function (params, callback) {
+        // di filter pake hash, agar tidak terdeteksi sebagai int
+        var fields = [
+            'postalCode',
+            'phoneNumber',
+            'faxNumber',
+            'taxNumber',
+            'taxPhoneNumber',
+            'taxFaxNumber',
+            'bankAccountNumber'
+        ];
+
+        var params = Bisnis.Util.Form.hashPrepand(fields, params);
+
         Bisnis.request({
             module: 'advertising/customers',
             method: 'post',

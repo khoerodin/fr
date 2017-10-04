@@ -37,11 +37,12 @@
                     records.push([
                         { value: memberData.code },
                         { value: memberData.name },
+                        { value: memberData.accountExecutiveManager.name },
                         { value: memberData.id, format: function (id) {
                             return '<span class="pull-right">' +
                                 '<button data-id="' + id + '" data-code="' + memberData.code + '" data-name="' + memberData.name + '" class="btn btn-xs btn-default btn-flat btn-categories" title="KATEGORI"><i class="fa fa-list-ol"></i></button>' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail-ae" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete-ae" title="HAPUS"><i class="fa fa-times"></i></button>' +
                                 '</span>';
                         }}
                     ]);
@@ -259,11 +260,25 @@
 
     // add modal
     Bisnis.Util.Event.bind('click', '#btnAddAccountExecutive', function () {
+        var AEManager = {
+            placeholder: 'CARI NAMA',
+            module: 'advertising/account-executive-managers',
+            prependValue: '/api/advertising/account-executive-managers/',
+            allowClear: true,
+            fields: [
+                {
+                    field: 'name',
+                    label: 'Nama'
+                }
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addAccountExecutiveManager', AEManager);
+
         Bisnis.Util.Dialog.showModal('#addModal');
-        document.getElementById('addCode').focus();
+        document.getElementById('addAccountExecutiveManager').focus();
     });
 
-    Bisnis.Util.Event.bind('click', '#btn-add', function () {
+    Bisnis.Util.Event.bind('click', '#btn-add-ae', function () {
         var params = Bisnis.Util.Form.serializeArray('#addForm');
         var thisBtn = this;
         thisBtn.disabled = true;
@@ -300,6 +315,26 @@
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_ID', id);
         Bisnis.Adv.AccountExecutives.fetchById(id, function (callback) {
+            if (callback.accountExecutiveManager) {
+                var AEMngrElm = document.getElementById('detailAccountExecutiveManager');
+                AEMngrElm.innerHTML = '<option value="/api/advertising/account-executive-managers/'+callback.accountExecutiveManager.id+'">'+callback.accountExecutiveManager.name+'</option>';
+                Bisnis.Util.Event.bind('change', '#detailAccountExecutiveManager');
+            }
+
+            var AEManager = {
+                placeholder: 'CARI NAMA',
+                module: 'advertising/account-executive-managers',
+                prependValue: '/api/advertising/account-executive-managers/',
+                allowClear: true,
+                fields: [
+                    {
+                        field: 'name',
+                        label: 'Nama'
+                    }
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailAccountExecutiveManager', AEManager);
+
             var codeElem = document.getElementById('detailCode');
             codeElem.value = callback.code;
             codeElem.focus();
@@ -310,7 +345,7 @@
         Bisnis.Util.Dialog.showModal('#detailModal');
     };
 
-    Bisnis.Util.Event.bind('click', '.btn-detail', function () {
+    Bisnis.Util.Event.bind('click', '.btn-detail-ae', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         loadDetail(id);
     });
@@ -346,7 +381,7 @@
         });
     };
 
-    Bisnis.Util.Event.bind('click', '#btn-update', function () {
+    Bisnis.Util.Event.bind('click', '#btn-update-ae', function () {
         var id = Bisnis.Util.Storage.fetch('ACCOUNT_EXECUTIVE_ID');
         var params = Bisnis.Util.Form.serializeArray('#detailForm');
         var thisBtn = this;
@@ -367,7 +402,7 @@
     // end detail modal
 
     // delete account executive
-    Bisnis.Util.Event.bind('click', '.btn-delete', function () {
+    Bisnis.Util.Event.bind('click', '.btn-delete-ae', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {

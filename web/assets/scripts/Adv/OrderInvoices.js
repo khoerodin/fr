@@ -1,7 +1,7 @@
 (function (Bisnis) {
-    Bisnis.Adv.OrdersInvoices = {};
+    Bisnis.Adv.OrderInvoices = {};
 
-    Bisnis.Adv.OrdersInvoices.fetchAll = function (params, callback) {
+    Bisnis.Adv.OrderInvoices.fetchAll = function (params, callback) {
         Bisnis.request({
             module: 'advertising/orders',
             method: 'get',
@@ -18,7 +18,7 @@
     };
 
     var loadPage = function (pageNum) {
-        Bisnis.Adv.OrdersInvoices.fetchAll([{page: pageNum}], function (rawData) {
+        Bisnis.Adv.OrderInvoices.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
             var viewData = rawData['hydra:view'];
 

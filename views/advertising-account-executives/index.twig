@@ -25,6 +25,7 @@
                             <th width="3%">NO.</th>
                             <th width="5%">KODE</th>
                             <th>AKUN EKSEKUTIF</th>
+                            <th>MANAJER AKUN EKSEKUTIF</th>
                             <th width="6%"><span class="pull-right">AKSI</span></th>
                         </tr>
                         </thead>
@@ -51,6 +52,10 @@
                 <div class="modal-body">
                     <form id="addForm">
                         <div class="form-group">
+                            <label for="addAccountExecutiveManager">MANAJER AKUN EKSEKUTIF</label>
+                            <select name="accountExecutiveManager" id="addAccountExecutiveManager" class="form-control" style="width:100%"></select>
+                        </div>
+                        <div class="form-group">
                             <label for="addCode">KODE</label>
                             <input type="text" name="code" id="addCode" class="form-control">
                         </div>
@@ -62,7 +67,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">TUTUP</button>
-                    <button type="button" id="btn-add" class="btn btn-danger btn-flat">SIMPAN</button>
+                    <button type="button" id="btn-add-ae" class="btn btn-danger btn-flat">SIMPAN</button>
                 </div>
             </div>
 
@@ -82,6 +87,10 @@
                 <div class="modal-body">
                     <form id="detailForm">
                         <div class="form-group">
+                            <label for="detailAccountExecutiveManager">MANAJER AKUN EKSEKUTIF</label>
+                            <select name="accountExecutiveManager" id="detailAccountExecutiveManager" class="form-control" style="width:100%"></select>
+                        </div>
+                        <div class="form-group">
                             <label for="detailCode">KODE</label>
                             <input type="text" name="code" id="detailCode" class="form-control">
                         </div>
@@ -93,7 +102,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">TUTUP</button>
-                    <button type="button" id="btn-update" class="btn btn-danger btn-flat">SIMPAN</button>
+                    <button type="button" id="btn-update-ae" class="btn btn-danger btn-flat">SIMPAN</button>
                 </div>
             </div>
 

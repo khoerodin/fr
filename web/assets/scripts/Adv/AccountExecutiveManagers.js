@@ -127,10 +127,6 @@
             prependValue: '/api/advertising/team-works/',
             fields: [
                 {
-                    field: 'code',
-                    label: 'Kode'
-                },
-                {
                     field: 'name',
                     label: 'Tim Kerja'
                 },
@@ -189,10 +185,6 @@
                 module: 'advertising/team-works',
                 prependValue: '/api/advertising/team-works/',
                 fields: [
-                    {
-                        field: 'code',
-                        label: 'Kode'
-                    },
                     {
                         field: 'name',
                         label: 'Tim Kerja'

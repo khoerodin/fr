@@ -3,7 +3,7 @@
 
     Bisnis.Adv.OrderInvoices.fetchAll = function (params, callback) {
         Bisnis.request({
-            module: 'advertising/orders',
+            module: 'advertising/order-invoices',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -17,8 +17,21 @@
         });
     };
 
+    var invoiceList = function (orderId) {
+        var records = 'BELUM ADA';
+        Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}], function (callback) {
+            var memberData = callback['hydra:member'];
+            if (memberData.length > 0) {
+                Bisnis.each(function (idx, memberData) {
+                    records = records + '<button class="btn btn-xs btn-flat btn-success btn-invoices" style="margin-right: 5px;">'+memberData.invoiceNumber+'</button>';
+                }, memberData);
+            }
+        });
+        return records;
+    };
+
     var loadPage = function (pageNum) {
-        Bisnis.Adv.OrderInvoices.fetchAll([{page: pageNum}], function (rawData) {
+        Bisnis.Adv.Orders.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
             var viewData = rawData['hydra:view'];
 
@@ -52,12 +65,10 @@
                     { value: memberData.title },
                     { value: invoiceAs },
                     { value: memberData.id, format: function (id) {
-                        return '<button class="btn btn-xs btn-flat btn-success btn-invoices">no faktur</button>&nbsp;' +
-                            '<button class="btn btn-xs btn-flat btn-success btn-invoices">no faktur</button>&nbsp;' +
-                            '<button class="btn btn-xs btn-flat btn-success btn-invoices">no faktur</button>';
+                        return ''+invoiceList(memberData.id)+'';
                     }},
                     { value: memberData.id, format: function (id) {
-                        return '<span class="pull-right"><button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-generate-invoices" title=""><i class="fa fa-file-text-o"></i></button></span>';
+                        return '<span class="pull-right"><button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-generate-invoices" title="GENERATE INVOICE"><i class="fa fa-file-text-o"></i></button></span>';
                     }}
                 ]);
             }, memberData);

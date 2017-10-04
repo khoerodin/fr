@@ -51,7 +51,7 @@ app:
 
         - { path: '/advertising/orders', controller: 'Bisnis:AdvertisingOrders@index', methods: ['GET'] }
         - { path: '/advertising/orders/new', controller: 'Bisnis:AdvertisingOrders@new', methods: ['GET'] }
-        - { path: '/advertising/orders/invoices', controller: 'Bisnis:AdvertisingOrders@invoices', methods: ['GET'] }
+        - { path: '/advertising/order-invoices', controller: 'Bisnis:AdvertisingOrderInvoices@index', methods: ['GET'] }
         - { path: '/advertising/orders/{id}', controller: 'Bisnis:AdvertisingOrders@detail', methods: ['GET'] }
         - { path: '/advertising/orders/publish-ads', controller: 'Bisnis:AdvertisingOrders@publishAds', methods: ['POST'] }
         - { path: '/advertising/orders/publish-ads/update', controller: 'Bisnis:AdvertisingOrders@updatePublishAds', methods: ['POST'] }

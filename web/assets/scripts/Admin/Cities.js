@@ -35,10 +35,10 @@
                 var records = [];
                 Bisnis.each(function (idx, memberData) {
                     records.push([
-                        { value: (memberData.parent) ? memberData.parent.name : '-' },
                         { value: memberData.code },
                         { value: memberData.name },
                         { value: memberData.postalCode },
+                        { value: (memberData.parent) ? memberData.parent.name : '-' },
                         { value: memberData.id, format: function (id) {
                             return '<span class="pull-right">' +
                                 '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +

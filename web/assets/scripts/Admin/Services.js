@@ -1,10 +1,10 @@
 (function (Bisnis) {
-    Bisnis.Adv.TeamWorks = {};
+    Bisnis.Admin.Services = {};
 
     // fetch grid and pagination
-    Bisnis.Adv.TeamWorks.fetchAll = function (params, callback) {
+    Bisnis.Admin.Services.fetchAll = function (params, callback) {
         Bisnis.request({
-            module: 'advertising/team-works',
+            module: 'services',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -21,21 +21,20 @@
     var loadGrid = function (pageNum) {
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
-        Bisnis.Util.Storage.store('TEAM_WORKS_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.TeamWorks.fetchAll([{page: pageNum}], function (rawData) {
+        Bisnis.Util.Storage.store('SERVICES_CURRENT_PAGE', pageNum);
+        Bisnis.Admin.Services.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
             var viewData = rawData['hydra:view'];
 
             if ('undefined' !== typeof viewData['hydra:last']) {
                 var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#teamWorksPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                Bisnis.Util.Grid.createPagination('#servicesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
             }
 
             if (memberData.length > 0) {
                 var records = [];
                 Bisnis.each(function (idx, memberData) {
                     records.push([
-                        { value: memberData.code },
                         { value: memberData.name },
                         { value: memberData.id, format: function (id) {
                             return '<span class="pull-right">' +
@@ -45,51 +44,47 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#teamWorksList', records);
+                Bisnis.Util.Grid.renderRecords('#servicesList', records);
             } else {
-                Bisnis.Util.Document.putHtml('#teamWorksList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                Bisnis.Util.Document.putHtml('#servicesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }
         });
     };
 
     loadGrid(1);
 
-    Bisnis.Util.Event.bind('click', '#teamWorksPagination .pagePrevious', function () {
+    Bisnis.Util.Event.bind('click', '#servicesPagination .pagePrevious', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#teamWorksPagination .pageNext', function () {
+    Bisnis.Util.Event.bind('click', '#servicesPagination .pageNext', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#teamWorksPagination .pageFirst', function () {
+    Bisnis.Util.Event.bind('click', '#servicesPagination .pageFirst', function () {
         loadGrid(1);
     });
 
-    Bisnis.Util.Event.bind('click', '#teamWorksPagination .pageLast', function () {
+    Bisnis.Util.Event.bind('click', '#servicesPagination .pageLast', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
     // end fetch grid and pagination
 
     // search box
     var params = {
-        placeholder: 'CARI KODE / NAMA TIM KERJA',
-        module: 'advertising/team-works',
+        placeholder: 'CARI SERVIS',
+        module: 'services',
         fields: [
             {
-                field: 'code',
-                label: 'Kode'
-            },
-            {
                 field: 'name',
-                label: 'Tim Kerja'
+                label: 'Servis'
             }
         ]
     };
 
-    Bisnis.Util.Style.ajaxSelect('#searchTeamWorks', params,
+    Bisnis.Util.Style.ajaxSelect('#searchServices', params,
         function (hasResultCallback) {
-            var btn = document.getElementById('btnAddTeamWork');
+            var btn = document.getElementById('btnAddService');
             if (hasResultCallback) {
                 btn.disabled = true;
             } else {
@@ -99,14 +94,14 @@
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
-            var btn = document.getElementById('btnAddTeamWork');
+            var btn = document.getElementById('btnAddService');
             if (openCallback === false) {
                 btn.disabled = false;
             } else {
                 btn.disabled = true;
             }
         }, function (closeCallback) {
-            var btn = document.getElementById('btnAddTeamWork');
+            var btn = document.getElementById('btnAddService');
             setTimeout(function () {
                 if (closeCallback === false) {
                     btn.disabled = false;
@@ -119,9 +114,9 @@
     // end search box
 
     // add modal
-    Bisnis.Util.Event.bind('click', '#btnAddTeamWork', function () {
+    Bisnis.Util.Event.bind('click', '#btnAddService', function () {
         Bisnis.Util.Dialog.showModal('#addModal');
-        document.getElementById('addCode').focus();
+        document.getElementById('addName').focus();
     });
 
     Bisnis.Util.Event.bind('click', '#btn-add', function () {
@@ -129,7 +124,7 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.TeamWorks.add(params, function (callback) {
+        Bisnis.Admin.Services.add(params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('addForm', callback.violations);
             } else {
@@ -140,9 +135,15 @@
         });
     });
 
-    Bisnis.Adv.TeamWorks.add = function (params, callback) {
+    Bisnis.Admin.Services.add = function (params, callback) {
+        var addCode = document.getElementById('addName').value;
+        params.push({
+            name: 'code',
+            value: addCode.replace(' ', '').toUpperCase()
+        });
+
         Bisnis.request({
-            module: 'advertising/team-works',
+            module: 'services',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -159,14 +160,11 @@
 
     // detail modal
     var loadDetail = function (id) {
-        Bisnis.Util.Storage.store('TEAM_WORK_ID', id);
-        Bisnis.Adv.TeamWorks.fetchById(id, function (callback) {
-            var codeElem = document.getElementById('detailCode');
-            codeElem.value = callback.code;
-            codeElem.focus();
-
+        Bisnis.Util.Storage.store('SERVICE_ID', id);
+        Bisnis.Admin.Services.fetchById(id, function (callback) {
             var nameElem = document.getElementById('detailName');
             nameElem.value = callback.name;
+            nameElem.focus();
         });
         Bisnis.Util.Dialog.showModal('#detailModal');
     };
@@ -176,9 +174,9 @@
         loadDetail(id);
     });
 
-    Bisnis.Adv.TeamWorks.fetchById = function (id, callback) {
+    Bisnis.Admin.Services.fetchById = function (id, callback) {
         Bisnis.request({
-            module: 'advertising/team-works/' + id,
+            module: 'services/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
@@ -191,9 +189,9 @@
         });
     };
 
-    Bisnis.Adv.TeamWorks.updateById = function (id, params, callback) {
+    Bisnis.Admin.Services.updateById = function (id, params, callback) {
         Bisnis.request({
-            module: 'advertising/team-works/' + id,
+            module: 'services/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -208,18 +206,18 @@
     };
 
     Bisnis.Util.Event.bind('click', '#btn-update', function () {
-        var id = Bisnis.Util.Storage.fetch('TEAM_WORK_ID');
+        var id = Bisnis.Util.Storage.fetch('SERVICE_ID');
         var params = Bisnis.Util.Form.serializeArray('#detailForm');
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.TeamWorks.updateById(id, params, function (callback) {
+        Bisnis.Admin.Services.updateById(id, params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('detailForm', callback.violations);
             } else {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
-                var page = Bisnis.Util.Storage.fetch('TEAM_WORKS_CURRENT_PAGE');
+                var page = Bisnis.Util.Storage.fetch('SERVICES_CURRENT_PAGE');
                 loadGrid(page);
             }
             thisBtn.disabled = false;
@@ -227,15 +225,15 @@
     });
     // end detail modal
 
-    // delete team work
+    // delete service
     Bisnis.Util.Event.bind('click', '.btn-delete', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Adv.TeamWorks.delete(id, function (textStatus) {
+                Bisnis.Admin.Services.delete(id, function (textStatus) {
                     if (textStatus === 'success') {
                         Bisnis.successMessage('Berhasil menghapus data');
-                        var page = Bisnis.Util.Storage.fetch('TEAM_WORKS_CURRENT_PAGE');
+                        var page = Bisnis.Util.Storage.fetch('SERVICES_CURRENT_PAGE');
                         loadGrid(page);
                     } else {
                         Bisnis.errorMessage('Gagal menghapus data');
@@ -245,9 +243,9 @@
         });
     });
 
-    Bisnis.Adv.TeamWorks.delete = function (id, callback) {
+    Bisnis.Admin.Services.delete = function (id, callback) {
         Bisnis.request({
-            module: 'advertising/team-works/' + id,
+            module: 'services/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
             if (Bisnis.validCallback(callback)) {
@@ -257,7 +255,7 @@
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
         });
     };
-    // end delete team work
+    // end delete service
 
     // prevent submit form on enter
     Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {

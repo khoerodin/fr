@@ -68,7 +68,7 @@
                     { value: memberData.title },
                     { value: invoiceStatus(memberData.printInvoiceAs) },
                     { value: memberData.id, format: function (id) {
-                        return ''+invoiceList(memberData.id)+'';
+                        return invoiceList(memberData.id);
                     }},
                     { value: memberData.id, format: function (id) {
                         return '<span class="pull-right"><button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-generate-invoices" title="GENERATE INVOICE"><i class="fa fa-file-text-o"></i></button></span>';

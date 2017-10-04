@@ -167,7 +167,7 @@
                             <label for="detailService">SERVIS</label>
                             <select multiple name="service" id="detailService" class="form-control" style="width: 100%;">
                                 {% for service in services %}
-                                    <option value="{{ service.id }}">{{ service.name }}</option>
+                                    <option value="{{ service.code }}">{{ service.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>

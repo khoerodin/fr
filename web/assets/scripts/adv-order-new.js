@@ -9,6 +9,7 @@ $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
 }).on('dp.hide', function(e){
     $('[name="pemasang"]').focus();
 });
+
 $('#invoicedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 $('#inputBookedAt').val(moment().format('dddd, DD MMMM YYYY'));
@@ -58,6 +59,8 @@ function saveOrder(orderNumber) {
     var params = $('#orderForm').serializeArray();
     var tags = String($('#orderTag').val());
 
+    console.log(tags);
+
     params.push({
         name: 'orderTag',
         value: tags
@@ -65,6 +68,8 @@ function saveOrder(orderNumber) {
         name: 'orderNumber',
         value: orderNumber
     });
+
+    console.log(params);
 
     $.ajax({
         url: '/api',

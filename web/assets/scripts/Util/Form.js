@@ -34,4 +34,18 @@
         });
         return params;
     };
+
+    Bisnis.Util.Form.formatDate = function (fieldsArray, serializeArray, format) {
+        var params = [];
+        serializeArray.forEach(function (value) {
+            if (Bisnis.Util.Document.inArray(value.name, fieldsArray)) {
+                params.push({name: value.name, value: moment(value.value, format).format()});
+            } else {
+                params.push({name: value.name, value: value.value});
+            }
+        });
+        return params;
+    };
+
+
 })(window.Bisnis || {});

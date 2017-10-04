@@ -30,6 +30,25 @@
         return records;
     };
 
+    var invoiceStatus = function (printInvoiceAs) {
+        var invoiceAs;
+        switch (printInvoiceAs) {
+            case 'n':
+                invoiceAs = '<span class="label label-success">NORMAL</span>';
+                break;
+            case 'p':
+                invoiceAs = '<label class="label label-danger">PECAH</label>';
+                break;
+            case 'b':
+                invoiceAs = '<label class="label label-warning">GABUNG</label>';
+                break;
+            default:
+                invoiceAs = '<span class="label label-success">NORMAL</span>';
+        }
+
+        return invoiceAs;
+    };
+
     var loadPage = function (pageNum) {
         Bisnis.Adv.Orders.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
@@ -44,26 +63,10 @@
 
             var records = [];
             Bisnis.each(function (idx, memberData) {
-
-                var invoiceAs;
-                switch (memberData.printInvoiceAs) {
-                    case 'n':
-                        invoiceAs = '<span class="label label-success">NORMAL</span>';
-                        break;
-                    case 'p':
-                        invoiceAs = '<label class="label label-danger">PECAH</label>';
-                        break;
-                    case 'b':
-                        invoiceAs = '<label class="label label-warning">GABUNG</label>';
-                        break;
-                    default:
-                        invoiceAs = '<span class="label label-success">NORMAL</span>';
-                }
-
                 records.push([
                     { value: memberData.orderNumber },
                     { value: memberData.title },
-                    { value: invoiceAs },
+                    { value: invoiceStatus(memberData.printInvoiceAs) },
                     { value: memberData.id, format: function (id) {
                         return ''+invoiceList(memberData.id)+'';
                     }},

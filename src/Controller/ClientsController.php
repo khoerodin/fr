@@ -8,7 +8,7 @@ class ClientsController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Admin',
-            'title' => 'API CLIENT',
+            'title' => 'KLIEN API',
         ];
 
         $data = [

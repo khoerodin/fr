@@ -1,0 +1,108 @@
+{% extends 'layout.twig' %}
+
+{% block js %}
+    <script type="text/javascript" src="/assets/vendor/chart/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Bar.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Line.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Pie.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
+    <script type="text/javascript">
+    </script>
+{% endblock %}
+
+{%- block content -%}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box">
+                <div class="box-header row">
+                    <div class="col-md-6 chartCategoryBox">
+                        <select name="category" class="form-control" id="chartCategory" style="width: 100%">
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <select name="type" class="form-control" id="chartType" style="width: 100%">
+                            <option selected value="">PILIH TIPE</option>
+                            <option value="bug">BUG</option>
+                            <option value="request">REQUEST</option>
+                            <option value="guide">GUIDE/TUTORIAL</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <canvas id="chart"></canvas>
+                </div>
+                <div class="box-footer">
+                    <button type="button" class="btn btn-success pull-right perStaff"><i class="fa fa-user"></i></button>
+                    <button type="button" class="btn btn-success pull-right margin-r-5 barChart"><i class="fa fa-bar-chart"></i></button>
+                    <button type="button" class="btn btn-success pull-right margin-r-5 lineChart"><i class="fa fa-line-chart"></i></button>
+                    <button type="button" class="btn btn-success pull-right margin-r-5 pieChart"><i class="fa fa-pie-chart"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-box bg-aqua">
+                <span class="info-box-icon"><i class="fa fa-pie-chart"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Tiket Outstanding</span>
+                    <span class="info-box-number totalOpen">0</span>
+                    <div class="progress"></div>
+                    <span class="progress-description">Bagian dengan tiket yang belum ditangani (status: <b>Open</b>) terbanyak</span>
+                </div>
+            </div>
+            <div class="info-box bg-blue">
+                <span class="info-box-icon"><i class="fa fa-user"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Staff Teraktif</span>
+                    <span class="info-box-number mostActiveStaff">0</span>
+                    <div class="progress"></div>
+                    <span class="progress-description">Staf dengan tiket terbanyak</span>
+                </div>
+            </div>
+            <div class="info-box bg-green">
+                <span class="info-box-icon"><i class="fa fa-building"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Bagian Teraktif</span>
+                    <span class="info-box-number mostActiveCategory">0</span>
+                    <div class="progress"></div>
+                    <span class="progress-description">Bagian dengan tiket terbanyak</span>
+                </div>
+            </div>
+            <div class="info-box bg-aqua-active">
+                <span class="info-box-icon"><i class="fa fa-tags"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Jenis Tiket Terbanyak</span>
+                    <span class="info-box-number mostActiveType">0</span>
+                    <div class="progress"></div>
+                    <span class="progress-description">Jenis tiket yang paling banyak dikirimkan oleh klien</span>
+                </div>
+            </div>
+            <div class="info-box bg-blue-active">
+                <span class="info-box-icon"><i class="fa fa-users"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Klien Teraktif</span>
+                    <span class="info-box-number mostActiveClient">0</span>
+                    <div class="progress"></div>
+                    <span class="progress-description">Klien yang paling banyak membuat tiket</span>
+                </div>
+            </div>
+            <div class="info-box bg-red-active">
+                <span class="info-box-icon"><i class="fa fa-clock-o"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Durasi Kerja</span>
+                    <span class="info-box-number totalWorkDuration">0</span>
+                    <div class="progress"></div>
+                    <span class="progress-description">Durasi jam kerja dihitung sejak tiket dikerjakan (status: <b>Onprogress</b>)</span>
+                </div>
+            </div>
+            <div class="info-box bg-green-active">
+                <span class="info-box-icon"><i class="fa fa-check"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Tiket yang telah selesai</span>
+                    <span class="info-box-number totalResolved">0</span>
+                    <div class="progress"></div>
+                    <span class="progress-description">Total tiket yang sudah selesai ditangani (status: <b>Resolved</b>)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endblock -%}

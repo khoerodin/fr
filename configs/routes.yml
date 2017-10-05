@@ -56,6 +56,7 @@ app:
         - { path: '/advertising/orders/publish-ads', controller: 'Bisnis:AdvertisingOrders@publishAds', methods: ['POST'] }
         - { path: '/advertising/orders/publish-ads/update', controller: 'Bisnis:AdvertisingOrders@updatePublishAds', methods: ['POST'] }
         - { path: '/advertising/orders/search', controller: 'Bisnis:AdvertisingOrders@search', methods: ['POST'] }
+        - { path: '/advertising/orders/dashboard', controller: 'Bisnis:AdvertisingOrderDashboard@index', methods: ['GET'] }
 
         #Billing
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }

@@ -19,8 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('TEAM_WORKS_CURRENT_PAGE', pageNum);
         Bisnis.Adv.TeamWorks.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];

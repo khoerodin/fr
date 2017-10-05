@@ -19,8 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_MANAGERS_CURRENT_PAGE', pageNum);
         Bisnis.Adv.AccountExecutiveManagers.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
@@ -304,7 +303,7 @@
     window.onload = function() {
         document.getElementById("addForm").onkeypress = function(e) {
             var key = e.charCode || e.keyCode || 0;
-            if (key == 13) {
+            if (key === 13) {
                 Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
                 e.preventDefault();
             }
@@ -312,7 +311,7 @@
 
         document.getElementById("detailForm").onkeypress = function (e) {
             var key = e.charCode || e.keyCode || 0;
-            if (key == 13) {
+            if (key === 13) {
                 Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
                 e.preventDefault();
             }

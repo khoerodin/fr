@@ -196,7 +196,7 @@
 
                     function () {
                         jQuery(this).removeClass('selected');
-                    },
+                    }
                 );
 
                 jQuery('.optionHistory').click(function (e) {

@@ -11,7 +11,7 @@ class HomeController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('home.twig', $data);
@@ -20,7 +20,8 @@ class HomeController extends AdminController
     public function meAction()
     {
         $response = $this->get('users/me');
-        echo $response->getContent();exit();
+        echo $response->getContent();
+        exit();
     }
 
     public function cobaAction()
@@ -43,7 +44,8 @@ class HomeController extends AdminController
             'user' =>
         ]);*/
 
-        echo $response->getContent();exit();
+        echo $response->getContent();
+        exit();
     }
 
     public function error404Action()

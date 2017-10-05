@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class HelpdeskTicketDashboardController extends AdminController
 {
     public function indexAction()
@@ -14,5 +13,4 @@ class HelpdeskTicketDashboardController extends AdminController
 
         return $this->view('helpdesk-ticket-dashboard/index.twig', $data);
     }
-
 }

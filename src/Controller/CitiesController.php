@@ -12,7 +12,7 @@ class CitiesController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('cities/index.twig', $data);

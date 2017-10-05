@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class AdvertisingOrderInvoicesController extends AdminController
 {
     public function indexAction()
@@ -13,7 +12,7 @@ class AdvertisingOrderInvoicesController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('advertising-order-invoices/index.twig', $data);

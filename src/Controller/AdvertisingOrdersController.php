@@ -16,7 +16,7 @@ class AdvertisingOrdersController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('advertising-orders/index.twig', $data);
@@ -45,8 +45,8 @@ class AdvertisingOrdersController extends AdminController
             'meta' => $meta,
             'representatives' => $representatives,
             'paymentMethod' => $paymentMethod,
-            'media' => ['name' => $media[0]['name'], 'id' => $media[0]['id'] ],
-            'tags' => $tags
+            'media' => ['name' => $media[0]['name'], 'id' => $media[0]['id']],
+            'tags' => $tags,
         ];
 
         return $this->view('advertising-orders/new.twig', $data);
@@ -59,7 +59,7 @@ class AdvertisingOrdersController extends AdminController
             'title' => 'Order Iklan',
         ];
 
-        $order = $this->request('advertising/orders/' . $orderId, 'get');
+        $order = $this->request('advertising/orders/'.$orderId, 'get');
         $order = json_decode($order->getContent(), true);
 
         $representatives = $this->request('representatives', 'get');
@@ -78,11 +78,11 @@ class AdvertisingOrdersController extends AdminController
             $tags[] = [
                 'id' => $tag['id'],
                 'name' => $tag['name'],
-                'selected' => ( in_array($tag['id'], $tagStrings) ) ? 1 : 0
+                'selected' => (in_array($tag['id'], $tagStrings)) ? 1 : 0,
             ];
         }
 
-        $orderRefference = $this->request('advertising/orders/' . $order['orderRefference'], 'get');
+        $orderRefference = $this->request('advertising/orders/'.$order['orderRefference'], 'get');
         $orderRefference = json_decode($orderRefference->getContent(), true);
 
         $categories = $this->request('advertising/categories', 'get');
@@ -95,7 +95,7 @@ class AdvertisingOrdersController extends AdminController
             'paymentMethod' => $paymentMethod,
             'categories' => $this->getTreeParents($order['category']['id'], $categories),
             'tags' => $tags,
-            'orderRefference' => $orderRefference['orderNumber']
+            'orderRefference' => $orderRefference['orderNumber'],
         ];
 
         return $this->view('advertising-orders/detail.twig', $data);
@@ -105,28 +105,27 @@ class AdvertisingOrdersController extends AdminController
     {
         $str = '';
         foreach ($categories as $value) {
-            if ( $categoryId == $value['id'] ) {
-
-                $str .= $this->getTreeParents( $value['parent']['id'], $categories);
-                if ( $value['parent']['id'] != null) {
+            if ($categoryId == $value['id']) {
+                $str .= $this->getTreeParents($value['parent']['id'], $categories);
+                if ($value['parent']['id'] != null) {
                     $str .= ' ➤ ';
                 }
                 $str .= $value['name'];
-
             }
         }
+
         return $str;
     }
 
-    function publishAdsAction(Request $request)
+    public function publishAdsAction(Request $request)
     {
         $orderId = $request->get('orderId');
         $tanggal = $request->get('tanggal');
 
         $content = array();
         foreach ($tanggal as $date) {
-            if (!empty($orderId) AND $date['publishDate'] != '') {
-                $response = $this->request('advertising/publish-ads', 'post', [ 'order' => '/api/advertising/orders/' . $orderId, 'publishDate' => $date['publishDate'] ]);
+            if (!empty($orderId) and $date['publishDate'] != '') {
+                $response = $this->request('advertising/publish-ads', 'post', ['order' => '/api/advertising/orders/'.$orderId, 'publishDate' => $date['publishDate']]);
                 $content[] = $response->getContent();
             }
         }
@@ -134,18 +133,18 @@ class AdvertisingOrdersController extends AdminController
         return new Response(json_encode($content));
     }
 
-    function updatePublishAdsAction(Request $request)
+    public function updatePublishAdsAction(Request $request)
     {
         $datas = $request->get('data');
 
         $content = array();
         foreach ($datas as $data) {
             if (strtolower($data['type']) == 'put') {
-                $response = $this->request('advertising/publish-ads/' . $data['id'], 'put', [ 'publishDate' => $data['publishDate'] ]);
+                $response = $this->request('advertising/publish-ads/'.$data['id'], 'put', ['publishDate' => $data['publishDate']]);
             } elseif (strtolower($data['type']) == 'post') {
-                $response = $this->request('advertising/publish-ads', 'post', [ 'order' => '/api/advertising/orders/' . $data['orderId'], 'publishDate' => $data['publishDate'] ]);
+                $response = $this->request('advertising/publish-ads', 'post', ['order' => '/api/advertising/orders/'.$data['orderId'], 'publishDate' => $data['publishDate']]);
             } elseif (strtolower($data['type']) == 'delete') {
-                $response = $this->request('advertising/publish-ads/' . $data['id'], 'delete');
+                $response = $this->request('advertising/publish-ads/'.$data['id'], 'delete');
             }
             $content[] = $response->getContent();
         }
@@ -156,11 +155,11 @@ class AdvertisingOrdersController extends AdminController
     private function searchModule(array $request)
     {
         $url = $request['module'];
-        $method = $request['method'];;
-        $q = $request['q'];;
-        $field = $request['field'];;
-        $params2 = $request['params2'];;
-        $label = $request['label'];;
+        $method = $request['method'];
+        $q = $request['q'];
+        $field = $request['field'];
+        $params2 = $request['params2'];
+        $label = $request['label'];
 
         $params = [];
         foreach ($field as $column) {
@@ -179,7 +178,7 @@ class AdvertisingOrdersController extends AdminController
         $arr = json_decode($response->getContent(), true);
 
         if (array_key_exists('hydra:member', $arr)) {
-            if(count($arr) > 0 ) {
+            if (count($arr) > 0) {
                 $arr = $arr['hydra:member'];
             } else {
                 return new JsonResponse(array());
@@ -188,18 +187,16 @@ class AdvertisingOrdersController extends AdminController
             return new JsonResponse(array());
         }
 
-
         $arrData = [];
         foreach ($arr as $value) {
             $obj = [];
             foreach ($value as $k => $v) {
-                if($k == 'id'){
+                if ($k == 'id') {
                     $obj[$k] = $v;
-
                 }
 
-                if($k == $field[0]){
-                    $obj['field'] = $v . $label;
+                if ($k == $field[0]) {
+                    $obj['field'] = $v.$label;
                 }
             }
             $arrData[] = $obj;
@@ -210,11 +207,11 @@ class AdvertisingOrdersController extends AdminController
 
     private function searchTagging($q)
     {
-        $response = $this->request('advertising/tags', 'GET', ['name' => $q ]);
+        $response = $this->request('advertising/tags', 'GET', ['name' => $q]);
         $arr = json_decode($response->getContent(), true);
 
         if (array_key_exists('hydra:member', $arr)) {
-            if(count($arr) > 0 ) {
+            if (count($arr) > 0) {
                 $arr = $arr['hydra:member'];
             } else {
                 return new JsonResponse(array());
@@ -227,40 +224,38 @@ class AdvertisingOrdersController extends AdminController
         foreach ($arr as $value) {
             $obj = [];
             foreach ($value as $k => $v) {
-                if($k == 'id'){
+                if ($k == 'id') {
                     $obj[$k] = $v;
-
                 }
 
-                if($k == 'name'){
-                    $obj['field'] = $v . ' ~ Tag';
+                if ($k == 'name') {
+                    $obj['field'] = $v.' ~ Tag';
                 }
             }
             $arrData[] = $obj;
         }
 
         return $arrData;
-
     }
 
     public function searchAction(Request $request)
     {
         $orderNumberData = [
-            'module'    => 'advertising/orders',
-            'method'    => 'GET',
-            'q'         => $request->get('q'),
-            'field'     => array('orderNumber'),
-            'params2'   => $request->get('params'),
-            'label'     => ' ~ No Order'
+            'module' => 'advertising/orders',
+            'method' => 'GET',
+            'q' => $request->get('q'),
+            'field' => array('orderNumber'),
+            'params2' => $request->get('params'),
+            'label' => ' ~ No Order',
         ];
 
         $orderLetterData = [
-            'module'    => 'advertising/orders',
-            'method'    => 'GET',
-            'q'         => $request->get('q'),
-            'field'     => array('orderLetter'),
-            'params2'   => $request->get('params'),
-            'label'     => ' ~ No Surat Order'
+            'module' => 'advertising/orders',
+            'method' => 'GET',
+            'q' => $request->get('q'),
+            'field' => array('orderLetter'),
+            'params2' => $request->get('params'),
+            'label' => ' ~ No Surat Order',
         ];
 
         $orderNumber = $this->searchModule($orderNumberData);
@@ -268,6 +263,7 @@ class AdvertisingOrdersController extends AdminController
         $tags = $this->searchTagging($request->get('q'));
 
         $response = array_merge($orderNumber, $orderLetter, $tags);
+
         return new JsonResponse($response);
     }
 
@@ -279,7 +275,7 @@ class AdvertisingOrdersController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('advertising-orders/invoices.twig', $data);

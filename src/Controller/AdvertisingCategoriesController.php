@@ -18,7 +18,7 @@ class AdvertisingCategoriesController extends AdminController
 
         $data = [
             'meta' => $meta,
-            'categories' => $this->getCategory(NULL, $categories)
+            'categories' => $this->getCategory(null, $categories),
         ];
 
         return $this->view('advertising-categories/index.twig', $data);
@@ -29,7 +29,7 @@ class AdvertisingCategoriesController extends AdminController
         $categories = $this->request('advertising/categories', 'get');
         $categories = json_decode($categories->getContent(), true)['hydra:member'];
 
-        return new Response($this->getCategory(NULL, $categories));
+        return new Response($this->getCategory(null, $categories));
     }
 
     private function getCategory($parentCategoryId, $data)
@@ -37,16 +37,15 @@ class AdvertisingCategoriesController extends AdminController
         $str = '';
         foreach ($data as $row) {
             if ($row['parent']['id'] == $parentCategoryId) {
-                $str .= '<li><span data-id="' . $row['id'] . '" data-name="' . $row['name'] . '">' . $row['name'] . '</span>';
+                $str .= '<li><span data-id="'.$row['id'].'" data-name="'.$row['name'].'">'.$row['name'].'</span>';
                 $res = $this->getCategory($row['id'], $data);
                 if ($res) {
-                    $str .= '<ul>' . $res . '</ul>';
+                    $str .= '<ul>'.$res.'</ul>';
                 }
                 $str .= '</li>';
             }
         }
+
         return $str;
-
     }
-
 }

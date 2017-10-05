@@ -12,7 +12,7 @@ class ClientsController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('clients/index.twig', $data);

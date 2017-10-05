@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class AdvertisingOrderDashboardController extends AdminController
 {
     public function indexAction()
@@ -14,5 +13,4 @@ class AdvertisingOrderDashboardController extends AdminController
 
         return $this->view('advertising-order-dashboard/index.twig', $data);
     }
-
 }

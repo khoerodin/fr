@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class ServicesController extends AdminController
 {
     public function indexAction()
@@ -13,7 +12,7 @@ class ServicesController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('services/index.twig', $data);

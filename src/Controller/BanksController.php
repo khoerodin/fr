@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class BanksController extends AdminController
 {
     public function indexAction()
@@ -13,7 +12,7 @@ class BanksController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('banks/index.twig', $data);

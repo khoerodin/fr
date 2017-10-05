@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class RepresentativesController extends AdminController
 {
     public function indexAction()
@@ -12,7 +11,7 @@ class RepresentativesController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('representatives/index.twig', $data);

@@ -12,7 +12,7 @@ class AdvertisingTypesController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('advertising-types/index.twig', $data);

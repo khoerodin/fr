@@ -12,7 +12,7 @@ class AdvertisingLayoutsController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('advertising-layouts/index.twig', $data);

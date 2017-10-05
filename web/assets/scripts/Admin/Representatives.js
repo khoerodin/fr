@@ -46,7 +46,7 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#representativesList', records);
+                Bisnis.Util.Grid.renderRecords('#representativesList', records, pageNum);
             } else {
                 Bisnis.Util.Document.putHtml('#representativesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }

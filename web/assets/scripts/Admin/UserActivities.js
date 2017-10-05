@@ -50,7 +50,7 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#userActivitiesList', records);
+                Bisnis.Util.Grid.renderRecords('#userActivitiesList', records, pageNum);
             } else {
                 Bisnis.Util.Document.putHtml('#userActivitiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }

@@ -45,7 +45,7 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#banksList', records);
+                Bisnis.Util.Grid.renderRecords('#banksList', records, pageNum);
             } else {
                 Bisnis.Util.Document.putHtml('#banksList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }

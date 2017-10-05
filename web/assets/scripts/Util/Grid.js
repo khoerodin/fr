@@ -37,20 +37,27 @@
     /**
      * [[{value: 4, format: function (value) {return value * 2;}}, {value: 7}, {value: 9}], [{value: 4, format: function (value) {return value * 2;}}, {value: 17}, {value: 99}]]
      */
-    Bisnis.Util.Grid.renderRecords = function (selector, records, rowFormatting) {
+    Bisnis.Util.Grid.renderRecords = function (selector, records, pageNum, rowFormatting) {
         Bisnis.each(function (idx, row) {
             records[idx] = gridRecords(row);
         }, records);
 
         var rowTable = '';
         Bisnis.each(function (idx, row) {
+            var currentSeq = '';
+            if (pageNum) {
+                currentSeq = ( pageNum - 1 ) * 17 + idx +1;
+            } else {
+                currentSeq = ( 1 - 1 ) * 17 + idx +1;
+            }
+
             if (Bisnis.validCallback(rowFormatting)) {
                 rowTable = rowFormatting(rowTable, row);
             } else {
                 rowTable = rowTable + '<tr data-idx="' + idx + '">';
             }
 
-            rowTable = rowTable + '<td>' + (idx + 1) + '</td>';
+            rowTable = rowTable + '<td>' + currentSeq + '</td>';
             rowTable = rowTable + columnRenderer(row);
             rowTable = rowTable + '</tr>';
         }, records);

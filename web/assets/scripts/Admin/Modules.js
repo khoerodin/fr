@@ -107,7 +107,7 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#modulesList'+serviceId, records);
+                Bisnis.Util.Grid.renderRecords('#modulesList'+serviceId, records, pageNum);
             } else {
                 Bisnis.Util.Document.putHtml('#modulesList'+serviceId, '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }

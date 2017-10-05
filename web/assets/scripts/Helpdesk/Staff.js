@@ -52,7 +52,7 @@
                         } }
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#staffsList', records);
+                Bisnis.Util.Grid.renderRecords('#staffsList', records, pageNum);
             } else {
                 Bisnis.Util.Document.putHtml('#staffsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }

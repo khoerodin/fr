@@ -43,7 +43,7 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#paymentMethodsList', records);
+                Bisnis.Util.Grid.renderRecords('#paymentMethodsList', records, pageNum);
             } else {
                 Bisnis.Util.Document.putHtml('#paymentMethodsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }

@@ -24,11 +24,11 @@
                             <th width="3%"><span class="pull-right">AKSI</span></th>
                         </tr>
                         </thead>
-                        <tbody id="invoicesList"></tbody>
+                        <tbody id="ordersList"></tbody>
                     </table>
                 </div>
                 <div class="box-footer clearfix">
-                    <ul id="invoicePagination" class="pagination pagination-sm pull-right"></ul>
+                    <ul id="ordersPagination" class="pagination pagination-sm pull-right"></ul>
                 </div>
             </div>
             <!-- /.box -->
@@ -43,10 +43,48 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">MEMBUAT FAKTUR ORDER: <span class="text-muted">NO-ORDER-HERE</span></h4>
+                    <h4 class="modal-title">MEMBUAT FAKTUR ORDER</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Some text in the modal.</p>
+                    {#<div class="box">#}
+                        <div class="box-body">
+                            <table class="table table-bordered table-responsive">
+                                <tr>
+                                    <th width="20%">NO. ORDER</th>
+                                    <td id="orderNumber" colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <th>SISA</th>
+                                    <td id="sisa" colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <th style="vertical-align: middle">MASUKKAN JUMLAH</th>
+                                    <td>
+                                        <input type="text" class="form-control" id="amount">
+                                    </td>
+                                    <td width="20%">
+                                        <button class="btn btn-danger btn-flat btn-block" id="generateInvoice">BUAT FAKTUR</button>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-bordered table-responsive table-hover" style="margin-top: 20px">
+                                <thead>
+                                <tr>
+                                    <th width="3%">NO.</th>
+                                    <th>NO. FAKTUR</th>
+                                    <th width="15%">JUMLAH</th>
+                                    <th width="10%">STATUS</th>
+                                </tr>
+                                </thead>
+                                <tbody id="invoicesList"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="box-footer">
+                            <ul id="invoicesPagination" class="pagination pagination-sm pull-right"></ul>
+                        </div>
+                    {#</div>#}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Close</button>

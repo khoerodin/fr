@@ -9,7 +9,7 @@ class ServicesController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Admin',
-            'title' => 'Services',
+            'title' => 'Servis',
         ];
 
         $data = [

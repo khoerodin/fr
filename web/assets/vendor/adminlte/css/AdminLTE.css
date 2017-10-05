@@ -5049,10 +5049,6 @@ input#file-image {
   border-radius: 50px;
 }
 
-tr.active {
-  background-color: ;
-}
-
 #emitenTable tr:hover, #sektorTable tr:hover {
   cursor: pointer;
 }

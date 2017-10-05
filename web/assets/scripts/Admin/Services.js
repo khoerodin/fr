@@ -1,10 +1,10 @@
 (function (Bisnis) {
-    Bisnis.Billing.PaymentMethods = {};
+    Bisnis.Admin.Services = {};
 
     // fetch grid and pagination
-    Bisnis.Billing.PaymentMethods.fetchAll = function (params, callback) {
+    Bisnis.Admin.Services.fetchAll = function (params, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods',
+            module: 'services',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -19,15 +19,16 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : parseInt(pageNum);
-        Bisnis.Util.Storage.store('PAYMENT_METHODS_CURRENT_PAGE', pageNum);
-        Bisnis.Billing.PaymentMethods.fetchAll([{page: pageNum}], function (rawData) {
+        var pageNum =
+            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        Bisnis.Util.Storage.store('SERVICES_CURRENT_PAGE', pageNum);
+        Bisnis.Admin.Services.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
             var viewData = rawData['hydra:view'];
 
             if ('undefined' !== typeof viewData['hydra:last']) {
                 var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#paymentMethodsPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                Bisnis.Util.Grid.createPagination('#servicesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
             }
 
             if (memberData.length > 0) {
@@ -43,47 +44,47 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#paymentMethodsList', records);
+                Bisnis.Util.Grid.renderRecords('#servicesList', records);
             } else {
-                Bisnis.Util.Document.putHtml('#paymentMethodsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                Bisnis.Util.Document.putHtml('#servicesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }
         });
     };
 
     loadGrid(1);
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pagePrevious', function () {
+    Bisnis.Util.Event.bind('click', '#servicesPagination .pagePrevious', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pageNext', function () {
+    Bisnis.Util.Event.bind('click', '#servicesPagination .pageNext', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pageFirst', function () {
+    Bisnis.Util.Event.bind('click', '#servicesPagination .pageFirst', function () {
         loadGrid(1);
     });
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pageLast', function () {
+    Bisnis.Util.Event.bind('click', '#servicesPagination .pageLast', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
     // end fetch grid and pagination
 
     // search box
     var params = {
-        placeholder: 'CARI METHODE PEMBAYARAN',
-        module: 'billing/payment-methods',
+        placeholder: 'CARI SERVIS',
+        module: 'services',
         fields: [
             {
                 field: 'name',
-                label: 'Metode Pembayaran'
+                label: 'Servis'
             }
         ]
     };
 
-    Bisnis.Util.Style.ajaxSelect('#searchPaymentMethods', params,
+    Bisnis.Util.Style.ajaxSelect('#searchServices', params,
         function (hasResultCallback) {
-            var btn = document.getElementById('btnAddPaymentMethod');
+            var btn = document.getElementById('btnAddService');
             if (hasResultCallback) {
                 btn.disabled = true;
             } else {
@@ -93,14 +94,14 @@
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
-            var btn = document.getElementById('btnAddPaymentMethod');
+            var btn = document.getElementById('btnAddService');
             if (openCallback === false) {
                 btn.disabled = false;
             } else {
                 btn.disabled = true;
             }
         }, function (closeCallback) {
-            var btn = document.getElementById('btnAddPaymentMethod');
+            var btn = document.getElementById('btnAddService');
             setTimeout(function () {
                 if (closeCallback === false) {
                     btn.disabled = false;
@@ -113,7 +114,7 @@
     // end search box
 
     // add modal
-    Bisnis.Util.Event.bind('click', '#btnAddPaymentMethod', function () {
+    Bisnis.Util.Event.bind('click', '#btnAddService', function () {
         Bisnis.Util.Dialog.showModal('#addModal');
         document.getElementById('addName').focus();
     });
@@ -123,7 +124,7 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Billing.PaymentMethods.add(params, function (callback) {
+        Bisnis.Admin.Services.add(params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('addForm', callback.violations);
             } else {
@@ -134,9 +135,15 @@
         });
     });
 
-    Bisnis.Billing.PaymentMethods.add = function (params, callback) {
+    Bisnis.Admin.Services.add = function (params, callback) {
+        var addCode = document.getElementById('addName').value;
+        params.push({
+            name: 'code',
+            value: addCode.replace(' ', '').toUpperCase()
+        });
+
         Bisnis.request({
-            module: 'billing/payment-methods',
+            module: 'services',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -153,8 +160,8 @@
 
     // detail modal
     var loadDetail = function (id) {
-        Bisnis.Util.Storage.store('PAYMENT_METHOD_ID', id);
-        Bisnis.Billing.PaymentMethods.fetchById(id, function (callback) {
+        Bisnis.Util.Storage.store('SERVICE_ID', id);
+        Bisnis.Admin.Services.fetchById(id, function (callback) {
             var nameElem = document.getElementById('detailName');
             nameElem.value = callback.name;
             nameElem.focus();
@@ -167,9 +174,9 @@
         loadDetail(id);
     });
 
-    Bisnis.Billing.PaymentMethods.fetchById = function (id, callback) {
+    Bisnis.Admin.Services.fetchById = function (id, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods/' + id,
+            module: 'services/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
@@ -182,9 +189,9 @@
         });
     };
 
-    Bisnis.Billing.PaymentMethods.updateById = function (id, params, callback) {
+    Bisnis.Admin.Services.updateById = function (id, params, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods/' + id,
+            module: 'services/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -199,18 +206,18 @@
     };
 
     Bisnis.Util.Event.bind('click', '#btn-update', function () {
-        var id = Bisnis.Util.Storage.fetch('PAYMENT_METHOD_ID');
+        var id = Bisnis.Util.Storage.fetch('SERVICE_ID');
         var params = Bisnis.Util.Form.serializeArray('#detailForm');
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Billing.PaymentMethods.updateById(id, params, function (callback) {
+        Bisnis.Admin.Services.updateById(id, params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('detailForm', callback.violations);
             } else {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
-                var page = Bisnis.Util.Storage.fetch('PAYMENT_METHODS_CURRENT_PAGE');
+                var page = Bisnis.Util.Storage.fetch('SERVICES_CURRENT_PAGE');
                 loadGrid(page);
             }
             thisBtn.disabled = false;
@@ -218,15 +225,15 @@
     });
     // end detail modal
 
-    // delete payment method
+    // delete service
     Bisnis.Util.Event.bind('click', '.btn-delete', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Billing.PaymentMethods.delete(id, function (textStatus) {
+                Bisnis.Admin.Services.delete(id, function (textStatus) {
                     if (textStatus === 'success') {
                         Bisnis.successMessage('Berhasil menghapus data');
-                        var page = Bisnis.Util.Storage.fetch('PAYMENT_METHODS_CURRENT_PAGE');
+                        var page = Bisnis.Util.Storage.fetch('SERVICES_CURRENT_PAGE');
                         loadGrid(page);
                     } else {
                         Bisnis.errorMessage('Gagal menghapus data');
@@ -236,9 +243,9 @@
         });
     });
 
-    Bisnis.Billing.PaymentMethods.delete = function (id, callback) {
+    Bisnis.Admin.Services.delete = function (id, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods/' + id,
+            module: 'services/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
             if (Bisnis.validCallback(callback)) {
@@ -248,7 +255,7 @@
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
         });
     };
-    // end delete payment method
+    // end delete service
 
     // prevent submit form on enter
     Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {

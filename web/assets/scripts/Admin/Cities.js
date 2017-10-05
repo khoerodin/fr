@@ -1,10 +1,10 @@
 (function (Bisnis) {
-    Bisnis.Billing.PaymentMethods = {};
+    Bisnis.Admin.Cities = {};
 
     // fetch grid and pagination
-    Bisnis.Billing.PaymentMethods.fetchAll = function (params, callback) {
+    Bisnis.Admin.Cities.fetchAll = function (params, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods',
+            module: 'cities',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -19,22 +19,26 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : parseInt(pageNum);
-        Bisnis.Util.Storage.store('PAYMENT_METHODS_CURRENT_PAGE', pageNum);
-        Bisnis.Billing.PaymentMethods.fetchAll([{page: pageNum}], function (rawData) {
+        var pageNum =
+            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        Bisnis.Util.Storage.store('ADMIN_CITIES_CURRENT_PAGE', pageNum);
+        Bisnis.Admin.Cities.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
             var viewData = rawData['hydra:view'];
 
             if ('undefined' !== typeof viewData['hydra:last']) {
                 var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#paymentMethodsPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                Bisnis.Util.Grid.createPagination('#citiesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
             }
 
             if (memberData.length > 0) {
                 var records = [];
                 Bisnis.each(function (idx, memberData) {
                     records.push([
+                        { value: memberData.code },
                         { value: memberData.name },
+                        { value: memberData.postalCode },
+                        { value: (memberData.parent) ? memberData.parent.name : '-' },
                         { value: memberData.id, format: function (id) {
                             return '<span class="pull-right">' +
                                 '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
@@ -43,47 +47,51 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#paymentMethodsList', records);
+                Bisnis.Util.Grid.renderRecords('#citiesList', records);
             } else {
-                Bisnis.Util.Document.putHtml('#paymentMethodsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                Bisnis.Util.Document.putHtml('#citiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }
         });
     };
 
     loadGrid(1);
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pagePrevious', function () {
+    Bisnis.Util.Event.bind('click', '#citiesPagination .pagePrevious', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pageNext', function () {
+    Bisnis.Util.Event.bind('click', '#citiesPagination .pageNext', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pageFirst', function () {
+    Bisnis.Util.Event.bind('click', '#citiesPagination .pageFirst', function () {
         loadGrid(1);
     });
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pageLast', function () {
+    Bisnis.Util.Event.bind('click', '#citiesPagination .pageLast', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
     // end fetch grid and pagination
 
     // search box
     var params = {
-        placeholder: 'CARI METHODE PEMBAYARAN',
-        module: 'billing/payment-methods',
+        placeholder: 'CARI KODE / NAMA KOTA',
+        module: 'cities',
         fields: [
             {
+                field: 'code',
+                label: 'Kode'
+            },
+            {
                 field: 'name',
-                label: 'Metode Pembayaran'
+                label: 'Kota'
             }
         ]
     };
 
-    Bisnis.Util.Style.ajaxSelect('#searchPaymentMethods', params,
+    Bisnis.Util.Style.ajaxSelect('#searchCities', params,
         function (hasResultCallback) {
-            var btn = document.getElementById('btnAddPaymentMethod');
+            var btn = document.getElementById('btnAddCity');
             if (hasResultCallback) {
                 btn.disabled = true;
             } else {
@@ -93,14 +101,14 @@
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
-            var btn = document.getElementById('btnAddPaymentMethod');
+            var btn = document.getElementById('btnAddCity');
             if (openCallback === false) {
                 btn.disabled = false;
             } else {
                 btn.disabled = true;
             }
         }, function (closeCallback) {
-            var btn = document.getElementById('btnAddPaymentMethod');
+            var btn = document.getElementById('btnAddCity');
             setTimeout(function () {
                 if (closeCallback === false) {
                     btn.disabled = false;
@@ -113,9 +121,24 @@
     // end search box
 
     // add modal
-    Bisnis.Util.Event.bind('click', '#btnAddPaymentMethod', function () {
+    Bisnis.Util.Event.bind('click', '#btnAddCity', function () {
+
+        var parent = {
+            placeholder: 'CARI NAMA KOTA',
+            module: 'cities',
+            prependValue: '/api/cities/',
+            allowClear: true,
+            fields: [
+                {
+                    field: 'name',
+                    label: 'Kota'
+                }
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addParent', parent);
+
         Bisnis.Util.Dialog.showModal('#addModal');
-        document.getElementById('addName').focus();
+        document.getElementById('addParent').focus();
     });
 
     Bisnis.Util.Event.bind('click', '#btn-add', function () {
@@ -123,7 +146,7 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Billing.PaymentMethods.add(params, function (callback) {
+        Bisnis.Admin.Cities.add(params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('addForm', callback.violations);
             } else {
@@ -134,9 +157,15 @@
         });
     });
 
-    Bisnis.Billing.PaymentMethods.add = function (params, callback) {
+    Bisnis.Admin.Cities.add = function (params, callback) {
+        // di filter pake hash, agar tidak terdeteksi sebagai int
+        var fields = [
+            'postalCode'
+        ];
+        var params = Bisnis.Util.Form.hashPrepand(fields, params);
+
         Bisnis.request({
-            module: 'billing/payment-methods',
+            module: 'cities',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -153,13 +182,36 @@
 
     // detail modal
     var loadDetail = function (id) {
-        Bisnis.Util.Storage.store('PAYMENT_METHOD_ID', id);
-        Bisnis.Billing.PaymentMethods.fetchById(id, function (callback) {
-            var nameElem = document.getElementById('detailName');
-            nameElem.value = callback.name;
-            nameElem.focus();
+        Bisnis.Util.Storage.store('ADMIN_CLIENTS_ID', id);
+        Bisnis.Admin.Cities.fetchById(id, function (callback) {
+            if (callback.parent) {
+                var userElm = document.getElementById('detailParent');
+                userElm.innerHTML = '<option value="/api/cities/'+callback.parent.id+'">'+callback.parent.name+'</option>';
+                Bisnis.Util.Event.bind('change', '#detailParent');
+            }
+
+            Bisnis.Util.Style.modifySelect('#detailParent');
+            var parent = {
+                placeholder: 'CARI KOTA',
+                module: 'cities',
+                prependValue: '/api/cities/',
+                allowClear: true,
+                fields: [
+                    {
+                        field: 'name',
+                        label: 'Kota'
+                    }
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailParent', parent);
+
+            document.getElementById('detailCode').value = callback.code;
+            document.getElementById('detailName').value = callback.name;
+            document.getElementById('detailPostalCode').value = callback.postalCode;
         });
+
         Bisnis.Util.Dialog.showModal('#detailModal');
+        document.getElementById('detailParent').focus();
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -167,9 +219,9 @@
         loadDetail(id);
     });
 
-    Bisnis.Billing.PaymentMethods.fetchById = function (id, callback) {
+    Bisnis.Admin.Cities.fetchById = function (id, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods/' + id,
+            module: 'cities/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
@@ -182,9 +234,15 @@
         });
     };
 
-    Bisnis.Billing.PaymentMethods.updateById = function (id, params, callback) {
+    Bisnis.Admin.Cities.updateById = function (id, params, callback) {
+        // di filter pake hash, agar tidak terdeteksi sebagai int
+        var fields = [
+            'postalCode'
+        ];
+        var params = Bisnis.Util.Form.hashPrepand(fields, params);
+
         Bisnis.request({
-            module: 'billing/payment-methods/' + id,
+            module: 'cities/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -199,18 +257,18 @@
     };
 
     Bisnis.Util.Event.bind('click', '#btn-update', function () {
-        var id = Bisnis.Util.Storage.fetch('PAYMENT_METHOD_ID');
+        var id = Bisnis.Util.Storage.fetch('ADMIN_CLIENTS_ID');
         var params = Bisnis.Util.Form.serializeArray('#detailForm');
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Billing.PaymentMethods.updateById(id, params, function (callback) {
+        Bisnis.Admin.Cities.updateById(id, params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('detailForm', callback.violations);
             } else {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
-                var page = Bisnis.Util.Storage.fetch('PAYMENT_METHODS_CURRENT_PAGE');
+                var page = Bisnis.Util.Storage.fetch('ADMIN_CITIES_CURRENT_PAGE');
                 loadGrid(page);
             }
             thisBtn.disabled = false;
@@ -218,15 +276,15 @@
     });
     // end detail modal
 
-    // delete payment method
+    // delete
     Bisnis.Util.Event.bind('click', '.btn-delete', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Billing.PaymentMethods.delete(id, function (textStatus) {
+                Bisnis.Admin.Cities.delete(id, function (textStatus) {
                     if (textStatus === 'success') {
                         Bisnis.successMessage('Berhasil menghapus data');
-                        var page = Bisnis.Util.Storage.fetch('PAYMENT_METHODS_CURRENT_PAGE');
+                        var page = Bisnis.Util.Storage.fetch('ADMIN_CITIES_CURRENT_PAGE');
                         loadGrid(page);
                     } else {
                         Bisnis.errorMessage('Gagal menghapus data');
@@ -236,9 +294,9 @@
         });
     });
 
-    Bisnis.Billing.PaymentMethods.delete = function (id, callback) {
+    Bisnis.Admin.Cities.delete = function (id, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods/' + id,
+            module: 'cities/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
             if (Bisnis.validCallback(callback)) {
@@ -248,7 +306,7 @@
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
         });
     };
-    // end delete payment method
+    // end delete
 
     // prevent submit form on enter
     Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {

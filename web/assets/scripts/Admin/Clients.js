@@ -1,10 +1,10 @@
 (function (Bisnis) {
-    Bisnis.Billing.PaymentMethods = {};
+    Bisnis.Admin.Clients = {};
 
     // fetch grid and pagination
-    Bisnis.Billing.PaymentMethods.fetchAll = function (params, callback) {
+    Bisnis.Admin.Clients.fetchAll = function (params, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods',
+            module: 'clients',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -19,15 +19,16 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum = ('undefined' === typeof pageNum || 'null' === pageNum) ? 1 : parseInt(pageNum);
-        Bisnis.Util.Storage.store('PAYMENT_METHODS_CURRENT_PAGE', pageNum);
-        Bisnis.Billing.PaymentMethods.fetchAll([{page: pageNum}], function (rawData) {
+        var pageNum =
+            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        Bisnis.Util.Storage.store('ADMIN_CLIENTS_CURRENT_PAGE', pageNum);
+        Bisnis.Admin.Clients.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
             var viewData = rawData['hydra:view'];
 
             if ('undefined' !== typeof viewData['hydra:last']) {
                 var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#paymentMethodsPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                Bisnis.Util.Grid.createPagination('#clientsPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
             }
 
             if (memberData.length > 0) {
@@ -35,6 +36,9 @@
                 Bisnis.each(function (idx, memberData) {
                     records.push([
                         { value: memberData.name },
+                        { value: memberData.email },
+                        { value: memberData.apiKey },
+                        { value: (memberData.user) ? memberData.user.fullname : '-' },
                         { value: memberData.id, format: function (id) {
                             return '<span class="pull-right">' +
                                 '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
@@ -43,47 +47,51 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#paymentMethodsList', records);
+                Bisnis.Util.Grid.renderRecords('#clientsList', records);
             } else {
-                Bisnis.Util.Document.putHtml('#paymentMethodsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                Bisnis.Util.Document.putHtml('#clientsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }
         });
     };
 
     loadGrid(1);
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pagePrevious', function () {
+    Bisnis.Util.Event.bind('click', '#clientsPagination .pagePrevious', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pageNext', function () {
+    Bisnis.Util.Event.bind('click', '#clientsPagination .pageNext', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pageFirst', function () {
+    Bisnis.Util.Event.bind('click', '#clientsPagination .pageFirst', function () {
         loadGrid(1);
     });
 
-    Bisnis.Util.Event.bind('click', '#paymentMethodsPagination .pageLast', function () {
+    Bisnis.Util.Event.bind('click', '#clientsPagination .pageLast', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
     // end fetch grid and pagination
 
     // search box
     var params = {
-        placeholder: 'CARI METHODE PEMBAYARAN',
-        module: 'billing/payment-methods',
+        placeholder: 'CARI NAMA KLIEN / EMAIL',
+        module: 'clients',
         fields: [
             {
                 field: 'name',
-                label: 'Metode Pembayaran'
+                label: 'Klien'
+            },
+            {
+                field: 'email',
+                label: 'Email'
             }
         ]
     };
 
-    Bisnis.Util.Style.ajaxSelect('#searchPaymentMethods', params,
+    Bisnis.Util.Style.ajaxSelect('#searchClients', params,
         function (hasResultCallback) {
-            var btn = document.getElementById('btnAddPaymentMethod');
+            var btn = document.getElementById('btnAddClient');
             if (hasResultCallback) {
                 btn.disabled = true;
             } else {
@@ -93,14 +101,14 @@
             //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
-            var btn = document.getElementById('btnAddPaymentMethod');
+            var btn = document.getElementById('btnAddClient');
             if (openCallback === false) {
                 btn.disabled = false;
             } else {
                 btn.disabled = true;
             }
         }, function (closeCallback) {
-            var btn = document.getElementById('btnAddPaymentMethod');
+            var btn = document.getElementById('btnAddClient');
             setTimeout(function () {
                 if (closeCallback === false) {
                     btn.disabled = false;
@@ -113,7 +121,22 @@
     // end search box
 
     // add modal
-    Bisnis.Util.Event.bind('click', '#btnAddPaymentMethod', function () {
+    Bisnis.Util.Event.bind('click', '#btnAddClient', function () {
+
+        var users = {
+            placeholder: 'CARI USERNAME PENGGUNA',
+            module: 'users',
+            prependValue: '/api/users/',
+            allowClear: true,
+            fields: [
+                {
+                    field: 'username',
+                    label: 'Username'
+                }
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addUser', users);
+
         Bisnis.Util.Dialog.showModal('#addModal');
         document.getElementById('addName').focus();
     });
@@ -123,7 +146,7 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Billing.PaymentMethods.add(params, function (callback) {
+        Bisnis.Admin.Clients.add(params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('addForm', callback.violations);
             } else {
@@ -134,9 +157,9 @@
         });
     });
 
-    Bisnis.Billing.PaymentMethods.add = function (params, callback) {
+    Bisnis.Admin.Clients.add = function (params, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods',
+            module: 'clients',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -153,13 +176,35 @@
 
     // detail modal
     var loadDetail = function (id) {
-        Bisnis.Util.Storage.store('PAYMENT_METHOD_ID', id);
-        Bisnis.Billing.PaymentMethods.fetchById(id, function (callback) {
-            var nameElem = document.getElementById('detailName');
-            nameElem.value = callback.name;
-            nameElem.focus();
+        Bisnis.Util.Storage.store('ADMIN_CLIENTS_ID', id);
+        Bisnis.Admin.Clients.fetchById(id, function (callback) {
+            document.getElementById('detailName').value = callback.name;
+            document.getElementById('detailEmail').value = callback.email;
+
+            if (callback.user) {
+                var userElm = document.getElementById('detailUser');
+                userElm.innerHTML = '<option value="/api/users/'+callback.user.id+'">'+callback.user.fullname+'</option>';
+                Bisnis.Util.Event.bind('change', '#detailUser');
+            }
+
+            Bisnis.Util.Style.modifySelect('#detailUser');
+            var users = {
+                placeholder: 'CARI USERNAME PENGGUNA',
+                module: 'users',
+                prependValue: '/api/users/',
+                allowClear: true,
+                fields: [
+                    {
+                        field: 'username',
+                        label: 'Username'
+                    }
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailUser', users);
         });
+
         Bisnis.Util.Dialog.showModal('#detailModal');
+        document.getElementById('detailName').focus();
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -167,9 +212,9 @@
         loadDetail(id);
     });
 
-    Bisnis.Billing.PaymentMethods.fetchById = function (id, callback) {
+    Bisnis.Admin.Clients.fetchById = function (id, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods/' + id,
+            module: 'clients/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
@@ -182,9 +227,9 @@
         });
     };
 
-    Bisnis.Billing.PaymentMethods.updateById = function (id, params, callback) {
+    Bisnis.Admin.Clients.updateById = function (id, params, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods/' + id,
+            module: 'clients/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -199,18 +244,18 @@
     };
 
     Bisnis.Util.Event.bind('click', '#btn-update', function () {
-        var id = Bisnis.Util.Storage.fetch('PAYMENT_METHOD_ID');
+        var id = Bisnis.Util.Storage.fetch('ADMIN_CLIENTS_ID');
         var params = Bisnis.Util.Form.serializeArray('#detailForm');
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Billing.PaymentMethods.updateById(id, params, function (callback) {
+        Bisnis.Admin.Clients.updateById(id, params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('detailForm', callback.violations);
             } else {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
-                var page = Bisnis.Util.Storage.fetch('PAYMENT_METHODS_CURRENT_PAGE');
+                var page = Bisnis.Util.Storage.fetch('ADMIN_CLIENTS_CURRENT_PAGE');
                 loadGrid(page);
             }
             thisBtn.disabled = false;
@@ -218,15 +263,15 @@
     });
     // end detail modal
 
-    // delete payment method
+    // delete account executive manager
     Bisnis.Util.Event.bind('click', '.btn-delete', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Billing.PaymentMethods.delete(id, function (textStatus) {
+                Bisnis.Admin.Clients.delete(id, function (textStatus) {
                     if (textStatus === 'success') {
                         Bisnis.successMessage('Berhasil menghapus data');
-                        var page = Bisnis.Util.Storage.fetch('PAYMENT_METHODS_CURRENT_PAGE');
+                        var page = Bisnis.Util.Storage.fetch('ADMIN_CLIENTS_CURRENT_PAGE');
                         loadGrid(page);
                     } else {
                         Bisnis.errorMessage('Gagal menghapus data');
@@ -236,9 +281,9 @@
         });
     });
 
-    Bisnis.Billing.PaymentMethods.delete = function (id, callback) {
+    Bisnis.Admin.Clients.delete = function (id, callback) {
         Bisnis.request({
-            module: 'billing/payment-methods/' + id,
+            module: 'clients/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
             if (Bisnis.validCallback(callback)) {
@@ -248,7 +293,7 @@
             Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
         });
     };
-    // end delete payment method
+    // end delete account executive manager
 
     // prevent submit form on enter
     Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {

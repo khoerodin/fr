@@ -1,7 +1,8 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/Adv/OrdersInvoices.js"></script>
+    <script src="/assets/scripts/Adv/Orders.js"></script>
+    <script src="/assets/scripts/Adv/OrderInvoices.js"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -14,14 +15,14 @@
                 <div class="box-body">
                     <table class="table table-bordered table-responsive table-hover">
                         <thead>
-                            <tr>
-                                <th width="3%">NO.</th>
-                                <th width="15%">NOMOR ORDER</th>
-                                <th width="25%">JUDUL IKLAN</th>
-                                <th width="7%">STATUS DETAIL</th>
-                                <th>FAKTUR</th>
-                                <th width="3%"><span class="pull-right">AKSI</span></th>
-                            </tr>
+                        <tr>
+                            <th width="3%">NO.</th>
+                            <th width="15%">NOMOR ORDER</th>
+                            <th width="25%">JUDUL IKLAN</th>
+                            <th width="10%">STATUS FAKTUR</th>
+                            <th>FAKTUR</th>
+                            <th width="3%"><span class="pull-right">AKSI</span></th>
+                        </tr>
                         </thead>
                         <tbody id="invoicesList"></tbody>
                     </table>

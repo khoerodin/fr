@@ -61,8 +61,8 @@
         });
 
         Bisnis.Util.Event.bind('click', '.addNew', function () {
-            Bisnis.Helpdesk.Category.fetchAll(function (categoryList) {
-
+            Bisnis.Helpdesk.Category.fetchAll([], function (categoryList) {
+                var categoryList = categoryList['hydra:member'];
                 var categoryOption = '<option selected disabled class="text-muted">PILIH TOPIK HELPDESK</option>';
                 Bisnis.each(function (index, value) {
                     categoryOption = categoryOption + '<option value="/api/helpdesk/categories/' + value.id + '">' + value.name + '</option>';
@@ -189,7 +189,7 @@
                         </ul>
                     </div>
                     <div class="tab-content">
-                        <div id="myTickets" class="tab-pane fade active in">
+                        <div id="myTickets" class="tab-pane active in">
                             <div class="row">
                                 <div class="col-md-12">
                                     <table class="table table-striped table-bordered table-hover tableTicket">
@@ -216,7 +216,7 @@
                                 <ul id="clientTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                             </div>
                         </div>
-                        <div id="closedTickets" class="tab-pane fade closedTickets">
+                        <div id="closedTickets" class="tab-pane closedTickets">
                             <div class="row">
                                 <div class="col-md-12">
                                     <table class="table table-striped table-bordered table-hover tableTicket">
@@ -248,7 +248,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="newTicketModal" role="dialog">
+<div class="modal" id="newTicketModal" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -294,7 +294,7 @@
     </div>
 </div>
 <!-- /.modal -->
-<div class="modal fade" id="tiketDetail" role="dialog">
+<div class="modal" id="tiketDetail" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

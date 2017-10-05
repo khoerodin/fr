@@ -1,10 +1,10 @@
 (function (Bisnis) {
-    Bisnis.Adv.Layouts = {};
+    Bisnis.Admin.UserActivities = {};
 
     // fetch grid and pagination
-    Bisnis.Adv.Layouts.fetchAll = function (params, callback) {
+    Bisnis.Admin.UserActivities.fetchAll = function (params, callback) {
         Bisnis.request({
-            module: 'advertising/layouts',
+            module: 'user-activities',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -21,21 +21,27 @@
     var loadGrid = function (pageNum) {
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
-        Bisnis.Util.Storage.store('LAYOUTS_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.Layouts.fetchAll([{page: pageNum}], function (rawData) {
+        Bisnis.Util.Storage.store('ADMIN_USER_ACTIVITIES_CURRENT_PAGE', pageNum);
+        Bisnis.Admin.UserActivities.fetchAll([{page: pageNum}], function (rawData) {
             var memberData = rawData['hydra:member'];
             var viewData = rawData['hydra:view'];
 
+            console.log(viewData)
+
             if ('undefined' !== typeof viewData['hydra:last']) {
                 var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#layoutsPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                Bisnis.Util.Grid.createPagination('#userActivitiesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
             }
 
             if (memberData.length > 0) {
                 var records = [];
                 Bisnis.each(function (idx, memberData) {
                     records.push([
-                        { value: memberData.name },
+                        { value: memberData.createdAt },
+                        { value: memberData.clientName },
+                        { value: memberData.username },
+                        { value: memberData.path },
+                        { value: memberData.requestMethod },
                         { value: memberData.id, format: function (id) {
                             return '<span class="pull-right">' +
                                 '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
@@ -44,77 +50,57 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#layoutsList', records);
+                Bisnis.Util.Grid.renderRecords('#userActivitiesList', records);
             } else {
-                Bisnis.Util.Document.putHtml('#layoutsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                Bisnis.Util.Document.putHtml('#userActivitiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }
         });
     };
 
     loadGrid(1);
 
-    Bisnis.Util.Event.bind('click', '#layoutsPagination .pagePrevious', function () {
+    Bisnis.Util.Event.bind('click', '#userActivitiesPagination .pagePrevious', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#layoutsPagination .pageNext', function () {
+    Bisnis.Util.Event.bind('click', '#userActivitiesPagination .pageNext', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
-    Bisnis.Util.Event.bind('click', '#layoutsPagination .pageFirst', function () {
+    Bisnis.Util.Event.bind('click', '#userActivitiesPagination .pageFirst', function () {
         loadGrid(1);
     });
 
-    Bisnis.Util.Event.bind('click', '#layoutsPagination .pageLast', function () {
+    Bisnis.Util.Event.bind('click', '#userActivitiesPagination .pageLast', function () {
         loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
     // end fetch grid and pagination
 
     // search box
     var params = {
-        placeholder: 'CARI NAMA LAYOUT',
-        module: 'advertising/layouts',
+        placeholder: 'CARI KLIEN API / USERNAME',
+        module: 'user-activities',
         fields: [
             {
-                field: 'name',
-                label: 'Layout'
+                field: 'clientName',
+                label: 'Klien Api'
+            },
+            {
+                field: 'username',
+                label: 'Username'
             }
         ]
     };
 
-    Bisnis.Util.Style.ajaxSelect('#searchLayouts', params,
-        function (hasResultCallback) {
-            var btn = document.getElementById('btnAddLayout');
-            if (hasResultCallback) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
-        }, function (selectedCallback) {
-            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
+    Bisnis.Util.Style.ajaxSelect('#searchUserActivities', params, null,
+        function (selectedCallback) {
             loadDetail(selectedCallback.id);
-        }, function (openCallback) {
-            var btn = document.getElementById('btnAddLayout');
-            if (openCallback === false) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
-        }, function (closeCallback) {
-            var btn = document.getElementById('btnAddLayout');
-            setTimeout(function () {
-                if (closeCallback === false) {
-                    btn.disabled = false;
-                } else {
-                    btn.disabled = true;
-                }
-            }, 300);
         }
     );
     // end search box
 
     // add modal
-    Bisnis.Util.Event.bind('click', '#btnAddLayout', function () {
+    Bisnis.Util.Event.bind('click', '#btnAddService', function () {
         Bisnis.Util.Dialog.showModal('#addModal');
         document.getElementById('addName').focus();
     });
@@ -124,7 +110,7 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.Layouts.add(params, function (callback) {
+        Bisnis.Admin.UserActivities.add(params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('addForm', callback.violations);
             } else {
@@ -135,9 +121,15 @@
         });
     });
 
-    Bisnis.Adv.Layouts.add = function (params, callback) {
+    Bisnis.Admin.UserActivities.add = function (params, callback) {
+        var addCode = document.getElementById('addName').value;
+        params.push({
+            name: 'code',
+            value: addCode.replace(' ', '').toUpperCase()
+        });
+
         Bisnis.request({
-            module: 'advertising/layouts',
+            module: 'user-activities',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -154,8 +146,8 @@
 
     // detail modal
     var loadDetail = function (id) {
-        Bisnis.Util.Storage.store('LAYOUTS_ID', id);
-        Bisnis.Adv.Layouts.fetchById(id, function (callback) {
+        Bisnis.Util.Storage.store('SERVICE_ID', id);
+        Bisnis.Admin.UserActivities.fetchById(id, function (callback) {
             var nameElem = document.getElementById('detailName');
             nameElem.value = callback.name;
             nameElem.focus();
@@ -168,9 +160,9 @@
         loadDetail(id);
     });
 
-    Bisnis.Adv.Layouts.fetchById = function (id, callback) {
+    Bisnis.Admin.UserActivities.fetchById = function (id, callback) {
         Bisnis.request({
-            module: 'advertising/layouts/' + id,
+            module: 'user-activities/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
             var rawData = JSON.parse(dataResponse);
@@ -183,9 +175,9 @@
         });
     };
 
-    Bisnis.Adv.Layouts.updateById = function (id, params, callback) {
+    Bisnis.Admin.UserActivities.updateById = function (id, params, callback) {
         Bisnis.request({
-            module: 'advertising/layouts/' + id,
+            module: 'user-activities/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -200,76 +192,23 @@
     };
 
     Bisnis.Util.Event.bind('click', '#btn-update', function () {
-        var id = Bisnis.Util.Storage.fetch('LAYOUTS_ID');
+        var id = Bisnis.Util.Storage.fetch('SERVICE_ID');
         var params = Bisnis.Util.Form.serializeArray('#detailForm');
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.Layouts.updateById(id, params, function (callback) {
+        Bisnis.Admin.UserActivities.updateById(id, params, function (callback) {
             if (callback.violations) {
                 Bisnis.Util.Grid.validate('detailForm', callback.violations);
             } else {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
-                var page = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE');
+                var page = Bisnis.Util.Storage.fetch('ADMIN_USER_ACTIVITIES_CURRENT_PAGE');
                 loadGrid(page);
             }
             thisBtn.disabled = false;
         });
     });
     // end detail modal
-
-    // delete layout
-    Bisnis.Util.Event.bind('click', '.btn-delete', function () {
-        var id = Bisnis.Util.Document.getDataValue(this, 'id');
-        Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
-            if (result) {
-                Bisnis.Adv.Layouts.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
-                        Bisnis.successMessage('Berhasil menghapus data');
-                        var page = Bisnis.Util.Storage.fetch('LAYOUTS_CURRENT_PAGE');
-                        loadGrid(page);
-                    } else {
-                        Bisnis.errorMessage('Gagal menghapus data');
-                    }
-                })
-            }
-        });
-    });
-
-    Bisnis.Adv.Layouts.delete = function (id, callback) {
-        Bisnis.request({
-            module: 'advertising/layouts/' + id,
-            method: 'delete'
-        }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
-            }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
-        });
-    };
-    // end delete layout
-
-    // prevent submit form on enter
-    Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {
-        var key = e.charCode || e.keyCode || 0;
-        if (key == 13) {
-            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
-            e.preventDefault();
-        }
-    });
-    // end prevent submit form on enter
-
-    // reset modal form on modal hidden
-    Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
-        Bisnis.Util.Grid.removeErrorForm('addForm');
-        document.getElementById("addForm").reset();
-    });
-    Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
-        Bisnis.Util.Grid.removeErrorForm('detailForm');
-        document.getElementById("detailForm").reset();
-    });
-    // end reset modal form on modal hidden
 
 })(window.Bisnis || {});

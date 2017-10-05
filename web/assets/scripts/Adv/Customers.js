@@ -191,6 +191,8 @@
         };
         Bisnis.Util.Style.ajaxSelect('#addBillingGroup', billingGroupsParams);
 
+        Bisnis.Util.DatePicker.render('#addPartnershipDate');
+
         Bisnis.Util.Dialog.showModal('#addModal');
         document.getElementById('addRepresentative').focus();
     });
@@ -223,7 +225,10 @@
             'bankAccountNumber'
         ];
 
-        var params = Bisnis.Util.Form.hashPrepand(fields, params);
+        var paramsWithHash = Bisnis.Util.Form.hashPrepand(fields, params);
+
+        var dateFields = ['partnershipDate'];
+        var params = Bisnis.Util.Form.formatDate(dateFields, paramsWithHash, 'DD/MM/YYYY');
 
         Bisnis.request({
             module: 'advertising/customers',
@@ -252,11 +257,11 @@
             var billingGroupElem = document.getElementById('detailBillingGroup');
 
 
-            representativeElem.innerHTML = '<option value="/api/advertising/representatives/'+callback.representative.id+'">'+callback.representative.name+'</option>';
-            cityElem.innerHTML = '<option value="/api/cities/'+callback.representative.id+'">'+callback.representative.name+'</option>';
-            taxCityElem.innerHTML = '<option value="/api/cities/'+callback.representative.id+'">'+callback.representative.name+'</option>';
-            bankElem.innerHTML = '<option value="/api/banks/'+callback.representative.id+'">'+callback.representative.name+'</option>';
-            billingGroupElem.innerHTML = '<option value="/api/billing/groups/'+callback.representative.id+'">'+callback.representative.name+'</option>';
+            representativeElem.innerHTML = '<option value="/api/representatives/'+callback.representative.id+'">'+callback.representative.name+'</option>';
+            cityElem.innerHTML = '<option value="/api/cities/'+callback.city.id+'">'+callback.city.name+'</option>';
+            taxCityElem.innerHTML = '<option value="/api/cities/'+callback.taxCity.id+'">'+callback.taxCity.name+'</option>';
+            bankElem.innerHTML = '<option value="/api/banks/'+callback.bank.id+'">'+callback.bank.name+'</option>';
+            billingGroupElem.innerHTML = '<option value="/api/billing/groups/'+callback.billingGroup.id+'">'+callback.billingGroup.name+'</option>';
 
             Bisnis.Util.Event.bind('change', '#detailRepresentative');
             Bisnis.Util.Style.modifySelect('#detailRepresentative');
@@ -332,6 +337,24 @@
                 ]
             };
             Bisnis.Util.Style.ajaxSelect('#detailBillingGroup', billingGroupsParams);
+
+            document.getElementById('detailCode').value = callback.code;
+            document.getElementById('detailName').value = callback.name;
+            document.getElementById('detailAddress').value = callback.address;
+            document.getElementById('detailPostalCode').value = callback.postalCode;
+            document.getElementById('detailPostalCode').value = callback.postalCode;
+            document.getElementById('detailPhoneNumber').value = callback.phoneNumber;
+            document.getElementById('detailFaxNumber').value = callback.faxNumber;
+            Bisnis.Util.DatePicker.render('#detailPartnershipDate', callback.partnershipDate);
+            document.getElementById('detailTaxNumber').value = callback.taxNumber;
+            document.getElementById('detailTaxAddress').value = callback.taxAddress;
+            document.getElementById('detailTaxPhoneNumber').value = callback.taxPhoneNumber;
+            document.getElementById('detailTaxFaxNumber').value = callback.taxFaxNumber;
+            document.getElementById('detailPresidentDirectorName').value = callback.presidentDirectorName;
+            document.getElementById('detailMediaManagerName').value = callback.mediaManagerName;
+            document.getElementById('detailBankAccountNumber').value = callback.bankAccountNumber;
+            document.getElementById('detailRemark').value = callback.remark;
+            document.getElementById('detailCreditLimit').value = callback.creditLimit;
         });
 
         Bisnis.Util.Dialog.showModal('#detailModal');
@@ -370,7 +393,10 @@
             'bankAccountNumber'
         ];
 
-        var params = Bisnis.Util.Form.hashPrepand(fields, params);
+        var paramsWithHash = Bisnis.Util.Form.hashPrepand(fields, params);
+
+        var dateFields = ['partnershipDate'];
+        var params = Bisnis.Util.Form.formatDate(dateFields, paramsWithHash, 'DD/MM/YYYY');
 
         Bisnis.request({
             module: 'advertising/customers/' + id,
@@ -440,23 +466,13 @@
     // end delete account executive manager
 
     // prevent submit form on enter
-    window.onload = function() {
-        document.getElementById("addForm").onkeypress = function(e) {
-            var key = e.charCode || e.keyCode || 0;
-            if (key == 13) {
-                Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
-                e.preventDefault();
-            }
-        };
-
-        document.getElementById("detailForm").onkeypress = function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            if (key == 13) {
-                Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
-                e.preventDefault();
-            }
-        };
-    };
+    Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+            e.preventDefault();
+        }
+    });
     // end prevent submit form on enter
 
     // reset modal form on modal hidden

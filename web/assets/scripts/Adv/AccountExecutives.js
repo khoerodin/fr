@@ -47,7 +47,7 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#accountExecutivesList', records);
+                Bisnis.Util.Grid.renderRecords('#accountExecutivesList', records, pageNum);
             } else {
                 Bisnis.Util.Document.putHtml('#accountExecutivesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }
@@ -212,7 +212,7 @@
                             }}
                         ]);
                     }, memberData);
-                    Bisnis.Util.Grid.renderRecords('#accountExecutiveCategoriesList', records);
+                    Bisnis.Util.Grid.renderRecords('#accountExecutiveCategoriesList', records, pageNum);
                 });
             } else {
                 Bisnis.Util.Document.putHtml('#accountExecutiveCategoriesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');

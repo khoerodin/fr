@@ -45,7 +45,7 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#accountExecutiveManagersList', records);
+                Bisnis.Util.Grid.renderRecords('#accountExecutiveManagersList', records, pageNum);
             } else {
                 Bisnis.Util.Document.putHtml('#accountExecutiveManagersList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }

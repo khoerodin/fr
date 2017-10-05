@@ -59,8 +59,6 @@ function saveOrder(orderNumber) {
     var params = $('#orderForm').serializeArray();
     var tags = String($('#orderTag').val());
 
-    console.log(tags);
-
     params.push({
         name: 'orderTag',
         value: tags

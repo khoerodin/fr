@@ -45,7 +45,7 @@
                         }}
                     ]);
                 }, memberData);
-                Bisnis.Util.Grid.renderRecords('#areasList', records);
+                Bisnis.Util.Grid.renderRecords('#areasList', records, pageNum);
             } else {
                 Bisnis.Util.Document.putHtml('#areasList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
             }

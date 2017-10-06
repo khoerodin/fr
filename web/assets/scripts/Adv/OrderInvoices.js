@@ -182,6 +182,11 @@
         Bisnis.Util.Storage.store('GENERATE_INV_ORDER_ID', orderId);
         Bisnis.Util.Storage.store('GENERATE_INV_NETTO', netto);
 
+        var amount = document.querySelector('#invoicesModal #amount');
+        amount.value = '';
+        amount.disabled = false;
+        document.querySelector('#generateInvoice').disabled = false;
+
         countAllInvoiceAmount(orderId, function (totalCallback) {
             var sisa = parseFloat(netto) - parseFloat(totalCallback);
             document.querySelector('#invoicesModal #sisa').innerHTML = Bisnis.Util.Money.format(parseFloat(sisa));

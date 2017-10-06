@@ -22,8 +22,6 @@
                 btn.disabled = false;
             }
         }, function (selectedCallback) {
-            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
-            console.log(selectedCallback)
             var id = selectedCallback.id;
             loadDetail(id);
         }, function (openCallback) {
@@ -47,19 +45,19 @@
     // end search box
 
     // fetch grid
-    Bisnis.Admin.Modules.fetchByService = function (params, callback) {
+    Bisnis.Admin.Modules.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'modules',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -76,7 +74,7 @@
             params.push({service: serviceId});
         }
 
-        Bisnis.Admin.Modules.fetchByService(params, function (rawData) {
+        Bisnis.Admin.Modules.fetchAll(params, function (rawData) {
             var memberData = rawData['hydra:member'];
             var viewData = rawData['hydra:view'];
 
@@ -178,7 +176,7 @@
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
             }
@@ -227,7 +225,7 @@
             module: 'modules/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
@@ -243,7 +241,7 @@
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);

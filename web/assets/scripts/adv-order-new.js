@@ -45,7 +45,6 @@ function getOrderId() {
             method: 'get'
         },
         success: function (data) {
-            var data = JSON.parse(data);
             var urutan = paddy(data.id, 3);
             var orderNumber = 'OI/'+urutan+'/'+code+'/'+month+'/'+year;
             $('#orderNumber').val(orderNumber);
@@ -79,8 +78,6 @@ function saveOrder() {
             $('#btn-order').text('MENYIMPAN ORDER ...').prop('disabled', true);
         },
         success: function (data, textStatus, jqXHR) {
-            var data = JSON.parse(data);
-
             if ( jqXHR.status === 200 ) {
 
                 if ("violations" in data) {

@@ -2,19 +2,19 @@
     Bisnis.Adv.Media = {};
 
     // fetch grid and pagination
-    Bisnis.Adv.Media.fetchAll = function (params, callback) {
+    Bisnis.Adv.Media.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/media',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -22,34 +22,38 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('MEDIA_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.Media.fetchAll([{page: pageNum}], function (rawData) {
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+        Bisnis.Adv.Media.fetchAll([{page: pageNum}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var viewData = dataResponse['hydra:view'];
 
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#mediaPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
+                if ('undefined' !== typeof viewData['hydra:last']) {
+                    var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                    Bisnis.Util.Grid.createPagination('#mediaPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                }
 
-            if (memberData.length > 0) {
-                var records = [];
-                Bisnis.each(function (idx, memberData) {
-                    records.push([
-                        { value: memberData.code },
-                        { value: memberData.name },
-                        { value: memberData.id, format: function (id) {
-                            return '<span class="pull-right">' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                                '</span>';
-                        }}
-                    ]);
-                }, memberData);
-                Bisnis.Util.Grid.renderRecords('#mediaList', records, pageNum);
-            } else {
-                Bisnis.Util.Document.putHtml('#mediaList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                if (memberData.length > 0) {
+                    var records = [];
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            { value: memberData.code },
+                            { value: memberData.name },
+                            { value: memberData.id, format: function (id) {
+                                return '<span class="pull-right">' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                    '</span>';
+                            }}
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#mediaList', records, pageNum);
+                } else {
+                    Bisnis.Util.Document.putHtml('#mediaList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA MEDIA');
             }
-        });
+        );
     };
 
     loadGrid(1);
@@ -96,7 +100,6 @@
                 btn.disabled = false;
             }
         }, function (selectedCallback) {
-            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddMedia');
@@ -129,30 +132,33 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.Media.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Adv.Media.add(params,
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
                 loadGrid(1);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
 
-    Bisnis.Adv.Media.add = function (params, callback) {
+    Bisnis.Adv.Media.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/media',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end add modal
@@ -176,34 +182,34 @@
         loadDetail(id);
     });
 
-    Bisnis.Adv.Media.fetchById = function (id, callback) {
+    Bisnis.Adv.Media.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/media/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Adv.Media.updateById = function (id, params, callback) {
+    Bisnis.Adv.Media.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/media/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -213,17 +219,20 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.Media.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Adv.Media.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('MEDIA_CURRENT_PAGE');
                 loadGrid(page);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
     // end detail modal
 
@@ -232,29 +241,31 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Adv.Media.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Adv.Media.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('MEDIA_CURRENT_PAGE');
                         loadGrid(page);
-                    } else {
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }
-                })
+                );
             }
         });
     });
 
-    Bisnis.Adv.Media.delete = function (id, callback) {
+    Bisnis.Adv.Media.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/media/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete media

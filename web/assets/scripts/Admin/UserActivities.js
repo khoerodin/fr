@@ -2,19 +2,19 @@
     Bisnis.Admin.UserActivities = {};
 
     // fetch grid and pagination
-    Bisnis.Admin.UserActivities.fetchAll = function (params, callback) {
+    Bisnis.Admin.UserActivities.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'user-activities',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -22,39 +22,43 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('ADMIN_USER_ACTIVITIES_CURRENT_PAGE', pageNum);
-        Bisnis.Admin.UserActivities.fetchAll([{page: pageNum}], function (rawData) {
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+        Bisnis.Admin.UserActivities.fetchAll([{page: pageNum}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var viewData = dataResponse['hydra:view'];
 
-            console.log(viewData)
+                console.log(viewData)
 
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#userActivitiesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                if ('undefined' !== typeof viewData['hydra:last']) {
+                    var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                    Bisnis.Util.Grid.createPagination('#userActivitiesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                }
+
+                if (memberData.length > 0) {
+                    var records = [];
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            { value: memberData.createdAt },
+                            { value: memberData.clientName },
+                            { value: memberData.username },
+                            { value: memberData.path },
+                            { value: memberData.requestMethod },
+                            { value: memberData.id, format: function (id) {
+                                return '<span class="pull-right">' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                    '</span>';
+                            }}
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#userActivitiesList', records, pageNum);
+                } else {
+                    Bisnis.Util.Document.putHtml('#userActivitiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKTIVITAS PENGGUNA');
             }
-
-            if (memberData.length > 0) {
-                var records = [];
-                Bisnis.each(function (idx, memberData) {
-                    records.push([
-                        { value: memberData.createdAt },
-                        { value: memberData.clientName },
-                        { value: memberData.username },
-                        { value: memberData.path },
-                        { value: memberData.requestMethod },
-                        { value: memberData.id, format: function (id) {
-                            return '<span class="pull-right">' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                                '</span>';
-                        }}
-                    ]);
-                }, memberData);
-                Bisnis.Util.Grid.renderRecords('#userActivitiesList', records, pageNum);
-            } else {
-                Bisnis.Util.Document.putHtml('#userActivitiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
-            }
-        });
+        );
     };
 
     loadGrid(1);
@@ -133,7 +137,7 @@
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
@@ -165,7 +169,7 @@
             module: 'user-activities/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
@@ -181,7 +185,7 @@
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);

@@ -15,8 +15,6 @@ function detailUserActivities(id) {
             jQuery('p.help-block').remove();
         },
         success: function (data, textStatus, jqXHR) {
-            data = JSON.parse(data);
-
             var tableRequest = '';
             $.each(data.requestData, function (index, value) {
                 if(jQuery.isEmptyObject(value) === false) {

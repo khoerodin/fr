@@ -2,19 +2,19 @@
     Bisnis.Admin.Cities = {};
 
     // fetch grid and pagination
-    Bisnis.Admin.Cities.fetchAll = function (params, callback) {
+    Bisnis.Admin.Cities.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'cities',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -22,36 +22,40 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('ADMIN_CITIES_CURRENT_PAGE', pageNum);
-        Bisnis.Admin.Cities.fetchAll([{page: pageNum}], function (rawData) {
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+        Bisnis.Admin.Cities.fetchAll([{page: pageNum}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var viewData = dataResponse['hydra:view'];
 
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#citiesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
+                if ('undefined' !== typeof viewData['hydra:last']) {
+                    var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                    Bisnis.Util.Grid.createPagination('#citiesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                }
 
-            if (memberData.length > 0) {
-                var records = [];
-                Bisnis.each(function (idx, memberData) {
-                    records.push([
-                        { value: memberData.code },
-                        { value: memberData.name },
-                        { value: memberData.postalCode },
-                        { value: (memberData.parent) ? memberData.parent.name : '-' },
-                        { value: memberData.id, format: function (id) {
-                            return '<span class="pull-right">' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                                '</span>';
-                        }}
-                    ]);
-                }, memberData);
-                Bisnis.Util.Grid.renderRecords('#citiesList', records, pageNum);
-            } else {
-                Bisnis.Util.Document.putHtml('#citiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                if (memberData.length > 0) {
+                    var records = [];
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            { value: memberData.code },
+                            { value: memberData.name },
+                            { value: memberData.postalCode },
+                            { value: (memberData.parent) ? memberData.parent.name : '-' },
+                            { value: memberData.id, format: function (id) {
+                                return '<span class="pull-right">' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                    '</span>';
+                            }}
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#citiesList', records, pageNum);
+                } else {
+                    Bisnis.Util.Document.putHtml('#citiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KOTA');
             }
-        });
+        );
     };
 
     loadGrid(1);
@@ -169,7 +173,7 @@
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
@@ -224,7 +228,7 @@
             module: 'cities/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
@@ -246,7 +250,7 @@
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);

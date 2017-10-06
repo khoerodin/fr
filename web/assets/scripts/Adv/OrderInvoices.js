@@ -20,15 +20,15 @@
     var invoiceList = function (orderId) {
         Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}], function (callback) {
             var memberData = callback['hydra:member'];
-            var records = '';
+            var invoicesButtons = '';
             var orderID = '';
             if (memberData.length > 0) {
                 Bisnis.each(function (idx, memberData) {
                     orderID = memberData.order.id;
                     var str = '<button class="btn btn-xs btn-flat btn-success btn-invoices" style="margin-right: 5px;margin-bottom: 5px;">'+memberData.invoiceNumber+'</button>';
-                    records = records + str;
+                    invoicesButtons = invoicesButtons + str;
                 }, memberData);
-                document.querySelector('#totalAmount' + orderID).innerHTML = records;
+                document.querySelector('#totalAmount' + orderID).innerHTML = invoicesButtons;
             }
         });
 

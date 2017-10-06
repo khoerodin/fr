@@ -55,19 +55,15 @@ function getOrderId() {
     });
 }
 
-function saveOrder(orderNumber) {
+function saveOrder() {
     var params = $('#orderForm').serializeArray();
     var tags = String($('#orderTag').val());
 
     params.push({
         name: 'orderTag',
         value: tags
-    }, {
-        name: 'orderNumber',
-        value: orderNumber
     });
 
-    console.log(params);
 
     $.ajax({
         url: '/api',
@@ -139,7 +135,7 @@ function saveOrder(orderNumber) {
 }
 
 $(document).on('click', '#btn-order', function () {
-    getOrderId();
+    saveOrder();
 });
 
 function saveByDates(orderId) {

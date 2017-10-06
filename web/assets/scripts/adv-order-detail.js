@@ -67,7 +67,7 @@ $(document).on('click', '#btn-order-update', function () {
                     success: function (data, textStatus, jqXHR) {
                         if (jqXHR.status === 200) {
 
-                            if ( JSON.parse(data).file ) {
+                            if ( data.file ) {
                                 bootbox.alert({
                                     message: "GAGAL MEMPERBARUI ORDER",
                                     animate: false,

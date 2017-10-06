@@ -8,7 +8,7 @@
             params: [params]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                callback(JSON.parse(response));
+                callback(response);
             }
         }, function () {
             console.log('KO');

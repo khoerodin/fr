@@ -1,19 +1,19 @@
 (function (Bisnis) {
     Bisnis.Adv.Categories = {};
 
-    Bisnis.Adv.Categories.fetchAll = function (params, callback) {
+    Bisnis.Adv.Categories.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/categories',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -149,7 +149,7 @@
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
@@ -167,7 +167,7 @@
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);

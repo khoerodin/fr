@@ -20,7 +20,6 @@ $(document).on('click', '#update-profile', function () {
             $('#update-profile').text('UPDATING...').prop('disabled', true);
         },
         success: function (data, textStatus, jqXHR) {
-            var data = JSON.parse(data);
             if ("violations" in data) {
 
                 $.each(data, function (index, value) {
@@ -60,7 +59,6 @@ $(document).on('click', '#update-profile', function () {
                             $('#update-profile').text('UPDATING...').prop('disabled', true);
                         },
                         success: function (data, textStatus, jqXHR) {
-                            var data = JSON.parse(data);
                             if ("violations" in data) {
 
                                 $.each(data, function (index, value) {

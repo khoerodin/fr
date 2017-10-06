@@ -59,7 +59,7 @@ function getCustomers(param, modalTag, pageNum) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data)['hydra:member'];
+            var memberData = data['hydra:member'];
 
             tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Kode</th><th>Nama</th><th>Kota</th></tr></thead>';
             tableData += '<tbody id="'+modalTag+'Data">';
@@ -87,7 +87,7 @@ function getCustomers(param, modalTag, pageNum) {
             }
             $('#'+modalTag +' .modal-body #data-list').html(tableData);
 
-            var view = JSON.parse(data)['hydra:view'];
+            var view = data['hydra:view'];
             if (view) {
                 var paging = '<ul class="pagination pull-right">';
                 $.each(view, function (idx, val) {
@@ -202,7 +202,7 @@ function getSpecifications(params, pageNum) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data)['hydra:member'];
+            var memberData = data['hydra:member'];
 
             tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Jenis Iklan</th></tr></thead>';
             tableData += '<tbody id="jenisIklanModalData">';
@@ -228,7 +228,7 @@ function getSpecifications(params, pageNum) {
             }
             $('#jenisIklanModal .modal-body #data-list').html(tableData);
 
-            var view = JSON.parse(data)['hydra:view'];
+            var view = data['hydra:view'];
             if (view) {
                 var paging = '<ul class="pagination pull-right">';
                 $.each(view, function (idx, val) {
@@ -329,7 +329,7 @@ function getTypes(params, spcId, pageNum) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data)['hydra:member'];
+            var memberData = data['hydra:member'];
 
             tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Tipe Iklan</th></tr></thead>';
             tableData += '<tbody id="tipeIklanModalData">';
@@ -355,7 +355,7 @@ function getTypes(params, spcId, pageNum) {
             }
             $('#tipeIklanModal .modal-body #data-list').html(tableData);
 
-            var view = JSON.parse(data)['hydra:view'];
+            var view = data['hydra:view'];
             if (view) {
                 var paging = '<ul class="pagination pull-right">';
                 $.each(view, function (idx, val) {
@@ -424,8 +424,8 @@ $(document).on('click', '#tipeIklanModal .to-page', function () {
             },
             success: function (data) {
 
-                var total = JSON.parse(data)['hydra:totalItems'];
-                var data = JSON.parse(data)['hydra:member'];
+                var total = data['hydra:totalItems'];
+                var data = data['hydra:member'];
 
                 if (total > 0) {
                     $('#basePrice, [name="basePrice"]').val(data[0]['price']);
@@ -468,7 +468,7 @@ function getMedia(params) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data)['hydra:member'];
+            var memberData = data['hydra:member'];
 
             tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Media klan</th></tr></thead>';
             tableData += '<tbody id="mediaIklanModalData">';
@@ -607,7 +607,7 @@ function getPIC(params, pageNum) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data)['hydra:member'];
+            var memberData = data['hydra:member'];
 
             tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th width="25%">Kode</th><th>Nama PIC</th></tr></thead>';
             tableData += '<tbody id="PICModalData">';
@@ -634,7 +634,7 @@ function getPIC(params, pageNum) {
             }
             $('#PICModal .modal-body #data-list').html(tableData);
 
-            var view = JSON.parse(data)['hydra:view'];
+            var view = data['hydra:view'];
             if (view) {
                 var paging = '<ul class="pagination pull-right">';
                 $.each(view, function (idx, val) {
@@ -717,7 +717,7 @@ function getSisipan(params) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var memberData = JSON.parse(data)['hydra:member'];
+            var memberData = data['hydra:member'];
 
             tableData  = '<table class="table table-bordered table-responsive table-hover"><thead><tr><th>Nama Kota</th></tr></thead>';
             tableData += '<tbody id="sisipanModalData">';
@@ -1602,7 +1602,7 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var count = JSON.parse(data)['hydra:totalItems'];
+            var count = data['hydra:totalItems'];
             count = Math.ceil(count / 366);
 
             var dates = [];
@@ -1622,7 +1622,7 @@ $(document).on('click', '#edisiTerbitButton', function (e) {
                         ]
                     },
                     success: function (data, textStatus, jqXHR) {
-                        var data = JSON.parse(data)['hydra:member'];
+                        var data = data['hydra:member'];
                         $.each(data, function (index, value) {
                             dates.push({id: value.id,publishDate: value.publishDate});
                         });
@@ -2297,7 +2297,6 @@ $('#orderTag').select2({
                 ]
             },
             success: function (data) {
-                var data = JSON.parse(data);
                 $('option[value="'+e.timeStamp+'"]').attr('value', data.id).prop('selected', true);
             },
             error: function () {

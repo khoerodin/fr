@@ -1,46 +1,50 @@
 (function (Bisnis) {
     Bisnis.Adv.AccountExecutiveCategories = {};
 
-    Bisnis.Adv.AccountExecutiveCategories.fetchAll = function (params, callback) {
+    Bisnis.Adv.AccountExecutiveCategories.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/account-executive-categories',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Adv.AccountExecutiveCategories.add = function (params, callback) {
+    Bisnis.Adv.AccountExecutiveCategories.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/account-executive-categories',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Adv.AccountExecutiveCategories.delete = function (id, callback) {
+    Bisnis.Adv.AccountExecutiveCategories.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/account-executive-categories/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 

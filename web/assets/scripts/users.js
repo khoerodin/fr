@@ -87,7 +87,7 @@ function getRoles(userId, serviceId, pageNum) {
     $.when(ajax1, ajax2).done(function(a1, a2){
 
         if((a1[1] === 'success' && a2[1] === 'success')) {
-            var data2 = JSON.parse(a2[0]);
+            var data2 = a2[0];
             roles = [];
             $.each(data2['hydra:member'], function (idx, val) {
                 roles[val.module.id] = {
@@ -102,7 +102,7 @@ function getRoles(userId, serviceId, pageNum) {
             });
 
             var userRoles = [];
-            var data1 = JSON.parse(a1[0]);
+            var data1 = a1[0];
             $.each(data1['hydra:member'], function (idx, val) {
                 if ('undefined' !== typeof roles[val.id]) {
                     userRoles[idx] = {
@@ -238,7 +238,7 @@ $(document).on('change', '.check-role', function () {
         data: data,
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
-            data = JSON.parse(data);
+            data = data;
             $this.closest('tr').attr('data-role', data.id);
             toastr.success('Role successfully changed');
         },

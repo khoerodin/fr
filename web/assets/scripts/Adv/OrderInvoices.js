@@ -1,19 +1,19 @@
 (function (Bisnis) {
     Bisnis.Adv.OrderInvoices = {};
 
-    Bisnis.Adv.OrderInvoices.fetchAll = function (params, callback) {
+    Bisnis.Adv.OrderInvoices.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/order-invoices',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -57,47 +57,51 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('ORDER_ORDER_INVOICES_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.Orders.fetchAll([{page: pageNum}], function (rawData) {
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+        Bisnis.Adv.Orders.fetchAll([{page: pageNum}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var viewData = dataResponse['hydra:view'];
 
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#ordersPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
+                if ('undefined' !== typeof viewData['hydra:last']) {
+                    var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                    Bisnis.Util.Grid.createPagination('#ordersPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                }
 
-            if (memberData.length > 0) {
-                var records = [];
-                Bisnis.each(function (idx, memberData) {
-                    records.push([
-                        {value: memberData.orderNumber},
-                        {value: memberData.title},
-                        {value: invoiceType(memberData.printInvoiceAs)},
-                        {
-                            value: memberData.id, format: function (id) {
-                            invoiceList(memberData.id);
-                            return '<span id="totalAmount' + memberData.id + '"></span>';
-                        }
-                        },
-                        {
-                            value: memberData.id, format: function (id) {
-                            return '<span class="pull-right">' +
-                                '<button data-id="' + id + '" ' +
-                                'data-ordernumber="' + memberData.orderNumber + '" ' +
-                                'data-totalamount="' + memberData.totalAmount + '" ' +
-                                'data-quantity="' + memberData.quantity + '" ' +
-                                'class="btn btn-xs btn-default btn-flat btn-generate-invoices" ' +
-                                'title="GENERATE INVOICE"><i class="fa fa-clone"></i> BUAT FAKTUR</button>' +
-                                '</span>';
-                        }
-                        }
-                    ]);
-                }, memberData);
-                Bisnis.Util.Grid.renderRecords('#ordersList', records, pageNum);
-            } else {
-                Bisnis.Util.Document.putHtml('#ordersList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                if (memberData.length > 0) {
+                    var records = [];
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            {value: memberData.orderNumber},
+                            {value: memberData.title},
+                            {value: invoiceType(memberData.printInvoiceAs)},
+                            {
+                                value: memberData.id, format: function (id) {
+                                invoiceList(memberData.id);
+                                return '<span id="totalAmount' + memberData.id + '"></span>';
+                            }
+                            },
+                            {
+                                value: memberData.id, format: function (id) {
+                                return '<span class="pull-right">' +
+                                    '<button data-id="' + id + '" ' +
+                                    'data-ordernumber="' + memberData.orderNumber + '" ' +
+                                    'data-totalamount="' + memberData.totalAmount + '" ' +
+                                    'data-quantity="' + memberData.quantity + '" ' +
+                                    'class="btn btn-xs btn-default btn-flat btn-generate-invoices" ' +
+                                    'title="GENERATE INVOICE"><i class="fa fa-clone"></i> BUAT FAKTUR</button>' +
+                                    '</span>';
+                            }
+                            }
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#ordersList', records, pageNum);
+                } else {
+                    Bisnis.Util.Document.putHtml('#ordersList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA FAKTUR');
             }
-        });
+        );
     };
 
     loadPage(1);
@@ -217,7 +221,7 @@
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
             }

@@ -242,10 +242,10 @@
             } else {
                 return null;
             }
-            
+
             if (staff[0].isAdmin) {
                 Bisnis.Helpdesk.Category.fetchAll([], function (categoryList) {
-                    var categoryList = categoryList['hydra:member'];
+                    categoryList = categoryList['hydra:member'];
                     var categoryOption = '<option selected value="">PILIH BAGIAN</option>';
                     Bisnis.each(function (index, value) {
                         categoryOption = categoryOption + '<option value="' + value.id + '#' + value.name + '">' + value.name + '</option>';

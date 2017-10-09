@@ -166,15 +166,20 @@
     // detail modal
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('MEDIA_ID', id);
-        Bisnis.Adv.Media.fetchById(id, function (callback) {
-            var codeElem = document.getElementById('detailCode');
-            codeElem.value = callback.code;
-            codeElem.focus();
+        Bisnis.Adv.Media.fetchById(id,
+            function (dataResponse) {
+                var codeElem = document.getElementById('detailCode');
+                codeElem.value = dataResponse.code;
+                codeElem.focus();
 
-            var nameElem = document.getElementById('detailName');
-            nameElem.value = callback.name;
-        });
-        Bisnis.Util.Dialog.showModal('#detailModal');
+                var nameElem = document.getElementById('detailName');
+                nameElem.value = dataResponse.name;
+                Bisnis.Util.Dialog.showModal('#detailModal');
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA MEDIA');
+            }
+        );
+
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {

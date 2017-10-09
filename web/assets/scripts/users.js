@@ -66,7 +66,7 @@ function getRoles(userId, serviceId, pageNum) {
     var roleData = {
         module: 'roles',
         method: 'get',
-        params: [{'user.id': userId},{'order[name]': 'ASC'}]
+        params: [{'user.id': userId},{'order': { 'name': 'ASC'}}]
     };
 
     var modules;
@@ -85,6 +85,8 @@ function getRoles(userId, serviceId, pageNum) {
     });
 
     $.when(ajax1, ajax2).done(function(a1, a2){
+
+        console.log(a2[0]['hydra:member']);
 
         if((a1[1] === 'success' && a2[1] === 'success')) {
             var data2 = a2[0];
@@ -251,7 +253,7 @@ function rolesResponse(data,userId,page) {
     var no = 1;
     jQuery.each(data, function (index, value) {
 
-        if (typeof value != 'undefined') {
+        if (typeof value !== 'undefined') {
 
             if(page > 1) {
                 c = page - 1;
@@ -266,25 +268,25 @@ function rolesResponse(data,userId,page) {
                 rolesCheck += '<td>'+value.moduleName+'</td>'
             }
 
-            if(value.viewable === true) {
+            if(value.viewable) {
                 rolesCheck += '<td><input name="viewable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             } else {
                 rolesCheck += '<td><input name="viewable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             }
 
-            if(value.addable === true) {
+            if(value.addable) {
                 rolesCheck += '<td><input name="addable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             } else {
                 rolesCheck += '<td><input name="addable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             }
 
-            if(value.editable === true) {
+            if(value.editable) {
                 rolesCheck += '<td><input name="editable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             } else {
                 rolesCheck += '<td><input name="editable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             }
 
-            if(value.deletable === true) {
+            if(value.deletable) {
                 rolesCheck += '<td><input name="deletable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             } else {
                 rolesCheck += '<td><input name="deletable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';

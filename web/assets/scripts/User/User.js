@@ -19,7 +19,7 @@
 
         jQuery.when(ajaxModules, ajaxRoles).done(function(responseModules, responseRoles) {
             if(('success' === responseModules[1] && 'success' === responseRoles[1])) {
-                var dataRoles = JSON.parse(responseRoles[0]);
+                var dataRoles = responseRoles[0];
                 var roles = [];
                 Bisnis.each(function (idx, val) {
                     roles[val.module.id] = {
@@ -34,7 +34,7 @@
                 }, dataRoles['hydra:member']);
 
                 var userRoles = [];
-                var dataModules = JSON.parse(responseModules[0]);
+                var dataModules = responseModules[0];
                 Bisnis.each(function (idx, val) {
                     if ('undefined' !== typeof roles[val.id]) {
                         userRoles[idx] = {

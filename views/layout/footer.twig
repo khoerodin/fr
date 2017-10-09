@@ -34,6 +34,8 @@
     <script type="text/javascript" src="/assets/vendor/notification/push_notification.min.js"></script>
     <script type="text/javascript" src="/assets/vendor/treeview/treed.js"></script>
     <script type="text/javascript" src="/assets/vendor/bootstrap-menu/BootstrapMenu.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/accountingjs/accounting.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/currency/currency.min.js"></script>
     <script type="text/javascript" src="/assets/scripts/Bisnis.js"></script>
     <script type="text/javascript" src="/assets/scripts/User/User.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Dialog.js"></script>
@@ -47,13 +49,10 @@
     <script type="text/javascript" src="/assets/scripts/Util/WebSocket.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/ContextMenu.js"></script>
     <script type="text/javascript" src="/assets/scripts/Util/Treed.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/DatePicker.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Money.js"></script>
     <script type="text/javascript" src="/assets/scripts/Notification/Notification.js"></script>
     <script>
-        (function() {
-            jQuery('li.treeview:has(ul.treeview-menu li)').removeClass('hidden');
-            jQuery('ul.treeview-menu:has(ul.treeview-menu li)').removeClass('hidden');
-        })();
-
         Bisnis.init(function () {
             Bisnis.BACKEND_HOST = '{{ BACKEND_HOST }}';
             Bisnis.Util.Style.editor('.editor');
@@ -64,10 +63,6 @@
                 Bisnis.Util.Dialog.hideModal('.modal');
                 window.focus(this);
                 Bisnis.Util.Event.triggerClick('a.notif_userNotification');
-                window.addEventListener('beforeunload', function() {
-                    Bisnis.User.logout();
-                    Bisnis.WebSocket.close();
-                });
             });
 
             Bisnis.Util.Event.bind('click', 'a.notif_userNotification', function () {

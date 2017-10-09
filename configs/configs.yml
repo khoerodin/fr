@@ -1,9 +1,9 @@
 app:
     api:
-        base_url: 'http://10.1.1.197:8000/api/'
+        base_url: 'http://10.1.1.197:8000/api/' 
         api_key: '9e210e532761ebf28646657e1bdf19d94a8ef40e'
-#        base_url: 'http://10.5.5.206:8000/api/'
-#        api_key: 'e10db52336fc4a71e4b36bd8acb39209f132c7e8'
+        #base_url: 'http://10.5.5.206:8000/api/'
+        #api_key: 'e10db52336fc4a71e4b36bd8acb39209f132c7e8'
         param_key: 'api_key'
     http: ~
     template:

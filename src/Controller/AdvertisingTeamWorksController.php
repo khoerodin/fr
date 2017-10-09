@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class AdvertisingTeamWorksController extends AdminController
 {
     public function indexAction()
@@ -13,7 +12,7 @@ class AdvertisingTeamWorksController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('advertising-team-works/index.twig', $data);

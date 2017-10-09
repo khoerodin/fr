@@ -12,7 +12,7 @@ class BillingAreasController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('billing-areas/index.twig', $data);

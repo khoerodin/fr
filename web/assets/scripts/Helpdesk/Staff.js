@@ -2,19 +2,19 @@
     Bisnis.Helpdesk.Staff = {};
 
     // fetch grid and pagination
-    Bisnis.Helpdesk.Staff.fetchAll = function (params, callback) {
+    Bisnis.Helpdesk.Staff.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'helpdesk/staffs',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -22,41 +22,45 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('STAFFS_CURRENT_PAGE', pageNum);
-        Bisnis.Helpdesk.Staff.fetchAll([{page: pageNum}], function (rawData) {
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+        Bisnis.Helpdesk.Staff.fetchAll([{page: pageNum}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var viewData = dataResponse['hydra:view'];
 
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#staffsPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
+                if ('undefined' !== typeof viewData['hydra:last']) {
+                    var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                    Bisnis.Util.Grid.createPagination('#staffsPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                }
 
-            if (memberData.length > 0) {
-                var records = [];
-                Bisnis.each(function (idx, memberData) {
-                    records.push([
-                        { value: memberData.user.fullname },
-                        { value: memberData.category.name },
-                        { value: memberData.isAdmin, format: function () {
-                            if (memberData.isAdmin) {
-                                return '<i class="fa fa-check text-success"></i>'
-                            } else {
-                                return '<i class="fa fa-times text-danger"></i>'
-                            }
-                        } },
-                        { value: memberData.id, format: function (id) {
-                            return '<span class="pull-right">' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                                '</span>';
-                        } }
-                    ]);
-                }, memberData);
-                Bisnis.Util.Grid.renderRecords('#staffsList', records);
-            } else {
-                Bisnis.Util.Document.putHtml('#staffsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                if (memberData.length > 0) {
+                    var records = [];
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            { value: memberData.user.fullname },
+                            { value: memberData.category.name },
+                            { value: memberData.isAdmin, format: function () {
+                                if (memberData.isAdmin) {
+                                    return '<i class="fa fa-check text-success"></i>'
+                                } else {
+                                    return '<i class="fa fa-times text-danger"></i>'
+                                }
+                            } },
+                            { value: memberData.id, format: function (id) {
+                                return '<span class="pull-right">' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                    '</span>';
+                            } }
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#staffsList', records, pageNum);
+                } else {
+                    Bisnis.Util.Document.putHtml('#staffsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA METODE PEMBAYARAN');
             }
-        });
+        );
     };
 
     loadGrid(1);
@@ -274,8 +278,7 @@
             method: 'get',
             params: [{'user.id' : userId}]
         }, function (response) {
-            var rawData = JSON.parse(response);
-            var staffList = rawData['hydra:member'];
+            var staffList = response['hydra:member'];
 
             if (Bisnis.validCallback(callback)) {
                 callback(staffList);
@@ -318,23 +321,13 @@
     // end delete staff
 
     // prevent submit form on enter
-    window.onload = function() {
-        document.getElementById("addForm").onkeypress = function(e) {
-            var key = e.charCode || e.keyCode || 0;
-            if (key == 13) {
-                Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
-                e.preventDefault();
-            }
-        };
-
-        document.getElementById("detailForm").onkeypress = function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            if (key == 13) {
-                Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
-                e.preventDefault();
-            }
-        };
-    };
+    Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+            e.preventDefault();
+        }
+    });
     // end prevent submit form on enter
 
     // reset modal form on modal hidden

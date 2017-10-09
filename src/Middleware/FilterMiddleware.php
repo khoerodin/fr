@@ -28,7 +28,7 @@ class FilterMiddleware implements HttpKernelInterface, ContainerAwareInterface
 
     /**
      * @param HttpKernelInterface $app
-     * @param array $filters
+     * @param array               $filters
      */
     public function __construct(HttpKernelInterface $app, array $filters = [])
     {
@@ -38,8 +38,8 @@ class FilterMiddleware implements HttpKernelInterface, ContainerAwareInterface
 
     /**
      * @param Request $request
-     * @param int $type
-     * @param bool $catch
+     * @param int     $type
+     * @param bool    $catch
      *
      * @return Response
      */
@@ -50,7 +50,7 @@ class FilterMiddleware implements HttpKernelInterface, ContainerAwareInterface
             $filters[] = new $filter();
         }
 
-        $this->container['app.filter_factory'] = function () use($filters) {
+        $this->container['app.filter_factory'] = function () use ($filters) {
             return new FilterFactory($filters);
         };
 

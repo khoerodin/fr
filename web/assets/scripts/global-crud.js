@@ -89,7 +89,7 @@ function getAll(module, columns = [], tbody = 'data-list') {
             jQuery('tbody['+tbody+'="'+module+'"]').html('<tr><td colspan="'+columnCount+'">LOADING DATA...</td></tr>')
         },
         success: function (data, textStatus, jqXHR) {
-            arr = JSON.parse(data);
+            var arr = data;
             if('hydra:member' in arr) {
                 $.each(arr, function (index, value) {
 
@@ -318,7 +318,7 @@ function post(module, params, columns = []) {
         },
         success: function (data, textStatus, jqXHR) {
 
-            var arr = JSON.parse(data);
+            var arr = data;
             if ("violations" in arr) {
 
                 $.each(arr, function (index, value) {
@@ -375,7 +375,7 @@ function detail(module,id) {
             jQuery('div[data-modal-detail="'+module+'"] input[type="checkbox"]').prop('disabled', true);
         },
         success: function (data, textStatus, jqXHR) {
-            arr = JSON.parse(data);
+            var arr = data;
 
             if('id' in arr) {
                 $.each(arr, function (index, value) {
@@ -443,7 +443,7 @@ function detail(module,id) {
                                 },
                                 success: function (data, textStatus, jqXHR) {
                                     var select = '';
-                                    var arr = JSON.parse(data);
+                                    var arr = data;
                                     $.each(arr, function (indeks, velyu) {
                                         console.log(indeks)
                                         if (indeks === 'hydra:member') {
@@ -575,7 +575,7 @@ function editAction(module, id, params) {
         },
         success: function (data, textStatus, jqXHR) {
 
-            var arr = JSON.parse(data);
+            var arr = data;
             if ("violations" in arr) {
 
                 $.each(arr, function (index, value) {

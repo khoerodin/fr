@@ -20,7 +20,7 @@ function getOrders(param, selected) {
 
             if (jqXHR.status == 200) {
 
-                var memberData = JSON.parse(data)['hydra:member'];
+                var memberData = data['hydra:member'];
                 var no = 1;
                 var searchArea;
                 var searchArea;
@@ -187,7 +187,7 @@ function getOrders(param, selected) {
 
                 if("searchHistory" in localStorage){
                     var searchStorage = localStorage.getItem('searchHistory');
-                    var searchHistory = JSON.parse(searchStorage);
+                    var searchHistory = searchStorage;
                     searchHistory.push({id: id, text: text});
 
                     searchHistory = removeDuplicates(searchHistory);
@@ -211,7 +211,7 @@ function getOrders(param, selected) {
 
                 if("searchHistory" in localStorage){
                     var searchStorsge = localStorage.getItem('searchHistory');
-                    var searchHistory = JSON.parse(searchStorsge).reverse();
+                    var searchHistory = searchStorsge.reverse();
                     var opt = '';
                     $.each(searchHistory, function (index, value) {
                         if (index === 0) {
@@ -239,7 +239,7 @@ function getOrders(param, selected) {
 
                             if("searchHistory" in localStorage){
                                 var searchStorage = localStorage.getItem('searchHistory');
-                                var searchHistory = JSON.parse(searchStorage);
+                                var searchHistory = searchStorage;
                                 searchHistory.push({id: id, text: text});
 
                                 searchHistory = removeDuplicates(searchHistory);

@@ -3,54 +3,8 @@ window.field = 'username';
 var columns = [
     'fullname',
     'username',
-    'email',
-    // 'loggedIn'
+    'email'
 ];
-
-// $( document ).ajaxComplete(function() {
-//     $('.loginState').bootstrapToggle({
-//         size: 'mini',
-//         onstyle: 'success'
-//     });
-// });
-//
-// $(document).on('change', '.loginState', function () {
-//     userId = $(this).attr('data-id');
-//
-//     if ($(this).is(':checked')){
-//         checkValue = true;
-//     } else {
-//         checkValue = false;
-//     }
-//
-//     var check = {
-//         'name' : 'loggedIn',
-//         'value' : checkValue
-//     };
-//
-//     params = [
-//         check
-//     ];
-//
-//     var data = {
-//         module : 'users/'+userId,
-//         method : 'put',
-//         params : params
-//     };
-//
-//     $.ajax({
-//         url: "/api",
-//         type: "POST",
-//         data: data,
-//         beforeSend: function () {},
-//         success: function (data, textStatus, jqXHR) {
-//             toastr.success('Login status changed successfully')
-//         },
-//         error: function (jqXHR, textStatus, errorThrown) {
-//             toastr.error('Error change login status')
-//         }
-//     });
-// });
 
 jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function (e) {
     jQuery('tbody#roles-check').html('<tr><td colspan="6">Loading...</td></tr>');
@@ -66,7 +20,7 @@ function getRoles(userId, serviceId, pageNum) {
     var roleData = {
         module: 'roles',
         method: 'get',
-        params: [{'user.id': userId},{'order[name]': 'ASC'}]
+        params: [{'user.id': userId},{'order': { 'name': 'ASC'}}]
     };
 
     var modules;
@@ -87,7 +41,7 @@ function getRoles(userId, serviceId, pageNum) {
     $.when(ajax1, ajax2).done(function(a1, a2){
 
         if((a1[1] === 'success' && a2[1] === 'success')) {
-            var data2 = JSON.parse(a2[0]);
+            var data2 = a2[0];
             roles = [];
             $.each(data2['hydra:member'], function (idx, val) {
                 roles[val.module.id] = {
@@ -102,7 +56,7 @@ function getRoles(userId, serviceId, pageNum) {
             });
 
             var userRoles = [];
-            var data1 = JSON.parse(a1[0]);
+            var data1 = a1[0];
             $.each(data1['hydra:member'], function (idx, val) {
                 if ('undefined' !== typeof roles[val.id]) {
                     userRoles[idx] = {
@@ -189,12 +143,9 @@ $(document).on('change', '.check-role', function () {
     var userId = $('#rolesUserId').val();
     var moduleId = $this.closest('tr').attr('id');
     var roleId = $this.closest('tr').attr('data-role');
+    var checkValue = $(this).is(':checked');
 
-    if ($(this).is(':checked')){
-        var checkValue = true;
-    } else {
-        checkValue = false;
-    }
+    console.log($(this).is(':checked'));
 
     var check = {
         'name' : checkName,
@@ -238,7 +189,6 @@ $(document).on('change', '.check-role', function () {
         data: data,
         beforeSend: function () {},
         success: function (data, textStatus, jqXHR) {
-            data = JSON.parse(data);
             $this.closest('tr').attr('data-role', data.id);
             toastr.success('Role successfully changed');
         },
@@ -251,7 +201,7 @@ function rolesResponse(data,userId,page) {
     var no = 1;
     jQuery.each(data, function (index, value) {
 
-        if (typeof value != 'undefined') {
+        if (typeof value !== 'undefined') {
 
             if(page > 1) {
                 c = page - 1;
@@ -266,25 +216,25 @@ function rolesResponse(data,userId,page) {
                 rolesCheck += '<td>'+value.moduleName+'</td>'
             }
 
-            if(value.viewable === true) {
+            if(value.viewable) {
                 rolesCheck += '<td><input name="viewable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             } else {
                 rolesCheck += '<td><input name="viewable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             }
 
-            if(value.addable === true) {
+            if(value.addable) {
                 rolesCheck += '<td><input name="addable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             } else {
                 rolesCheck += '<td><input name="addable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             }
 
-            if(value.editable === true) {
+            if(value.editable) {
                 rolesCheck += '<td><input name="editable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             } else {
                 rolesCheck += '<td><input name="editable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             }
 
-            if(value.deletable === true) {
+            if(value.deletable) {
                 rolesCheck += '<td><input name="deletable" type="checkbox" class="check-role" type="checkbox" checked data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';
             } else {
                 rolesCheck += '<td><input name="deletable" type="checkbox" class="check-role" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"></td>';

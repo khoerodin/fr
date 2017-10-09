@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class HelpdeskMyTicketsController extends AdminController
 {
     public function indexAction()
@@ -11,10 +10,9 @@ class HelpdeskMyTicketsController extends AdminController
             'meta' => [
                 'parentMenu' => 'Helpdesk',
                 'title' => 'TiketKu',
-            ]
+            ],
         ];
 
         return $this->view('helpdesk-my-tickets/index.twig', $data);
     }
-
 }

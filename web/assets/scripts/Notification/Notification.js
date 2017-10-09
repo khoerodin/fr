@@ -33,7 +33,7 @@
             }]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                var rawData = JSON.parse(response);
+                var rawData = response;
                 callback(rawData);
             }
         }, function () {
@@ -69,7 +69,7 @@
             params: []
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                callback(JSON.parse(response));
+                callback(response);
             }
         }, function () {
             console.log('KO');

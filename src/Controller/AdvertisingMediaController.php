@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class AdvertisingMediaController extends AdminController
 {
     public function indexAction()
@@ -13,7 +12,7 @@ class AdvertisingMediaController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('advertising-media/index.twig', $data);

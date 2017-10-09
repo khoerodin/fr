@@ -12,7 +12,7 @@ class AdvertisingPaymentMethodsController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('advertising-payment-methods/index.twig', $data);

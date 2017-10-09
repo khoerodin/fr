@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class BillingPaymentMethodsController extends AdminController
 {
     public function indexAction()
@@ -13,7 +12,7 @@ class BillingPaymentMethodsController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('billing-payment-methods/index.twig', $data);

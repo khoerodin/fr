@@ -82,9 +82,14 @@
                     },
                     callback: function (result) {
                         if (result) {
-                            Bisnis.Adv.Categories.delete(data.id, function () {
-                                document.querySelector('[data-id="'+data.id+'"]').closest('li').remove();
-                            });
+                            Bisnis.Adv.Categories.delete(data.id,
+                                function () {
+                                    document.querySelector('[data-id="'+data.id+'"]').closest('li').remove();
+                                    Bisnis.successMessage('Berhasil menghapus data');
+                                }, function () {
+                                    Bisnis.Util.Dialog.alert('Gagal menghapus kategori');
+                                }
+                            );
                         }
                     }
                 });
@@ -107,17 +112,15 @@
             });
         }
 
-        Bisnis.Adv.Categories.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Adv.Categories.add(params,
+            function (dataResponse) {
                 // jika id tidak kosong
                 // maka maka id jadikan parent
                 if (id) {
                     var list = document.querySelector('[data-id="'+id+'"]').closest('li');
                     // jika id telah memiliki child
                     if (Bisnis.Util.Document.hasClass(list, 'branch')) {
-                        var html = '<li style="display: list-item;"><span data-id="'+callback.id+'" data-name="'+callback.name+'">'+callback.name+'</span></li>';
+                        var html = '<li style="display: list-item;"><span data-id="'+dataResponse.id+'" data-name="'+dataResponse.name+'">'+dataResponse.name+'</span></li>';
                         document.querySelector('[data-id="'+id+'"]').closest('li').querySelector('ul').insertAdjacentHTML('beforeend', html);
 
                         // jika id belum memiliki child
@@ -125,55 +128,60 @@
                         var htmlBefore = '<i class="indicator glyphicon glyphicon-folder-open"></i>';
                         document.querySelector('[data-id="'+id+'"]').insertAdjacentHTML('beforebegin', htmlBefore);
 
-                        var htmlAppend = '<ul><li style="display: list-item;"><span data-id="'+callback.id+'" data-name="'+callback.name+'">'+callback.name+'</span></li></ul>';
+                        var htmlAppend = '<ul><li style="display: list-item;"><span data-id="'+dataResponse.id+'" data-name="'+dataResponse.name+'">'+dataResponse.name+'</span></li></ul>';
                         var closestLi = document.querySelector('[data-id="'+id+'"]').closest('li');
                         closestLi.classList.add('branch');
                         closestLi.insertAdjacentHTML('beforeend', htmlAppend);
                     }
-                // jika id kosong
-                // maka tanpa parent
+                    // jika id kosong
+                    // maka tanpa parent
                 } else {
-                    var htmlAppend = '<li style="display: list-item;"><span data-id="'+callback.id+'" data-name="'+callback.name+'">'+callback.name+'</span></li>';
+                    var htmlAppend = '<li style="display: list-item;"><span data-id="'+dataResponse.id+'" data-name="'+dataResponse.name+'">'+dataResponse.name+'</span></li>';
                     var ul = document.querySelector('ul#treed-categoriesTree li > ul')
                         .insertAdjacentHTML('beforeend', htmlAppend);
                 }
                 Bisnis.Util.Dialog.hideModal('#addModal');
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
 
-    Bisnis.Adv.Categories.add = function (params, callback) {
+    Bisnis.Adv.Categories.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/categories',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     //end add modal
 
     // edit modal
-    Bisnis.Adv.Categories.updateById = function (id, params, callback) {
+    Bisnis.Adv.Categories.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/categories/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -189,38 +197,43 @@
         var $this = this;
         $this.disabled = true;
 
-        Bisnis.Adv.Categories.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Adv.Categories.updateById(id, params,
+            function (dataResponse) {
                 Bisnis.successMessage('Berhasil memperbarui data');
 
                 var elem = document.querySelector('[data-id="'+id+'"]');
-                elem.textContent = callback.name;
-                elem.setAttribute('data-name', callback.name);
+                elem.textContent = dataResponse.name;
+                elem.setAttribute('data-name', dataResponse.name);
 
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 Bisnis.Util.Event.bind('contextmenu', '#categoriesTree li span', function () {
                     document.querySelector('#categoriesTree li span').classList.remove('active');
                     document.querySelector('#categoriesTree li span').classList.add('active');
                 });
+                $this.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                $this.disabled = false;
             }
-            $this.disabled = false;
-        });
+        );
     });
     // end edit modal
 
     // delete category
-    Bisnis.Adv.Categories.delete = function (id, callback) {
+    Bisnis.Adv.Categories.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/categories/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete category

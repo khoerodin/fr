@@ -3,7 +3,6 @@
 namespace Bisnis\Controller;
 
 use Bisnis\Filter\FilterFactory;
-use GuzzleHttp\Exception\RequestException;
 use Ihsan\Client\Platform\Controller\AbstractController;
 use Ihsan\Client\Platform\DependencyInjection\ContainerAwareInterface;
 use Ihsan\Client\Platform\DependencyInjection\ContainerAwareTrait;
@@ -39,19 +38,18 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                     $temps[$param['name']] = $value;
                 }
 
-                if($param['name'] == 'fullname' && $url == 'users') {
+                if ($param['name'] == 'fullname' && $url == 'users') {
                     $fullname = $value;
                 }
             }
 
-            if ($url == 'users' && ( $method == 'post' || $method == 'POST') ) {
+            if ($url == 'users' && ($method == 'post' || $method == 'POST')) {
                 $temps['username'] = $this->generateUsername($fullname);
             }
-
-        } elseif($method == 'get') {
-            if(count($params) > 0) {
+        } elseif ($method == 'get') {
+            if (count($params) > 0) {
                 $temps = array_reduce($params, 'array_merge', array());
-                if(count($temps) > 0) {
+                if (count($temps) > 0) {
                     $temps = array_filter($temps);
                 } else {
                     $temps = [];
@@ -65,9 +63,9 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
         $response = $this->request($url, $method, $temps);
 
-        return new Response($response->getContent());
+        //return new Response($response->getContent());
 
-        //return new Response($response->getContent(), $response->getStatusCode(), $response->headers->all());
+        return new Response($response->getContent(), $response->getStatusCode(), $response->headers->all());
     }
 
     /**
@@ -100,7 +98,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $arr = json_decode($response->getContent(), true);
 
         if (array_key_exists('hydra:member', $arr)) {
-            if(count($arr) > 0 ) {
+            if (count($arr) > 0) {
                 $arr = $arr['hydra:member'];
             } else {
                 return new JsonResponse(array());
@@ -109,17 +107,15 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
             return new JsonResponse(array());
         }
 
-
         $arrData = [];
         foreach ($arr as $value) {
             $obj = [];
             foreach ($value as $k => $v) {
-                if($k == 'id'){
+                if ($k == 'id') {
                     $obj[$k] = $v;
-
                 }
 
-                if($k == $field[0]){
+                if ($k == $field[0]) {
                     $obj[$k] = $v;
                 }
             }
@@ -151,10 +147,8 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $modules = [];
         $modName = [];
         foreach ($modulesResponse as $module) {
-
             foreach ($rolesResponse as $role) {
                 if ($module['id'] == $role['module']['id']) {
-
                     $modules[] = [
                         'id' => $role['id'],
                         'module' => $role['module']['name'],
@@ -162,14 +156,12 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                         'addable' => $role['addable'],
                         'editable' => $role['editable'],
                         'viewable' => $role['viewable'],
-                        'deletable' => $role['deletable']
+                        'deletable' => $role['deletable'],
                     ];
 
                     $modName[] = $role['module']['id'];
-
                 }
             }
-
         }
 
         $allModules = [];
@@ -180,30 +172,26 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $notInUserModules = array_diff($allModules, $modName);
 
         if (count($notInUserModules) > 0) {
-
             foreach ($modulesResponse as $module) {
-
                 foreach ($notInUserModules as $mod) {
                     if ($mod == $module['id']) {
-
                         $data = [
-                            'module' => '/api/modules/' . $module['id'],
-                            'user' => '/api/users/' . $params['user.id'],
+                            'module' => '/api/modules/'.$module['id'],
+                            'user' => '/api/users/'.$params['user.id'],
                             'addable' => false,
                             'editable' => false,
                             'viewable' => false,
-                            'deletable' => false
+                            'deletable' => false,
                         ];
 
                         $this->request('roles', 'post', $data);
                     }
                 }
-
             }
-
         }
 
         $response = $this->request('roles', 'get', $params);
+
         return new Response($response->getContent());
     }
 
@@ -214,7 +202,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
      */
     public function menusAction(Request $request)
     {
-        $response = json_decode($this->fetch('menus'),true)['hydra:member'];
+        $response = json_decode($this->fetch('menus'), true)['hydra:member'];
         $modules = array();
         foreach ($response as $key => $value) {
             $name = $value['module']['name'];
@@ -255,6 +243,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
     private function generateUsername($fullname)
     {
         $username = $this->request('username/generate/'.$fullname, 'get');
+
         return json_decode($username->getContent(), true)['username'];
     }
 
@@ -270,6 +259,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         }
 
         $response = $this->request('advertising/specification-details', 'get', $params);
+
         return new JsonResponse(json_decode($response->getContent(), true));
     }
 
@@ -284,7 +274,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $arr = json_decode($response->getContent(), true);
 
         if (array_key_exists('hydra:member', $arr)) {
-            if(count($arr) > 0 ) {
+            if (count($arr) > 0) {
                 $arr = $arr['hydra:member'];
             } else {
                 return new JsonResponse(array());
@@ -293,16 +283,15 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
             return new JsonResponse(array());
         }
 
-
         $arrData = [];
         foreach ($arr as $value) {
             $obj = [];
             foreach ($value as $k => $v) {
-                if($k == 'id'){
+                if ($k == 'id') {
                     $obj['id'] = $v;
                 }
 
-                if($k == $field){
+                if ($k == $field) {
                     $obj['text'] = $v;
                 }
 
@@ -314,7 +303,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         return $arrData;
     }
 
-    public function searchGridAction (Request $request)
+    public function searchGridAction(Request $request)
     {
         $module = $request->get('module');
         $fields = $request->get('fields');
@@ -324,7 +313,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
             $data = [
                 'q' => $request->get('q'),
                 'field' => $value['field'],
-                'label' => $value['label']
+                'label' => $value['label'],
             ];
 
             $response = array_merge($response, $this->searchByField($module, $data));
@@ -333,4 +322,3 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         return new JsonResponse($response);
     }
 }
-

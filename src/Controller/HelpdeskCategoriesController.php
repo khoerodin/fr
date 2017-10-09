@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class HelpdeskCategoriesController extends AdminController
 {
     public function indexAction()
@@ -13,7 +12,7 @@ class HelpdeskCategoriesController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('helpdesk-categories/index.twig', $data);

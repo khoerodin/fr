@@ -8,11 +8,11 @@ class BillingGroupsController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Tagihan',
-            'title' => 'Group Tagihan',
+            'title' => 'Grup Tagihan',
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('billing-groups/index.twig', $data);

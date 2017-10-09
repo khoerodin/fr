@@ -11,7 +11,7 @@ class ProfileController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('profile/index.twig', $data);

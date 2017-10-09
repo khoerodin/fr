@@ -12,7 +12,7 @@ class AdvertisingSpecificationsController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('advertising-specifications/index.twig', $data);

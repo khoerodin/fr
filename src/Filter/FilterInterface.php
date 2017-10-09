@@ -9,6 +9,7 @@ interface FilterInterface
 {
     /**
      * @param mixed $value
+     *
      * @return mixed
      */
     public function cast($value);

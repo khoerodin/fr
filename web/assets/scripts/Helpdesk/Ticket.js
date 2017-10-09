@@ -196,9 +196,8 @@
             method: 'get',
             params: [params]
         }, function (response) {
-            var rawData = JSON.parse(response);
-            var ticketList = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+            var ticketList = response['hydra:member'];
+            var viewData = response['hydra:view'];
 
             if ('undefined' !== typeof viewData['hydra:last']) {
                 var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
@@ -225,9 +224,8 @@
             method: 'get',
             params: [params]
         }, function (response) {
-            var rawData = JSON.parse(response);
-            var ticketList = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+            var ticketList = response['hydra:member'];
+            var viewData = response['hydra:view'];
 
             if ('undefined' !== typeof viewData['hydra:last']) {
                 var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
@@ -261,7 +259,7 @@
             params: []
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                callback(JSON.parse(response));
+                callback(response);
             }
         }, function () {
             console.log('KO');
@@ -284,7 +282,7 @@
             params: [params]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                var rawData = JSON.parse(response);
+                var rawData = response;
                 callback(rawData['hydra:member']);
             }
         }, function () {
@@ -328,7 +326,7 @@
             params: [{'ticket.id': ticketId, 'order[createdAt]': 'DESC'}]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                var rawData = JSON.parse(response);
+                var rawData = response;
                 callback(rawData['hydra:member']);
             }
         }, function () {
@@ -343,7 +341,7 @@
             params: params
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                callback(JSON.parse(response));
+                callback(response);
             }
         }, function () {
             console.log('KO');
@@ -537,7 +535,7 @@
                             statistics[stat['status']][index] = parseInt(stat['total']);
                         }, value);
                     }
-                }, JSON.parse(response));
+                }, response);
 
                 callback(statistics);
             }
@@ -567,7 +565,7 @@
             method: 'get'
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                callback(JSON.parse(response));
+                callback(response);
             }
         }, function () {
             console.log('KO');

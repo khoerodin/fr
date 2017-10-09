@@ -9,6 +9,7 @@ $('#dtInvoicedAt, #inputInvoicedAt').datetimepicker({
 }).on('dp.hide', function(e){
     $('[name="pemasang"]').focus();
 });
+
 $('#invoicedAt').val(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 $('#inputBookedAt').val(moment().format('dddd, DD MMMM YYYY'));
@@ -44,7 +45,6 @@ function getOrderId() {
             method: 'get'
         },
         success: function (data) {
-            var data = JSON.parse(data);
             var urutan = paddy(data.id, 3);
             var orderNumber = 'OI/'+urutan+'/'+code+'/'+month+'/'+year;
             $('#orderNumber').val(orderNumber);
@@ -54,17 +54,15 @@ function getOrderId() {
     });
 }
 
-function saveOrder(orderNumber) {
+function saveOrder() {
     var params = $('#orderForm').serializeArray();
     var tags = String($('#orderTag').val());
 
     params.push({
         name: 'orderTag',
         value: tags
-    }, {
-        name: 'orderNumber',
-        value: orderNumber
     });
+
 
     $.ajax({
         url: '/api',
@@ -80,8 +78,6 @@ function saveOrder(orderNumber) {
             $('#btn-order').text('MENYIMPAN ORDER ...').prop('disabled', true);
         },
         success: function (data, textStatus, jqXHR) {
-            var data = JSON.parse(data);
-
             if ( jqXHR.status === 200 ) {
 
                 if ("violations" in data) {
@@ -136,7 +132,7 @@ function saveOrder(orderNumber) {
 }
 
 $(document).on('click', '#btn-order', function () {
-    getOrderId();
+    saveOrder();
 });
 
 function saveByDates(orderId) {

@@ -2,19 +2,19 @@
     Bisnis.Adv.AccountExecutives = {};
 
     // fetch grid and pagination
-    Bisnis.Adv.AccountExecutives.fetchAll = function (params, callback) {
+    Bisnis.Adv.AccountExecutives.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/account-executives',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -22,35 +22,40 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.AccountExecutives.fetchAll([{page: pageNum}], function (rawData) {
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+        Bisnis.Adv.AccountExecutives.fetchAll([{page: pageNum}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var viewData = dataResponse['hydra:view'];
 
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#accountExecutivesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
+                if ('undefined' !== typeof viewData['hydra:last']) {
+                    var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                    Bisnis.Util.Grid.createPagination('#accountExecutivesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                }
 
-            if (memberData.length > 0) {
-                var records = [];
-                Bisnis.each(function (idx, memberData) {
-                    records.push([
-                        { value: memberData.code },
-                        { value: memberData.name },
-                        { value: memberData.id, format: function (id) {
-                            return '<span class="pull-right">' +
-                                '<button data-id="' + id + '" data-code="' + memberData.code + '" data-name="' + memberData.name + '" class="btn btn-xs btn-default btn-flat btn-categories" title="KATEGORI"><i class="fa fa-list-ol"></i></button>' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                                '</span>';
-                        }}
-                    ]);
-                }, memberData);
-                Bisnis.Util.Grid.renderRecords('#accountExecutivesList', records);
-            } else {
-                Bisnis.Util.Document.putHtml('#accountExecutivesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                if (memberData.length > 0) {
+                    var records = [];
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            { value: memberData.code },
+                            { value: memberData.name },
+                            { value: memberData.accountExecutiveManager.name },
+                            { value: memberData.id, format: function (id) {
+                                return '<span class="pull-right">' +
+                                    '<button data-id="' + id + '" data-code="' + memberData.code + '" data-name="' + memberData.name + '" class="btn btn-xs btn-default btn-flat btn-categories" title="KATEGORI"><i class="fa fa-list-ol"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail-ae" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete-ae" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                    '</span>';
+                            }}
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#accountExecutivesList', records, pageNum);
+                } else {
+                    Bisnis.Util.Document.putHtml('#accountExecutivesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKUN EKSEKUTIF');
             }
-        });
+        );
     };
 
     loadGrid(1);
@@ -211,7 +216,7 @@
                             }}
                         ]);
                     }, memberData);
-                    Bisnis.Util.Grid.renderRecords('#accountExecutiveCategoriesList', records);
+                    Bisnis.Util.Grid.renderRecords('#accountExecutiveCategoriesList', records, pageNum);
                 });
             } else {
                 Bisnis.Util.Document.putHtml('#accountExecutiveCategoriesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
@@ -259,11 +264,25 @@
 
     // add modal
     Bisnis.Util.Event.bind('click', '#btnAddAccountExecutive', function () {
+        var AEManager = {
+            placeholder: 'CARI NAMA',
+            module: 'advertising/account-executive-managers',
+            prependValue: '/api/advertising/account-executive-managers/',
+            allowClear: true,
+            fields: [
+                {
+                    field: 'name',
+                    label: 'Nama'
+                }
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addAccountExecutiveManager', AEManager);
+
         Bisnis.Util.Dialog.showModal('#addModal');
-        document.getElementById('addCode').focus();
+        document.getElementById('addAccountExecutiveManager').focus();
     });
 
-    Bisnis.Util.Event.bind('click', '#btn-add', function () {
+    Bisnis.Util.Event.bind('click', '#btn-add-ae', function () {
         var params = Bisnis.Util.Form.serializeArray('#addForm');
         var thisBtn = this;
         thisBtn.disabled = true;
@@ -285,7 +304,7 @@
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
@@ -300,6 +319,26 @@
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_ID', id);
         Bisnis.Adv.AccountExecutives.fetchById(id, function (callback) {
+            if (callback.accountExecutiveManager) {
+                var AEMngrElm = document.getElementById('detailAccountExecutiveManager');
+                AEMngrElm.innerHTML = '<option value="/api/advertising/account-executive-managers/'+callback.accountExecutiveManager.id+'">'+callback.accountExecutiveManager.name+'</option>';
+                Bisnis.Util.Event.bind('change', '#detailAccountExecutiveManager');
+            }
+
+            var AEManager = {
+                placeholder: 'CARI NAMA',
+                module: 'advertising/account-executive-managers',
+                prependValue: '/api/advertising/account-executive-managers/',
+                allowClear: true,
+                fields: [
+                    {
+                        field: 'name',
+                        label: 'Nama'
+                    }
+                ]
+            };
+            Bisnis.Util.Style.ajaxSelect('#detailAccountExecutiveManager', AEManager);
+
             var codeElem = document.getElementById('detailCode');
             codeElem.value = callback.code;
             codeElem.focus();
@@ -310,7 +349,7 @@
         Bisnis.Util.Dialog.showModal('#detailModal');
     };
 
-    Bisnis.Util.Event.bind('click', '.btn-detail', function () {
+    Bisnis.Util.Event.bind('click', '.btn-detail-ae', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         loadDetail(id);
     });
@@ -320,7 +359,7 @@
             module: 'advertising/account-executives/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
@@ -336,7 +375,7 @@
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
+            var rawData = dataResponse;
 
             if (Bisnis.validCallback(callback)) {
                 callback(rawData);
@@ -346,7 +385,7 @@
         });
     };
 
-    Bisnis.Util.Event.bind('click', '#btn-update', function () {
+    Bisnis.Util.Event.bind('click', '#btn-update-ae', function () {
         var id = Bisnis.Util.Storage.fetch('ACCOUNT_EXECUTIVE_ID');
         var params = Bisnis.Util.Form.serializeArray('#detailForm');
         var thisBtn = this;
@@ -367,7 +406,7 @@
     // end detail modal
 
     // delete account executive
-    Bisnis.Util.Event.bind('click', '.btn-delete', function () {
+    Bisnis.Util.Event.bind('click', '.btn-delete-ae', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
@@ -399,23 +438,13 @@
     // end delete account executive
 
     // prevent submit form on enter
-    window.onload = function() {
-        document.getElementById("addForm").onkeypress = function(e) {
-            var key = e.charCode || e.keyCode || 0;
-            if (key == 13) {
-                Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
-                e.preventDefault();
-            }
-        };
-
-        document.getElementById("detailForm").onkeypress = function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            if (key == 13) {
-                Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
-                e.preventDefault();
-            }
-        };
-    };
+    Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+            e.preventDefault();
+        }
+    });
     // end prevent submit form on enter
 
     // reset modal form on modal hidden

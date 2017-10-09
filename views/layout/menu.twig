@@ -14,179 +14,44 @@
             </div>#}
 
             <ul class="sidebar-menu">
-                {#{% for key, category in menus %}#}
-                    {#<li class="treeview active hidden">#}
-                        {#<a href="javascript:void(0)" title="{{ key|upper }}">#}
-                            {#<i class="fa fa-file-image-o"></i>#}
-                            {#<span>{{ key|upper }}</span>#}
-                        {#</a>#}
+                {% for key, category in menus %}
+                    <li class="treeview" id="firstParent{{ key|lower|replace({ ' ': "" }) }}">
+                        <a href="javascript:void(0)" title="{{ key|upper }}">
+                            <i class="fa fa-circle"></i>
+                            <span>{{ key|upper }}</span>
+                        </a>
 
-                        {#<ul class="treeview-menu hidden">#}
-                            {#{% for moduleKey, module in category %}#}
-                            {#<li class="treeview active">#}
-                                {#<a href="javascript:void(0)" title="{{ moduleKey|upper }}">#}
-                                    {#<i class="fa fa-circle-o"></i> {{ moduleKey|upper }}#}
-                                    {#<span class="pull-right-container">#}
-                                        {#<i class="fa fa-angle-left pull-right"></i>#}
-                                    {#</span>#}
-                                {#</a>#}
-                                {#<ul class="treeview-menu">#}
-                                    {#{% for menuKey, menu in module %}#}
-                                    {#<li>#}
-                                        {#<a href="/{{ menu.path }}" title="{{ menu.name|upper }}">#}
-                                            {#<i class="fa fa-circle-o"></i>#}
-                                            {#{{ menu.name|upper }}#}
-                                        {#</a>#}
-                                    {#</li>#}
-                                    {#{% endfor %}#}
-                                {#</ul>#}
-                            {#</li>#}
-                            {#{% endfor %}#}
-                        {#</ul>#}
-                    {#</li>#}
-                {#{% endfor %}#}
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-pie-chart"></i> <span>DASHBOARD</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="/helpdesk/dashboard" title="HELPDESK"><i class="fa fa-circle-o"></i>HELPDESK</a></li>
-                    </ul>
-                </li>
-
-                <li class="treeview active"><a href="javascript:void(0)" title="MASTER"><i class="fa fa-files-o"></i><span>MASTER</span></a>
-                    <ul class="treeview-menu">
-                        <li class="treeview active"><a href="javascript:void(0)" title="IKLAN"><i class="fa fa-circle-o"></i> IKLAN
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
-                            <ul class="treeview-menu">
-                                <li><a href="/advertising/team-works" title="TIM KERJA"><i class="fa fa-circle-o"></i>TIM KERJA</a></li>
-                                <li><a href="/advertising/account-executive-managers" title="MANAJER AKUN EKSEKUTIF"><i class="fa fa-circle-o"></i>
-                                        MANAJER AKUN EKSEKUTIF
-                                    </a>
-                                </li>
-                                <li><a href="/advertising/account-executives" title="AKUN EKSEKUTIF"><i class="fa fa-circle-o"></i>
-                                        AKUN EKSEKUTIF
-                                    </a>
-                                </li>
-                                <li><a href="/advertising/customers" title="PELANGGAN IKLAN"><i class="fa fa-circle-o"></i>
-                                        PELANGGAN
-                                    </a>
-                                </li>
-                                <li><a href="/advertising/layouts" title="LAYOUT IKLAN"><i class="fa fa-circle-o"></i>
-                                        LAYOUT
-                                    </a>
-                                </li>
-                                <li><a href="/advertising/media" title="MEDIA IKLAN"><i class="fa fa-circle-o"></i>
-                                        MEDIA
-                                    </a>
-                                </li>
-                                <li><a href="/advertising/categories" title="KATEGORI"><i class="fa fa-circle-o"></i>
-                                        KATEGORI
-                                    </a>
-                                </li>
-                                <li><a href="/advertising/positions" title="POSISI IKLAN"><i class="fa fa-circle-o"></i>
-                                        POSISI
-                                    </a>
-                                </li>
-                                <li><a href="/advertising/specifications" title="JENIS IKLAN"><i class="fa fa-circle-o"></i>
-                                        JENIS
-                                    </a>
-                                </li>
-                                <li><a href="/advertising/types" title="TYPE IKLAN"><i class="fa fa-circle-o"></i>
-                                        TYPE
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="treeview"><a href="javascript:void(0)" title="TAGIHAN"><i class="fa fa-circle-o"></i> TAGIHAN
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
-                            <ul class="treeview-menu">
-                                <li><a href="/billing/groups" title="GRUP TAGIHAN"><i class="fa fa-circle-o"></i>
-                                        GRUP TAGIHAN
-                                    </a>
-                                </li>
-                                <li><a href="/billing/areas" title="AREA TAGIHAN"><i class="fa fa-circle-o"></i>
-                                        AREA TAGIHAN
-                                    </a>
-                                </li>
-                                <li><a href="/billing/identities" title="PENANDA TAGIH"><i class="fa fa-circle-o"></i>
-                                        PENANDA TAGIH
-                                    </a>
-                                </li>
-                                <li><a href="/billing/payment-methods" title="METODE PEMBAYARAN"><i class="fa fa-circle-o"></i>
-                                        MTD PEMBAYARAN
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="treeview"><a href="javascript:void(0)" title="ADMIN"><i class="fa fa-circle-o"></i> ADMIN
-                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
-                            <ul class="treeview-menu">
-                                <li><a href="/banks" title="BANK"><i class="fa fa-circle-o"></i>BANK</a></li>
-                                <li><a href="/cities" title="KOTA"><i class="fa fa-circle-o"></i>KOTA</a></li>
-                                <li><a href="/representatives" title="PERWAKILAN"><i class="fa fa-circle-o"></i>PERWAKILAN</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-user-circle-o"></i> <span>ADMIN</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="active"><a href="/users"><i class="fa fa-circle-o"></i> PENGGUNA</a></li>
-                        <li class="active"><a href="/modules"><i class="fa fa-circle-o"></i> MODUL</a></li>
-                        <li class="active"><a href="/services"><i class="fa fa-circle-o"></i> SERVICES</a></li>
-                        <li class="active"><a href="/user-activities"><i class="fa fa-circle-o"></i> AKTIVITAS PENGGUNA</a></li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-user-circle-o"></i> <span>PERSONAL</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="/helpdesk/my-tickets" title="TIKET BARU HELPDESK"><i class="fa fa-circle-o"></i>
-                                HELPDESK
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-question-circle-o"></i> <span>HELPDESK</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="/helpdesk/tickets" title="TIKET HELPDESK"><i class="fa fa-circle-o"></i>TIKET</a></li>
-                        <li><a href="/helpdesk/staffs" title="STAF HELPDESK"><i class="fa fa-circle-o"></i>STAF</a></li>
-                        <li><a href="/helpdesk/categories" title="KATEGORI HELPDESK"><i class="fa fa-circle-o"></i>KATEGORI</a></li></li>
-                        <li><a href="/helpdesk/ticket-stats" title="STATISTIK TIKET HELPDESK"><i class="fa fa-circle-o"></i>STATISTIK TIKET</a></li>
-                    </ul>
-                </li>
-                <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-file-image-o"></i> <span>IKLAN</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="/advertising/orders/new"><i class="fa fa-circle-o"></i> ORDER BARU</a></li>
-                        <li><a href="/advertising/orders"><i class="fa fa-circle-o"></i> LIST IKLAN</a></li>
-                        <li><a href="/advertising/orders/invoices"><i class="fa fa-circle-o"></i> LIST FAKTUR</a></li>
-                    </ul>
-                </li>
+                        <ul class="treeview-menu">
+                            {% for moduleKey, module in category %}
+                            <li class="treeview" id="secondParent{{ key|lower|replace({ ' ': "" }) }}{{ moduleKey|lower|replace({ ' ': "" }) }}">
+                                <a href="javascript:void(0)" title="{{ moduleKey|upper }}">
+                                    <i class="fa fa-circle-o"></i> {{ moduleKey|upper }}
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    {% for menuKey, menu in module %}
+                                    <li class="treeview" id="thirdParent{{ menuKey|lower|replace({ ' ': "" }) }}{{ menu.name|lower|replace({ ' ': "" }) }}">
+                                        <a href="/{{ menu.path }}" title="{{ menu.name|upper }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            {{ menu.name|upper }}
+                                        </a>
+                                        <script>
+                                            if ('/{{ menu.path }}' === window.location.pathname) {
+                                                document.querySelector('#firstParent{{ key|lower|replace({ ' ': "" }) }}').classList.add('active');
+                                                document.querySelector('#secondParent{{ key|lower|replace({ ' ': "" }) }}{{ moduleKey|lower|replace({ ' ': "" }) }}').classList.add('active');
+                                                document.querySelector('#thirdParent{{ menuKey|lower|replace({ ' ': "" }) }}{{ menu.name|lower|replace({ ' ': "" }) }}').classList.add('active');
+                                            }
+                                        </script>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
             </ul>
         </section>
     </aside>

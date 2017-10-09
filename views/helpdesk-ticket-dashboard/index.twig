@@ -9,7 +9,6 @@
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Category.js"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
-    <script type="text/javascript" src="/assets/scripts/User/User.js"></script>
     <script type="text/javascript">
         var bar = {};
         var line = {};
@@ -237,8 +236,16 @@
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
             Bisnis.Util.Storage.remove('staff');
             Bisnis.Util.Style.modifySelect('#chartType');
+
+            if (0 < staff.length) {
+                Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
+            } else {
+                return null;
+            }
+
             if (staff[0].isAdmin) {
-                Bisnis.Helpdesk.Category.fetchAll(function (categoryList) {
+                Bisnis.Helpdesk.Category.fetchAll([], function (categoryList) {
+                    categoryList = categoryList['hydra:member'];
                     var categoryOption = '<option selected value="">PILIH BAGIAN</option>';
                     Bisnis.each(function (index, value) {
                         categoryOption = categoryOption + '<option value="' + value.id + '#' + value.name + '">' + value.name + '</option>';
@@ -249,12 +256,6 @@
                 });
             } else {
                 Bisnis.Util.Document.hide('.chartCategoryBox');
-            }
-
-            if (0 < staff.length) {
-                Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
-            } else {
-                return null;
             }
 
             loadStatisticData({{ year }}, function () {

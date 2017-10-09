@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class UserActivitiesController extends AdminController
 {
     public function indexAction()
@@ -13,7 +12,7 @@ class UserActivitiesController extends AdminController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('user-activities/index.twig', $data);

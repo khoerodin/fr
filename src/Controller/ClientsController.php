@@ -8,11 +8,11 @@ class ClientsController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Admin',
-            'title' => 'API CLIENT',
+            'title' => 'KLIEN API',
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->view('clients/index.twig', $data);

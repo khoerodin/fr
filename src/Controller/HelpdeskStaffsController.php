@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 class HelpdeskStaffsController extends AdminController
 {
     public function indexAction()
@@ -21,7 +20,7 @@ class HelpdeskStaffsController extends AdminController
         $data = [
             'meta' => $meta,
             'users' => $users,
-            'categories' => $categories
+            'categories' => $categories,
         ];
 
         return $this->view('helpdesk-staffs/index.twig', $data);

@@ -73,7 +73,6 @@ $(document).on('ajaxComplete', function () {
             },
             type: 'POST',
             success: function (successData) {
-                var successData = JSON.parse(successData);
                 $('#form-detail .modal-title').text('Edit Iklan '+name);
                 $('#form-detail input#name').val(successData.name);
                 $('#form-detail textarea#remark').val(successData.remark);
@@ -175,7 +174,6 @@ $(document).on('click', '.update-detail', function () {
         },
         type: 'POST',
         success: function (successData, textStatus, jqXHR) {
-            successData = JSON.parse(successData);
             var td1 = successData.name;
             var td2 = successData.type.name;
             var td3 = successData.remark;
@@ -309,7 +307,6 @@ $(document).on('click', '#form-add-detail .add-detail', function () {
         type: 'POST',
         data: data,
         success: function (successData, textStatus, jqXHR) {
-            var successData = JSON.parse(successData);
             if (jqXHR.status === 200) {
                 getAdvDetail(advSpecId);
                 $('#form-add-detail').modal('hide');
@@ -334,7 +331,6 @@ function getPriceList(id) {
             ]
         },
         success: function (data, textStatus, jqXHR) {
-            var data = JSON.parse(data);
             var member = data['hydra:member'];
             var tr = '';
             var no = 1;
@@ -442,7 +438,6 @@ $(document).on('click', '.detail-price', function () {
             method: 'get'
         },
         success: function (data) {
-            var data = JSON.parse(data);
             $('#detailHarga #year').val(data.year);
             $('#detailHarga #price').val(data.price);
             if(data.active === true) {
@@ -470,7 +465,6 @@ $(document).on('click', '#detailHarga #updateHarga', function () {
             params: $('#detailHarga form').serializeArray()
         },
         success: function (data, textStatus, jqXHR) {
-            data = JSON.parse(data);
             var td4 = data.year;
             var td5 = data.price;
             var td6 = ((data.active === true) ? '<span class="text-success">Aktif</span>' : '<span class="text-danger">Tidak Aktif</span>');
@@ -539,7 +533,7 @@ $(document).on('click', '#addHarga #saveHarga', function () {
             params: $('#addHarga form').serializeArray()
         },
         success: function (data, textStatus, jqXHR) {
-            var arr = JSON.parse(data);
+            var arr = data;
             if ("violations" in arr) {
 
                 $.each(arr, function (index, value) {

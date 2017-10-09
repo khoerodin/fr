@@ -9,6 +9,7 @@ class BooleanFilter extends AbstractFilter
 {
     /**
      * @param mixed $value
+     *
      * @return mixed
      */
     public function cast($value)

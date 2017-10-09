@@ -15,13 +15,13 @@ class UsersController extends AdminController
         $services = json_decode($services->getContent(), true)['hydra:member'];
 
         // sorting ASC
-        usort($services, function($a, $b) {
+        usort($services, function ($a, $b) {
             return $a['name'] <=> $b['name'];
         });
 
         $data = [
             'meta' => $meta,
-            'services' => $services
+            'services' => $services,
         ];
 
         return $this->view('users/index.twig', $data);

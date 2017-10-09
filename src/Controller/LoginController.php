@@ -17,7 +17,7 @@ class LoginController extends AbstractController
         ];
 
         $data = [
-            'meta' => $meta
+            'meta' => $meta,
         ];
 
         return $this->renderResponse('login.twig', $data);
@@ -30,10 +30,10 @@ class LoginController extends AbstractController
 
         $response = $this->post('login', [
             'username' => $username,
-            'password' => $password
+            'password' => $password,
         ]);
 
-        if($response->getStatusCode() != 401){
+        if ($response->getStatusCode() != 401) {
             $token = json_decode($response->getContent(), true)['token'];
             $this->store('token', $token);
         }
@@ -52,6 +52,4 @@ class LoginController extends AbstractController
 
         return $response;
     }
-
-
 }

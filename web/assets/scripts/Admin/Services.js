@@ -128,18 +128,21 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Admin.Services.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Admin.Services.add(params,
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
                 loadGrid(1);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
 
-    Bisnis.Admin.Services.add = function (params, callback) {
+    Bisnis.Admin.Services.add = function (params, successCallback, errorCallback) {
         var addCode = document.getElementById('addName').value;
         params.push({
             name: 'code',
@@ -151,13 +154,13 @@
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end add modal
@@ -165,11 +168,15 @@
     // detail modal
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('SERVICE_ID', id);
-        Bisnis.Admin.Services.fetchById(id, function (callback) {
-            var nameElem = document.getElementById('detailName');
-            nameElem.value = callback.name;
-            nameElem.focus();
-        });
+        Bisnis.Admin.Services.fetchById(id,
+            function (dataResponse) {
+                var nameElem = document.getElementById('detailName');
+                nameElem.value = dataResponse.name;
+                nameElem.focus();
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA SERVIS');
+            }
+        );
         Bisnis.Util.Dialog.showModal('#detailModal');
     };
 
@@ -178,34 +185,34 @@
         loadDetail(id);
     });
 
-    Bisnis.Admin.Services.fetchById = function (id, callback) {
+    Bisnis.Admin.Services.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'services/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Admin.Services.updateById = function (id, params, callback) {
+    Bisnis.Admin.Services.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'services/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -215,17 +222,19 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Admin.Services.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Admin.Services.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('SERVICES_CURRENT_PAGE');
                 loadGrid(page);
-            }
-            thisBtn.disabled = false;
-        });
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
+            });
     });
     // end detail modal
 
@@ -234,29 +243,31 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Admin.Services.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Admin.Services.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('SERVICES_CURRENT_PAGE');
                         loadGrid(page);
-                    } else {
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }
-                })
+                )
             }
         });
     });
 
-    Bisnis.Admin.Services.delete = function (id, callback) {
+    Bisnis.Admin.Services.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'services/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete service

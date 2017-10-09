@@ -134,15 +134,18 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Admin.Representatives.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Admin.Representatives.add(params,
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
                 loadGrid(1);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
 
     Bisnis.Admin.Representatives.add = function (params, callback) {
@@ -165,17 +168,21 @@
     // detail modal
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('REPRESENTATIVE_ID', id);
-        Bisnis.Admin.Representatives.fetchById(id, function (callback) {
-            var codeElem = document.getElementById('detailCode');
-            codeElem.value = callback.code;
-            codeElem.focus();
+        Bisnis.Admin.Representatives.fetchById(id,
+            function (dataResponse) {
+                var codeElem = document.getElementById('detailCode');
+                codeElem.value = dataResponse.code;
+                codeElem.focus();
 
-            var nameElem = document.getElementById('detailName');
-            nameElem.value = callback.name;
+                var nameElem = document.getElementById('detailName');
+                nameElem.value = dataResponse.name;
 
-            var addressElem = document.getElementById('detailAddress');
-            addressElem.value = callback.address;
-        });
+                var addressElem = document.getElementById('detailAddress');
+                addressElem.value = dataResponse.address;
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PERWAKILAN');
+            }
+        );
         Bisnis.Util.Dialog.showModal('#detailModal');
     };
 
@@ -184,34 +191,34 @@
         loadDetail(id);
     });
 
-    Bisnis.Admin.Representatives.fetchById = function (id, callback) {
+    Bisnis.Admin.Representatives.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'representatives/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Admin.Representatives.updateById = function (id, params, callback) {
+    Bisnis.Admin.Representatives.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'representatives/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -221,17 +228,19 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Admin.Representatives.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Admin.Representatives.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('REPRESENTATIVES_CURRENT_PAGE');
                 loadGrid(page);
-            }
-            thisBtn.disabled = false;
-        });
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
+            });
     });
     // end detail modal
 
@@ -240,29 +249,31 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Admin.Representatives.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Admin.Representatives.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('REPRESENTATIVES_CURRENT_PAGE');
                         loadGrid(page);
-                    } else {
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }
-                })
+                )
             }
         });
     });
 
-    Bisnis.Admin.Representatives.delete = function (id, callback) {
+    Bisnis.Admin.Representatives.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'representatives/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete representative

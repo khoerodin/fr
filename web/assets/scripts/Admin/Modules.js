@@ -151,11 +151,8 @@
         });
 
         $this.disabled = true;
-        Bisnis.Admin.Modules.add(params, function (callback) {
-
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Admin.Modules.add(params,
+            function (callback) {
                 Bisnis.Util.Dialog.hideModal('#addModal');
 
                 var activeId = document.getElementById("serviceTab")
@@ -164,24 +161,29 @@
                     .getAttribute('aria-controls');
                 var pageNum = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE'+activeId);
                 Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
+                $this.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                $this.disabled = false;
             }
-
-            $this.disabled = false;
-        });
+        );
     });
 
-    Bisnis.Admin.Modules.add = function (params, callback) {
+    Bisnis.Admin.Modules.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'modules',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end add modal
@@ -189,28 +191,32 @@
     // detail modal
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('MODULES_ID', id);
-        Bisnis.Admin.Modules.fetchById(id, function (callback) {
-            var nameElem = document.getElementById('detailName');
-            var descriptionElem = document.getElementById('detailDescription');
-            var groupNameElem = document.getElementById('detailGroupName');
-            var pathElem = document.getElementById('detailPath');
-            var iconClsElem = document.getElementById('detailIconCls');
-            var menuOrderElem = document.getElementById('detailMenuOrder');
-            var menuDisplayElem = document.getElementById('detailMenuDisplay');
+        Bisnis.Admin.Modules.fetchById(id,
+            function (dataResponse) {
+                var nameElem = document.getElementById('detailName');
+                var descriptionElem = document.getElementById('detailDescription');
+                var groupNameElem = document.getElementById('detailGroupName');
+                var pathElem = document.getElementById('detailPath');
+                var iconClsElem = document.getElementById('detailIconCls');
+                var menuOrderElem = document.getElementById('detailMenuOrder');
+                var menuDisplayElem = document.getElementById('detailMenuDisplay');
 
-            nameElem.value = callback.name; nameElem.focus();
-            descriptionElem.value = callback.description;
-            groupNameElem.value = callback.groupName;
-            pathElem.value = callback.path;
-            iconClsElem.value = callback.iconCls;
-            menuOrderElem.value = callback.menuOrder;
-            menuDisplayElem.checked = callback.menuDisplay;
+                nameElem.value = dataResponse.name; nameElem.focus();
+                descriptionElem.value = dataResponse.description;
+                groupNameElem.value = dataResponse.groupName;
+                pathElem.value = dataResponse.path;
+                iconClsElem.value = dataResponse.iconCls;
+                menuOrderElem.value = dataResponse.menuOrder;
+                menuDisplayElem.checked = dataResponse.menuDisplay;
 
-            var service = callback.service.split(',');
-            Bisnis.Util.Document.putValue('#detailService', service);
-            Bisnis.Util.Event.bind('change', '#detailService');
-            Bisnis.Util.Style.modifySelect('#detailService');
-        });
+                var service = dataResponse.service.split(',');
+                Bisnis.Util.Document.putValue('#detailService', service);
+                Bisnis.Util.Event.bind('change', '#detailService');
+                Bisnis.Util.Style.modifySelect('#detailService');
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA MODUL');
+            }
+        );
 
         Bisnis.Util.Dialog.showModal('#detailModal');
     };
@@ -220,34 +226,34 @@
         loadDetail(id);
     });
 
-    Bisnis.Admin.Modules.fetchById = function (id, callback) {
+    Bisnis.Admin.Modules.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'modules/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Admin.Modules.updateById = function (id, params, callback) {
+    Bisnis.Admin.Modules.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'modules/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -270,10 +276,8 @@
         var $this = this;
         $this.disabled = true;
 
-        Bisnis.Admin.Modules.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Admin.Modules.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
 
@@ -283,9 +287,13 @@
                     .getAttribute('aria-controls');
                 var pageNum = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE'+activeId);
                 Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
-            }
-            $this.disabled = false;
-        });
+                $this.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                $this.disabled = false;
+            });
     });
     // end detail modal
 
@@ -294,8 +302,8 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Admin.Modules.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Admin.Modules.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
 
                         var activeId = document.getElementById("serviceTab")
@@ -304,24 +312,25 @@
                             .getAttribute('aria-controls');
                         var pageNum = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE'+activeId);
                         Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
-                    } else {
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
-                    }
-                })
+                    })
             }
         });
     });
 
-    Bisnis.Admin.Modules.delete = function (id, callback) {
+    Bisnis.Admin.Modules.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'modules/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete module

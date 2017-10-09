@@ -150,18 +150,21 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Admin.Cities.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Admin.Cities.add(params,
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
                 loadGrid(1);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
 
-    Bisnis.Admin.Cities.add = function (params, callback) {
+    Bisnis.Admin.Cities.add = function (params, successCallback, errorCallback) {
         // di filter pake hash, agar tidak terdeteksi sebagai int
         var fields = [
             'postalCode'
@@ -173,13 +176,13 @@
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end add modal
@@ -187,35 +190,38 @@
     // detail modal
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('ADMIN_CLIENTS_ID', id);
-        Bisnis.Admin.Cities.fetchById(id, function (callback) {
-            if (callback.parent) {
-                var userElm = document.getElementById('detailParent');
-                userElm.innerHTML = '<option value="/api/cities/'+callback.parent.id+'">'+callback.parent.name+'</option>';
-                Bisnis.Util.Event.bind('change', '#detailParent');
+        Bisnis.Admin.Cities.fetchById(id,
+            function (dataResponse) {
+                if (dataResponse.parent) {
+                    var userElm = document.getElementById('detailParent');
+                    userElm.innerHTML = '<option value="/api/cities/'+dataResponse.parent.id+'">'+dataResponse.parent.name+'</option>';
+                    Bisnis.Util.Event.bind('change', '#detailParent');
+                }
+
+                Bisnis.Util.Style.modifySelect('#detailParent');
+                var parent = {
+                    placeholder: 'CARI KOTA',
+                    module: 'cities',
+                    prependValue: '/api/cities/',
+                    allowClear: true,
+                    fields: [
+                        {
+                            field: 'name',
+                            label: 'Kota'
+                        }
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailParent', parent);
+
+                document.getElementById('detailCode').value = dataResponse.code;
+                document.getElementById('detailName').value = dataResponse.name;
+                document.getElementById('detailPostalCode').value = dataResponse.postalCode;
+                Bisnis.Util.Dialog.showModal('#detailModal');
+                document.getElementById('detailParent').focus();
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KOTA');
             }
-
-            Bisnis.Util.Style.modifySelect('#detailParent');
-            var parent = {
-                placeholder: 'CARI KOTA',
-                module: 'cities',
-                prependValue: '/api/cities/',
-                allowClear: true,
-                fields: [
-                    {
-                        field: 'name',
-                        label: 'Kota'
-                    }
-                ]
-            };
-            Bisnis.Util.Style.ajaxSelect('#detailParent', parent);
-
-            document.getElementById('detailCode').value = callback.code;
-            document.getElementById('detailName').value = callback.name;
-            document.getElementById('detailPostalCode').value = callback.postalCode;
-        });
-
-        Bisnis.Util.Dialog.showModal('#detailModal');
-        document.getElementById('detailParent').focus();
+        );
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -223,22 +229,22 @@
         loadDetail(id);
     });
 
-    Bisnis.Admin.Cities.fetchById = function (id, callback) {
+    Bisnis.Admin.Cities.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'cities/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Admin.Cities.updateById = function (id, params, callback) {
+    Bisnis.Admin.Cities.updateById = function (id, params, successCallback, errorCallback) {
         // di filter pake hash, agar tidak terdeteksi sebagai int
         var fields = [
             'postalCode'
@@ -250,13 +256,13 @@
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -266,17 +272,20 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Admin.Cities.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Admin.Cities.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('ADMIN_CITIES_CURRENT_PAGE');
                 loadGrid(page);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
     // end detail modal
 
@@ -285,29 +294,31 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Admin.Cities.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Admin.Cities.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('ADMIN_CITIES_CURRENT_PAGE');
                         loadGrid(page);
-                    } else {
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }
-                })
+                )
             }
         });
     });
 
-    Bisnis.Admin.Cities.delete = function (id, callback) {
+    Bisnis.Admin.Cities.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'cities/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete

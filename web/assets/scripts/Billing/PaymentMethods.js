@@ -75,7 +75,7 @@
 
     // search box
     var params = {
-        placeholder: 'CARI METHODE PEMBAYARAN',
+        placeholder: 'CARI METODE PEMBAYARAN',
         module: 'billing/payment-methods',
         fields: [
             {

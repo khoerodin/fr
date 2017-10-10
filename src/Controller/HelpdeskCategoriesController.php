@@ -8,7 +8,7 @@ class HelpdeskCategoriesController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Helpdesk',
-            'title' => 'Kategori Helpdesk',
+            'title' => 'Bagian Helpdesk',
         ];
 
         $data = [

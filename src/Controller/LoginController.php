@@ -20,6 +20,9 @@ class LoginController extends AbstractController
             'meta' => $meta,
         ];
 
+        $this->request('logout', 'put', []);
+        $this->client->removeAll();
+
         return $this->renderResponse('login.twig', $data);
     }
 
@@ -33,15 +36,21 @@ class LoginController extends AbstractController
             'password' => $password,
         ]);
 
-        if ($response->getStatusCode() != 401) {
-            $token = json_decode($response->getContent(), true)['token'];
-            $this->store('token', $token);
+        $arr = json_decode($response->getContent(), true);
+
+        if (array_key_exists('token', $arr) && $response->getStatusCode() === 200) {
+            if ( !empty($arr['token']) ) {
+                $this->store('token', $arr['token']);
+                return new Response('1');
+            }
+
+            return new Response($response->getStatusCode());
         }
 
         return new Response($response->getStatusCode());
     }
 
-    public function logoutAction(Request $request)
+    /*public function logoutAction(Request $request)
     {
         $response = $this->request('logout', 'put', []);
         $this->client->removeAll();
@@ -51,5 +60,5 @@ class LoginController extends AbstractController
         }
 
         return $response;
-    }
+    }*/
 }

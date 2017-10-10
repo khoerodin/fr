@@ -68,49 +68,56 @@
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('MODULES_CURRENT_PAGE'+serviceId, pageNum);
 
-        params.push({page: pageNum});
+        params.push(
+            { page: pageNum },
+            { order: { name: 'ASC' } }
+        );
 
         if (typeof serviceId !== 'undefined') {
             params.push({service: serviceId});
         }
 
-        Bisnis.Admin.Modules.fetchAll(params, function (rawData) {
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+        Bisnis.Admin.Modules.fetchAll(params,
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var viewData = dataResponse['hydra:view'];
 
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#modulesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
+                if ('undefined' !== typeof viewData['hydra:last']) {
+                    var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                    Bisnis.Util.Grid.createPagination('#modulesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                }
 
-            if (memberData.length > 0) {
-                var records = [];
-                Bisnis.each(function (idx, memberData) {
-                    records.push([
-                        { value: memberData.name },
-                        { value: memberData.groupName },
-                        { value: memberData.path },
-                        { value: memberData.menuDisplay, format: function (menuDisplay) {
-                            if (memberData.menuDisplay) {
-                                return '<i class="fa fa-check text-success"></i>'
-                            } else {
-                                return '<i class="fa fa-times text-danger"></i>'
-                            }
-                        }},
-                        { value: memberData.id, format: function (id) {
-                            return '<span class="pull-right">' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
-                                '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                                '</span>';
-                        }}
-                    ]);
-                }, memberData);
-                Bisnis.Util.Grid.renderRecords('#modulesList'+serviceId, records, pageNum);
-            } else {
-                Bisnis.Util.Document.putHtml('#modulesList'+serviceId, '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                if (memberData.length > 0) {
+                    var records = [];
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            { value: memberData.name },
+                            { value: memberData.groupName },
+                            { value: memberData.path },
+                            { value: memberData.menuDisplay, format: function (menuDisplay) {
+                                if (memberData.menuDisplay) {
+                                    return '<i class="fa fa-check text-success"></i>'
+                                } else {
+                                    return '<i class="fa fa-times text-danger"></i>'
+                                }
+                            }},
+                            { value: memberData.id, format: function (id) {
+                                return '<span class="pull-right">' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                    '</span>';
+                            }}
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#modulesList'+serviceId, records, pageNum);
+                } else {
+                    Bisnis.Util.Document.putHtml('#modulesList'+serviceId, '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA MODUL');
             }
-        });
-    }
+        );
+    };
 
     var activeId = document.getElementById("serviceTab")
         .getElementsByClassName("active")[0]
@@ -152,7 +159,7 @@
 
         $this.disabled = true;
         Bisnis.Admin.Modules.add(params,
-            function (callback) {
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
 
                 var activeId = document.getElementById("serviceTab")
@@ -213,12 +220,12 @@
                 Bisnis.Util.Document.putValue('#detailService', service);
                 Bisnis.Util.Event.bind('change', '#detailService');
                 Bisnis.Util.Style.modifySelect('#detailService');
+
+                Bisnis.Util.Dialog.showModal('#detailModal');
             }, function () {
                 Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA MODUL');
             }
         );
-
-        Bisnis.Util.Dialog.showModal('#detailModal');
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -314,7 +321,8 @@
                         Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
                     }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
-                    })
+                    }
+                )
             }
         });
     });

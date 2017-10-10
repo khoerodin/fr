@@ -10,4 +10,8 @@
             defaultDate: defaultDate
         });
     };
+
+    Bisnis.Util.DatePicker.destroy = function (selector) {
+        jQuery(selector).datetimepicker('destroy');
+    };
 })(window.Bisnis || {});

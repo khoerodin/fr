@@ -145,29 +145,31 @@
         function (hasResultCallback) {
 
         }, function (selectedCallback) {
-            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             console.log(selectedCallback)
-        }, function (openCallback) {
-
-        }, function (closeCallback) {
-
         }
     );
 
     // generate invoices
     var countAllInvoiceAmount = function (orderId, totalCallback) {
-        Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}], function (callback) {
-            var memberData = callback['hydra:member'];
-            var amount = 0;
-            if (memberData.length > 0) {
-                Bisnis.each(function (idx, memberData) {
-                    amount = amount + memberData.amount;
-                }, memberData);
+        Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var amount = 0;
+                if (memberData.length > 0) {
+                    Bisnis.each(function (idx, memberData) {
+                        amount = amount + memberData.amount;
+                    }, memberData);
+                }
+                if (Bisnis.validCallback(totalCallback)) {
+                    totalCallback(amount);
+                }
+            }, function () {
+                if (Bisnis.validCallback(totalCallback)) {
+                    totalCallback(0);
+                    Bisnis.Util.Dialog.alert('Gagal mengambil data sisa');
+                }
             }
-            if (Bisnis.validCallback(totalCallback)) {
-                totalCallback(amount);
-            }
-        });
+        );
     };
 
     Bisnis.Util.Event.bind('click', '.btn-generate-invoices', function () {
@@ -182,14 +184,15 @@
         Bisnis.Util.Storage.store('GENERATE_INV_ORDER_ID', orderId);
         Bisnis.Util.Storage.store('GENERATE_INV_NETTO', netto);
 
-        var amount = document.querySelector('#invoicesModal #amount');
-        amount.value = '';
-        amount.disabled = false;
-        document.querySelector('#generateInvoice').disabled = false;
-
         countAllInvoiceAmount(orderId, function (totalCallback) {
             var sisa = parseFloat(netto) - parseFloat(totalCallback);
             document.querySelector('#invoicesModal #sisa').innerHTML = Bisnis.Util.Money.format(parseFloat(sisa));
+
+            var amount = document.querySelector('#invoicesModal #amount');
+            amount.value = sisa;
+            amount.disabled = false;
+            document.querySelector('#generateInvoice').disabled = false;
+
             if (sisa <= 0) {
                 var amount = document.querySelector('#invoicesModal #amount');
                 amount.value = '';
@@ -265,14 +268,15 @@
                     var amount = document.querySelector('#invoicesModal #amount');
                     amount.value = '';
                     amount.disabled = true;
+                    document.querySelector('#generateInvoice').disabled = true;
                 } else {
+                    var amount = document.querySelector('#invoicesModal #amount');
+                    amount.value = sisa;
+                    amount.focus();
                     document.querySelector('#generateInvoice').disabled = false;
                 }
             });
 
-            var amount = document.querySelector('#invoicesModal #amount');
-            amount.value = '';
-            amount.focus();
             loadInvoices(invoicePage, orderId);
             invoiceList(orderId);
         });
@@ -301,29 +305,33 @@
         var pageNum =
             (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store(orderId + 'INVOICES_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.OrderInvoices.fetchAll([{page: pageNum},{'order.id': orderId}], function (rawData) {
-            var memberData = rawData['hydra:member'];
-            var viewData = rawData['hydra:view'];
+        Bisnis.Adv.OrderInvoices.fetchAll([{page: pageNum},{'order.id': orderId}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var viewData = dataResponse['hydra:view'];
 
-            if ('undefined' !== typeof viewData['hydra:last']) {
-                var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
-                Bisnis.Util.Grid.createPagination('#invoicesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
-            }
+                if ('undefined' !== typeof viewData['hydra:last']) {
+                    var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                    Bisnis.Util.Grid.createPagination('#invoicesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                }
 
-            if (memberData.length > 0) {
-                var records = [];
-                Bisnis.each(function (idx, memberData) {
-                    records.push([
-                        { value: memberData.invoiceNumber },
-                        { value: '<span class="pull-right">' + Bisnis.Util.Money.format(memberData.amount) + '</span>' },
-                        { value: invoiceStatus(memberData.status) }
-                    ]);
-                }, memberData);
-                Bisnis.Util.Grid.renderRecords('#invoicesList', records, pageNum);
-            } else {
-                Bisnis.Util.Document.putHtml('#invoicesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                if (memberData.length > 0) {
+                    var records = [];
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            { value: memberData.invoiceNumber },
+                            { value: '<span class="pull-right">' + Bisnis.Util.Money.format(memberData.amount) + '</span>' },
+                            { value: invoiceStatus(memberData.status) }
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#invoicesList', records, pageNum);
+                } else {
+                    Bisnis.Util.Document.putHtml('#invoicesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT LIST FAKTUR');
             }
-        });
+        );
     };
     // end generate invoices
 

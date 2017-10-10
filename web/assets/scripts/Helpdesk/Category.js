@@ -178,20 +178,20 @@
         Bisnis.Helpdesk.Category.fetchById(id, function (callback) {
             if (callback.parent) {
                 var userElm = document.getElementById('detailParent');
-                userElm.innerHTML = '<option value="/api/cities/'+callback.parent.id+'">'+callback.parent.name+'</option>';
+                userElm.innerHTML = '<option value="/api/helpdesk/categories/'+callback.parent.id+'">'+callback.parent.name+'</option>';
                 Bisnis.Util.Event.bind('change', '#detailParent');
             }
 
             Bisnis.Util.Style.modifySelect('#detailParent');
             var parent = {
-                placeholder: 'CARI KOTA',
+                placeholder: 'CARI KATEGORI',
                 module: 'helpdesk/categories',
-                prependValue: '/api/cities/',
+                prependValue: '/api/helpdesk/categories/',
                 allowClear: true,
                 fields: [
                     {
                         field: 'name',
-                        label: 'Kota'
+                        label: 'Kategori'
                     }
                 ]
             };

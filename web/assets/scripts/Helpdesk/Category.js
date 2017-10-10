@@ -51,7 +51,7 @@
                     Bisnis.Util.Document.putHtml('#categoryList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KATEGORI HELPDESK');
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA BAGIAN HELPDESK');
             }
         );
     };
@@ -77,12 +77,12 @@
 
     // search box
     var params = {
-        placeholder: 'CARI KATEGORI',
+        placeholder: 'CARI BAGIAN',
         module: 'helpdesk/categories',
         fields: [
             {
                 field: 'name',
-                label: 'Kategori'
+                label: 'Bagian'
             }
         ]
     };
@@ -121,14 +121,14 @@
     Bisnis.Util.Event.bind('click', '#btnAddCategory', function () {
 
         var parent = {
-            placeholder: 'CARI KATEGORI',
+            placeholder: 'CARI BAGIAN',
             module: 'helpdesk/categories',
             prependValue: '/api/helpdesk/categories/',
             allowClear: true,
             fields: [
                 {
                     field: 'name',
-                    label: 'Kategori'
+                    label: 'Bagian'
                 }
             ]
         };
@@ -187,14 +187,14 @@
 
                 Bisnis.Util.Style.modifySelect('#detailParent');
                 var parent = {
-                    placeholder: 'CARI KATEGORI',
+                    placeholder: 'CARI BAGIAN',
                     module: 'helpdesk/categories',
                     prependValue: '/api/helpdesk/categories/',
                     allowClear: true,
                     fields: [
                         {
                             field: 'name',
-                            label: 'Kategori'
+                            label: 'Bagian'
                         }
                     ]
                 };
@@ -205,7 +205,7 @@
                 Bisnis.Util.Dialog.showModal('#detailModal');
                 document.getElementById('detailParent').focus();
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KATEGORI HELPDESK');
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA BAGIAN HELPDESK');
             });
     };
 

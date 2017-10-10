@@ -8,7 +8,7 @@ class UserActivitiesController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Admin',
-            'title' => 'Aktivitas pengguna',
+            'title' => 'Aktifitas pengguna',
         ];
 
         $data = [

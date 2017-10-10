@@ -8,7 +8,7 @@ class BillingAreasController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Tagihan',
-            'title' => 'Area Tagihan',
+            'title' => 'Wilayah Tagih',
         ];
 
         $data = [

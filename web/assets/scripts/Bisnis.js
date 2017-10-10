@@ -21,25 +21,35 @@
         }
     };
 
+    var checkParams = function (params) {
+        if (Array.isArray(params.params)) {
+            params.params = 'undefined' === typeof params.params ? [] : params.params;
+
+            var order = false;
+            params.params.forEach(function (value) {
+                if (value.order) {
+                    order = true;
+                }
+            });
+
+            if (params.method.toLowerCase() === 'get' && order === false) {
+                params.params.push({
+                    order: {
+                        createdAt: 'DESC'
+                    }
+                });
+            }
+        } else {
+            params = params.params;
+        }
+
+        return params;
+    };
+
     Bisnis.request = function (params, successCallback, errorCallback, url, method) {
         url = 'undefined' === typeof url ? '/api' : url;
         method = 'undefined' === typeof method ? 'post' : method;
-        params.params = 'undefined' === typeof params.params ? [] : params.params;
-
-        var order = false;
-        params.params.forEach(function (value) {
-            if (value.order) {
-                order = true;
-            }
-        });
-
-        if (params.method.toLowerCase() === 'get' && order === false) {
-            params.params.push({
-                order: {
-                    createdAt: 'DESC'
-                }
-            });
-        }
+        params = checkParams(params);
 
         jQuery.ajax({
             url: url,

@@ -101,7 +101,6 @@
                 btn.disabled = false;
             }
         }, function (selectedCallback) {
-            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddIdentity');
@@ -148,30 +147,33 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Billing.Identities.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Billing.Identities.add(params,
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
                 loadGrid(1);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
 
-    Bisnis.Billing.Identities.add = function (params, callback) {
+    Bisnis.Billing.Identities.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'billing/identities',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end add modal
@@ -179,35 +181,40 @@
     // detail modal
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('BILLING_IDENTITIES_ID', id);
-        Bisnis.Billing.Identities.fetchById(id, function (callback) {
-            if (callback.parent) {
-                var userElm = document.getElementById('detailParent');
-                userElm.innerHTML = '<option value="/api/billing/identities/'+callback.parent.id+'">'+callback.parent.name+'</option>';
-                Bisnis.Util.Event.bind('change', '#detailParent');
+        Bisnis.Billing.Identities.fetchById(id,
+            function (dataResponse) {
+                if (dataResponse.parent) {
+                    var userElm = document.getElementById('detailParent');
+                    userElm.innerHTML = '<option value="/api/billing/identities/'+dataResponse.parent.id+'">'+dataResponse.parent.name+'</option>';
+                    Bisnis.Util.Event.bind('change', '#detailParent');
+                }
+
+                var parent = {
+                    placeholder: 'CARI PENANDA TAGIH',
+                    module: 'billing/identities',
+                    prependValue: '/api/billing/identities',
+                    allowClear: true,
+                    fields: [
+                        {
+                            field: 'name',
+                            label: 'Penanda Tagih'
+                        }
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailParent', parent);
+
+                var codeElem = document.getElementById('detailCode');
+                codeElem.value = dataResponse.code;
+                codeElem.focus();
+
+                var nameElem = document.getElementById('detailName');
+                nameElem.value = dataResponse.name;
+
+                Bisnis.Util.Dialog.showModal('#detailModal');
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PENANDA TAGIH');
             }
-
-            var parent = {
-                placeholder: 'CARI PENANDA TAGIH',
-                module: 'billing/identities',
-                prependValue: '/api/billing/identities',
-                allowClear: true,
-                fields: [
-                    {
-                        field: 'name',
-                        label: 'Penanda Tagih'
-                    }
-                ]
-            };
-            Bisnis.Util.Style.ajaxSelect('#detailParent', parent);
-
-            var codeElem = document.getElementById('detailCode');
-            codeElem.value = callback.code;
-            codeElem.focus();
-
-            var nameElem = document.getElementById('detailName');
-            nameElem.value = callback.name;
-        });
-        Bisnis.Util.Dialog.showModal('#detailModal');
+        );
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -215,34 +222,34 @@
         loadDetail(id);
     });
 
-    Bisnis.Billing.Identities.fetchById = function (id, callback) {
+    Bisnis.Billing.Identities.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'billing/identities/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Billing.Identities.updateById = function (id, params, callback) {
+    Bisnis.Billing.Identities.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'billing/identities/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -252,17 +259,20 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Billing.Identities.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Billing.Identities.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('BILLING_IDENTITIES_CURRENT_PAGE');
                 loadGrid(page);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
     // end detail modal
 
@@ -271,29 +281,31 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Billing.Identities.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Billing.Identities.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('BILLING_IDENTITIES_CURRENT_PAGE');
                         loadGrid(page);
-                    } else {
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }
-                })
+                )
             }
         });
     });
 
-    Bisnis.Billing.Identities.delete = function (id, callback) {
+    Bisnis.Billing.Identities.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'billing/identities/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete

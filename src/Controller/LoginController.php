@@ -20,9 +20,6 @@ class LoginController extends AbstractController
             'meta' => $meta,
         ];
 
-        $this->request('logout', 'put', []);
-        $this->client->removeAll();
-
         return $this->renderResponse('login.twig', $data);
     }
 
@@ -50,7 +47,7 @@ class LoginController extends AbstractController
         return new Response($response->getStatusCode());
     }
 
-    /*public function logoutAction(Request $request)
+    public function logoutAction(Request $request)
     {
         $response = $this->request('logout', 'put', []);
         $this->client->removeAll();
@@ -60,5 +57,5 @@ class LoginController extends AbstractController
         }
 
         return $response;
-    }*/
+    }
 }

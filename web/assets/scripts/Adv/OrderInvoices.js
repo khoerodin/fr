@@ -18,20 +18,23 @@
     };
 
     var invoiceList = function (orderId) {
-        Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}], function (callback) {
-            var memberData = callback['hydra:member'];
-            var invoicesButtons = '';
-            var orderID = '';
-            if (memberData.length > 0) {
-                Bisnis.each(function (idx, memberData) {
-                    orderID = memberData.order.id;
-                    var str = '<button class="btn btn-xs btn-flat btn-success btn-invoices" style="margin-right: 5px;margin-bottom: 5px;">'+memberData.invoiceNumber+'</button>';
-                    invoicesButtons = invoicesButtons + str;
-                }, memberData);
-                document.querySelector('#totalAmount' + orderID).innerHTML = invoicesButtons;
+        Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var invoicesButtons = '';
+                var orderID = '';
+                if (memberData.length > 0) {
+                    Bisnis.each(function (idx, memberData) {
+                        orderID = memberData.order.id;
+                        var str = '<button class="btn btn-xs btn-flat btn-success btn-invoices" style="margin-right: 5px;margin-bottom: 5px;">'+memberData.invoiceNumber+'</button>';
+                        invoicesButtons = invoicesButtons + str;
+                    }, memberData);
+                    document.querySelector('#totalAmount' + orderID).innerHTML = invoicesButtons;
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA FAKTUR');
             }
-        });
-
+        );
     };
 
     var invoiceType= function (printInvoiceAs) {
@@ -43,7 +46,7 @@
             case 'p':
                 invoiceAs = '<label class="label label-danger">PECAH</label>';
                 break;
-            case 'b':
+            case 'g':
                 invoiceAs = '<label class="label label-warning">GABUNG</label>';
                 break;
             default:
@@ -223,18 +226,19 @@
         document.querySelector('#invoicesModal #amount').focus();
     });
 
-    Bisnis.Adv.OrderInvoices.add = function (params, callback) {
+    Bisnis.Adv.OrderInvoices.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/order-invoices',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -260,26 +264,37 @@
                 value: amount
             }
         ];
-        Bisnis.Adv.OrderInvoices.add(params, function () {
-            countAllInvoiceAmount(orderId, function (totalCallback) {
-                var sisa = parseFloat(netto) - parseFloat(totalCallback);
-                document.querySelector('#invoicesModal #sisa').innerHTML = Bisnis.Util.Money.format(sisa);
-                if (sisa <= 0) {
-                    var amount = document.querySelector('#invoicesModal #amount');
-                    amount.value = '';
-                    amount.disabled = true;
-                    document.querySelector('#generateInvoice').disabled = true;
-                } else {
-                    var amount = document.querySelector('#invoicesModal #amount');
-                    amount.value = sisa;
-                    amount.focus();
-                    document.querySelector('#generateInvoice').disabled = false;
-                }
-            });
+        Bisnis.Adv.OrderInvoices.add(params,
+            function () {
+                countAllInvoiceAmount(orderId, function (totalCallback) {
+                    var sisa = parseFloat(netto) - parseFloat(totalCallback);
+                    Bisnis.Util.Storage.store('sisa', sisa);
+                    document.querySelector('#invoicesModal #sisa').innerHTML = Bisnis.Util.Money.format(sisa);
+                    if (sisa <= 0) {
+                        var amount = document.querySelector('#invoicesModal #amount');
+                        amount.value = '';
+                        amount.disabled = true;
+                        document.querySelector('#generateInvoice').disabled = true;
+                    } else {
+                        var amount = document.querySelector('#invoicesModal #amount');
+                        amount.value = sisa;
+                        amount.focus();
+                        document.querySelector('#generateInvoice').disabled = false;
+                    }
+                });
 
-            loadInvoices(invoicePage, orderId);
-            invoiceList(orderId);
-        });
+                loadInvoices(invoicePage, orderId);
+                invoiceList(orderId);
+            }, function (response) {
+                document.querySelector('#invoicesModal #amount').focus();
+                document.querySelector('#generateInvoice').disabled = false;
+
+                document.querySelector('#amountMessage').classList.remove('hidden');
+                document.querySelector('#amountMessage').parentNode.classList.add('has-error');
+
+                // console.log(document.querySelector('#amountMessage').parentNode)
+            }
+        );
     });
 
     var invoiceStatus = function (status) {

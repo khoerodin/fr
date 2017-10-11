@@ -18,8 +18,9 @@
         });
     };
 
-    var loadGrid = function (pageNum) {
-       pageNum = (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+    Bisnis.Helpdesk.Staff.loadGrid = function (pageNum) {
+        var pageNum =
+            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
         Bisnis.Util.Storage.store('STAFF_CURRENT_PAGE', pageNum);
         Bisnis.Helpdesk.Staff.fetchAll([{page: pageNum}],
             function (dataResponse) {
@@ -62,22 +63,20 @@
         );
     };
 
-    loadGrid(1);
-
     Bisnis.Util.Event.bind('click', '#staffsPagination .pagePrevious', function () {
-        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
+        Bisnis.Helpdesk.Staff.loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
     Bisnis.Util.Event.bind('click', '#staffsPagination .pageNext', function () {
-        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
+        Bisnis.Helpdesk.Staff.loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
     Bisnis.Util.Event.bind('click', '#staffsPagination .pageFirst', function () {
-        loadGrid(1);
+        Bisnis.Helpdesk.Staff.loadGrid(1);
     });
 
     Bisnis.Util.Event.bind('click', '#staffsPagination .pageLast', function () {
-        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
+        Bisnis.Helpdesk.Staff.loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
     // end fetch grid and pagination
 
@@ -127,7 +126,7 @@
         Bisnis.Helpdesk.Staff.add(params,
             function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
-                loadGrid(1);
+                Bisnis.Helpdesk.Staff.loadGrid(1);
                 thisBtn.disabled = false;
             }, function (response) {
                 if (response.responseJSON) {
@@ -240,7 +239,7 @@
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('STAFF_CURRENT_PAGE');
-                loadGrid(page);
+                Bisnis.Helpdesk.Staff.loadGrid(page);
                 thisBtn.disabled = false;
             }, function (response) {
                 if (response.responseJSON) {
@@ -293,7 +292,7 @@
                     function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('STAFF_CURRENT_PAGE');
-                        loadGrid(page);
+                        Bisnis.Helpdesk.Staff.loadGrid(page);
                     }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }

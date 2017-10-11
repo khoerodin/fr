@@ -23,6 +23,7 @@
         };
 
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+            staff = staff['hydra:member'];
             Bisnis.Util.Storage.remove('staff');
             Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
             if (0 < staff.length) {

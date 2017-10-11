@@ -234,6 +234,7 @@
         }
 
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+            staff = staff['hydra:member'];
             Bisnis.Util.Storage.remove('staff');
             Bisnis.Util.Style.modifySelect('#chartType');
 

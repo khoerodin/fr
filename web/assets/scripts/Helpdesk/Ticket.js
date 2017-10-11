@@ -549,7 +549,7 @@
             params: [params]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                Bisnis.Util.Storage.store('__HELPDESK_CHARTDATA_DETAIL__', response);
+                Bisnis.Util.Storage.store('__HELPDESK_CHARTDATA_DETAIL__', JSON.stringify(response));
                 callback();
             }
         }, function () {

@@ -40,7 +40,7 @@
                 });
             }
         } else {
-            params = params.params;
+            params = (typeof params.params === 'undefined') ? params : params.params;
         }
 
         return params;

@@ -95,28 +95,16 @@
     Bisnis.Util.Style.ajaxSelect('#searchStaffs', params,
         function (hasResultCallback) {
             var btn = document.getElementById('btnAddStaff');
-            if (hasResultCallback) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
+            btn.disabled = !!hasResultCallback;
         }, function (selectedCallback) {
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddStaff');
-            if (openCallback === false) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
+            btn.disabled = openCallback !== false;
         }, function (closeCallback) {
             var btn = document.getElementById('btnAddStaff');
             setTimeout(function () {
-                if (closeCallback === false) {
-                    btn.disabled = false;
-                } else {
-                    btn.disabled = true;
-                }
+                btn.disabled = closeCallback !== false;
             }, 300);
         }
     );
@@ -332,7 +320,7 @@
     // prevent submit form on enter
     Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {
         var key = e.charCode || e.keyCode || 0;
-        if (key == 13) {
+        if (13 === key) {
             Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
             e.preventDefault();
         }

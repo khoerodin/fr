@@ -59,7 +59,25 @@
         }
     });
 
+    Bisnis.Auth.logout = function (successCallback, errorCallback) {
+        Bisnis.request([], function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
+            }
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
+        }, '/logout', 'put');
+    };
+
     Bisnis.Util.Event.bind('click', '#sign-out', function () {
-        location.href = '/login';
+        Bisnis.Auth.logout(
+            function () {
+                location.href = '/';
+            }, function () {
+                Bisnis.Util.Dialog.alert('Gagal Keluar Aplikasi!');
+            }
+        );
     });
 })(window.Bisnis || {});

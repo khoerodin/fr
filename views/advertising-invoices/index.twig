@@ -1,6 +1,8 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
+    <script src="/assets/scripts/Adv/Orders.js"></script>
+    <script src="/assets/scripts/Adv/OrderInvoices.js"></script>
     <script src="/assets/scripts/Adv/Invoices.js"></script>
 {% endblock %}
 
@@ -13,17 +15,17 @@
                         <select class="form-control" id="searchInvoices" style="width: 100%"></select>
                     </div>
                     <div class="col-md-2">
-                        <button disabled id="btnAddInvoice" class="btn btn-danger btn-flat btn-block">FAKTUR BARU</button>
+                        <button id="btnAddInvoice" class="btn btn-danger btn-flat btn-block">TAMBAH</button>
                     </div>
                 </div>
                 <div class="box-body">
                     <table class="table table-bordered table-responsive table-hover">
                         <thead>
                         <tr>
-                            <th width="4%">NO.</th>
-                            <th width="55%">NOMOR FAKTUR</th>
-                            <th width="25%">JUMLAH</th>
-                            <th width="10%">STATUS FAKTUR</th>
+                            <th width="3%">NO.</th>
+                            <th width="20%">NOMOR FAKTUR</th>
+                            <th width="8%">JUMLAH</th>
+                            <th width="66%">STATUS FAKTUR</th>
                             <th width="3%"><span class="pull-right">AKSI</span></th>
                         </tr>
                         </thead>
@@ -68,96 +70,66 @@
 
                                 <div role="tabpanel" class="tab-pane active" id="satu">
 
-                                    <div class="form-group">
-                                        <label for="">IKLAN</label>
-                                        <div class="input-group" id="">
-                                            <input type="text" readonly name="" class="form-control" value="" placeholder="PILIH IKLAN">
-                                            <input type="hidden" id="" name="" value="/api/advertising/#">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
+                                    <form id="normalForm">
                                         <div class="form-group">
-                                            <label for="">NETTO</label>
-                                            <div class="input-group" id="">
-                                                <input type="text" readonly name="" class="form-control" value="">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-danger btn-flat" type="button">BUAT FAKTUR</button>
-                                                </span>
+                                            <label for="normalOrder">IKLAN</label>
+                                            <select name="order" id="normalOrder" style="width: 100%"></select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label for="">NETTO</label>
+                                                <div class="input-group" id="">
+                                                    <input type="text" readonly name="netto" id="netto" class="form-control">
+                                                    <input type="hidden" id="amount">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-danger btn-flat" id="btn-normal-invoice" type="button">BUAT FAKTUR</button>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
 
                                 </div>
 
                                 <div role="tabpanel" class="tab-pane" id="dua">
 
-                                    <div class="form-group">
-                                        <label for="">IKLAN</label>
-                                        <div class="input-group" id="">
-                                            <input type="text" readonly name="" class="form-control" value="" placeholder="PILIH IKLAN">
-                                            <input type="hidden" id="" name="" value="/api/advertising/#">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
-                                            </span>
+                                    <form id="pecahForm">
+                                        <div class="form-group">
+                                            <label for="pecahOrder">IKLAN</label>
+                                            <select name="order" id="pecahOrder" style="width: 100%"></select>
                                         </div>
-                                    </div>
 
-                                    <div class="form-group">
-                                        <label for="">SISA</label>
-                                        <input type="text" readonly class="form-control">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="">MASUKKAN JUMLAH</label>
-                                        <div class="input-group" id="">
-                                            <input type="text" name="" class="form-control" value="">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-danger btn-flat" type="button">BUAT FAKTUR</button>
-                                            </span>
+                                        <div class="form-group">
+                                            <label for="sisa">SISA</label>
+                                            <input type="text" id="sisa" readonly class="form-control">
                                         </div>
-                                    </div>
 
-                                    <label for="">LIST FAKTUR</label>
-                                    <table class="table table-bordered table-responsive table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th width="5%">NO.</th>
-                                            <th>NO. ORDER</th>
-                                            <th>JUDUL IKLAN</th>
-                                            <th>TANGGAL</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>NO.</td>
-                                            <td>NO. ORDER</td>
-                                            <td>JUDUL IKLAN</td>
-                                            <td>TANGGAL</td>
-                                        </tr>
-                                        <tr>
-                                            <td>NO.</td>
-                                            <td>NO. ORDER</td>
-                                            <td>JUDUL IKLAN</td>
-                                            <td>TANGGAL</td>
-                                        </tr>
-                                        <tr>
-                                            <td>NO.</td>
-                                            <td>NO. ORDER</td>
-                                            <td>JUDUL IKLAN</td>
-                                            <td>TANGGAL</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                        <div class="form-group">
+                                            <label for="pecahAmount">MASUKKAN JUMLAH</label>
+                                            <div class="input-group">
+                                                <input type="text" name="amount" id="pecahAmount" class="form-control" value="">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-danger btn-flat" id="btn-pecah-invoice" type="button">BUAT FAKTUR</button>
+                                                </span>
+                                            </div>
+                                        </div>
 
-                                    <ul class="pagination pagination-sm pull-right">
-                                        <li><a href="#">FIRST</a></li>
-                                        <li><a href="#">NEXT</a></li>
-                                        <li><a href="#">LAST</a></li>
-                                    </ul>
+                                        <label>LIST FAKTUR</label>
+                                        <table class="table table-bordered table-responsive table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th width="5%">NO.</th>
+                                                <th>NO. FAKTUR</th>
+                                                <th>JUMLAH</th>
+                                                <th>STATUS FAKTUR</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="invoicePecahList"></tbody>
+                                        </table>
+
+                                        <ul class="pagination pagination-sm pull-right" id="invoicePecahPagination"></ul>
+                                    </form>
                                 </div>
 
                                 <div role="tabpanel" class="tab-pane" id="tiga">

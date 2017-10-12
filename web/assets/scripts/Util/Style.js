@@ -35,6 +35,8 @@
             return $state;
         };
 
+        var history = !!params.showHistory;
+
         jQuery(selector).select2({
             theme: "bootstrap",
             placeholder: placeholder.toUpperCase(),
@@ -114,22 +116,31 @@
                     text: e.text,
                     label: e.label
                 };
-                createHistory(selector, data);
+
+                if (history) {
+                    createHistory(selector, data);
+                }
             }
         }).on('select2:open', function () {
             if (Bisnis.validCallback(openCallback)) {
                 openCallback(true);
             }
-            showHistory(selector, function (selectedHistoryData) {
-                if (Bisnis.validCallback(selectedCallback)) {
-                    selectedCallback(selectedHistoryData);
-                }
-            });
+            if (history) {
+                showHistory(selector, function (selectedHistoryData) {
+                    if (Bisnis.validCallback(selectedCallback)) {
+                        selectedCallback(selectedHistoryData);
+                    }
+                });
+            }
         }).on('select2:closing', function () {
             if (Bisnis.validCallback(closeCallback)) {
                 closeCallback(true);
             }
         });
+    };
+
+    Bisnis.Util.Style.destroySelect = function (selector) {
+        jQuery(selector).select2('destroy');
     };
 
     Bisnis.Util.Style.editor = function (selector) {

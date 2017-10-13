@@ -33,6 +33,8 @@
         });
     };
 
+    // Invoices List
+
     var invoiceStatus = function (status) {
         var str;
         switch (status) {
@@ -148,6 +150,10 @@
         }
     );
 
+    // End Invoices List
+
+    // Add Incvoice Modal
+
     var fetchSelect = function (selector, selectedCallback) {
         var params = {
             placeholder: 'CARI NO. ORDER',
@@ -232,11 +238,11 @@
         );
     };
 
-    // add invoice modal
     Bisnis.Util.Event.bind('click', '#btnAddInvoice', function () {
         fetchSelect('#normalOrder', function (selected) {
             var id = selected.id.split('/')[4];
             Bisnis.Util.Storage.store('normalOrderId', id);
+
             Bisnis.Adv.Orders.fetchById(id,
                 function (dataResponse) {
                     var netto = dataResponse.totalAmount * dataResponse.quantity;
@@ -245,6 +251,25 @@
                 },
                 function () {
                     Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA ORDER IKLAN');
+                }
+            );
+
+            Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': id}],
+                function (dataResponse) {
+                    var memberData = dataResponse['hydra:member'];
+                    if ( memberData.length > 0 ) {
+                        document.querySelector('#normalForm #btn-normal-invoice').disabled = true;
+                        document.querySelector('#normalForm').classList.add('has-error');
+                        document.querySelector('#hasNormalInvoice').classList.remove('hidden');
+                    } else {
+                        document.querySelector('#normalForm #btn-normal-invoice').disabled = false;
+                        document.querySelector('#normalForm').classList.remove('has-error');
+                        document.querySelector('#hasNormalInvoice').classList.add('hidden');
+                    }
+                },
+                function () {
+                    Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL VALIDASI FAKTUR');
+                    document.querySelector('#normalForm #btn-normal-invoice').disabled = true;
                 }
             );
         });
@@ -258,19 +283,19 @@
             loadInvoices(pageNum, orderId);
 
             Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pagePrevious', function () {
-                loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+                loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
             });
 
             Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageNext', function () {
-                loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+                loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
             });
 
             Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageFirst', function () {
-                loadPage(1);
+                loadInvoices(1, orderId);
             });
 
             Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageLast', function () {
-                loadPage(Bisnis.Util.Document.getDataValue(this, 'page'));
+                loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
             });
         });
 
@@ -461,6 +486,7 @@
         );
     };
 
+    // add pecah invoice
     Bisnis.Util.Event.bind('click', '#btn-pecah-invoice', function () {
         var orderId = Bisnis.Util.Storage.fetch('pecahOrderId');
 
@@ -485,6 +511,7 @@
             );
         }
     });
+    // End Add Incvoice Modal
 
     // reset modal form on modal hidden
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
@@ -497,6 +524,10 @@
         document.querySelector('#pecahForm #pecahOrder').value = [];
 
         Bisnis.Util.Storage.remove('INVOICE_PECAH_ID');
+        document.querySelector('#invoicePecahList').innerHTML = '';
+        document.querySelector('#pecahAmount').value = '';
+        document.querySelector('#btn-pecah-invoice').disabled = false;
+        document.querySelector('#sisa').value = '';
 
         /*Bisnis.Util.Grid.removeErrorForm('gabungForm');
         document.getElementById("gabungForm").reset();*/

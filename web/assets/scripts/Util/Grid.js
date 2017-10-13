@@ -102,6 +102,8 @@
     };
 
     Bisnis.Util.Grid.removeErrorForm = function (formId) {
+        document.getElementById(formId).classList.remove('has-error');
+
         let helpElm = document.getElementById(formId).getElementsByClassName('help-block');
         while (helpElm.length > 0) helpElm[0].remove();
 

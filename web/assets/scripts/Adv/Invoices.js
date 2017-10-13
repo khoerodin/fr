@@ -153,7 +153,6 @@
     // End Invoices List
 
     // Add Incvoice Modal
-
     var fetchSelect = function (selector, selectedCallback) {
         var params = {
             placeholder: 'CARI NO. ORDER',
@@ -238,6 +237,68 @@
         );
     };
 
+    var addOrder = function (orderId) {
+        Bisnis.Adv.Orders.fetchById(orderId,
+            function (dataReasponse) {
+                var netto = parseInt(dataReasponse.totalAmount) * parseInt(dataReasponse.quantity);
+
+                Bisnis.Util.Storage.store('gabungOrderNumber', dataReasponse.orderNumber);
+                Bisnis.Util.Storage.store('gabungTitle', dataReasponse.title);
+                Bisnis.Util.Storage.store('gabungNetto', Bisnis.Util.Money.format(netto));
+
+
+                Bisnis.Util.Event.bind('click', '#add-order', function (e) {
+                    var stamp = Bisnis.Util.Storage.fetch('addOrderStamp');
+                    Bisnis.Util.Storage.store('addOrderStamp', e.timeStamp);
+
+                    if (parseFloat(stamp) !== e.timeStamp) {
+
+                        Bisnis.Util.Storage.storeArray('gabungOrdersIds', Bisnis.Util.Storage.fetch('orderIdToGabung'));
+
+                        var tbody = document.querySelector('#orderGabungList');
+                        var lastNum = tbody.rows[ tbody.rows.length - 1 ].cells[0].innerText;
+                        var rowNum = 1;
+                        if ( Number.isInteger( parseInt(lastNum) ) ) {
+                            rowNum = parseInt(lastNum) + 1;
+                        } else {
+                            tbody.innerHTML = '';
+                        }
+
+                        var row = tbody.insertRow(-1);
+                        row.insertCell(0).innerHTML = rowNum.toString();
+                        row.insertCell(1).innerHTML = Bisnis.Util.Storage.fetch('gabungOrderNumber');
+                        row.insertCell(2).innerHTML = Bisnis.Util.Storage.fetch('gabungTitle');
+                        row.insertCell(3).innerHTML = Bisnis.Util.Storage.fetch('gabungNetto');
+                        row.insertCell(4).innerHTML = '<button type="button" data-id="'+ Bisnis.Util.Storage.fetch('orderIdToGabung') +'" class="btn btn-flat btn-default btn-xs pull-right btn-remove-gabung-order"><i class="fa fa-times"></i></button>';
+
+                        document.querySelector('#add-order').disabled = true;
+                        document.querySelector('#btn-gabung-invoice').disabled = false;
+                        document.querySelector('#gabungOrder').value = [];
+                        Bisnis.Util.Event.trigger('change', '#gabungOrder');
+
+                    }
+                });
+            },
+            function () {
+
+            }
+        );
+    };
+
+    Bisnis.Util.Event.bind('click', '.btn-remove-gabung-order', function () {
+        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+        Bisnis.Util.Storage.removeArray('gabungOrdersIds', id);
+        this.closest('tr').remove();
+
+        var arrIds = JSON.parse(localStorage.getItem('gabungOrdersIds'));
+        if ( arrIds.length > 0 ) {
+            document.querySelector('#btn-gabung-invoice').disabled = false;
+        } else {
+            document.querySelector('#btn-gabung-invoice').disabled = true;
+            document.querySelector('#orderGabungList').innerHTML = '<tr><td colspan="10">SILAKAN TAMBAH ORDER IKLAN</td></tr>';
+        }
+    });
+
     Bisnis.Util.Event.bind('click', '#btnAddInvoice', function () {
         fetchSelect('#normalOrder', function (selected) {
             var id = selected.id.split('/')[4];
@@ -297,6 +358,24 @@
             Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageLast', function () {
                 loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
             });
+        });
+
+        fetchSelect('#gabungOrder', function (selected) {
+            var orderId = selected.id.split('/')[4];
+            var ids = Bisnis.Util.Storage.fetch('gabungOrdersIds');
+            ids = (ids) ? JSON.parse(ids) : [];
+            Bisnis.Util.Storage.store('orderIdToGabung', orderId);
+
+            if ( ids.length < 1) {
+                document.querySelector('#orderGabungList').innerHTML = '<tr><td colspan="10">SILAKAN TAMBAH ORDER IKLAN</td></tr>';
+            }
+
+            if ( ids.indexOf(orderId) !== -1 ) {
+                document.querySelector('#add-order').disabled = true;
+            } else {
+                document.querySelector('#add-order').disabled = false;
+                addOrder(orderId);
+            }
         });
 
         Bisnis.Util.Dialog.showModal('#addModal');
@@ -380,6 +459,7 @@
 
     // add normal invoice
     Bisnis.Util.Event.bind('click', '#btn-normal-invoice', function () {
+        document.querySelector('#btn-normal-invoice').disabled = true;
         var params = [
             {
                 name: 'invoiceNumber',
@@ -395,10 +475,12 @@
                 var orderId = Bisnis.Util.Storage.fetch('normalOrderId');
                 storeOrderInvoice(orderId, dataResponse.id);
                 Bisnis.Util.Dialog.hideModal('#addModal');
+                document.querySelector('#btn-normal-invoice').disabled = false;
             },
             function () {
                 Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMBUAT FAKTUR');
                 Bisnis.Util.Dialog.hideModal('#addModal');
+                document.querySelector('#btn-normal-invoice').disabled = false;
             }
         );
     });
@@ -479,15 +561,18 @@
                         showPecahAmount(orderId);
                     }
                 });
+                document.querySelector('#btn-pecah-invoice').disabled = false;
             },
             function () {
                 Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMBUAT FAKTUR');
+                document.querySelector('#btn-pecah-invoice').disabled = false;
             }
         );
     };
 
     // add pecah invoice
     Bisnis.Util.Event.bind('click', '#btn-pecah-invoice', function () {
+        document.querySelector('#btn-pecah-invoice').disabled = true;
         var orderId = Bisnis.Util.Storage.fetch('pecahOrderId');
 
         if ( Bisnis.Util.Storage.fetch('INVOICE_PECAH_ID') ) {
@@ -497,6 +582,7 @@
                     var pageNum = Bisnis.Util.Storage.fetch('INVOICE_PECAH_PAGE');
                     loadInvoices(pageNum, orderId);
                 }
+                document.querySelector('#btn-pecah-invoice').disabled = false;
             });
         } else {
             var amount = document.querySelector('#pecahForm #pecahAmount').value;
@@ -506,6 +592,7 @@
                         addInvoice(orderId, amount);
                     } else {
                         Bisnis.Util.Dialog.alert('PERHATIAN', 'JUMLAH YANG ANDA MASUKKAN TIDAK BOLEH MELEBIHI SISA');
+                        document.querySelector('#btn-pecah-invoice').disabled = false;
                     }
                 }
             );
@@ -524,13 +611,15 @@
         document.querySelector('#pecahForm #pecahOrder').value = [];
 
         Bisnis.Util.Storage.remove('INVOICE_PECAH_ID');
-        document.querySelector('#invoicePecahList').innerHTML = '';
+        document.querySelector('#invoicePecahList').innerHTML = '<tr><td colspan="10">SILAKAN PILIH ORDER IKLAN</td></tr>';
+        document.querySelector('#pecahAmount').disabled = true;
         document.querySelector('#pecahAmount').value = '';
         document.querySelector('#btn-pecah-invoice').disabled = false;
         document.querySelector('#sisa').value = '';
 
-        /*Bisnis.Util.Grid.removeErrorForm('gabungForm');
-        document.getElementById("gabungForm").reset();*/
+        Bisnis.Util.Grid.removeErrorForm('gabungForm');
+        Bisnis.Util.Storage.remove('gabungOrdersIds');
+        document.getElementById("gabungForm").reset();
     });
     // end reset modal form on modal hidden
 })(window.Bisnis || {});

@@ -244,7 +244,7 @@
 
                 Bisnis.Util.Storage.store('gabungOrderNumber', dataReasponse.orderNumber);
                 Bisnis.Util.Storage.store('gabungTitle', dataReasponse.title);
-                Bisnis.Util.Storage.store('gabungNetto', Bisnis.Util.Money.format(netto));
+                Bisnis.Util.Storage.store('gabungNetto', netto);
 
 
                 Bisnis.Util.Event.bind('click', '#add-order', function (e) {
@@ -252,6 +252,16 @@
                     Bisnis.Util.Storage.store('addOrderStamp', e.timeStamp);
 
                     if (parseFloat(stamp) !== e.timeStamp) {
+
+                        var val = document.querySelector('#nettoGabung').value;
+                        if (!val) {
+                            document.querySelector('#nettoGabung').value = '0';
+                            val = 0;
+                        }
+
+                        var hasValue = parseFloat(val) + parseFloat(Bisnis.Util.Storage.fetch('gabungNetto'));
+                        document.querySelector('#nettoGabung').value = hasValue;
+                        Bisnis.Util.Storage.store('nettoGabungAll', hasValue);
 
                         Bisnis.Util.Storage.storeArray('gabungOrdersIds', Bisnis.Util.Storage.fetch('orderIdToGabung'));
 
@@ -268,8 +278,8 @@
                         row.insertCell(0).innerHTML = rowNum.toString();
                         row.insertCell(1).innerHTML = Bisnis.Util.Storage.fetch('gabungOrderNumber');
                         row.insertCell(2).innerHTML = Bisnis.Util.Storage.fetch('gabungTitle');
-                        row.insertCell(3).innerHTML = Bisnis.Util.Storage.fetch('gabungNetto');
-                        row.insertCell(4).innerHTML = '<button type="button" data-id="'+ Bisnis.Util.Storage.fetch('orderIdToGabung') +'" class="btn btn-flat btn-default btn-xs pull-right btn-remove-gabung-order"><i class="fa fa-times"></i></button>';
+                        row.insertCell(3).innerHTML = Bisnis.Util.Money.format(Bisnis.Util.Storage.fetch('gabungNetto'));
+                        row.insertCell(4).innerHTML = '<button type="button" data-netto="'+ Bisnis.Util.Storage.fetch('gabungNetto') +'" data-id="'+ Bisnis.Util.Storage.fetch('orderIdToGabung') +'" class="btn btn-flat btn-default btn-xs pull-right btn-remove-gabung-order"><i class="fa fa-times"></i></button>';
 
                         document.querySelector('#add-order').disabled = true;
                         document.querySelector('#btn-gabung-invoice').disabled = false;
@@ -287,8 +297,14 @@
 
     Bisnis.Util.Event.bind('click', '.btn-remove-gabung-order', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
-        Bisnis.Util.Storage.removeArray('gabungOrdersIds', id);
+        var netto = Bisnis.Util.Document.getDataValue(this, 'netto');
         this.closest('tr').remove();
+
+        var nettoAll = parseFloat(Bisnis.Util.Storage.fetch('nettoGabungAll')) - parseFloat(netto);
+        document.querySelector('#nettoGabung').value = nettoAll;
+        Bisnis.Util.Storage.store('nettoGabungAll', nettoAll);
+
+        Bisnis.Util.Storage.removeArray('gabungOrdersIds', id);
 
         var arrIds = JSON.parse(localStorage.getItem('gabungOrdersIds'));
         if ( arrIds.length > 0 ) {

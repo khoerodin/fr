@@ -23,6 +23,7 @@
         var minimumInputLength = typeof params.minimumInputLength !== 'undefined' ? params.minimumInputLength : 2;
         var prependValue = typeof params.prependValue !== 'undefined' ? params.prependValue : '';
         var appendValue = typeof params.appendValue !== 'undefined' ? params.appendValue : '';
+        var filters = params.filters;
 
         var optionTemplate = function (data) {
             if (!data.id) {
@@ -74,7 +75,8 @@
                         page: params.page,
                         module: module,
                         method: 'get',
-                        fields: fields
+                        fields: fields,
+                        filters : filters
                     };
                 },
                 processResults: function (data) {

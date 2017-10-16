@@ -153,10 +153,16 @@
     // End Invoices List
 
     // Add Incvoice Modal
-    var fetchSelect = function (selector, selectedCallback) {
+    var fetchSelect = function (selector, invoiceAs, selectedCallback) {
         var params = {
             placeholder: 'CARI NO. ORDER',
             module: 'advertising/orders',
+            filters: [
+                {
+                  key: 'printInvoiceAs',
+                  value: invoiceAs
+                }
+            ],
             prependValue: '/api/advertising/orders/',
             fields: [
                 {
@@ -290,7 +296,7 @@
                 });
             },
             function () {
-
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENGAMBIL DATA ORDER!');
             }
         );
     };
@@ -316,83 +322,89 @@
     });
 
     Bisnis.Util.Event.bind('click', '#btnAddInvoice', function () {
-        fetchSelect('#normalOrder', function (selected) {
-            var id = selected.id.split('/')[4];
-            Bisnis.Util.Storage.store('normalOrderId', id);
+        fetchSelect('#normalOrder', 'n',
+            function (selected) {
+                var id = selected.id.split('/')[4];
+                Bisnis.Util.Storage.store('normalOrderId', id);
 
-            Bisnis.Adv.Orders.fetchById(id,
-                function (dataResponse) {
-                    var netto = dataResponse.totalAmount * dataResponse.quantity;
-                    document.querySelector('#normalForm #netto').value = Bisnis.Util.Money.format(netto);
-                    document.querySelector('#normalForm #amount').value = netto;
-                },
-                function () {
-                    Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA ORDER IKLAN');
-                }
-            );
-
-            Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': id}],
-                function (dataResponse) {
-                    var memberData = dataResponse['hydra:member'];
-                    if ( memberData.length > 0 ) {
-                        document.querySelector('#normalForm #btn-normal-invoice').disabled = true;
-                        document.querySelector('#normalForm').classList.add('has-error');
-                        document.querySelector('#hasNormalInvoice').classList.remove('hidden');
-                    } else {
-                        document.querySelector('#normalForm #btn-normal-invoice').disabled = false;
-                        document.querySelector('#normalForm').classList.remove('has-error');
-                        document.querySelector('#hasNormalInvoice').classList.add('hidden');
+                Bisnis.Adv.Orders.fetchById(id,
+                    function (dataResponse) {
+                        var netto = dataResponse.totalAmount * dataResponse.quantity;
+                        document.querySelector('#normalForm #netto').value = Bisnis.Util.Money.format(netto);
+                        document.querySelector('#normalForm #amount').value = netto;
+                    },
+                    function () {
+                        Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA ORDER IKLAN');
                     }
-                },
-                function () {
-                    Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL VALIDASI FAKTUR');
-                    document.querySelector('#normalForm #btn-normal-invoice').disabled = true;
-                }
-            );
-        });
+                );
+
+                Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': id}],
+                    function (dataResponse) {
+                        var memberData = dataResponse['hydra:member'];
+                        if ( memberData.length > 0 ) {
+                            document.querySelector('#normalForm #btn-normal-invoice').disabled = true;
+                            document.querySelector('#normalForm').classList.add('has-error');
+                            document.querySelector('#hasNormalInvoice').classList.remove('hidden');
+                        } else {
+                            document.querySelector('#normalForm #btn-normal-invoice').disabled = false;
+                            document.querySelector('#normalForm').classList.remove('has-error');
+                            document.querySelector('#hasNormalInvoice').classList.add('hidden');
+                        }
+                    },
+                    function () {
+                        Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL VALIDASI FAKTUR');
+                        document.querySelector('#normalForm #btn-normal-invoice').disabled = true;
+                    }
+                );
+            }
+        );
         
-        fetchSelect('#pecahOrder', function (selected) {
-            var orderId = selected.id.split('/')[4];
-            Bisnis.Util.Storage.store('pecahOrderId', orderId);
-            showPecahAmount(orderId);
+        fetchSelect('#pecahOrder', 'p',
+            function (selected) {
+                var orderId = selected.id.split('/')[4];
+                Bisnis.Util.Storage.store('pecahOrderId', orderId);
+                showPecahAmount(orderId);
 
-            var pageNum = Bisnis.Util.Storage.fetch('INVOICE_PECAH_PAGE');
-            loadInvoices(pageNum, orderId);
+                var pageNum = Bisnis.Util.Storage.fetch('INVOICE_PECAH_PAGE');
+                loadInvoices(pageNum, orderId);
 
-            Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pagePrevious', function () {
-                loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
-            });
+                Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pagePrevious', function () {
+                    loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
+                });
 
-            Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageNext', function () {
-                loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
-            });
+                Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageNext', function () {
+                    loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
+                });
 
-            Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageFirst', function () {
-                loadInvoices(1, orderId);
-            });
+                Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageFirst', function () {
+                    loadInvoices(1, orderId);
+                });
 
-            Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageLast', function () {
-                loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
-            });
-        });
-
-        fetchSelect('#gabungOrder', function (selected) {
-            var orderId = selected.id.split('/')[4];
-            var ids = Bisnis.Util.Storage.fetch('gabungOrdersIds');
-            ids = (ids) ? JSON.parse(ids) : [];
-            Bisnis.Util.Storage.store('orderIdToGabung', orderId);
-
-            if ( ids.length < 1) {
-                document.querySelector('#orderGabungList').innerHTML = '<tr><td colspan="10">SILAKAN TAMBAH ORDER IKLAN</td></tr>';
+                Bisnis.Util.Event.bind('click', '#invoicePecahPagination .pageLast', function () {
+                    loadInvoices(Bisnis.Util.Document.getDataValue(this, 'page'), orderId);
+                });
             }
+        );
 
-            if ( ids.indexOf(orderId) !== -1 ) {
-                document.querySelector('#add-order').disabled = true;
-            } else {
-                document.querySelector('#add-order').disabled = false;
-                addOrder(orderId);
+        fetchSelect('#gabungOrder', 'g',
+            function (selected) {
+                var orderId = selected.id.split('/')[4];
+                var ids = Bisnis.Util.Storage.fetch('gabungOrdersIds');
+                ids = (ids) ? JSON.parse(ids) : [];
+                Bisnis.Util.Storage.store('orderIdToGabung', orderId);
+
+                if ( ids.length < 1) {
+                    document.querySelector('#orderGabungList').innerHTML = '<tr><td colspan="10">SILAKAN TAMBAH ORDER IKLAN</td></tr>';
+                }
+
+                if ( ids.indexOf(orderId) !== -1 ) {
+                    document.querySelector('#add-order').disabled = true;
+                } else {
+                    document.querySelector('#add-order').disabled = false;
+                    addOrder(orderId);
+                }
             }
-        });
+        );
 
         Bisnis.Util.Dialog.showModal('#addModal');
     });
@@ -591,30 +603,86 @@
         document.querySelector('#btn-pecah-invoice').disabled = true;
         var orderId = Bisnis.Util.Storage.fetch('pecahOrderId');
 
-        if ( Bisnis.Util.Storage.fetch('INVOICE_PECAH_ID') ) {
-            var invoiceId = Bisnis.Util.Storage.fetch('INVOICE_PECAH_ID');
-            storeOrderInvoice(orderId, invoiceId, function (callback) {
-                if (callback) {
-                    var pageNum = Bisnis.Util.Storage.fetch('INVOICE_PECAH_PAGE');
-                    loadInvoices(pageNum, orderId);
+        var amount = document.querySelector('#pecahForm #pecahAmount').value;
+        isGreater(orderId, amount,
+            function (callback) {
+                if (callback === false) {
+                    addInvoice(orderId, amount);
+                } else {
+                    Bisnis.Util.Dialog.alert('PERHATIAN', 'JUMLAH YANG ANDA MASUKKAN TIDAK BOLEH MELEBIHI SISA');
+                    document.querySelector('#btn-pecah-invoice').disabled = false;
                 }
-                document.querySelector('#btn-pecah-invoice').disabled = false;
-            });
-        } else {
-            var amount = document.querySelector('#pecahForm #pecahAmount').value;
-            isGreater(orderId, amount,
-                function (callback) {
-                    if (callback === false) {
-                        addInvoice(orderId, amount);
-                    } else {
-                        Bisnis.Util.Dialog.alert('PERHATIAN', 'JUMLAH YANG ANDA MASUKKAN TIDAK BOLEH MELEBIHI SISA');
-                        document.querySelector('#btn-pecah-invoice').disabled = false;
-                    }
-                }
-            );
-        }
+            }
+        );
     });
+
+    // save orders
+    var saveOrders = function (orderId, invoiceId, last) {
+        document.querySelector('#btn-gabung-invoice').disabled = true;
+        var params = [
+            {
+                name: 'order',
+                value: '/api/advertising/orders/' + orderId
+            },
+            {
+                name: 'invoice',
+                value: '/api/advertising/invoices/' + invoiceId
+            }
+        ];
+
+        Bisnis.Adv.OrderInvoices.add(params,
+            function () {
+                if (last) {
+                    var pageNum = Bisnis.Util.Storage.fetch('INVOICES_CURRENT_PAGE');
+                    loadPage(pageNum);
+                    document.querySelector('#btn-gabung-invoice').disabled = false;
+                    Bisnis.Util.Dialog.hideModal('#addModal');
+                }
+            },
+            function () {
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENAMBAH ORDER');
+            }
+        );
+    };
+    // add gabung invoice
+    Bisnis.Util.Event.bind('click', '#btn-gabung-invoice', function () {
+        var params = [
+            {
+                name: 'invoiceNumber',
+                value: 'INVOICE/NUM/HERE/001'
+            },
+            {
+                name: 'amount',
+                value: document.querySelector('#nettoGabung').value
+            }
+        ];
+        Bisnis.Adv.Invoices.add(params,
+            function (dataResponse) {
+                var id = dataResponse.id;
+                var orderIds = JSON.parse(Bisnis.Util.Storage.fetch('gabungOrdersIds'));
+                var length = orderIds.length;
+                var urut = 1;
+                var last = false;
+                orderIds.forEach(function (value) {
+                    if (length === urut++) {
+                        last = true;
+                    }
+                    saveOrders(value, id, last);
+                });
+
+            },
+            function () {
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENYIMPAN FAKTUR GABUNG');
+            }
+        );
+        //2. simpan no order
+    });
+
     // End Add Incvoice Modal
+
+    // reset gabung order
+    Bisnis.Util.Storage.remove('gabungOrdersIds');
+    // end reset gabung order
 
     // reset modal form on modal hidden
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {

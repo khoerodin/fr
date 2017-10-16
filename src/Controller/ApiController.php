@@ -324,7 +324,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
             ];
 
             $fieldFilters = [];
-            foreach ($filters as $key => $filter) {
+            foreach ($filters as $filter) {
                 $fieldFilters[$filter['key']] = $filter['value'];
             }
 

@@ -397,12 +397,27 @@
                     document.querySelector('#orderGabungList').innerHTML = '<tr><td colspan="10">SILAKAN TAMBAH ORDER IKLAN</td></tr>';
                 }
 
-                if ( ids.indexOf(orderId) !== -1 ) {
-                    document.querySelector('#add-order').disabled = true;
-                } else {
-                    document.querySelector('#add-order').disabled = false;
-                    addOrder(orderId);
-                }
+                Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}],
+                    function (dataResponse) {
+                        var memberData = dataResponse['hydra:member'];
+                        if ( memberData.length > 0 ) {
+                            document.querySelector('#add-order').disabled = true;
+                            document.querySelector('#hasGabungInvoice').classList.remove('hidden');
+                        } else {
+                            document.querySelector('#hasGabungInvoice').classList.add('hidden');
+                            if ( ids.indexOf(orderId) !== -1 ) {
+                                document.querySelector('#add-order').disabled = true;
+                            } else {
+                                document.querySelector('#add-order').disabled = false;
+                                addOrder(orderId);
+                            }
+                        }
+                    },
+                    function () {
+                        Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL VALIDASI FAKTUR');
+                        document.querySelector('#normalForm #btn-normal-invoice').disabled = true;
+                    }
+                );
             }
         );
 

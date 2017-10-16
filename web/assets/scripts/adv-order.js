@@ -23,7 +23,6 @@ function getOrders(param, selected) {
                 var memberData = data['hydra:member'];
                 var no = 1;
                 var searchArea;
-                var searchArea;
 
                 tableData  = '<table class="table table-bordered table-responsive table-hover">';
                 tableData += '<thead><tr><th width="3%">#</th><th width="10%">NOMOR ORDER</th>';
@@ -92,7 +91,7 @@ function getOrders(param, selected) {
                 searchArea += '</div>';
 
                 searchArea += '<div id="searchOrderBtnArea" class="button-area transition">';
-                searchArea += '<a id="addOrder" href="/advertising/orders/new"style="visibility: hidden;" class="add-btn h btn btn-flat btn-block btn-danger">Add</a>';
+                searchArea += '<a id="addOrder" href="/advertising/orders/new" style="visibility: hidden;" class="add-btn h btn btn-flat btn-block btn-danger">Add</a>';
                 searchArea += '</div>';
 
                 if (memberData.length < 1) {

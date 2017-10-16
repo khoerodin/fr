@@ -344,11 +344,11 @@
                         if ( memberData.length > 0 ) {
                             document.querySelector('#normalForm #btn-normal-invoice').disabled = true;
                             document.querySelector('#normalForm').classList.add('has-error');
-                            document.querySelector('#hasNormalInvoice').classList.remove('hidden');
+                            // document.querySelector('#hasNormalInvoice').classList.remove('hidden');
                         } else {
                             document.querySelector('#normalForm #btn-normal-invoice').disabled = false;
                             document.querySelector('#normalForm').classList.remove('has-error');
-                            document.querySelector('#hasNormalInvoice').classList.add('hidden');
+                            // document.querySelector('#hasNormalInvoice').classList.add('hidden');
                         }
                     },
                     function () {
@@ -403,10 +403,10 @@
                         if ( memberData.length > 0 ) {
                             document.querySelector('#add-order').disabled = true;
                             document.querySelector('#gabungOrder').closest('div').classList.add('has-error');
-                            document.querySelector('#hasGabungInvoice').classList.remove('hidden');
+                            // document.querySelector('#hasGabungInvoice').classList.remove('hidden');
                         } else {
                             document.querySelector('#gabungOrder').closest('div').classList.remove('has-error');
-                            document.querySelector('#hasGabungInvoice').classList.add('hidden');
+                            // document.querySelector('#hasGabungInvoice').classList.add('hidden');
                             if ( ids.indexOf(orderId) !== -1 ) {
                                 document.querySelector('#add-order').disabled = true;
                             } else {
@@ -721,6 +721,11 @@
         Bisnis.Util.Grid.removeErrorForm('gabungForm');
         Bisnis.Util.Storage.remove('gabungOrdersIds');
         document.getElementById("gabungForm").reset();
+        document.querySelector('#gabungOrder').value = [];
+        document.querySelector('#gabungOrder').closest('div').classList.remove('has-error');
+        // document.querySelector('#hasGabungInvoice').classList.add('hidden');
+        document.querySelector('#orderGabungList').innerHTML = '<tr><td colspan="10">SILAKAN TAMBAH ORDER IKLAN</td></tr>';
+
     });
     // end reset modal form on modal hidden
 })(window.Bisnis || {});

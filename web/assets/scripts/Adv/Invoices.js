@@ -402,8 +402,10 @@
                         var memberData = dataResponse['hydra:member'];
                         if ( memberData.length > 0 ) {
                             document.querySelector('#add-order').disabled = true;
+                            document.querySelector('#gabungOrder').closest('div').classList.add('has-error');
                             document.querySelector('#hasGabungInvoice').classList.remove('hidden');
                         } else {
+                            document.querySelector('#gabungOrder').closest('div').classList.remove('has-error');
                             document.querySelector('#hasGabungInvoice').classList.add('hidden');
                             if ( ids.indexOf(orderId) !== -1 ) {
                                 document.querySelector('#add-order').disabled = true;

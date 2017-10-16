@@ -1,7 +1,8 @@
 {% extends 'layout.twig' %}
 
 {%- block js -%}
-    <script src="/assets/scripts/profile.js"></script>
+    <script src="/assets/scripts/Admin/Users.js"></script>
+    <script src="/assets/scripts/Admin/Profile.js"></script>
 {%- endblock -%}
 
 {%- block content -%}
@@ -14,7 +15,7 @@
                 <div class="box-body">
 
                     <div class="col-md-2">
-                        <label for="file-image" class="profile-image avatar-img"
+                        <label for="file-image" id="profile-image" class="profile-image avatar-img"
                                style="background-image: url('/api/images/{{ image[0] }}?ext={{ image[1] }}');"
                                title="CLICK TO CHANGE YOUR PROFILE PHOTO"></label>
                         <input id="file-image" type="file"/>
@@ -26,36 +27,36 @@
                                 <input type="hidden" name="imageExtension">
                                 <input type="hidden" name="imageString">
                                 <div class="form-group">
-                                    <label for="fullname" class="col-sm-1 control-label">Fullname</label>
+                                    <label for="fullname" class="col-sm-2 control-label">NAMA LENGKAP</label>
 
-                                    <div class="col-sm-11">
-                                        <input type="text" name="fullname" value="{{- me.fullname | raw -}}" class="form-control" id="fullname" placeholder="FULLNAME">
+                                    <div class="col-sm-10">
+                                        <input type="text" name="fullname" value="{{- me.fullname | raw -}}" class="form-control" id="fullname">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="email" class="col-sm-1 control-label">Email</label>
+                                    <label for="email" class="col-sm-2 control-label">Email</label>
 
-                                    <div class="col-sm-11">
-                                        <input type="email" name="email" value="{{- me.email | raw -}}" class="form-control" id="email" placeholder="EMAIL">
+                                    <div class="col-sm-10">
+                                        <input type="email" name="email" value="{{- me.email | raw -}}" class="form-control" id="email">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="username" class="col-sm-1 control-label">Username</label>
+                                    <label for="username" class="col-sm-2 control-label">Username</label>
 
-                                    <div class="col-sm-11">
-                                        <input type="text" readonly value="{{- me.username | raw -}}"  class="form-control" id="username" placeholder="USERNAME">
+                                    <div class="col-sm-10">
+                                        <input type="text" readonly value="{{- me.username | raw -}}"  class="form-control" id="username">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="plainPassword" class="col-sm-1 control-label">Password</label>
+                                    <label for="plainPassword" class="col-sm-2 control-label">Password</label>
 
-                                    <div class="col-sm-11">
-                                        <input type="password" class="form-control" id="plainPassword" placeholder="LEAVE BLANK IF DONT WANT TO CHANGE">
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="plainPassword" placeholder="KOSONGKAN JIKA TIDAK DIUBAH">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-sm-offset-1 col-sm-1">
-                                        <button type="button" id="update-profile" class="btn btn-flat btn-block btn-danger">UPDATE</button>
+                                    <div class="col-sm-offset-2 col-sm-1">
+                                        <button type="button" id="update-profile" class="btn btn-flat btn-block btn-danger">SIMPAN</button>
                                     </div>
                                 </div>
                             </form>

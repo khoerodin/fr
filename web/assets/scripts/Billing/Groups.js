@@ -79,7 +79,7 @@
     // search box
     var params = {
         placeholder: 'CARI KODE / GRUP TAGIH',
-        module: 'billing/groups/',
+        module: 'billing/groups',
         fields: [
             {
                 field: 'code',

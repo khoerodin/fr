@@ -15,8 +15,7 @@
                 document.querySelector('#username').value = dataResponse.username;
                 toastr.success('Berhasil memperbarui profil');
                 document.querySelector('#update-profile').disabled = false;
-                document.querySelector('#plainPassword').value = '';
-
+                
                 if ( document.querySelector('#plainPassword').value ) {
                     document.querySelector('#update-profile').disabled = true;
                     var params = [ { name : 'plainPassword', value : document.querySelector('#plainPassword').value } ]

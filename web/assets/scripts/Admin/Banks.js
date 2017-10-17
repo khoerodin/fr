@@ -45,9 +45,11 @@
                             }}
                         ]);
                     }, memberData);
-                    Bisnis.Util.Grid.renderRecords('#banksList', records, pageNum, function (rowTable, row) {
-                        return rowTable + '<tr id="'+ row[row.length - 1].value +'">';
-                    });
+                    Bisnis.Util.Grid.renderRecords('#banksList', records, pageNum,
+                        function (rowTable, row) {
+                            return rowTable + '<tr id="'+ row[row.length - 1].value +'">';
+                        }
+                    );
                 } else {
                     Bisnis.Util.Document.putHtml('#banksList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }

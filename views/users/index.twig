@@ -3,6 +3,10 @@
 {%- block js -%}
     <script src="/assets/scripts/users.js"></script>
     <script src="/assets/scripts/global-crud.js"></script>
+
+    <script src="/assets/scripts/Admin/Modules.js"></script>
+    <script src="/assets/scripts/Admin/Roles.js"></script>
+    <script src="/assets/scripts/Admin/Users.js"></script>
 {%- endblock -%}
 
 {%- block content -%}
@@ -130,7 +134,7 @@
                     {#END DETAIL MODAL#}
 
                     {#ROLES MODAL#}
-                    <div class="users roles-modal modal" tabindex="-1" role="dialog">
+                    <div class="users roles-modal modal" id="rolesModal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -163,7 +167,7 @@
                                                                 <table class="table table-striped table-bordered">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>#</th>
+                                                                            <th>NO.</th>
                                                                             <th>Module</th>
                                                                             <th>Viewable</th>
                                                                             <th>Addable</th>
@@ -186,7 +190,9 @@
 
                                         </div>
                                         <!-- /.box-body -->
-                                        <div class="box-footer clearfix roles-pagination"></div>
+                                        <div class="box-footer">
+                                            <ul id="rolesPagination" class="pagination pagination-sm pull-right clearfix"></ul>
+                                        </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">

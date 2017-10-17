@@ -6,11 +6,11 @@ var columns = [
     'email'
 ];
 
-jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function (e) {
+/*jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function (e) {
     jQuery('tbody#roles-check').html('<tr><td colspan="6">Loading...</td></tr>');
-});
+});*/
 
-function getRoles(userId, serviceId, pageNum) {
+/*function getRoles(userId, serviceId, pageNum) {
     var moduleData = {
         module: 'modules',
         method: 'get',
@@ -112,32 +112,32 @@ function getRoles(userId, serviceId, pageNum) {
             rolesResponse(userRoles, userId, pageNum);
         }
     });
-}
+}*/
 
 // Roles form
-$(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', function () {
+/*$(document).on('click', 'tbody[data-list="'+window.module+'"] .roles-btn', function () {
     var userId = $(this).attr('data-id');
     var activeId = $('#serviceTab .active a').attr('aria-controls');
     var name = $(this).closest('tr').find('td:nth-child(2)').text();
     localStorage.setItem('accessFor', name);
     $('#userId').val(userId);
     getRoles(userId, activeId);
-});
+});*/
 
-$(document).on('click', '.to-roles-page', function () {
+/*$(document).on('click', '.to-roles-page', function () {
     var pageNum = $(this).attr('data-page');
     var userId = $('.roles-modal input#rolesUserId').val();
     var activeId = $('#serviceTab .active a').attr('aria-controls');
     getRoles(userId, activeId, pageNum);
-});
+});*/
 
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+/*$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var userId = $('#userId').val();
     var activeId = $('#serviceTab .active a').attr('aria-controls');
     getRoles(userId, activeId);
-});
+});*/
 
-$(document).on('change', '.check-role', function () {
+/*$(document).on('change', '.check-role', function () {
     var $this = $(this);
     var checkName = $this.attr('name');
     var userId = $('#rolesUserId').val();
@@ -193,8 +193,9 @@ $(document).on('change', '.check-role', function () {
             toastr.success('Role successfully changed');
         },
     });
-});
+});*/
 
+/*
 function rolesResponse(data,userId,page) {
 
     var rolesCheck = '';
@@ -255,4 +256,4 @@ function rolesResponse(data,userId,page) {
     var $this = $('.roles-modal');
     $this.modal({show: true, backdrop: 'static'});
 
-}
+}*/

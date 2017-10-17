@@ -16,29 +16,17 @@
     Bisnis.Util.Style.ajaxSelect('#searchModules', params,
         function (hasResultCallback) {
             var btn = document.getElementById('btnAddModule');
-            if (hasResultCallback) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
+            hasResultCallback ? btn.disabled = true : btn.disabled = false;
         }, function (selectedCallback) {
             var id = selectedCallback.id;
             loadDetail(id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddModule');
-            if (openCallback === false) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
+            openCallback ? btn.disabled = true : btn.disabled = false;
         }, function (closeCallback) {
             var btn = document.getElementById('btnAddModule');
             setTimeout(function () {
-                if (closeCallback === false) {
-                    btn.disabled = false;
-                } else {
-                    btn.disabled = true;
-                }
+                closeCallback ? btn.disabled = true : btn.disabled = false;
             }, 300);
         }
     );

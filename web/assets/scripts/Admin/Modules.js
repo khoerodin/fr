@@ -64,8 +64,7 @@
     Bisnis.Admin.Modules.loadGrid = function (serviceId, pageNum, params) {
         var params = 'undefined' !== typeof params ? params : [];
 
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('MODULES_CURRENT_PAGE'+serviceId, pageNum);
 
         params.push(

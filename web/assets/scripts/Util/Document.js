@@ -2,9 +2,7 @@
     Bisnis.Util.Document = {};
 
     Bisnis.Util.Document.putHtml = function (selector, content) {
-        let elm = document.querySelector(selector)
-            elm.innerHTML = '';
-            elm.innerHTML = content;
+        document.querySelector(selector).innerHTML = content;
     };
 
     Bisnis.Util.Document.getHtml = function (selector) {

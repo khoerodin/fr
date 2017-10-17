@@ -6,19 +6,19 @@
     };
 
     Bisnis.Util.Document.getHtml = function (selector) {
-        return jQuery(selector).html();
+        return document.querySelector(selector).innerHTML;
     };
 
     Bisnis.Util.Document.getDataValue = function (selector, attribute) {
-        return jQuery(selector).data(attribute);
+        return document.querySelector(selector).getAttribute('data-' + attribute);
     };
 
     Bisnis.Util.Document.putValue = function (selector, value) {
-        jQuery(selector).val(value);
+        document.querySelector(selector).value = value;
     };
 
     Bisnis.Util.Document.getValue = function (selector) {
-        return jQuery(selector).val();
+        return document.querySelector(selector).value;
     };
 
     Bisnis.Util.Document.putEditor = function (selector, value) {

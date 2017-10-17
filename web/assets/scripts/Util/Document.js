@@ -2,7 +2,9 @@
     Bisnis.Util.Document = {};
 
     Bisnis.Util.Document.putHtml = function (selector, content) {
-        jQuery(selector).empty().html(content);
+        let elm = document.querySelector(selector)
+            elm.innerHTML = '';
+            elm.innerHTML = content;
     };
 
     Bisnis.Util.Document.getHtml = function (selector) {
@@ -26,7 +28,7 @@
     };
 
     Bisnis.Util.Document.hide = function (selector) {
-        jQuery(selector).hide();
+        document.querySelector(selector).style.display = "none";
     };
 
     Bisnis.Util.Document.hasClass = function (element, className) {

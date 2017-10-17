@@ -6,9 +6,9 @@ var columns = [
     'email'
 ];
 
-jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function (e) {
+/*jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function (e) {
     jQuery('tbody#roles-check').html('<tr><td colspan="6">Loading...</td></tr>');
-});
+});*/
 
 /*function getRoles(userId, serviceId, pageNum) {
     var moduleData = {
@@ -137,7 +137,7 @@ jQuery('div[data-modal-add="'+window.module+'"]').on('hidden.bs.modal', function
     getRoles(userId, activeId);
 });*/
 
-$(document).on('change', '.check-role', function () {
+/*$(document).on('change', '.check-role', function () {
     var $this = $(this);
     var checkName = $this.attr('name');
     var userId = $('#rolesUserId').val();
@@ -193,8 +193,9 @@ $(document).on('change', '.check-role', function () {
             toastr.success('Role successfully changed');
         },
     });
-});
+});*/
 
+/*
 function rolesResponse(data,userId,page) {
 
     var rolesCheck = '';
@@ -255,4 +256,4 @@ function rolesResponse(data,userId,page) {
     var $this = $('.roles-modal');
     $this.modal({show: true, backdrop: 'static'});
 
-}
+}*/

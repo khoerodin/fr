@@ -7,7 +7,6 @@
     <script src="/assets/scripts/Admin/Modules.js"></script>
     <script src="/assets/scripts/Admin/Roles.js"></script>
     <script src="/assets/scripts/Admin/Users.js"></script>
-    <script src="/assets/scripts/Admin/Profile.js"></script>
 {%- endblock -%}
 
 {%- block content -%}
@@ -191,7 +190,9 @@
 
                                         </div>
                                         <!-- /.box-body -->
-                                        <div class="box-footer clearfix roles-pagination"></div>
+                                        <div class="box-footer">
+                                            <ul id="rolesPagination" class="pagination pagination-sm pull-right clearfix"></ul>
+                                        </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">

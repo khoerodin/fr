@@ -19,8 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('BANK_CURRENT_PAGE', pageNum);
         Bisnis.Admin.Banks.fetchAll([{page: pageNum}],
             function (dataResponse) {
@@ -46,7 +45,9 @@
                             }}
                         ]);
                     }, memberData);
-                    Bisnis.Util.Grid.renderRecords('#banksList', records, pageNum);
+                    Bisnis.Util.Grid.renderRecords('#banksList', records, pageNum, function (rowTable, row) {
+                        return rowTable + '<tr id="'+ row[row.length - 1].value +'">';
+                    });
                 } else {
                     Bisnis.Util.Document.putHtml('#banksList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }

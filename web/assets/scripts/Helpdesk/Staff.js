@@ -19,8 +19,7 @@
     };
 
     Bisnis.Helpdesk.Staff.loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('STAFF_CURRENT_PAGE', pageNum);
         Bisnis.Helpdesk.Staff.fetchAll([{page: pageNum}],
             function (dataResponse) {

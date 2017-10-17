@@ -19,7 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        pageNum = (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('TEAM_WORKS_CURRENT_PAGE', pageNum);
         Bisnis.Adv.TeamWorks.fetchAll([{page: pageNum}],
             function (dataResponse) {

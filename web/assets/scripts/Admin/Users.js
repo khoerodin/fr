@@ -87,10 +87,11 @@
         });
 
         let viewData = firstResponse['hydra:view'];
-
         if ('undefined' !== typeof viewData['hydra:last']) {
             var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
             Bisnis.Util.Grid.createPagination('#rolesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+        } else {
+            document.querySelector('#rolesPagination').innerHTML = '';
         }
 
         Bisnis.Util.Event.bind('click', '#rolesPagination .pagePrevious', function () {

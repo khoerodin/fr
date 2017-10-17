@@ -19,8 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('ADV_SPECIFICATIONS_CURRENT_PAGE', pageNum);
         Bisnis.Adv.Specifications.fetchAll([{page: pageNum}],
             function (rawData) {

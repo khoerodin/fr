@@ -1,6 +1,22 @@
 (function (Bisnis) {
     Bisnis.Admin.Users = {};
 
+    Bisnis.Admin.Users.fetchAll = function (params, successCallback, errorCallback) {
+        Bisnis.request({
+            module: 'users',
+            method: 'get',
+            params: params
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
+            }
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
+        });
+    };
+
     Bisnis.Admin.Users.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'users/' + id,
@@ -32,6 +48,267 @@
             }
         });
     };
+
+    // load users list / grid
+    var loadGrid = function (pageNum) {
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
+        Bisnis.Util.Storage.store('USERS_CURRENT_PAGE', pageNum);
+        Bisnis.Admin.Users.fetchAll([{page: pageNum}],
+            function (dataResponse) {
+                var memberData = dataResponse['hydra:member'];
+                var viewData = dataResponse['hydra:view'];
+
+                if ('undefined' !== typeof viewData['hydra:last']) {
+                    var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                    Bisnis.Util.Grid.createPagination('#usersPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                }
+
+                if (memberData.length > 0) {
+                    var records = [];
+                    Bisnis.each(function (idx, memberData) {
+                        records.push([
+                            { value: memberData.fullname },
+                            { value: memberData.username },
+                            { value: memberData.email },
+                            { value: memberData.enabled, format: function (enabled) {
+                                return enabled ? '<span class="label label-success">AKTIF</span>' : '<span class="label label-danger">TIDAK</span>';
+                            } },
+                            { value: memberData.id, format: function (id) {
+                                return '<span class="pull-right">' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail-user" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete-user" title="HAPUS"><i class="fa fa-times"></i></button>' +
+                                    '<button data-id="' + id + '" data-user-fullname="' + memberData.fullname + '" class="btn btn-xs btn-default btn-flat btn-roles" title="HAK AKSES"><i class="fa fa-lock"></i></button>' +
+                                    '</span>';
+                            }}
+                        ]);
+                    }, memberData);
+                    Bisnis.Util.Grid.renderRecords('#usersList', records, pageNum,
+                        function (rowTable, row) {
+                            return rowTable + '<tr id="'+ row[row.length - 1].value +'">';
+                        }
+                    );
+                } else {
+                    Bisnis.Util.Document.putHtml('#usersList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                }
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PENGGUNA');
+            }
+        );
+    };
+
+    loadGrid(1);
+
+    Bisnis.Util.Event.bind('click', '#usersPagination .pagePrevious', function () {
+        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
+    });
+
+    Bisnis.Util.Event.bind('click', '#usersPagination .pageNext', function () {
+        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
+    });
+
+    Bisnis.Util.Event.bind('click', '#usersPagination .pageFirst', function () {
+        loadGrid(1);
+    });
+
+    Bisnis.Util.Event.bind('click', '#usersPagination .pageLast', function () {
+        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
+    });
+    // end load users list / grid
+
+    // search box
+    var params = {
+        placeholder: 'CARI USERNAME / EMAIL',
+        module: 'users',
+        fields: [
+            {
+                field: 'username',
+                label: 'Username'
+            },
+            {
+                field: 'email',
+                label: 'Email'
+            }
+        ]
+    };
+
+    Bisnis.Util.Style.ajaxSelect('#searchUsers', params,
+        function (hasResultCallback) {
+            var btn = document.getElementById('btnAddUser');
+            hasResultCallback ? btn.disabled = true : btn.disabled = false;
+        }, function (selectedCallback) {
+            loadUserDetail(selectedCallback.id);
+        }, function (openCallback) {
+            var btn = document.getElementById('btnAddUser');
+            openCallback ? btn.disabled = true : btn.disabled = false;
+        }, function (closeCallback) {
+            var btn = document.getElementById('btnAddUser');
+            setTimeout(function () {
+                closeCallback ? btn.disabled = true : btn.disabled = false;
+            }, 300);
+        }
+    );
+    // end search box
+
+    // add modal
+    Bisnis.Util.Event.bind('click', '#btnAddUser', function () {
+        Bisnis.Util.Dialog.showModal('#addModal');
+        document.getElementById('addFullname').focus();
+        Bisnis.Util.CheckToggle.render('#addEnabled');
+    });
+
+    Bisnis.Util.Event.bind('click', '#btn-add-user', function () {
+        var params = Bisnis.Util.Form.serializeArray('#addForm');
+        var thisBtn = this;
+        thisBtn.disabled = true;
+
+        Bisnis.Admin.Users.add(params,
+            function () {
+                Bisnis.Util.Dialog.hideModal('#addModal');
+                loadGrid(1);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
+            }
+        );
+    });
+
+    Bisnis.Admin.Users.add = function (params, successCallback, errorCallback) {
+        Bisnis.request({
+            module: 'users',
+            method: 'post',
+            params: params
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
+            }
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
+        });
+    };
+    // end add modal
+
+    // detail modal
+    var loadUserDetail = function (id) {
+        Bisnis.Util.Storage.store('USER_ID', id);
+        Bisnis.Admin.Users.fetchById(id,
+            function (dataResponse) {
+                var fullnameElem = document.getElementById('detailFullname');
+                fullnameElem.value = dataResponse.fullname;
+                fullnameElem.focus();
+
+                var emailElem = document.getElementById('detailEmail');
+                emailElem.value = dataResponse.email;
+
+                document.getElementById('detailEnabled').checked = dataResponse.enabled;
+                Bisnis.Util.CheckToggle.render('#detailEnabled');
+                Bisnis.Util.Dialog.showModal('#detailModal');
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PENGGUNA');
+            }
+        );
+    };
+
+    Bisnis.Util.Event.bind('click', '.btn-detail-user', function () {
+        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+        loadUserDetail(id);
+    });
+
+    Bisnis.Admin.Users.fetchById = function (id, successCallback, errorCallback) {
+        Bisnis.request({
+            module: 'users/' + id,
+            method: 'get'
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
+            }
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
+        });
+    };
+
+    Bisnis.Util.Event.bind('click', '#btn-update-user', function () {
+        var id = Bisnis.Util.Storage.fetch('USER_ID');
+        var params = Bisnis.Util.Form.serializeArray('#detailForm');
+        var thisBtn = this;
+        thisBtn.disabled = true;
+
+        Bisnis.Admin.Users.updateById(id, params,
+            function () {
+                Bisnis.successMessage('Berhasil memperbarui data');
+                Bisnis.Util.Dialog.hideModal('#detailModal');
+                var page = Bisnis.Util.Storage.fetch('USER_CURRENT_PAGE');
+                loadGrid(page);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
+            }
+        );
+    });
+    // end detail modal
+
+    // delete
+    Bisnis.Util.Event.bind('click', '.btn-delete-user', function () {
+        var id = Bisnis.Util.Document.getDataValue(this, 'id');
+        Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
+            if (result) {
+                Bisnis.Admin.Users.delete(id,
+                    function () {
+                        Bisnis.successMessage('Berhasil menghapus data');
+                        var page = Bisnis.Util.Storage.fetch('USER_CURRENT_PAGE');
+                        loadGrid(page);
+                    }, function () {
+                        Bisnis.errorMessage('Gagal menghapus data');
+                    })
+            }
+        });
+    });
+
+    Bisnis.Admin.Users.delete = function (id, successCallback, errorCallback) {
+        Bisnis.request({
+            module: 'users/' + id,
+            method: 'delete'
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
+            }
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
+        });
+    };
+    // end delete
+
+    // prevent submit form on enter
+    Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {
+        var key = e.charCode || e.keyCode || 0;
+        if (key == 13) {
+            Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
+            e.preventDefault();
+        }
+    });
+    // end prevent submit form on enter
+
+    // reset modal form on modal hidden
+    Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('addForm');
+        document.getElementById("addForm").reset();
+    });
+    Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
+        Bisnis.Util.Grid.removeErrorForm('detailForm');
+        document.getElementById("detailForm").reset();
+    });
+    // end reset modal form on modal hidden
 
     let getRoles = function (userId, serviceId, pageNum) {
         Bisnis.Admin.Modules.fetchAll(
@@ -176,7 +453,7 @@
         Bisnis.Util.Dialog.showModal('#rolesModal');
     };
 
-    Bisnis.Util.Event.bind('click', '.roles-btn', function () {
+    Bisnis.Util.Event.bind('click', '.btn-roles', function () {
         var userId = this.getAttribute('data-id');
         var activeId = document.querySelector('#serviceTab .active a').getAttribute('aria-controls');
         var name = this.closest('tr').childNodes[1].innerText;

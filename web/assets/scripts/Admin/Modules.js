@@ -72,6 +72,8 @@
                 if ('undefined' !== typeof viewData['hydra:last']) {
                     var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
                     Bisnis.Util.Grid.createPagination('#modulesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                } else {
+                    Bisnis.Util.Document.putHtml('#modulesPagination', '');
                 }
 
                 if (memberData.length > 0) {
@@ -106,13 +108,28 @@
         );
     };
 
-    var activeId = document.getElementById("serviceTab")
-        .getElementsByClassName("active")[0]
-        .getElementsByTagName('a')[0]
-        .getAttribute('aria-controls');
+    var activeId = document.querySelector("#serviceTab li.active a").getAttribute('aria-controls');
+    Bisnis.Admin.Modules.loadGrid(activeId, 1);
 
-    var pageNum = Bisnis.Util.Storage.fetch('MODULES_CURRENT_PAGE'+activeId);
-    Bisnis.Admin.Modules.loadGrid(activeId, pageNum);
+    Bisnis.Util.Event.bind('click', '#modulesPagination .pagePrevious', function () {
+        var activeId = document.querySelector("#serviceTab li.active a").getAttribute('aria-controls');
+        Bisnis.Admin.Modules.loadGrid(activeId, Bisnis.Util.Document.getDataValue(this, 'page'));
+    });
+
+    Bisnis.Util.Event.bind('click', '#modulesPagination .pageNext', function () {
+        var activeId = document.querySelector("#serviceTab li.active a").getAttribute('aria-controls');
+        Bisnis.Admin.Modules.loadGrid(activeId, Bisnis.Util.Document.getDataValue(this, 'page'));
+    });
+
+    Bisnis.Util.Event.bind('click', '#modulesPagination .pageFirst', function () {
+        var activeId = document.querySelector("#serviceTab li.active a").getAttribute('aria-controls');
+        Bisnis.Admin.Modules.loadGrid(activeId, 1);
+    });
+
+    Bisnis.Util.Event.bind('click', '#modulesPagination .pageLast', function () {
+        var activeId = document.querySelector("#serviceTab li.active a").getAttribute('aria-controls');
+        Bisnis.Admin.Modules.loadGrid(activeId, Bisnis.Util.Document.getDataValue(this, 'page'));
+    });
 
     Bisnis.Util.Dialog.shownTab('a[data-toggle="tab"]', function (e) {
         var activeId = e.target.getAttribute('aria-controls');

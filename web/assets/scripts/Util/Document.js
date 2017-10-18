@@ -2,7 +2,7 @@
     Bisnis.Util.Document = {};
 
     Bisnis.Util.Document.putHtml = function (selector, content) {
-        document.querySelector(selector).innerHTML = content;
+        jQuery(selector).html(content);
     };
 
     Bisnis.Util.Document.getHtml = function (selector) {
@@ -10,7 +10,7 @@
     };
 
     Bisnis.Util.Document.getDataValue = function (selector, attribute) {
-        return document.querySelector(selector).getAttribute('data-' + attribute);
+        return jQuery(selector).data(attribute);
     };
 
     Bisnis.Util.Document.putValue = function (selector, value) {

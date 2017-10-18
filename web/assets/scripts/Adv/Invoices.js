@@ -76,7 +76,7 @@
                             { value: invoiceStatus(memberData.status) },
                             { value: memberData.id, format: function (id) {
                                 return '<span class="pull-right">' +
-                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title="DETAIL"><i class="fa fa-print"></i> CETAK</button>' +
                                     '</span>';
                             } }
                         ]);
@@ -178,13 +178,14 @@
             }
         );
 
-        Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}],
+        Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}, {'order': {'createdAt': 'ASC'}}],
             function (dataResponse) {
                 var memberData = dataResponse['hydra:member'];
                 var netto = Bisnis.Util.Storage.fetch('netto' + orderId);
                 var pecahAmount = document.querySelector('#pecahAmount');
                 var btnPecahInvoice = document.querySelector('#btn-pecah-invoice');
                 var sisa = document.querySelector('#sisa');
+                var invoiceSequence = parseFloat(memberData.length) +1;
 
                 if ( memberData.length < 1 ) {
                     finalAmount = Bisnis.Util.Storage.fetch('netto' + orderId);
@@ -193,35 +194,28 @@
                     btnPecahInvoice.disabled = false;
                     pecahAmount.value = finalAmount;
                     pecahAmount.focus();
+                    Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-' + invoiceSequence);
                 } else {
-                    Bisnis.Adv.OrderInvoices.fetchAll([{'order.id': orderId}],
-                        function (dataResponse) {
-                            var memberData = dataResponse['hydra:member'];
-                            var amount = 0;
-                            if (memberData.length > 0) {
-                                Bisnis.each(function (idx, memberData) {
-                                    amount = amount + memberData.invoice.amount;
-                                }, memberData);
-                            }
 
-                            var finalAmount = parseFloat(netto) - parseFloat(amount);
-                            document.querySelector('#sisa').value = Bisnis.Util.Money.format(finalAmount);
+                    var amount = 0;
+                    Bisnis.each(function (idx, memberData) {
+                        amount = amount + memberData.invoice.amount;
+                    }, memberData);
 
-                            if ( finalAmount <= 0 ) {
-                                btnPecahInvoice.disabled = true;
-                                pecahAmount.value = '';
-                                pecahAmount.disabled = true;
-                            } else {
-                                pecahAmount.value = finalAmount;
-                                pecahAmount.focus();
-                                pecahAmount.disabled = false;
-                                btnPecahInvoice.disabled = false;
-                            }
+                    finalAmount = parseFloat(netto) - parseFloat(amount);
+                    document.querySelector('#sisa').value = Bisnis.Util.Money.format(finalAmount);
 
-                        }, function () {
-                            Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA SISA');
-                        }
-                    );
+                    if ( finalAmount <= 0 ) {
+                        btnPecahInvoice.disabled = true;
+                        pecahAmount.value = '';
+                        pecahAmount.disabled = true;
+                    } else {
+                        pecahAmount.value = finalAmount;
+                        pecahAmount.focus();
+                        pecahAmount.disabled = false;
+                        btnPecahInvoice.disabled = false;
+                        Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-' + invoiceSequence);
+                    }
                 }
 
             },
@@ -310,10 +304,13 @@
     });
 
     Bisnis.Util.Event.bind('click', '#btnAddInvoice', function () {
+
+        // select for normal invoice
         fetchSelect('#normalOrder', 'n',
             function (selected) {
-                var id = selected.id.split('/')[4];
+                let id = selected.id.split('/')[4];
                 Bisnis.Util.Storage.store('normalOrderId', id);
+                Bisnis.Util.Storage.store('normalOrderNumber', selected.text);
 
                 Bisnis.Adv.Orders.fetchById(id,
                     function (dataResponse) {
@@ -331,11 +328,11 @@
                         var memberData = dataResponse['hydra:member'];
                         if ( memberData.length > 0 ) {
                             document.querySelector('#normalForm #btn-normal-invoice').disabled = true;
-                            document.querySelector('#normalForm').classList.add('has-error');
+                            document.querySelector('#normalForm').classList.add('has-success');
                             // document.querySelector('#hasNormalInvoice').classList.remove('hidden');
                         } else {
                             document.querySelector('#normalForm #btn-normal-invoice').disabled = false;
-                            document.querySelector('#normalForm').classList.remove('has-error');
+                            document.querySelector('#normalForm').classList.remove('has-success');
                             // document.querySelector('#hasNormalInvoice').classList.add('hidden');
                         }
                     },
@@ -346,11 +343,13 @@
                 );
             }
         );
-        
+
+        // select for pecah invoice
         fetchSelect('#pecahOrder', 'p',
             function (selected) {
                 var orderId = selected.id.split('/')[4];
                 Bisnis.Util.Storage.store('pecahOrderId', orderId);
+                Bisnis.Util.Storage.store('pecahOrderNumber', selected.text);
                 showPecahAmount(orderId);
 
                 var pageNum = Bisnis.Util.Storage.fetch('INVOICE_PECAH_PAGE');
@@ -374,6 +373,7 @@
             }
         );
 
+        // select for gabung invoice
         fetchSelect('#gabungOrder', 'g',
             function (selected) {
                 var orderId = selected.id.split('/')[4];
@@ -496,7 +496,7 @@
         var params = [
             {
                 name: 'invoiceNumber',
-                value: 'INVC/001/2978329/2017'
+                value: Bisnis.Util.Storage.fetch('normalOrderNumber')
             },
             {
                 name: 'amount',
@@ -505,7 +505,7 @@
         ];
         Bisnis.Adv.Invoices.add(params,
             function (dataResponse) {
-                var orderId = Bisnis.Util.Storage.fetch('normalOrderId');
+                let orderId = Bisnis.Util.Storage.fetch('normalOrderId');
                 storeOrderInvoice(orderId, dataResponse.id);
                 Bisnis.Util.Dialog.hideModal('#addModal');
                 document.querySelector('#btn-normal-invoice').disabled = false;
@@ -574,11 +574,11 @@
         );
     };
 
-    var addInvoice = function (orderId, amount) {
+    var addPecahInvoice = function (orderId, amount) {
         var params = [
             {
                 name: 'invoiceNumber',
-                value: 'INVC/001/2978329/2017'
+                value: Bisnis.Util.Storage.fetch('pecahInvoiceNumber')
             },
             {
                 name: 'amount',
@@ -612,7 +612,7 @@
         isGreater(orderId, amount,
             function (callback) {
                 if (callback === false) {
-                    addInvoice(orderId, amount);
+                    addPecahInvoice(orderId, amount);
                 } else {
                     Bisnis.Util.Dialog.alert('PERHATIAN', 'JUMLAH YANG ANDA MASUKKAN TIDAK BOLEH MELEBIHI SISA');
                     document.querySelector('#btn-pecah-invoice').disabled = false;

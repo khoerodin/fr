@@ -242,6 +242,19 @@
         Bisnis.Admin.Users.updateById(id, params,
             function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
+                let password = document.querySelector('#detailPassword').value;
+                if ( password ) {
+                    var params = [ { name : 'plainPassword', value : password } ];
+                    Bisnis.Admin.Users.changePassword(params,
+                        function () {
+                            window.toastr.success('Berhasil memperbarui Sandi');
+                        },
+                        function () {
+                            Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMPERBARUI SANDI');
+                        }
+                    );
+                }
+
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('USER_CURRENT_PAGE');
                 loadGrid(page);

@@ -57,7 +57,7 @@
     var loadPage = function (pageNum) {
         pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('INVOICES_CURRENT_PAGE', pageNum);
-        Bisnis.Adv.Invoices.fetchAll([{page: pageNum}],
+        Bisnis.Adv.Invoices.fetchAll([{page: pageNum},{order: {createdAt: 'DESC'}},{order: {invoiceNumber: 'ASC'}}],
             function (dataResponse) {
                 var memberData = dataResponse['hydra:member'];
                 var viewData = dataResponse['hydra:view'];
@@ -76,7 +76,7 @@
                             { value: invoiceStatus(memberData.status) },
                             { value: memberData.id, format: function (id) {
                                 return '<span class="pull-right">' +
-                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title="DETAIL"><i class="fa fa-print"></i> CETAK</button>' +
+                                    '<a href="/advertising/invoice-print" data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title="DETAIL"><i class="fa fa-print"></i> CETAK</a>' +
                                     '</span>';
                             } }
                         ]);

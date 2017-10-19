@@ -48,6 +48,7 @@ app:
         - { path: '/advertising/team-works', controller: 'Bisnis:AdvertisingTeamWorks@index', methods: ['GET'] }
         - { path: '/advertising/account-executive-managers', controller: 'Bisnis:AdvertisingAccountExecutiveManagers@index', methods: ['GET'] }
         - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
+        - { path: '/advertising/invoice-print', controller: 'Bisnis:AdvertisingInvoicePrint@index', methods: ['GET'] }
 
         - { path: '/advertising/orders/dashboard', controller: 'Bisnis:AdvertisingOrderDashboard@index', methods: ['GET'] }
         - { path: '/advertising/orders', controller: 'Bisnis:AdvertisingOrders@index', methods: ['GET'] }

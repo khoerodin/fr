@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Invoice</title>
+    <title>Invoice</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {#Bootstrap 3.3.6#}
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/assets/vendor/ionicons/css/ionicons.min.css">
     {#Theme style#}
     <link rel="stylesheet" href="/assets/vendor/adminlte/css/AdminLTE.css">
+    <link rel="stylesheet" href="/assets/vendor/paper/paper.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,25 +24,38 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style type="text/css">
-        body { font-size: 12px; line-height: 2 },
+        @page { size: A4 }
+        body { font-size: 13px; line-height: 2 },
         table td { padding: 5px; }
     </style>
 </head>
 
-<body>
+<body class="A4">
 <div class="wrapper">
     <!-- Main content -->
-    <section class="invoice" style="border: 1px solid #555;position: fixed;top:0;bottom: 0; width: 100%;">
+    <section class="invoice sheet padding-10mm">
         <!-- title row -->
-        <div class="row" style="padding: 15px 0 15px 0;border-bottom: 1px solid #555;">
-            <div class="col-xs-12">
-                <img src="/img/logo-faktur.png" style="width: 30%; margin-left: 5px;">
+        <div class="row" style="padding: 15px 0 15px 0;border-bottom: 3px solid #555;">
+            <div class="col-xs-6">
+                <img src="/img/logo-faktur.png" style="width: 60%; margin-left: 5px;">
             </div>
+            <div class="col-xs-2"></div>
+            <div class="col-xs-4">
+                <div class="row">
+                    <div class="col-xs-3"><b>NO</b></div>
+                    <div class="col-xs-9">: JAJSKJD/AKJAK/AKJAK</div>
+                    <div class="col-xs-3"><b>TANGGAL</b></div>
+                    <div class="col-xs-9">: JAJSKJD/AKJAK/AKJAK</div>
+                </div>
+            </div>
+
         </div>
 
         <div class="row">
             <!-- /.col -->
             <div class="col-xs-12" style="margin-top: 20px; ">
+
+                <div class="row">
 
                 <div class="col-xs-12 text-center" style="font-size: 17px; font-weight: bold;">FAKTUR IKLAN</div>
 
@@ -73,7 +87,7 @@
                 <div class="col-xs-2" style="margin-top: 13px;">: Rp <span class="pull-right">90,000</span></div>
                 <div class="col-xs-3" style="margin-top: 13px;">/mmk</div>
 
-                <div class="col-xs-2" style="margin-top: 13px;">Quantity 1x Harga</div>
+                <div class="col-xs-2" style="margin-top: 13px;">Qty 1x Harga</div>
                 <div class="col-xs-2" style="margin-top: 13px;">: Rp <span class="pull-right">68,040,000</span></div>
                 <div class="col-xs-1" style="margin-top: 13px; visibility: hidden;">s</div>
 
@@ -130,10 +144,49 @@
                 <div class="col-xs-2">Catatan</div>
                 <div class="col-xs-10">: MHN DI HAL KANAN INTI (PROGRAM DOUBLE POINT)</div>
 
+                </div>
+
             </div>
             <!-- /.col -->
         </div>
         <!-- /.row -->
+        <footer style="margin-top: 200px;">
+            <div class="row">
+                <div class="col-xs-3">
+                    <table style="width: 100%; font-weight: bold" align="center"">
+                        <tr>
+                            <td style="text-align:center; vertical-align:middle;">
+                                Dibuat Oleh:
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
+                        <tr>
+                            <td style="text-align:center; vertical-align:middle;">
+                                Staff Iklan - Layanan
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-xs-6"></div>
+                <div class="col-xs-3">
+                    <table style="width: 100%; font-weight: bold;" align="center">
+                        <tr>
+                            <td style="text-align:center; vertical-align:middle;">
+                                Diperiksa Oleh:
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
+                        <tr>
+                            <td style="text-align:center; vertical-align:middle;">
+                                Pemberi Order
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </footer>
     </section>
     <!-- /.content -->
 </div>

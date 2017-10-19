@@ -76,7 +76,7 @@
                             { value: invoiceStatus(memberData.status) },
                             { value: memberData.id, format: function (id) {
                                 return '<span class="pull-right">' +
-                                    '<a href="/advertising/invoice-print" data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title="DETAIL"><i class="fa fa-print"></i> CETAK</a>' +
+                                    '<a href="/advertising/invoices/pdf/'+ id +'" target="_blank" data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title="CETAK"><i class="fa fa-print"></i> CETAK</a>' +
                                     '</span>';
                             } }
                         ]);

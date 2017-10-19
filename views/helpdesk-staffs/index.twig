@@ -52,21 +52,11 @@
                     <form id="addForm">
                         <div class="form-group">
                             <label for="addUser">STAFF</label>
-                            <select name="user" id="addUser" class="form-control" style="width: 100%">
-                                <option selected disabled>PILIH STAFF</option>
-                                {% for user in users %}
-                                    <option value="/api/users/{{ user.id }}">{{ user.fullname }}</option>
-                                {% endfor %}
-                            </select>
+                            <select name="user" id="addUser" class="form-control" style="width: 100%"></select>
                         </div>
                         <div class="form-group">
                             <label for="addCategory">BAGIAN</label>
-                            <select name="category" id="addCategory" class="form-control" style="width: 100%">
-                                <option selected disabled>PILIH BAGIAN</option>
-                                {% for category in categories %}
-                                    <option value="/api/helpdesk/categories/{{ category.id }}">{{ category.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <select name="category" id="addCategory" class="form-control" style="width: 100%"></select>
                         </div>
                         <div class="form-group">
                             <label for="AddIsAdmin">SEBAGAI ADMIN?</label>
@@ -101,21 +91,11 @@
                     <form id="detailForm">
                         <div class="form-group">
                             <label for="detailUser">STAFF</label>
-                            <select name="user" id="detailUser" class="form-control">
-                                <option selected disabled>PILIH STAFF</option>
-                                {% for user in users %}
-                                    <option value="/api/users/{{ user.id }}">{{ user.fullname }}</option>
-                                {% endfor %}
-                            </select>
+                            <select name="user" id="detailUser" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="detailCategory">BAGIAN</label>
-                            <select name="category" id="detailCategory" class="form-control">
-                                <option selected disabled>PILIH BAGIAN</option>
-                                {% for category in categories %}
-                                    <option value="/api/helpdesk/categories/{{ category.id }}">{{ category.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <select name="category" id="detailCategory" class="form-control"></select>
                         </div>
                         <div class="form-group">
                             <label for="detailIsAdmin">SEBAGAI ADMIN?</label>

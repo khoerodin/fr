@@ -111,8 +111,35 @@
 
     // add modal
     Bisnis.Util.Event.bind('click', '#btnAddStaff', function () {
-        Bisnis.Util.Style.modifySelect('#addUser');
-        Bisnis.Util.Style.modifySelect('#addCategory');
+        var users = {
+            placeholder: 'CARI USERNAME / EMAIL PENGGUNA',
+            module: 'users',
+            prependValue: '/api/users/',
+            fields: [
+                {
+                    field: 'username',
+                    label: 'Username'
+                },
+                {
+                    field: 'email',
+                    label: 'Email'
+                }
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addUser', users);
+
+        var categories = {
+            placeholder: 'CARI KATEGORI',
+            module: 'helpdesk/categories',
+            prependValue: '/api/helpdesk/categories/',
+            fields: [
+                {
+                    field: 'name',
+                    label: 'Kategori'
+                }
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addCategory', categories);
         Bisnis.Util.Dialog.showModal('#addModal');
         document.getElementById('addUser').focus();
     });
@@ -159,28 +186,46 @@
         Bisnis.Util.Dialog.showModal('#detailModal');
         Bisnis.Helpdesk.Staff.fetchById(id,
             function (dataResponse) {
-                var user = dataResponse.user;
-                var detailUserOpt = Array.prototype.slice.call(document.getElementById('detailUser').options);
-                detailUserOpt.map(function (value) {
-                    Array.prototype.slice.call(value.attributes).forEach(function(item) {
-                        if(item.value.split('/')[3] === user.id) {
-                            value.selected = true;
-                        }
-                    });
-                });
+                if (dataResponse.user) {
+                    var userElm = document.getElementById('detailUser');
+                    userElm.innerHTML = '<option value="/api/users/'+dataResponse.user.id+'">'+dataResponse.user.fullname+'</option>';
+                    Bisnis.Util.Event.bind('change', '#detailUser');
+                }
+
                 Bisnis.Util.Style.modifySelect('#detailUser');
+                var users = {
+                    placeholder: 'CARI USERNAME PENGGUNA',
+                    module: 'users',
+                    prependValue: '/api/users/',
+                    fields: [
+                        {
+                            field: 'username',
+                            label: 'Username'
+                        }
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailUser', users);
                 document.getElementById('detailUser').focus();
 
-                var category = dataResponse.category;
-                var detailCategoryOpt = Array.prototype.slice.call(document.getElementById('detailCategory').options);
-                detailCategoryOpt.map(function (value) {
-                    Array.prototype.slice.call(value.attributes).forEach(function(item) {
-                        if(item.value.split('/')[4] === category.id) {
-                            value.selected = true;
-                        }
-                    });
-                });
+                if (dataResponse.category) {
+                    var userElm = document.getElementById('detailCategory');
+                    userElm.innerHTML = '<option value="/api/helpdesk/categories/'+dataResponse.category.id+'">'+dataResponse.category.name+'</option>';
+                    Bisnis.Util.Event.bind('change', '#detailCategory');
+                }
+
                 Bisnis.Util.Style.modifySelect('#detailCategory');
+                var users = {
+                    placeholder: 'CARI KATEGORI',
+                    module: 'helpdesk/categories',
+                    prependValue: '/api/helpdesk/categories/',
+                    fields: [
+                        {
+                            field: 'name',
+                            label: 'Kategori'
+                        }
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailCategory', users);
 
                 document.getElementById('detailIsAdmin').checked = dataResponse.isAdmin;
 

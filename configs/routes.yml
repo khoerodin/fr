@@ -48,7 +48,6 @@ app:
         - { path: '/advertising/team-works', controller: 'Bisnis:AdvertisingTeamWorks@index', methods: ['GET'] }
         - { path: '/advertising/account-executive-managers', controller: 'Bisnis:AdvertisingAccountExecutiveManagers@index', methods: ['GET'] }
         - { path: '/advertising/account-executives', controller: 'Bisnis:AdvertisingAccountExecutives@index', methods: ['GET'] }
-        - { path: '/advertising/invoice-print', controller: 'Bisnis:AdvertisingInvoicePrint@index', methods: ['GET'] }
 
         - { path: '/advertising/orders/dashboard', controller: 'Bisnis:AdvertisingOrderDashboard@index', methods: ['GET'] }
         - { path: '/advertising/orders', controller: 'Bisnis:AdvertisingOrders@index', methods: ['GET'] }
@@ -58,6 +57,8 @@ app:
         - { path: '/advertising/orders/publish-ads/update', controller: 'Bisnis:AdvertisingOrders@updatePublishAds', methods: ['POST'] }
         - { path: '/advertising/orders/search', controller: 'Bisnis:AdvertisingOrders@search', methods: ['POST'] }
         - { path: '/advertising/invoices', controller: 'Bisnis:AdvertisingInvoices@index', methods: ['GET'] }
+        - { path: '/advertising/invoices/pdf/{id}', controller: 'Bisnis:AdvertisingInvoices@pdf', methods: ['GET'] }
+        - { path: '/advertising/invoices/print', controller: 'Bisnis:AdvertisingInvoices@print', methods: ['GET'] }
 
         #Billing
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }

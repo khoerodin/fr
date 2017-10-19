@@ -1165,23 +1165,6 @@ $(document).on('keyup keydown change mouseup', '#cashBackPercentage', function (
     getJumlahBayar();
 });
 
-// ambil diskon
-// function getDiscount() {
-//     var result;
-//     var $this = 'input[name=pickDiscount]';
-//     if ($($this+':checked').length > 0) {
-//         if ($($this+':checked').val() === '1') {
-//             result = $('#discountPercentage').val();
-//         } else {
-//             result = unformatMoney($('#discountValue').val());
-//         }
-//     } else {
-//         result = parseFloat(0);
-//     }
-//
-//     console.log(result);
-// }
-
 // hitung jumlah bayar
 function getJumlahBayar() {
     var diskon;

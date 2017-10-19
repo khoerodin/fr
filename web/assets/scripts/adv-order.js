@@ -30,7 +30,7 @@ function getOrders(param, selected) {
                 tableData += '<th width="">Judul</th>';
                 tableData += '<th width="">Order Dari</th><th width="">Pemasang</th>';
                 tableData += '<th>Status</th>';
-                tableData += '<th width="3%"><span class="pull-right">Aksi</span></th></tr></thead>';
+                tableData += '<th width="5%"><span class="pull-right">Aksi</span></th></tr></thead>';
                 tableData += '<tbody>';
 
                 $.each(memberData, function (index, value) {
@@ -75,7 +75,7 @@ function getOrders(param, selected) {
                     tableData += '<td>';
                     tableData += '<span class="pull-right" data-id="'+value.id+'">';
                     tableData += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                    // tableData += '<button class="delete-btn btn btn-default btn-xs btn-flat" title="DELETE"><i class="fa fa-times"></i></button>';
+                    tableData += '<button class="clone-btn btn btn-default btn-xs btn-flat" title="DUPLIKASI ORDER"><i class="fa fa-clone"></i></button>';
                     tableData += '</span>';
                     tableData += '</td>';
                     tableData += '</tr>';
@@ -209,12 +209,14 @@ function getOrders(param, selected) {
             }).on("select2:open", function (e) {
 
                 if("searchHistory" in localStorage){
-                    var searchStorsge = localStorage.getItem('searchHistory');
-                    var searchHistory = searchStorsge.reverse();
+                    var searchStorage = localStorage.getItem('searchHistory');
+                    console.log(searchStorage)
+                    // var searchHistory = searchStorage.reverse();
+                    var searchHistory = searchStorage;
                     var opt = '';
                     $.each(searchHistory, function (index, value) {
                         if (index === 0) {
-                            var selected = 'selected';
+                            var selected =   'selected';
                         }
                         opt += '<li class="optionHistory '+selected+' select2-results__option" data-id="'+value.id+'">'+value.text+'</li>';
                     });

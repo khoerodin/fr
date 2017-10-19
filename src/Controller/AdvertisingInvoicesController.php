@@ -33,35 +33,36 @@ class AdvertisingInvoicesController extends AdminController
 
         $jenis = strtolower($order['specification']['name']);
 
-        switch ($jenis) {
-            case "kuping":
-                $harga = '';
-                break;
-            case "banner":
-                $harga = '';
-                break;
-            case "stapel":
-                $harga = '';
-                break;
-            case "eksposisi":
-                $harga = '';
-                break;
-            case "tarif khusus":
-                $harga = '';
-                break;
-            case substr( $jenis, 0, 5 ) === "paket" ) :
-                $harga = '';
-                break;
-            default:
-                echo "Your favorite color is neither red, blue, nor green!";
+        $harga = '';
+        if ( substr( $jenis, 0, 5 ) === "paket" ) {
+            $harga = $order['basePrice'];
+        } else {
+            switch ($jenis) {
+                case "kuping":
+                    $harga = $order['basePrice'];
+                    break;
+                case "banner":
+                    $harga = $order['basePrice'];
+                    break;
+                case "stapel":
+                    $harga = $order['basePrice'];
+                    break;
+                case "eksposisi":
+                    $harga = $order['basePrice'];
+                    break;
+                case "tarif khusus":
+                    $harga = $order['basePrice'];
+                    break;
+                default:
+                    $harga = ( (float) $order['columnSize'] *(float) $order['milimeterSize'] ) * (float) $order['totalPost'] * (float) $order['basePrice'];
+            }
         }
-
-        $harga =
 
         $data = [
             'meta' => $meta,
             'invoice' => $invoice,
-            'order' => $order
+            'order' => $order,
+            'harga' => $harga
         ];
 
         return $this->view('advertising-invoices/pdf.twig', $data);

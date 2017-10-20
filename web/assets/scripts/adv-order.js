@@ -75,7 +75,7 @@ function getOrders(param, selected) {
                     tableData += '<td>';
                     tableData += '<span class="pull-right" data-id="'+value.id+'">';
                     tableData += '<button class="detail-btn btn btn-default btn-xs btn-flat" title="DETAIL"><i class="fa fa-eye"></i></button>';
-                    tableData += '<button class="clone-btn btn btn-default btn-xs btn-flat" title="DUPLIKASI ORDER"><i class="fa fa-clone"></i></button>';
+                    tableData += '<button class="clone-btn btn btn-default btn-xs btn-flat" title="DUPLIKASI ORDER INI  "><i class="fa fa-clone"></i></button>';
                     tableData += '</span>';
                     tableData += '</td>';
                     tableData += '</tr>';

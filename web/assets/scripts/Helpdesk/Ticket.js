@@ -51,8 +51,8 @@
     };
 
     var createPriorityButton = function (priority) {
-        var priorityMark = 'default';
-        var priorityText = 'LOW';
+        var priorityMark = 'primary';
+        var priorityText = 'NORMAL';
         switch (priority) {
             case 'low':
                 priorityMark = 'default';
@@ -65,6 +65,10 @@
             case 'urgent':
                 priorityMark = 'warning';
                 priorityText = 'URGENT';
+                break;
+            case 'very_urgent':
+                priorityMark = 'danger';
+                priorityText = 'VERY URGENT';
                 break;
         }
 

@@ -58,63 +58,65 @@
 
                     <div class="col-xs-12 text-center" style="font-size: 17px; font-weight: bold;">FAKTUR IKLAN</div>
 
-                    <div class="col-xs-2">No. Order</div>
+                    <div class="col-xs-2">NO. ORDER</div>
                     <div class="col-xs-10">: {{ order.orderLetter|upper }}</div>
 
-                    <div class="col-xs-2" style="margin-top: 13px;">Jenis Iklan</div>
+                    <div class="col-xs-2" style="margin-top: 13px;">JENIS IKLAN</div>
                     <div class="col-xs-10" style="margin-top: 13px;">: {{ order.specification.name|upper }}</div>
 
-                    <div class="col-xs-2">Tanggal Terbit</div>
+                    <div class="col-xs-2">TANGGAL TERBIT</div>
                     <div class="col-xs-10">: {{ order.specification.name|upper }}</div>
 
-                    <div class="col-xs-2">Jumlah Terbit</div>
+                    <div class="col-xs-2">JUMLAH TERBIT</div>
                     <div class="col-xs-10">: {{ order.totalPost }}</div>
 
-                    <div class="col-xs-2" style="margin-top: 13px;">Nama Pemesan</div>
+                    <div class="col-xs-2" style="margin-top: 13px;">NAMA PEMESAN</div>
                     <div class="col-xs-10" style="margin-top: 13px;">: {{ order.customer.name|upper }}</div>
 
-                    <div class="col-xs-2">Alamat</div>
+                    <div class="col-xs-2">ALAMAT</div>
                     <div class="col-xs-10">: {{ order.customer.address|upper }}</div>
 
-                    <div class="col-xs-2" style="margin-top: 13px;">Judul Iklan</div>
+                    <div class="col-xs-2" style="margin-top: 13px;">JUDUL IKLAN</div>
                     <div class="col-xs-10" style="margin-top: 13px;">:  {{ order.title|upper }}</div>
 
-                    <div class="col-xs-2">Ukuran</div>
+                    <div class="col-xs-2">UKURAN</div>
                     <div class="col-xs-10">: {{ order.columnSize }} x {{ order.milimeterSize }}</div>
 
-                    <div class="col-xs-2" style="margin-top: 13px;">Harga</div>
+                    <div class="col-xs-2" style="margin-top: 13px;">HARGA</div>
                     <div class="col-xs-2" style="margin-top: 13px;">: Rp <span class="pull-right">{{ harga }}</span></div>
                     <div class="col-xs-3" style="margin-top: 13px;">/mmk</div>
-
-                    <div class="col-xs-2" style="margin-top: 13px;">Qty 1x Harga</div>
-                    <div class="col-xs-2" style="margin-top: 13px;">: Rp <span class="pull-right">#</span></div>
-                    <div class="col-xs-1" style="margin-top: 13px; visibility: hidden;">s</div>
-
-                    <div class="col-xs-2">Minus {{ order.minDiscountPercentage }}%</div>
-                    <div class="col-xs-2">: Rp <span class="pull-right">{{ order.minDiscountValue }}</span></div>
-                    <div class="col-xs-3">( - )</div>
-
-                    <div class="col-xs-2">Disc {{ order.discountPercentage }}%</div>
-                    <div class="col-xs-2">: Rp <span class="pull-right">{{ order.discountValue }}</span></div>
-                    <div class="col-xs-1">( - )</div>
-
-                    <div class="col-xs-2">Plus {{ order.surchargePercentage }}%</div>
-                    <div class="col-xs-2" style="border-bottom: 1px solid #555;">: Rp <span class="pull-right">{{ order.surchargeValue }}</span></div>
-                    <div class="col-xs-1" style="border-bottom: 1px solid #555;">( + )</div>
-                    <div class="col-xs-2" style="visibility: hidden">s</div>
-
-                    <div class="col-xs-2">Cash Disc {{ order.cashBackPercentage }}%</div>
-                    <div class="col-xs-2" style="border-bottom: 1px solid #555;">: Rp <span class="pull-right">{{ order.cashBackValue }}</span></div>
-                    <div class="col-xs-1" style="border-bottom: 1px solid #555;">( - )</div>
-
-                    <div class="col-xs-2">Harga Iklan</div>
-                    <div class="col-xs-2">: Rp <span class="pull-right">{{ harga - order.minDiscountValue + order.surchargeValue }}</span></div>
-                    <div class="col-xs-3" style="visibility: hidden;">s</div>
 
                     {% set total = invoice.amount / 1.1 %}
                     {% set tax = total * 10 / 100 %}
 
-                    <div class="col-xs-2">Total</div>
+                    {% set harga = (total * 100) / (100 - order.discountPercentage) %}
+
+                    <div class="col-xs-2" style="margin-top: 13px;">QTY 1x HARGA</div>
+                    <div class="col-xs-2" style="margin-top: 13px;">: Rp <span class="pull-right">{{ harga }}</span></div>
+                    <div class="col-xs-1" style="margin-top: 13px; visibility: hidden;">s</div>
+
+                    <div class="col-xs-2">MINUS {{ order.minDiscountPercentage }}%</div>
+                    <div class="col-xs-2">: Rp <span class="pull-right">{{ order.minDiscountValue }}</span></div>
+                    <div class="col-xs-3">( - )</div>
+
+                    <div class="col-xs-2">DSIC {{ order.discountPercentage }}%</div>
+                    <div class="col-xs-2">: Rp <span class="pull-right">{{ order.discountValue }}</span></div>
+                    <div class="col-xs-1">( - )</div>
+
+                    <div class="col-xs-2">PLUS {{ order.surchargePercentage }}%</div>
+                    <div class="col-xs-2" style="border-bottom: 1px solid #555;">: Rp <span class="pull-right">{{ order.surchargeValue }}</span></div>
+                    <div class="col-xs-1" style="border-bottom: 1px solid #555;">( + )</div>
+                    <div class="col-xs-2" style="visibility: hidden">s</div>
+
+                    <div class="col-xs-2">CASH DISC {{ order.cashBackPercentage }}%</div>
+                    <div class="col-xs-2" style="border-bottom: 1px solid #555;">: Rp <span class="pull-right">{{ order.cashBackValue }}</span></div>
+                    <div class="col-xs-1" style="border-bottom: 1px solid #555;">( - )</div>
+
+                    <div class="col-xs-2">HARGA IKLAN</div>
+                    <div class="col-xs-2">: Rp <span class="pull-right">{{ harga - order.minDiscountValue + order.surchargeValue }}</span></div>
+                    <div class="col-xs-3" style="visibility: hidden;">s</div>
+
+                    <div class="col-xs-2">TOTAL</div>
                     <div class="col-xs-2">: Rp <span class="pull-right">{{ total }}</span></div>
                     <div class="col-xs-1" style="visibility: hidden;">s</div>
 
@@ -126,17 +128,17 @@
 
                     <div class="col-xs-7" style="visibility: hidden;">s</div>
 
-                    <div class="col-xs-2">Netto</div>
+                    <div class="col-xs-2">NETTO</div>
                     <div class="col-xs-2">: Rp <span class="pull-right">{{ total + tax }}</b></span></div>
                     <div class="col-xs-1" style="visibility:hidden;">s</div>
 
                     <div class="col-xs-12" style="visibility: hidden;">s</div>
                     <div class="col-xs-12" style="visibility: hidden;">s</div>
 
-                    <div class="col-xs-2">Terbilang</div>
+                    <div class="col-xs-2">TERBILANG</div>
                     <div class="col-xs-10">: <i><b>EMPATPULUH ENAM JUTA DUARATUS ENAMBELAS RIBU SERATUS TUJUHPULUH RUPIAH</b></i></div>
 
-                    <div class="col-xs-2">Catatan</div>
+                    <div class="col-xs-2">CATATAN</div>
                     <div class="col-xs-10">: {{ order.orderDescription }}</div>
 
                 </div>
@@ -151,14 +153,14 @@
                     <table style="width: 100%; font-weight: bold" align="center"">
                     <tr>
                         <td style="text-align:center; vertical-align:middle;">
-                            Dibuat Oleh:
+                            DIBUAT OLEH:
                         </td>
                     </tr>
                     </table>
                     <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
                         <tr>
                             <td style="text-align:center; vertical-align:middle;">
-                                Staff Iklan - Layanan
+                                STAFF IKLAN - LAYANAN
                             </td>
                         </tr>
                     </table>
@@ -168,14 +170,14 @@
                     <table style="width: 100%; font-weight: bold;" align="center">
                         <tr>
                             <td style="text-align:center; vertical-align:middle;">
-                                Diperiksa Oleh:
+                                DIPERIKSA OLEH:
                             </td>
                         </tr>
                     </table>
                     <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
                         <tr>
                             <td style="text-align:center; vertical-align:middle;">
-                                Pemberi Order
+                                PEMBERI ORDER
                             </td>
                         </tr>
                     </table>

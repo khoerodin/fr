@@ -69,26 +69,19 @@
         return st;
     };
 
-    var gerOrderNumber = function (orderId) {
-        var orderNum = '';
-        if (orderId) {
-            Bisnis.Adv.Orders.fetchById(orderId,
-                function (dataResponse) {
-                    if (dataResponse.orderNumber) {
-                        Bisnis.Util.Storage.store('ORDER_NUM_' + orderId, dataResponse.orderNumber);
-                    } else {
-                        Bisnis.Util.Storage.store('ORDER_NUM_' + orderId, '<span class="text-danger">Error</span>');
-                    }
-                },
-                function () {
-                    Bisnis.Util.Storage.store('ORDER_NUM_' + orderId, '<span class="text-danger">Error</span>');
+    var gerOrderNumber = function (orderId, idx) {
+        Bisnis.Adv.Orders.fetchById(orderId,
+            function (dataResponse) {
+                if (dataResponse.orderNumber) {
+                    document.querySelector('#ref' + idx).innerText = dataResponse.orderNumber;
+                } else {
+                    document.querySelector('#ref' + idx).innerHTML = '-';
                 }
-            );
-            orderNum = Bisnis.Util.Storage.fetch('ORDER_NUM_' + orderId);
-        } else {
-            orderNum = '-';
-        }
-        return orderNum;
+            },
+            function () {
+                document.querySelector('#ref' + idx).innerHTML = '<span class="text-danger">Error</span>';
+            }
+        );
     };
 
     var loadGrid = function (pageNum) {
@@ -117,7 +110,8 @@
                                 return orderStatus(status);
                             } },
                             { value: memberData.orderRefference, format: function (orderRefference) {
-                                return gerOrderNumber(orderRefference);
+                                gerOrderNumber(orderRefference, (parseInt(idx) + 1));
+                                return '<span id="ref'+ (parseInt(idx) + 1) +'"></span>';
                             } },
                             { value: memberData.id, format: function (id) {
                                 return '<span class="pull-right">' +
@@ -237,7 +231,7 @@
                         if (panjang === (index +1)) {
                             Bisnis.Adv.PublishAds.add(PAParams,
                                 function () {
-                                    loadGrid(1);
+                                    loadGrid(Bisnis.Util.Storage.fetch('ORDERS_CURRENT_PAGE'));
                                     Bisnis.successMessage('Berhasil menduplikasi order');
                                 },
                                 function () {
@@ -249,7 +243,7 @@
                         }
                     });
                 } else {
-                    loadGrid(1);
+                    loadGrid(loadGrid(Bisnis.Util.Storage.fetch('ORDERS_CURRENT_PAGE')));
                     Bisnis.successMessage('Berhasil menduplikasi order');
                 }
             },
@@ -261,22 +255,26 @@
 
     Bisnis.Util.Event.bind('click', '.btn-clone', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
-        Bisnis.Adv.Orders.fetchById(id,
-            function (dataResponse) {
-                var params = createParams(dataResponse, dataResponse.id);
-                Bisnis.Adv.Orders.add(params,
-                    function (response) {
-                        savePublishAds(response);
+        Bisnis.Util.Dialog.yesNo('PERHATIAN', 'BENAR ANDA AKAN MENDUPLIKASI IKLAN INI?', function (response) {
+            if (response) {
+                Bisnis.Adv.Orders.fetchById(id,
+                    function (dataResponse) {
+                        var params = createParams(dataResponse, dataResponse.id);
+                        Bisnis.Adv.Orders.add(params,
+                            function (response) {
+                                savePublishAds(response);
+                            },
+                            function () {
+                                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENDUPLIKASI ORDER');
+                            }
+                        );
                     },
                     function () {
-                        Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENDUPLIKASI ORDER');
+                        Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENDAPATKAN DATA DATA ORDER INI');
                     }
                 );
-            },
-            function () {
-                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENDAPATKAN DATA DATA ORDER INI');
             }
-        );
+        });
     });
     // end button action
 })(window.Bisnis || {});

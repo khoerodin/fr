@@ -1,26 +1,43 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/adv-order.js"></script>
+    <script src="/assets/scripts/Adv/Orders.js"></script>
+    <script src="/assets/scripts/Adv/PublishAds.js"></script>
 {% endblock %}
 
 {%- block content -%}
     <div class="row">
         <div class="col-md-12">
             <div class="box">
-                <div class="box-header row" id="searchArea" style="margin-bottom: 0px;">
-                    <div class="col-md-12 search-area">
-                        <select class="form-control" id="searchOrder"></select>
+                <div class="box-header row" style="margin-bottom: 0px;">
+                    <div class="col-md-10">
+                        <select class="form-control" id="searchOrders" style="width: 100%"></select>
                     </div>
-
-                    <div id="searchOrderBtnArea" class="button-area transition">
-                        <a id="addOrder" href="/advertising/orders/new" style="visibility: hidden;" class="add-btn btn h btn-flat btn-block btn-danger">Add</a>
+                    <div class="col-md-2">
+                        <button disabled id="btnAddOrder" class="btn btn-danger btn-flat btn-block">TAMBAH</button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <div id="dataList"></div>
+                    <table class="table table-bordered table-responsive table-hover">
+                        <thead>
+                        <tr>
+                            <th width="3%">NO.</th>
+                            <th>NO. ORDER</th>
+                            <th>NO. SURAT ORDER</th>
+                            <th>JUDUL</th>
+                            <th>PEMASANG</th>
+                            <th>KLIEN</th>
+                            <th>STATUS</th>
+                            <th>ORDER REF</th>
+                            <th width="5%"><span class="pull-right">AKSI</span></th>
+                        </tr>
+                        </thead>
+                        <tbody id="ordersList"></tbody>
+                    </table>
                 </div>
-                <div class="box-footer clearfix"></div>
+                <div class="box-footer clearfix">
+                    <ul id="ordersPagination" class="pagination pagination-sm pull-right"></ul>
+                </div>
             </div>
             <!-- /.box -->
         </div>

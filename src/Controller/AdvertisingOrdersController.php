@@ -19,7 +19,7 @@ class AdvertisingOrdersController extends AdminController
             'meta' => $meta,
         ];
 
-        return $this->view('advertising-orders/index2.twig', $data);
+        return $this->view('advertising-orders/index.twig', $data);
     }
 
     public function newAction()

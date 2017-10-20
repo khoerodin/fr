@@ -34,8 +34,8 @@
 
     Bisnis.Adv.Orders.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
-            module: 'advertising/orders/',
-            method: 'get',
+            module: 'advertising/orders',
+            method: 'post',
             params: params,
         }, function (dataResponse, textStatus, response) {
             if (Bisnis.validCallback(successCallback)) {
@@ -69,6 +69,28 @@
         return st;
     };
 
+    var gerOrderNumber = function (orderId) {
+        var orderNum = '';
+        if (orderId) {
+            Bisnis.Adv.Orders.fetchById(orderId,
+                function (dataResponse) {
+                    if (dataResponse.orderNumber) {
+                        Bisnis.Util.Storage.store('ORDER_NUM_' + orderId, dataResponse.orderNumber);
+                    } else {
+                        Bisnis.Util.Storage.store('ORDER_NUM_' + orderId, '<span class="text-danger">Error</span>');
+                    }
+                },
+                function () {
+                    Bisnis.Util.Storage.store('ORDER_NUM_' + orderId, '<span class="text-danger">Error</span>');
+                }
+            );
+            orderNum = Bisnis.Util.Storage.fetch('ORDER_NUM_' + orderId);
+        } else {
+            orderNum = '-';
+        }
+        return orderNum;
+    };
+
     var loadGrid = function (pageNum) {
         pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('ORDERS_CURRENT_PAGE', pageNum);
@@ -93,6 +115,9 @@
                             { value: memberData.client.name },
                             { value: memberData.status, format: function (status) {
                                 return orderStatus(status);
+                            } },
+                            { value: memberData.orderRefference, format: function (orderRefference) {
+                                return gerOrderNumber(orderRefference);
                             } },
                             { value: memberData.id, format: function (id) {
                                 return '<span class="pull-right">' +
@@ -173,17 +198,78 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         window.location.href = '/advertising/orders/' + id;
     });
+
+    var createParams = function (dataResponse, orderId) {
+        var params = [];
+        for (var key in dataResponse) {
+            if ( key !== 'id') {
+                var value = '';
+                if ( typeof dataResponse[key] === 'object') {
+                    if (dataResponse[key]) {
+                        value = dataResponse[key]['@id'];
+                    } else {
+                        value = null;
+                    }
+                } else {
+                    value = dataResponse[key];
+                }
+
+                if (key === 'orderRefference') {
+                    value = orderId;
+                }
+                params.push({name: key, value: value});
+            }
+        }
+        return params;
+    };
+
+    var savePublishAds = function (response) {
+        Bisnis.Adv.PublishAds.fetchAll([{'order.id': response.id}],
+            function (PAResponse) {
+                var memberData = PAResponse['hydra:member'];
+                var panjang = memberData.length;
+                if (panjang > 0) {
+                    forEach.memberData(function (value, index) {
+                        var PAParams = [
+                            {name: 'order', value: '/api/advertising/orders/' + value.order.id},
+                            {name: 'publishDate', value: value.publishDate}
+                        ];
+                        if (panjang === (index +1)) {
+                            Bisnis.Adv.PublishAds.add(PAParams,
+                                function () {
+                                    loadGrid(1);
+                                    Bisnis.successMessage('Berhasil menduplikasi order');
+                                },
+                                function () {
+                                    Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENYIMPAN TANGGAL ORDER');
+                                }
+                            );
+                        } else {
+                            Bisnis.Adv.PublishAds.add(PAParams);
+                        }
+                    });
+                } else {
+                    loadGrid(1);
+                    Bisnis.successMessage('Berhasil menduplikasi order');
+                }
+            },
+            function () {
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENDUPLIKASI ORDER');
+            }
+        );
+    };
+
     Bisnis.Util.Event.bind('click', '.btn-clone', function () {
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Adv.Orders.fetchById(id,
             function (dataResponse) {
-
+                var params = createParams(dataResponse, dataResponse.id);
                 Bisnis.Adv.Orders.add(params,
-                    function () {
-
+                    function (response) {
+                        savePublishAds(response);
                     },
                     function () {
-
+                        Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENDUPLIKASI ORDER');
                     }
                 );
             },

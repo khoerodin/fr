@@ -72,6 +72,7 @@
     var gerOrderNumber = function (orderId, idx) {
         Bisnis.Adv.Orders.fetchById(orderId,
             function (dataResponse) {
+                console.log(dataResponse)
                 if (dataResponse.orderNumber) {
                     document.querySelector('#ref' + idx).innerText = dataResponse.orderNumber;
                 } else {

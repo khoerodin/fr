@@ -56,7 +56,7 @@
         switch (priority) {
             case 'low':
                 priorityMark = 'default';
-                priorityText = 'LOW';
+                priorityText = 'KURANG MENDESAK';
                 break;
             case 'normal':
                 priorityMark = 'primary';
@@ -64,11 +64,11 @@
                 break;
             case 'urgent':
                 priorityMark = 'warning';
-                priorityText = 'URGENT';
+                priorityText = 'MENDESAK';
                 break;
             case 'very_urgent':
                 priorityMark = 'danger';
-                priorityText = 'VERY URGENT';
+                priorityText = 'SANGAT MENDESAK';
                 break;
         }
 

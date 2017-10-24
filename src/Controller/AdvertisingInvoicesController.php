@@ -70,7 +70,6 @@ class AdvertisingInvoicesController extends AdminController
 
         $jenis = strtolower($order['specification']['name']);
 
-        $harga = '';
         if ( substr( $jenis, 0, 5 ) === "paket" ) {
             $harga = $order['basePrice'];
         } else {

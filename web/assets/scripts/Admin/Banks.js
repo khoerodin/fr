@@ -19,8 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('BANK_CURRENT_PAGE', pageNum);
         Bisnis.Admin.Banks.fetchAll([{page: pageNum}],
             function (dataResponse) {
@@ -46,7 +45,11 @@
                             }}
                         ]);
                     }, memberData);
-                    Bisnis.Util.Grid.renderRecords('#banksList', records, pageNum);
+                    Bisnis.Util.Grid.renderRecords('#banksList', records, pageNum,
+                        function (rowTable, row) {
+                            return rowTable + '<tr id="'+ row[row.length - 1].value +'">';
+                        }
+                    );
                 } else {
                     Bisnis.Util.Document.putHtml('#banksList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
@@ -94,28 +97,16 @@
     Bisnis.Util.Style.ajaxSelect('#searchBanks', params,
         function (hasResultCallback) {
             var btn = document.getElementById('btnAddBank');
-            if (hasResultCallback) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
+            hasResultCallback ? btn.disabled = true : btn.disabled = false;
         }, function (selectedCallback) {
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddBank');
-            if (openCallback === false) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
+            openCallback ? btn.disabled = true : btn.disabled = false;
         }, function (closeCallback) {
             var btn = document.getElementById('btnAddBank');
             setTimeout(function () {
-                if (closeCallback === false) {
-                    btn.disabled = false;
-                } else {
-                    btn.disabled = true;
-                }
+                closeCallback ? btn.disabled = true : btn.disabled = false;
             }, 300);
         }
     );

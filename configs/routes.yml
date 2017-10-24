@@ -52,11 +52,12 @@ app:
         - { path: '/advertising/orders/dashboard', controller: 'Bisnis:AdvertisingOrderDashboard@index', methods: ['GET'] }
         - { path: '/advertising/orders', controller: 'Bisnis:AdvertisingOrders@index', methods: ['GET'] }
         - { path: '/advertising/orders/new', controller: 'Bisnis:AdvertisingOrders@new', methods: ['GET'] }
-        - { path: '/advertising/order-invoices', controller: 'Bisnis:AdvertisingOrderInvoices@index', methods: ['GET'] }
         - { path: '/advertising/orders/{id}', controller: 'Bisnis:AdvertisingOrders@detail', methods: ['GET'] }
         - { path: '/advertising/orders/publish-ads', controller: 'Bisnis:AdvertisingOrders@publishAds', methods: ['POST'] }
         - { path: '/advertising/orders/publish-ads/update', controller: 'Bisnis:AdvertisingOrders@updatePublishAds', methods: ['POST'] }
         - { path: '/advertising/orders/search', controller: 'Bisnis:AdvertisingOrders@search', methods: ['POST'] }
+        - { path: '/advertising/invoices', controller: 'Bisnis:AdvertisingInvoices@index', methods: ['GET'] }
+        - { path: '/advertising/invoices/pdf/{id}', controller: 'Bisnis:AdvertisingInvoices@pdf', methods: ['GET'] }
 
         #Billing
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }

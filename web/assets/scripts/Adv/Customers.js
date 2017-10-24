@@ -19,8 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('ADV_CUSTOMERS_CURRENT_PAGE', pageNum);
         Bisnis.Adv.Customers.fetchAll([{page: pageNum}],
             function (dataResponse) {
@@ -98,29 +97,16 @@
     Bisnis.Util.Style.ajaxSelect('#searchCustomers', params,
         function (hasResultCallback) {
             var btn = document.getElementById('btnAddCustomer');
-            if (hasResultCallback) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
+            hasResultCallback ? btn.disabled = true : btn.disabled = false;
         }, function (selectedCallback) {
-            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddCustomer');
-            if (openCallback === false) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
+            openCallback ? btn.disabled = true : btn.disabled = false;
         }, function (closeCallback) {
             var btn = document.getElementById('btnAddCustomer');
             setTimeout(function () {
-                if (closeCallback === false) {
-                    btn.disabled = false;
-                } else {
-                    btn.disabled = true;
-                }
+                closeCallback ? btn.disabled = true : btn.disabled = false;
             }, 300);
         }
     );
@@ -206,18 +192,21 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.Customers.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Adv.Customers.add(params,
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
                 loadGrid(1);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
 
-    Bisnis.Adv.Customers.add = function (params, callback) {
+    Bisnis.Adv.Customers.add = function (params, successCallback, errorCallback) {
         // di filter pake hash, agar tidak terdeteksi sebagai int
         var fields = [
             'postalCode',
@@ -239,13 +228,13 @@
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end add modal
@@ -253,116 +242,120 @@
     // detail modal
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('ADV_CUSTOMERS_ID', id);
-        Bisnis.Adv.Customers.fetchById(id, function (callback) {
-            var representativeElem = document.getElementById('detailRepresentative');
-            var cityElem = document.getElementById('detailCity');
-            var taxCityElem = document.getElementById('detailTaxCity');
-            var bankElem = document.getElementById('detailBank');
-            var billingGroupElem = document.getElementById('detailBillingGroup');
+        Bisnis.Adv.Customers.fetchById(id,
+            function (dataResponse) {
+                var representativeElem = document.getElementById('detailRepresentative');
+                var cityElem = document.getElementById('detailCity');
+                var taxCityElem = document.getElementById('detailTaxCity');
+                var bankElem = document.getElementById('detailBank');
+                var billingGroupElem = document.getElementById('detailBillingGroup');
 
 
-            representativeElem.innerHTML = '<option value="/api/representatives/'+callback.representative.id+'">'+callback.representative.name+'</option>';
-            cityElem.innerHTML = '<option value="/api/cities/'+callback.city.id+'">'+callback.city.name+'</option>';
-            taxCityElem.innerHTML = '<option value="/api/cities/'+callback.taxCity.id+'">'+callback.taxCity.name+'</option>';
-            bankElem.innerHTML = '<option value="/api/banks/'+callback.bank.id+'">'+callback.bank.name+'</option>';
-            billingGroupElem.innerHTML = '<option value="/api/billing/groups/'+callback.billingGroup.id+'">'+callback.billingGroup.name+'</option>';
+                representativeElem.innerHTML = '<option value="/api/representatives/'+dataResponse.representative.id+'">'+dataResponse.representative.name+'</option>';
+                cityElem.innerHTML = '<option value="/api/cities/'+dataResponse.city.id+'">'+dataResponse.city.name+'</option>';
+                taxCityElem.innerHTML = '<option value="/api/cities/'+dataResponse.taxCity.id+'">'+dataResponse.taxCity.name+'</option>';
+                bankElem.innerHTML = '<option value="/api/banks/'+dataResponse.bank.id+'">'+dataResponse.bank.name+'</option>';
+                billingGroupElem.innerHTML = '<option value="/api/billing/groups/'+dataResponse.billingGroup.id+'">'+dataResponse.billingGroup.name+'</option>';
 
-            Bisnis.Util.Event.bind('change', '#detailRepresentative');
-            Bisnis.Util.Style.modifySelect('#detailRepresentative');
-            var representativesParams = {
-                placeholder: 'CARI NAMA PERWAKILAN',
-                module: 'representatives',
-                prependValue: '/api/representatives/',
-                fields: [
-                    {
-                        field: 'name',
-                        label: 'Perwakilan'
-                    },
-                ]
-            };
-            Bisnis.Util.Style.ajaxSelect('#detailRepresentative', representativesParams);
+                Bisnis.Util.Event.bind('change', '#detailRepresentative');
+                Bisnis.Util.Style.modifySelect('#detailRepresentative');
+                var representativesParams = {
+                    placeholder: 'CARI NAMA PERWAKILAN',
+                    module: 'representatives',
+                    prependValue: '/api/representatives/',
+                    fields: [
+                        {
+                            field: 'name',
+                            label: 'Perwakilan'
+                        },
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailRepresentative', representativesParams);
 
-            Bisnis.Util.Event.bind('change', '#detailCity');
-            Bisnis.Util.Style.modifySelect('#detailCity');
-            var citiesParams = {
-                placeholder: 'CARI NAMA KOTA',
-                module: 'cities',
-                prependValue: '/api/cities/',
-                fields: [
-                    {
-                        field: 'name',
-                        label: 'Kota'
-                    },
-                ]
-            };
-            Bisnis.Util.Style.ajaxSelect('#detailCity', citiesParams);
+                Bisnis.Util.Event.bind('change', '#detailCity');
+                Bisnis.Util.Style.modifySelect('#detailCity');
+                var citiesParams = {
+                    placeholder: 'CARI NAMA KOTA',
+                    module: 'cities',
+                    prependValue: '/api/cities/',
+                    fields: [
+                        {
+                            field: 'name',
+                            label: 'Kota'
+                        },
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailCity', citiesParams);
 
-            Bisnis.Util.Event.bind('change', '#detailTaxCity');
-            Bisnis.Util.Style.modifySelect('#detailTaxCity');
-            var taxCitiesParams = {
-                placeholder: 'CARI NAMA KOTA',
-                module: 'cities',
-                prependValue: '/api/cities/',
-                fields: [
-                    {
-                        field: 'name',
-                        label: 'Kota'
-                    },
-                ]
-            };
-            Bisnis.Util.Style.ajaxSelect('#detailTaxCity', taxCitiesParams);
+                Bisnis.Util.Event.bind('change', '#detailTaxCity');
+                Bisnis.Util.Style.modifySelect('#detailTaxCity');
+                var taxCitiesParams = {
+                    placeholder: 'CARI NAMA KOTA',
+                    module: 'cities',
+                    prependValue: '/api/cities/',
+                    fields: [
+                        {
+                            field: 'name',
+                            label: 'Kota'
+                        },
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailTaxCity', taxCitiesParams);
 
-            Bisnis.Util.Event.bind('change', '#detailBank');
-            Bisnis.Util.Style.modifySelect('#detailBank');
-            var banksParams = {
-                placeholder: 'CARI NAMA BANK',
-                module: 'banks',
-                prependValue: '/api/banks/',
-                fields: [
-                    {
-                        field: 'name',
-                        label: 'Bank'
-                    },
-                ]
-            };
-            Bisnis.Util.Style.ajaxSelect('#detailBank', banksParams);
+                Bisnis.Util.Event.bind('change', '#detailBank');
+                Bisnis.Util.Style.modifySelect('#detailBank');
+                var banksParams = {
+                    placeholder: 'CARI NAMA BANK',
+                    module: 'banks',
+                    prependValue: '/api/banks/',
+                    fields: [
+                        {
+                            field: 'name',
+                            label: 'Bank'
+                        },
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailBank', banksParams);
 
-            Bisnis.Util.Event.bind('change', '#detailBillingGroup');
-            Bisnis.Util.Style.modifySelect('#detailBillingGroup');
-            var billingGroupsParams = {
-                placeholder: 'CARI NAMA GRUP TAGIHAN',
-                module: 'billing/groups',
-                prependValue: '/api/billing/groups/',
-                fields: [
-                    {
-                        field: 'name',
-                        label: 'Grup Tagihan'
-                    },
-                ]
-            };
-            Bisnis.Util.Style.ajaxSelect('#detailBillingGroup', billingGroupsParams);
+                Bisnis.Util.Event.bind('change', '#detailBillingGroup');
+                Bisnis.Util.Style.modifySelect('#detailBillingGroup');
+                var billingGroupsParams = {
+                    placeholder: 'CARI NAMA GRUP TAGIHAN',
+                    module: 'billing/groups',
+                    prependValue: '/api/billing/groups/',
+                    fields: [
+                        {
+                            field: 'name',
+                            label: 'Grup Tagihan'
+                        },
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailBillingGroup', billingGroupsParams);
 
-            document.getElementById('detailCode').value = callback.code;
-            document.getElementById('detailName').value = callback.name;
-            document.getElementById('detailAddress').value = callback.address;
-            document.getElementById('detailPostalCode').value = callback.postalCode;
-            document.getElementById('detailPostalCode').value = callback.postalCode;
-            document.getElementById('detailPhoneNumber').value = callback.phoneNumber;
-            document.getElementById('detailFaxNumber').value = callback.faxNumber;
-            Bisnis.Util.DatePicker.render('#detailPartnershipDate', callback.partnershipDate);
-            document.getElementById('detailTaxNumber').value = callback.taxNumber;
-            document.getElementById('detailTaxAddress').value = callback.taxAddress;
-            document.getElementById('detailTaxPhoneNumber').value = callback.taxPhoneNumber;
-            document.getElementById('detailTaxFaxNumber').value = callback.taxFaxNumber;
-            document.getElementById('detailPresidentDirectorName').value = callback.presidentDirectorName;
-            document.getElementById('detailMediaManagerName').value = callback.mediaManagerName;
-            document.getElementById('detailBankAccountNumber').value = callback.bankAccountNumber;
-            document.getElementById('detailRemark').value = callback.remark;
-            document.getElementById('detailCreditLimit').value = callback.creditLimit;
-        });
+                document.getElementById('detailCode').value = dataResponse.code;
+                document.getElementById('detailName').value = dataResponse.name;
+                document.getElementById('detailAddress').value = dataResponse.address;
+                document.getElementById('detailPostalCode').value = dataResponse.postalCode;
+                document.getElementById('detailPostalCode').value = dataResponse.postalCode;
+                document.getElementById('detailPhoneNumber').value = dataResponse.phoneNumber;
+                document.getElementById('detailFaxNumber').value = dataResponse.faxNumber;
+                Bisnis.Util.DatePicker.render('#detailPartnershipDate', dataResponse.partnershipDate);
+                document.getElementById('detailTaxNumber').value = dataResponse.taxNumber;
+                document.getElementById('detailTaxAddress').value = dataResponse.taxAddress;
+                document.getElementById('detailTaxPhoneNumber').value = dataResponse.taxPhoneNumber;
+                document.getElementById('detailTaxFaxNumber').value = dataResponse.taxFaxNumber;
+                document.getElementById('detailPresidentDirectorName').value = dataResponse.presidentDirectorName;
+                document.getElementById('detailMediaManagerName').value = dataResponse.mediaManagerName;
+                document.getElementById('detailBankAccountNumber').value = dataResponse.bankAccountNumber;
+                document.getElementById('detailRemark').value = dataResponse.remark;
+                document.getElementById('detailCreditLimit').value = dataResponse.creditLimit;
 
-        Bisnis.Util.Dialog.showModal('#detailModal');
-        document.getElementById('detailRepresentative').focus();
+                Bisnis.Util.Dialog.showModal('#detailModal');
+                document.getElementById('detailRepresentative').focus();
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PELANGGAN');
+            }
+        );
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -370,22 +363,22 @@
         loadDetail(id);
     });
 
-    Bisnis.Adv.Customers.fetchById = function (id, callback) {
+    Bisnis.Adv.Customers.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/customers/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Adv.Customers.updateById = function (id, params, callback) {
+    Bisnis.Adv.Customers.updateById = function (id, params, successCallback, errorCallback) {
         // di filter pake hash, agar tidak terdeteksi sebagai int
         var fields = [
             'postalCode',
@@ -407,13 +400,13 @@
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -423,17 +416,20 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.Customers.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Adv.Customers.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('ADV_CUSTOMERS_CURRENT_PAGE');
                 loadGrid(page);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
     // end detail modal
 
@@ -442,29 +438,31 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Adv.Customers.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Adv.Customers.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('ADV_CUSTOMERS_CURRENT_PAGE');
                         loadGrid(page);
-                    } else {
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }
-                })
+                )
             }
         });
     });
 
-    Bisnis.Adv.Customers.delete = function (id, callback) {
+    Bisnis.Adv.Customers.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/customers/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete account executive manager
@@ -483,10 +481,12 @@
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
         Bisnis.Util.Grid.removeErrorForm('addForm');
         document.getElementById("addForm").reset();
+        Bisnis.Util.DatePicker.destroy('#addPartnershipDate');
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
         Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
+        Bisnis.Util.DatePicker.destroy('#detailPartnershipDate');
     });
     // end reset modal form on modal hidden
 

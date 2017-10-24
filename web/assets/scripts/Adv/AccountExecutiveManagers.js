@@ -19,7 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        pageNum = (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_MANAGERS_CURRENT_PAGE', pageNum);
         Bisnis.Adv.AccountExecutiveManagers.fetchAll([{page: pageNum}],
             function (dataResponse) {
@@ -94,29 +94,16 @@
     Bisnis.Util.Style.ajaxSelect('#searchAccountExecutiveManagers', params,
         function (hasResultCallback) {
             var btn = document.getElementById('btnAddAccountExecutiveManager');
-            if (hasResultCallback) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
+            hasResultCallback ? btn.disabled = true : btn.disabled = false;
         }, function (selectedCallback) {
-            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddAccountExecutiveManager');
-            if (openCallback === false) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
+            openCallback ? btn.disabled = true : btn.disabled = false;
         }, function (closeCallback) {
             var btn = document.getElementById('btnAddAccountExecutiveManager');
             setTimeout(function () {
-                if (closeCallback === false) {
-                    btn.disabled = false;
-                } else {
-                    btn.disabled = true;
-                }
+                closeCallback ? btn.disabled = true : btn.disabled = false;
             }, 300);
         }
     );
@@ -150,30 +137,33 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.AccountExecutiveManagers.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Adv.AccountExecutiveManagers.add(params,
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
                 loadGrid(1);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
 
-    Bisnis.Adv.AccountExecutiveManagers.add = function (params, callback) {
+    Bisnis.Adv.AccountExecutiveManagers.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/account-executive-managers',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end add modal
@@ -181,38 +171,42 @@
     // detail modal
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('ACCOUNT_EXECUTIVE_MANAGER_ID', id);
-        Bisnis.Adv.AccountExecutiveManagers.fetchById(id, function (callback) {
-            var teamWorkElem = document.getElementById('detailTeamWork');
-            teamWorkElem.innerHTML = '<option value="/api/advertising/team-works/'+callback.teamWork.id+'">'+callback.teamWork.name+'</option>';
+        Bisnis.Adv.AccountExecutiveManagers.fetchById(id,
+            function (dataResponse) {
+                var teamWorkElem = document.getElementById('detailTeamWork');
+                teamWorkElem.innerHTML = '<option value="/api/advertising/team-works/'+dataResponse.teamWork.id+'">'+dataResponse.teamWork.name+'</option>';
 
-            Bisnis.Util.Event.bind('change', '#detailTeamWork');
-            Bisnis.Util.Style.modifySelect('#detailTeamWork');
-            var params = {
-                placeholder: 'CARI KODE / NAMA TIM KERJA',
-                module: 'advertising/team-works',
-                prependValue: '/api/advertising/team-works/',
-                fields: [
-                    {
-                        field: 'code',
-                        label: 'Kode'
-                    },
-                    {
-                        field: 'name',
-                        label: 'Tim Kerja'
-                    },
-                ]
-            };
-            Bisnis.Util.Style.ajaxSelect('#detailTeamWork', params);
+                Bisnis.Util.Event.bind('change', '#detailTeamWork');
+                Bisnis.Util.Style.modifySelect('#detailTeamWork');
+                var params = {
+                    placeholder: 'CARI KODE / NAMA TIM KERJA',
+                    module: 'advertising/team-works',
+                    prependValue: '/api/advertising/team-works/',
+                    fields: [
+                        {
+                            field: 'code',
+                            label: 'Kode'
+                        },
+                        {
+                            field: 'name',
+                            label: 'Tim Kerja'
+                        },
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailTeamWork', params);
 
-            document.getElementById('detailTeamWork').focus();
+                document.getElementById('detailTeamWork').focus();
 
-            var codeElem = document.getElementById('detailCode');
-            codeElem.value = callback.code;
+                var codeElem = document.getElementById('detailCode');
+                codeElem.value = dataResponse.code;
 
-            var nameElem = document.getElementById('detailName');
-            nameElem.value = callback.name;
-        });
-        Bisnis.Util.Dialog.showModal('#detailModal');
+                var nameElem = document.getElementById('detailName');
+                nameElem.value = dataResponse.name;
+                Bisnis.Util.Dialog.showModal('#detailModal');
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA MANAJER AKUN EKSEKUTIF');
+            }
+        );
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -220,34 +214,34 @@
         loadDetail(id);
     });
 
-    Bisnis.Adv.AccountExecutiveManagers.fetchById = function (id, callback) {
+    Bisnis.Adv.AccountExecutiveManagers.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/account-executive-managers/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Adv.AccountExecutiveManagers.updateById = function (id, params, callback) {
+    Bisnis.Adv.AccountExecutiveManagers.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/account-executive-managers/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -257,17 +251,20 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.AccountExecutiveManagers.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Adv.AccountExecutiveManagers.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('ACCOUNT_EXECUTIVE_MANAGERS_CURRENT_PAGE');
                 loadGrid(page);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
     // end detail modal
 
@@ -276,29 +273,31 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Adv.AccountExecutiveManagers.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Adv.AccountExecutiveManagers.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('ACCOUNT_EXECUTIVE_MANAGERS_CURRENT_PAGE');
                         loadGrid(page);
-                    } else {
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }
-                })
+                )
             }
         });
     });
 
-    Bisnis.Adv.AccountExecutiveManagers.delete = function (id, callback) {
+    Bisnis.Adv.AccountExecutiveManagers.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/account-executive-managers/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete account executive manager

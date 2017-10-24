@@ -18,10 +18,9 @@
         });
     };
 
-    var loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
-        Bisnis.Util.Storage.store('STAFFS_CURRENT_PAGE', pageNum);
+    Bisnis.Helpdesk.Staff.loadGrid = function (pageNum) {
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
+        Bisnis.Util.Storage.store('STAFF_CURRENT_PAGE', pageNum);
         Bisnis.Helpdesk.Staff.fetchAll([{page: pageNum}],
             function (dataResponse) {
                 var memberData = dataResponse['hydra:member'];
@@ -63,22 +62,20 @@
         );
     };
 
-    loadGrid(1);
-
     Bisnis.Util.Event.bind('click', '#staffsPagination .pagePrevious', function () {
-        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
+        Bisnis.Helpdesk.Staff.loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
     Bisnis.Util.Event.bind('click', '#staffsPagination .pageNext', function () {
-        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
+        Bisnis.Helpdesk.Staff.loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
 
     Bisnis.Util.Event.bind('click', '#staffsPagination .pageFirst', function () {
-        loadGrid(1);
+        Bisnis.Helpdesk.Staff.loadGrid(1);
     });
 
     Bisnis.Util.Event.bind('click', '#staffsPagination .pageLast', function () {
-        loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
+        Bisnis.Helpdesk.Staff.loadGrid(Bisnis.Util.Document.getDataValue(this, 'page'));
     });
     // end fetch grid and pagination
 
@@ -97,29 +94,16 @@
     Bisnis.Util.Style.ajaxSelect('#searchStaffs', params,
         function (hasResultCallback) {
             var btn = document.getElementById('btnAddStaff');
-            if (hasResultCallback) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
+            btn.disabled = !!hasResultCallback;
         }, function (selectedCallback) {
-            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddStaff');
-            if (openCallback === false) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
+            btn.disabled = openCallback !== false;
         }, function (closeCallback) {
             var btn = document.getElementById('btnAddStaff');
             setTimeout(function () {
-                if (closeCallback === false) {
-                    btn.disabled = false;
-                } else {
-                    btn.disabled = true;
-                }
+                btn.disabled = closeCallback !== false;
             }, 300);
         }
     );
@@ -127,8 +111,35 @@
 
     // add modal
     Bisnis.Util.Event.bind('click', '#btnAddStaff', function () {
-        Bisnis.Util.Style.modifySelect('#addUser');
-        Bisnis.Util.Style.modifySelect('#addCategory');
+        var users = {
+            placeholder: 'CARI USERNAME / EMAIL PENGGUNA',
+            module: 'users',
+            prependValue: '/api/users/',
+            fields: [
+                {
+                    field: 'username',
+                    label: 'Username'
+                },
+                {
+                    field: 'email',
+                    label: 'Email'
+                }
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addUser', users);
+
+        var categories = {
+            placeholder: 'CARI KATEGORI',
+            module: 'helpdesk/categories',
+            prependValue: '/api/helpdesk/categories/',
+            fields: [
+                {
+                    field: 'name',
+                    label: 'Kategori'
+                }
+            ]
+        };
+        Bisnis.Util.Style.ajaxSelect('#addCategory', categories);
         Bisnis.Util.Dialog.showModal('#addModal');
         document.getElementById('addUser').focus();
     });
@@ -138,30 +149,33 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Helpdesk.Staff.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Helpdesk.Staff.add(params,
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
-                loadGrid(1);
+                Bisnis.Helpdesk.Staff.loadGrid(1);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
 
-    Bisnis.Helpdesk.Staff.add = function (params, callback) {
+    Bisnis.Helpdesk.Staff.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'helpdesk/staffs',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end add modal
@@ -170,33 +184,56 @@
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('STAFF_ID', id);
         Bisnis.Util.Dialog.showModal('#detailModal');
-        Bisnis.Helpdesk.Staff.fetchById(id, function (callback) {
+        Bisnis.Helpdesk.Staff.fetchById(id,
+            function (dataResponse) {
+                if (dataResponse.user) {
+                    var userElm = document.getElementById('detailUser');
+                    userElm.innerHTML = '<option value="/api/users/'+dataResponse.user.id+'">'+dataResponse.user.fullname+'</option>';
+                    Bisnis.Util.Event.bind('change', '#detailUser');
+                }
 
-            var user = callback.user;
-            var detailUserOpt = Array.prototype.slice.call(document.getElementById('detailUser').options);
-            detailUserOpt.map(function (value) {
-                Array.prototype.slice.call(value.attributes).forEach(function(item) {
-                    if(item.value.split('/')[3] === user.id) {
-                        value.selected = true;
-                    }
-                });
-            });
-            Bisnis.Util.Style.modifySelect('#detailUser');
-            document.getElementById('detailUser').focus();
+                Bisnis.Util.Style.modifySelect('#detailUser');
+                var users = {
+                    placeholder: 'CARI USERNAME PENGGUNA',
+                    module: 'users',
+                    prependValue: '/api/users/',
+                    fields: [
+                        {
+                            field: 'username',
+                            label: 'Username'
+                        }
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailUser', users);
+                document.getElementById('detailUser').focus();
 
-            var category = callback.category;
-            var detailCategoryOpt = Array.prototype.slice.call(document.getElementById('detailCategory').options);
-            detailCategoryOpt.map(function (value) {
-                Array.prototype.slice.call(value.attributes).forEach(function(item) {
-                    if(item.value.split('/')[4] === category.id) {
-                        value.selected = true;
-                    }
-                });
-            });
-            Bisnis.Util.Style.modifySelect('#detailCategory');
+                if (dataResponse.category) {
+                    var userElm = document.getElementById('detailCategory');
+                    userElm.innerHTML = '<option value="/api/helpdesk/categories/'+dataResponse.category.id+'">'+dataResponse.category.name+'</option>';
+                    Bisnis.Util.Event.bind('change', '#detailCategory');
+                }
 
-            document.getElementById('detailIsAdmin').checked = callback.isAdmin;
-        });
+                Bisnis.Util.Style.modifySelect('#detailCategory');
+                var users = {
+                    placeholder: 'CARI KATEGORI',
+                    module: 'helpdesk/categories',
+                    prependValue: '/api/helpdesk/categories/',
+                    fields: [
+                        {
+                            field: 'name',
+                            label: 'Kategori'
+                        }
+                    ]
+                };
+                Bisnis.Util.Style.ajaxSelect('#detailCategory', users);
+
+                document.getElementById('detailIsAdmin').checked = dataResponse.isAdmin;
+
+                Bisnis.Util.Dialog.showModal('#detailModal');
+            }, function () {
+
+            }
+        );
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -204,34 +241,34 @@
         loadDetail(id);
     });
 
-    Bisnis.Helpdesk.Staff.fetchById = function (id, callback) {
+    Bisnis.Helpdesk.Staff.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'helpdesk/staffs/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Helpdesk.Staff.updateById = function (id, params, callback) {
+    Bisnis.Helpdesk.Staff.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'helpdesk/staffs/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = JSON.parse(dataResponse);
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -241,50 +278,52 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Helpdesk.Staff.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Helpdesk.Staff.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('STAFF_CURRENT_PAGE');
-                loadGrid(page);
+                Bisnis.Helpdesk.Staff.loadGrid(page);
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
             }
-            thisBtn.disabled = false;
-        });
+        );
     });
     // end detail modal
 
-    Bisnis.Helpdesk.Staff.fetchByCategory = function (categoryId, callback) {
+    Bisnis.Helpdesk.Staff.fetchByCategory = function (categoryId, successCallback, errorCallback) {
         Bisnis.request({
             module: 'helpdesk/staffs',
             method: 'get',
             params: [{'category.id' : categoryId}]
-        }, function (response) {
-            var rawData = JSON.parse(response);
-            var staffList = rawData['hydra:member'];
-
-            if (Bisnis.validCallback(callback)) {
-                callback(staffList);
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            console.log('KO');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Helpdesk.Staff.fetchByUser = function (userId, callback) {
+    Bisnis.Helpdesk.Staff.fetchByUser = function (userId, successCallback, errorCallback) {
         Bisnis.request({
             module: 'helpdesk/staffs',
             method: 'get',
             params: [{'user.id' : userId}]
-        }, function (response) {
-            var staffList = response['hydra:member'];
-
-            if (Bisnis.validCallback(callback)) {
-                callback(staffList);
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            console.log('KO');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -293,29 +332,31 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Helpdesk.Staff.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Helpdesk.Staff.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('STAFF_CURRENT_PAGE');
-                        loadGrid(page);
-                    } else {
+                        Bisnis.Helpdesk.Staff.loadGrid(page);
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }
-                })
+                )
             }
         });
     });
 
-    Bisnis.Helpdesk.Staff.delete = function (id, callback) {
+    Bisnis.Helpdesk.Staff.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'helpdesk/staffs/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete staff
@@ -323,7 +364,7 @@
     // prevent submit form on enter
     Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {
         var key = e.charCode || e.keyCode || 0;
-        if (key == 13) {
+        if (13 === key) {
             Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
             e.preventDefault();
         }
@@ -336,7 +377,7 @@
         document.getElementById("addForm").reset();
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
-        Bisnis.Util.Grid.removeErrorForm('detailFrom');
+        Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
     });
     // end reset modal form on modal hidden

@@ -19,8 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('ADMIN_USER_ACTIVITIES_CURRENT_PAGE', pageNum);
         Bisnis.Admin.UserActivities.fetchAll([{page: pageNum}],
             function (dataResponse) {
@@ -56,7 +55,7 @@
                     Bisnis.Util.Document.putHtml('#userActivitiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKTIVITAS PENGGUNA');
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKTIFITAS PENGGUNA');
             }
         );
     };
@@ -160,7 +159,7 @@
                 nameElem.value = dataResponse.name;
                 nameElem.focus();
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKTIVITAS PENGGUNA');
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKTIFITAS PENGGUNA');
             }
         );
         Bisnis.Util.Dialog.showModal('#detailModal');

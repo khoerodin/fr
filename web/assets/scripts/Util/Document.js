@@ -2,11 +2,11 @@
     Bisnis.Util.Document = {};
 
     Bisnis.Util.Document.putHtml = function (selector, content) {
-        jQuery(selector).empty().html(content);
+        jQuery(selector).html(content);
     };
 
     Bisnis.Util.Document.getHtml = function (selector) {
-        return jQuery(selector).html();
+        return document.querySelector(selector).innerHTML;
     };
 
     Bisnis.Util.Document.getDataValue = function (selector, attribute) {
@@ -14,11 +14,11 @@
     };
 
     Bisnis.Util.Document.putValue = function (selector, value) {
-        jQuery(selector).val(value);
+        document.querySelector(selector).value = value;
     };
 
     Bisnis.Util.Document.getValue = function (selector) {
-        return jQuery(selector).val();
+        return document.querySelector(selector).value;
     };
 
     Bisnis.Util.Document.putEditor = function (selector, value) {
@@ -26,7 +26,7 @@
     };
 
     Bisnis.Util.Document.hide = function (selector) {
-        jQuery(selector).hide();
+        document.querySelector(selector).style.display = "none";
     };
 
     Bisnis.Util.Document.hasClass = function (element, className) {

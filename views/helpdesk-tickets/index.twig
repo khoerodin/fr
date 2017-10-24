@@ -23,6 +23,7 @@
         };
 
         Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+            staff = staff['hydra:member'];
             Bisnis.Util.Storage.remove('staff');
             Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
             if (0 < staff.length) {
@@ -129,17 +130,22 @@
 
             Bisnis.Util.Storage.store('ticketId', Bisnis.Util.Document.getDataValue(that, 'ticket-id'));
 
-            Bisnis.Helpdesk.Staff.fetchByCategory(Bisnis.Util.Document.getDataValue(that, 'ticket-category-id'), function (staffList) {
-                var staffOption = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN</option>';
-                Bisnis.each(function (index, value) {
-                    staffOption = staffOption + '<option value="/api/helpdesk/staffs/' + value.id + '">' + value.fullname + '</option>';
-                }, staffList);
+            Bisnis.Helpdesk.Staff.fetchByCategory(Bisnis.Util.Document.getDataValue(that, 'ticket-category-id'),
+                function (dataResponse) {
+                    var staffList = dataResponse['hydra:member'];
+                    var staffOption = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN</option>';
+                    Bisnis.each(function (index, value) {
+                        staffOption = staffOption + '<option value="/api/helpdesk/staffs/' + value.id + '">' + value.fullname + '</option>';
+                    }, staffList);
 
-                Bisnis.Util.Document.putHtml('#staff', staffOption);
-                Bisnis.Util.Style.modifySelect('#staff');
-            });
+                    Bisnis.Util.Document.putHtml('#staff', staffOption);
+                    Bisnis.Util.Style.modifySelect('#staff');
 
-            Bisnis.Util.Dialog.showModal('.ticketAssignment');
+                    Bisnis.Util.Dialog.showModal('.ticketAssignment');
+                }, function () {
+                    Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA STAFF');
+                }
+            );
         });
 
         Bisnis.Util.Event.bind('click', '.changePriorityTicket', function () {

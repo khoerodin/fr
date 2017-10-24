@@ -19,8 +19,7 @@
     };
 
     var loadGrid = function (pageNum) {
-        var pageNum =
-            (isNaN(pageNum) || 'undefined' === typeof pageNum || 'null' === pageNum ) ? 1 : parseInt(pageNum);
+        pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('POSITIONS_CURRENT_PAGE', pageNum);
         Bisnis.Adv.Positions.fetchAll([{page: pageNum}],
             function (dataResponse) {
@@ -89,29 +88,16 @@
     Bisnis.Util.Style.ajaxSelect('#searchPositions', params,
         function (hasResultCallback) {
             var btn = document.getElementById('btnAddPosition');
-            if (hasResultCallback) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }
+            hasResultCallback ? btn.disabled = true : btn.disabled = false;
         }, function (selectedCallback) {
-            //selectedCallback = {disabled, element, id, label, selected, text, _resultId}
             loadDetail(selectedCallback.id);
         }, function (openCallback) {
             var btn = document.getElementById('btnAddPosition');
-            if (openCallback === false) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
+            openCallback ? btn.disabled = true : btn.disabled = false;
         }, function (closeCallback) {
             var btn = document.getElementById('btnAddPosition');
             setTimeout(function () {
-                if (closeCallback === false) {
-                    btn.disabled = false;
-                } else {
-                    btn.disabled = true;
-                }
+                closeCallback ? btn.disabled = true : btn.disabled = false;
             }, 300);
         }
     );
@@ -128,30 +114,32 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.Positions.add(params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('addForm', callback.violations);
-            } else {
+        Bisnis.Adv.Positions.add(params,
+            function () {
                 Bisnis.Util.Dialog.hideModal('#addModal');
                 loadGrid(1);
-            }
-            thisBtn.disabled = false;
-        });
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('addForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
+            });
     });
 
-    Bisnis.Adv.Positions.add = function (params, callback) {
+    Bisnis.Adv.Positions.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/positions',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end add modal
@@ -159,12 +147,16 @@
     // detail modal
     var loadDetail = function (id) {
         Bisnis.Util.Storage.store('POSITIONS_ID', id);
-        Bisnis.Adv.Positions.fetchById(id, function (callback) {
-            var nameElem = document.getElementById('detailName');
-            nameElem.value = callback.name;
-            nameElem.focus();
-        });
-        Bisnis.Util.Dialog.showModal('#detailModal');
+        Bisnis.Adv.Positions.fetchById(id,
+            function (dataResponse) {
+                var nameElem = document.getElementById('detailName');
+                nameElem.value = dataResponse.name;
+                nameElem.focus();
+                Bisnis.Util.Dialog.showModal('#detailModal');
+            }, function () {
+                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA POSISI');
+            }
+        );
     };
 
     Bisnis.Util.Event.bind('click', '.btn-detail', function () {
@@ -172,34 +164,34 @@
         loadDetail(id);
     });
 
-    Bisnis.Adv.Positions.fetchById = function (id, callback) {
+    Bisnis.Adv.Positions.fetchById = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/positions/' + id,
             method: 'get'
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
-    Bisnis.Adv.Positions.updateById = function (id, params, callback) {
+    Bisnis.Adv.Positions.updateById = function (id, params, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/positions/' + id,
             method: 'put',
             params: params
         }, function (dataResponse, textStatus, response) {
-            var rawData = dataResponse;
-
-            if (Bisnis.validCallback(callback)) {
-                callback(rawData);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
 
@@ -209,17 +201,19 @@
         var thisBtn = this;
         thisBtn.disabled = true;
 
-        Bisnis.Adv.Positions.updateById(id, params, function (callback) {
-            if (callback.violations) {
-                Bisnis.Util.Grid.validate('detailForm', callback.violations);
-            } else {
+        Bisnis.Adv.Positions.updateById(id, params,
+            function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
                 Bisnis.Util.Dialog.hideModal('#detailModal');
                 var page = Bisnis.Util.Storage.fetch('POSITIONS_CURRENT_PAGE');
                 loadGrid(page);
-            }
-            thisBtn.disabled = false;
-        });
+                thisBtn.disabled = false;
+            }, function (response) {
+                if (response.responseJSON) {
+                    Bisnis.Util.Grid.validate('detailForm', response.responseJSON.violations);
+                }
+                thisBtn.disabled = false;
+            });
     });
     // end detail modal
 
@@ -228,29 +222,31 @@
         var id = Bisnis.Util.Document.getDataValue(this, 'id');
         Bisnis.Util.Dialog.yesNo('HATI-HATI', 'YAKIN AKAN MENGHAPUS DATA INI?', function (result) {
             if (result) {
-                Bisnis.Adv.Positions.delete(id, function (textStatus) {
-                    if (textStatus === 'success') {
+                Bisnis.Adv.Positions.delete(id,
+                    function () {
                         Bisnis.successMessage('Berhasil menghapus data');
                         var page = Bisnis.Util.Storage.fetch('POSITIONS_CURRENT_PAGE');
                         loadGrid(page);
-                    } else {
+                    }, function () {
                         Bisnis.errorMessage('Gagal menghapus data');
                     }
-                })
+                )
             }
         });
     });
 
-    Bisnis.Adv.Positions.delete = function (id, callback) {
+    Bisnis.Adv.Positions.delete = function (id, successCallback, errorCallback) {
         Bisnis.request({
             module: 'advertising/positions/' + id,
             method: 'delete'
         }, function (dataResponse, textStatus, response) {
-            if (Bisnis.validCallback(callback)) {
-                callback(textStatus);
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
             }
-        }, function () {
-            Bisnis.Util.Dialog.alert('ERROR', 'Maaf, terjadi kesalahan sistem');
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
         });
     };
     // end delete position

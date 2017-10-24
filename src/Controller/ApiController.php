@@ -263,14 +263,20 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         return new JsonResponse(json_decode($response->getContent(), true));
     }
 
-    private function searchByField($module, $data)
+    private function searchByField($module, $data, $filter)
     {
         $url = $module;
         $q = $data['q'];
         $field = $data['field'];
         $label = $data['label'];
 
-        $response = $this->request($url, 'GET', [$field => $q]);
+        if ( count($filter) > 0 ) {
+            $params = array_merge([$field => $q], $filter);
+        } else {
+            $params = [$field => $q];
+        }
+
+        $response = $this->request($url, 'GET', $params);
         $arr = json_decode($response->getContent(), true);
 
         if (array_key_exists('hydra:member', $arr)) {
@@ -307,6 +313,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
     {
         $module = $request->get('module');
         $fields = $request->get('fields');
+        $filters = $request->get('filters');
 
         $response = [];
         foreach ($fields as $value) {
@@ -316,7 +323,12 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 'label' => $value['label'],
             ];
 
-            $response = array_merge($response, $this->searchByField($module, $data));
+            $fieldFilters = [];
+            foreach ($filters as $filter) {
+                $fieldFilters[$filter['key']] = $filter['value'];
+            }
+
+            $response = array_merge($response, $this->searchByField($module, $data, $fieldFilters));
         }
 
         return new JsonResponse($response);

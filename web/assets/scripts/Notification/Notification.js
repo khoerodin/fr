@@ -33,11 +33,10 @@
             }]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                var rawData = response;
-                callback(rawData);
+                callback(response);
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data notifikasi');
         });
     };
 
@@ -58,7 +57,7 @@
                 callback();
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data notifikasi');
         });
     };
 
@@ -72,7 +71,7 @@
                 callback(response);
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data notifikasi');
         });
     };
 
@@ -88,7 +87,7 @@
                 callback();
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data notifikasi');
         });
     };
 
@@ -103,7 +102,7 @@
                 callback();
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data notifikasi');
         });
     };
 

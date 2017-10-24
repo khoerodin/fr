@@ -51,12 +51,12 @@
     };
 
     var createPriorityButton = function (priority) {
-        var priorityMark = 'default';
-        var priorityText = 'LOW';
+        var priorityMark = 'primary';
+        var priorityText = 'NORMAL';
         switch (priority) {
             case 'low':
                 priorityMark = 'default';
-                priorityText = 'LOW';
+                priorityText = 'KURANG MENDESAK';
                 break;
             case 'normal':
                 priorityMark = 'primary';
@@ -64,7 +64,11 @@
                 break;
             case 'urgent':
                 priorityMark = 'warning';
-                priorityText = 'URGENT';
+                priorityText = 'MENDESAK';
+                break;
+            case 'very_urgent':
+                priorityMark = 'danger';
+                priorityText = 'SANGAT MENDESAK';
                 break;
         }
 
@@ -180,7 +184,7 @@
                 callback();
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal memperbarui tiket');
         });
     };
 
@@ -208,7 +212,7 @@
 
             renderGrid(ticketList, renderTo, useMe);
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data tiket');
         });
     };
 
@@ -248,7 +252,7 @@
                 });
             }, ticketList);
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data tiket');
         });
     };
 
@@ -262,12 +266,12 @@
                 callback(response);
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data tiket');
         });
     };
 
     Bisnis.Helpdesk.Ticket.hasUnreadResponse = function (ticketId, filter, callback) {
-        params = {
+        var params = {
             'ticket.id': ticketId,
             'read': false
         };
@@ -282,11 +286,10 @@
             params: [params]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                var rawData = response;
-                callback(rawData['hydra:member']);
+                callback(response['hydra:member']);
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data tiket');
         });
     };
 
@@ -300,7 +303,7 @@
                 callback();
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal memperbarui data respon tiket');
         });
     };
 
@@ -315,7 +318,7 @@
                 callback();
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal memperbarui data respon tiket');
         });
     };
 
@@ -326,11 +329,10 @@
             params: [{'ticket.id': ticketId, 'order[createdAt]': 'DESC'}]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                var rawData = response;
-                callback(rawData['hydra:member']);
+                callback(response['hydra:member']);
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data respon tiket');
         });
     };
 
@@ -344,7 +346,7 @@
                 callback(response);
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengirim data respon tiket');
         });
     };
 
@@ -380,7 +382,7 @@
                 callback();
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengirim data tiket');
         });
     };
 
@@ -540,7 +542,7 @@
                 callback(statistics);
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data kategori tiket');
         });
     };
 
@@ -551,11 +553,11 @@
             params: [params]
         }, function (response) {
             if (Bisnis.validCallback(callback)) {
-                Bisnis.Util.Storage.store('__HELPDESK_CHARTDATA_DETAIL__', response);
+                Bisnis.Util.Storage.store('__HELPDESK_CHARTDATA_DETAIL__', JSON.stringify(response));
                 callback();
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data staff');
         });
     };
 
@@ -568,7 +570,7 @@
                 callback(response);
             }
         }, function () {
-            console.log('KO');
+            Bisnis.Util.Dialog.alert('Gagal mengambil data statistik tiket');
         });
     };
 })(window.Bisnis || {});

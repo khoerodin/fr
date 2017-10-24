@@ -8,7 +8,7 @@ class BillingGroupsController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Tagihan',
-            'title' => 'Grup Tagihan',
+            'title' => 'Grup Tagih',
         ];
 
         $data = [

@@ -1,9 +1,9 @@
 (function (Bisnis) {
-    Bisnis.Adv.OrderInvoices = {};
+    Bisnis.Adv.PublishAds = {};
 
-    Bisnis.Adv.OrderInvoices.fetchAll = function (params, successCallback, errorCallback) {
+    Bisnis.Adv.PublishAds.fetchAll = function (params, successCallback, errorCallback) {
         Bisnis.request({
-            module: 'advertising/order-invoices',
+            module: 'advertising/publish-ads',
             method: 'get',
             params: params
         }, function (dataResponse, textStatus, response) {
@@ -17,9 +17,9 @@
         });
     };
 
-    Bisnis.Adv.OrderInvoices.add = function (params, successCallback, errorCallback) {
+    Bisnis.Adv.PublishAds.add = function (params, successCallback, errorCallback) {
         Bisnis.request({
-            module: 'advertising/order-invoices',
+            module: 'advertising/publish-ads',
             method: 'post',
             params: params
         }, function (dataResponse, textStatus, response) {

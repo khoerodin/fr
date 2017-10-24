@@ -14,7 +14,7 @@
                 //Now, find all the checkboxes and append their "checked" state to the results.
                 this.find('input[type=checkbox]').each(function(id, item) {
                     var $item = jQuery(item);
-                    results.push({name: $item.attr('name'), value: $item.is(":checked") ? true : false});
+                    results.push({name: $item.attr('name'), value: !!$item.is(":checked")});
                 });
                 return results;
             }

@@ -41,7 +41,7 @@
             var i;
             for (i=0; i < this.length; i++)
             {
-                if (this[i] == value)
+                if (this[i] === value)
                 {
                     return true;
                 }

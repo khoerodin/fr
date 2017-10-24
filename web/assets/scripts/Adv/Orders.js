@@ -177,7 +177,7 @@
             openCallback ? btn.disabled = true : btn.disabled = false;
         }, function (closeCallback) {
             var btn = document.getElementById('btnAddOrder');
-            setTimeout(function () {
+            setTimeout(() => {
                 closeCallback ? btn.disabled = true : btn.disabled = false;
             }, 300);
         }

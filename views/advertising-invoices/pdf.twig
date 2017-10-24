@@ -92,7 +92,7 @@
 
                     {% set harga = (total * 100) / (100 - order.discountPercentage) %}
 
-                    <div class="col-xs-2" style="margin-top: 13px;">QTY 1x HARGA</div>
+                    <div class="col-xs-2" style="margin-top: 13px;">HARGA</div>
                     <div class="col-xs-2" style="margin-top: 13px;">: Rp <span class="pull-right">{{ harga }}</span></div>
                     <div class="col-xs-1" style="margin-top: 13px; visibility: hidden;">s</div>
 
@@ -100,7 +100,7 @@
                     <div class="col-xs-2">: Rp <span class="pull-right">{{ order.minDiscountValue }}</span></div>
                     <div class="col-xs-3">( - )</div>
 
-                    <div class="col-xs-2">DSIC {{ order.discountPercentage }}%</div>
+                    <div class="col-xs-2">DISC {{ order.discountPercentage }}%</div>
                     <div class="col-xs-2">: Rp <span class="pull-right">{{ order.discountValue }}</span></div>
                     <div class="col-xs-1">( - )</div>
 

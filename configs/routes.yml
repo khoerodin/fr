@@ -58,7 +58,6 @@ app:
         - { path: '/advertising/orders/search', controller: 'Bisnis:AdvertisingOrders@search', methods: ['POST'] }
         - { path: '/advertising/invoices', controller: 'Bisnis:AdvertisingInvoices@index', methods: ['GET'] }
         - { path: '/advertising/invoices/pdf/{id}', controller: 'Bisnis:AdvertisingInvoices@pdf', methods: ['GET'] }
-        - { path: '/advertising/invoices/print', controller: 'Bisnis:AdvertisingInvoices@print', methods: ['GET'] }
 
         #Billing
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }

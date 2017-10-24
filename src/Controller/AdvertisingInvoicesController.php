@@ -106,17 +106,4 @@ class AdvertisingInvoicesController extends AdminController
         return $this->view('advertising-invoices/pdf.twig', $data);
     }
 
-    public function printAction()
-    {
-        $meta = [
-            'parentMenu' => 'Faktur',
-            'title' => 'Print Template',
-        ];
-
-        $data = [
-            'meta' => $meta,
-        ];
-
-        return $this->view('advertising-invoices/pdf.twig', $data);
-    }
 }

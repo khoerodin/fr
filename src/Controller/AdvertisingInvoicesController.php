@@ -90,7 +90,7 @@ class AdvertisingInvoicesController extends AdminController
                     $harga = $order['basePrice'];
                     break;
                 default:
-                    $harga = ( (float) $order['columnSize'] *(float) $order['milimeterSize'] ) * (float) $order['totalPost'] * (float) $order['basePrice'];
+                    $harga = ( (float) $order['columnSize'] * (float) $order['milimeterSize'] ) * (float) $order['totalPost'] * (float) $order['basePrice'];
             }
         }
 

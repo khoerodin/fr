@@ -1463,8 +1463,8 @@ $(document).on(
 
 // fungsi terbilang rupiah indonesia
 function terbilang(input, output){
-    var bilangan=document.getElementById(input).value;
-    var kalimat="";
+    var bilangan = document.getElementById(input).value;
+    var kalimat = "";
     var angka   = new Array('0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0');
     var kata    = new Array('','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan');
     var tingkat = new Array('','Ribu','Juta','Milyar','Triliun');
@@ -1838,7 +1838,7 @@ function toISODate(milliseconds) {
 
 Array.prototype.removeDuplicates = function () {
     return this.filter(function (item, index, self) {
-        return self.indexOf(item) == index;
+        return self.indexOf(item) === index;
     });
 };
 

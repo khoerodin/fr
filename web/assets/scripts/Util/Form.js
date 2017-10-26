@@ -47,5 +47,13 @@
         return params;
     };
 
-
+    Bisnis.Util.Form.rmArrayDuplicates = function (data) {
+        if (data instanceof Array ) {
+            return data.filter(function (item, index, self) {
+                return self.indexOf(item) === index;
+            });
+        } else {
+            console.error(data + ' bukan berupa array');
+        }
+    };
 })(window.Bisnis || {});

@@ -81,7 +81,12 @@
                 kalimat = kalimat.replace("Satu Ribu","Seribu");
             }
 
-            kalimat = kalimat + ' Rupiah';
+            if (kalimat) {
+                kalimat = kalimat + ' Rupiah';
+            } else {
+                kalimat = 'Nol Rupiah';
+            }
+
         }
 
         return kalimat;

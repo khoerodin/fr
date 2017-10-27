@@ -56,4 +56,17 @@
             console.error(data + ' bukan berupa array');
         }
     };
+
+    Bisnis.Util.Form.unFormatMoney = function (fieldsArray, serializeArray) {
+        var params = [];
+        serializeArray.forEach(function (value) {
+            if (Bisnis.Util.Document.inArray(value.name, fieldsArray)) {
+                var unFormatMoney = Bisnis.Util.Money.unFormat(value.value);
+                params.push({name: value.name, value: unFormatMoney});
+            } else {
+                params.push({name: value.name, value: value.value});
+            }
+        });
+        return params;
+    };
 })(window.Bisnis || {});

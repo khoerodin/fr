@@ -81,7 +81,6 @@
                 kalimat = kalimat.replace("Satu Ribu","Seribu");
             }
 
-            console.error(kalimat)
             kalimat = kalimat + ' Rupiah';
         }
 

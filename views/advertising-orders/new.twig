@@ -227,7 +227,7 @@
                                             <label for="">Tarif Iklan</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" name="basePrice" class="form-control">
+                                                <input type="text" name="basePrice" value="0" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
@@ -256,27 +256,6 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-4">
-                                            <label for="">Plus Diskon %</label>
-                                            <div class="input-group">
-                                                <input type="number"  value="0" name="surchargePercentage" min="0" max="100" class="form-control">
-                                                <div class="input-group-addon">%</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <label for="">Plus Diskon Rp</label>
-                                            <div class="input-group">
-                                                <div class="input-group-addon">Rp</div>
-                                                <input type="text" readonly name="surchargeValue" value="0" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-xs-4">
                                             <label for="">Min Diskon %</label>
                                             <div class="input-group">
                                                 <input type="number"  value="0" name="minDiscountPercentage" min="0" max="100" class="form-control">
@@ -288,6 +267,27 @@
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
                                                 <input type="text" readonly name="minDiscountValue" value="0" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <label for="">Plus Diskon %</label>
+                                            <div class="input-group">
+                                                <input type="number"  value="0" name="surchargePercentage" min="0" max="100" class="form-control">
+                                                <div class="input-group-addon">%</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label for="">Plus Diskon Rp</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">Rp</div>
+                                                <input type="text" readonly name="surchargeValue" value="0" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -315,13 +315,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
+                            {#<div class="col-md-12">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <label for="">NPB Diskon %</label>
                                             <div class="input-group">
-                                                <input type="number"  value="0" name="npbDiscountPercentage" min="0" max="100" class="form-control">
+                                                <input type="number" value="0" name="npbDiscountPercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
@@ -334,7 +334,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>#}
 
                             <div class="col-md-12">
                                 <div class="form-group">

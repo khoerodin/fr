@@ -48,6 +48,22 @@
         });
     };
 
+    Bisnis.Adv.Orders.updateById = function (id, params, successCallback, errorCallback) {
+        Bisnis.request({
+            module: 'advertising/orders/' + id,
+            method: 'put',
+            params: params
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
+            }
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
+        });
+    };
+
     var orderStatus = function (status) {
         var st;
         switch (status) {

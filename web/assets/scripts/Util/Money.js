@@ -12,7 +12,8 @@
     };
 
     Bisnis.Util.Money.formatInput = function (selector) {
-        //this.value = Bisnis.Util.Money.format(this.value);
+        var $this = document.querySelector(selector);
+        $this.value = Bisnis.Util.Money.format($this.value);
 
         Bisnis.Util.Event.bind('input', selector, function () {
             this.value = Bisnis.Util.Money.format( Bisnis.Util.Money.unFormat(this.value) );

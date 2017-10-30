@@ -202,6 +202,13 @@
         thisBtn.disabled = true;
 
         var params = Bisnis.Util.Form.serializeArray('#orderForm');
+        var tags = document.querySelector('[name="orderTag"]').value;
+
+        params.push({
+            name: 'orderTag',
+            value: tags.toString()
+        });
+
         var fields = [
             'basePrice',
             'taxValue',

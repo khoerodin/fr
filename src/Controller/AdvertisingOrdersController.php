@@ -130,6 +130,9 @@ class AdvertisingOrdersController extends AdminController
             }
         }
 
+        var_dump($orderId);
+        var_dump($tanggal);
+
         return new Response(json_encode($content));
     }
 

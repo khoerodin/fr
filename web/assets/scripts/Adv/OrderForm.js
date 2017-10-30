@@ -189,6 +189,9 @@
             document.querySelector('[name="basePrice"]').value = '';
             document.querySelector('#typeButton').disabled = false;
 
+            document.querySelector('[name="basePrice"]').value = '0';
+            getNetto();
+
             Bisnis.Util.Dialog.hideModal('#specificationModal');
         });
     };
@@ -262,6 +265,7 @@
                     } else {
                         document.querySelector('[name="basePrice"]').value = '0';
                     }
+                    getNetto();
                 },
                 function () {
                     document.querySelector('[name="basePrice"]').value = '0';
@@ -462,21 +466,47 @@
     // End Biaya
 
     // Min Diskon
-    var getMinDiscount = function () {
+    var getMinDiscountByPercent = function () {
         var minDiscountPercentage = document.querySelector('[name="minDiscountPercentage"]').value;
-        var minDiscount = ( getBiaya() * minDiscountPercentage) / 100;
-        document.querySelector('[name="minDiscountValue"]').value = Bisnis.Util.Money.format(minDiscount);
-        return minDiscount;
+        var minDiscount = ( getBiaya() * minDiscountPercentage ) / 100;
+        minDiscount = Bisnis.Util.Money.format(minDiscount);
+        document.querySelector('[name="minDiscountValue"]').value = minDiscount;
+    };
+
+    var getMinDiscountByValue = function () {
+        var minDiscountValue = document.querySelector('[name="minDiscountValue"]').value;
+        minDiscountValue = Bisnis.Util.Money.unFormat(minDiscountValue);
+
+        var minDiscount = ( minDiscountValue / getBiaya() ) * 100;
+        document.querySelector('[name="minDiscountPercentage"]').value = minDiscount.toFixed();
+    };
+
+    var getMinDiscount = function () {
+        var minDiscount = document.querySelector('[name="minDiscountValue"]').value;
+        return Bisnis.Util.Money.unFormat(minDiscount);
     };
     // End Min Diskon
 
     // Plus Diskon
-    var getPlusDiscount = function () {
+    var getPlusDiscountByPercent = function () {
         var surchargePercentage = document.querySelector('[name="surchargePercentage"]').value;
         var biaya = getBiaya() - getMinDiscount();
         var plusDiscount = ( biaya * surchargePercentage) / 100;
         document.querySelector('[name="surchargeValue"]').value = Bisnis.Util.Money.format(plusDiscount);
-        return plusDiscount;
+    };
+
+    var getPlusDiscountByValue = function () {
+        var plusDiscountValue = document.querySelector('[name="minDiscountValue"]').value;
+        plusDiscountValue = Bisnis.Util.Money.unFormat(plusDiscountValue);
+        var biaya = getBiaya() - getMinDiscount();
+
+        var plusDiscount = ( plusDiscountValue / biaya ) * 100;
+        document.querySelector('[name="surchargePercentage"]').value = plusDiscount.toFixed();
+    };
+
+    var getPlusDiscount = function () {
+        var plusDiscount = document.querySelector('[name="surchargeValue"]').value;
+        return Bisnis.Util.Money.unFormat(plusDiscount);
     };
     // End Plus Diskon
 
@@ -487,22 +517,42 @@
     // End Harga
 
     // Diskon
-    var getDiscount = function () {
+    var getDiscountByPercent = function () {
         var discountPercentage = document.querySelector('[name="discountPercentage"]').value;
-        var biaya = getBiaya() - getMinDiscount();
-        var discount = ( biaya * discountPercentage) / 100;
+        var discount = ( getHarga() * discountPercentage) / 100;
         document.querySelector('[name="discountValue"]').value = Bisnis.Util.Money.format(discount);
-        return discount;
+    };
+
+    var getDiscountByValue = function () {
+        var discountValue = document.querySelector('[name="discountValue"]').value;
+        var discount = ( discountValue / getHarga() ) * 100;
+        document.querySelector('[name="discountPercentage"]').value = discount.toFixed();
+    };
+
+    var getDiscount = function () {
+        var discount = document.querySelector('[name="discountValue"]').value;
+        return Bisnis.Util.Money.unFormat(discount);
     };
     // End Diskon
 
     // Cash Back
-    var getCashBack = function () {
+    var getCashBackByPercent = function () {
         var cashBackPercentage = document.querySelector('[name="cashBackPercentage"]').value;
-        var biaya = getBiaya() - getMinDiscount() - getDiscount();
+        var biaya = getHarga() - getDiscount();
         var cashBack = ( biaya * cashBackPercentage) / 100;
         document.querySelector('[name="cashBackValue"]').value = Bisnis.Util.Money.format(cashBack);
-        return cashBack;
+    };
+
+    var getCashBackByValue = function () {
+        var cashBackValue = document.querySelector('[name="cashBackValue"]').value;
+        var biaya = getHarga() - getDiscount();
+        var cashBack = ( cashBackValue / biaya ) * 100;
+        document.querySelector('[name="cashBackPercentage"]').value = cashBack.toFixed();
+    };
+
+    var getCashBack = function () {
+        var cashBack = document.querySelector('[name="cashBackValue"]').value;
+        return Bisnis.Util.Money.unFormat(cashBack);
     };
     // End Cash Back
 
@@ -513,10 +563,21 @@
     // End Total
 
     // PPN
-    var getPPN = function () {
-        var ppn = (getTotal() * 10) / 100;
+    var getPPNByPercent = function () {
+        var PPNPercentage = document.querySelector('[name="taxPercentage"]').value;
+        var ppn = ( getTotal() * PPNPercentage ) / 100;
         document.querySelector('[name="taxValue"]').value = Bisnis.Util.Money.format(ppn);
-        return ppn;
+    };
+
+    var getPPNByValue = function () {
+        var PPNValue = document.querySelector('[name="taxValue"]').value;
+        var ppn = ( PPNValue / getTotal() ) * 100;
+        document.querySelector('[name="taxPercentage"]').value = Bisnis.Util.Money.format(ppn);
+    };
+
+    var getPPN = function () {
+        var ppn = document.querySelector('[name="taxValue"]').value;
+        return Bisnis.Util.Money.unFormat(ppn);
     };
     // End PPN
 
@@ -536,6 +597,8 @@
         var terbilang = Bisnis.Util.Terbilang.render(netto);
         document.querySelector('#terbilangNetto').innerText = terbilang;
         document.querySelector('#netto').innerText = Bisnis.Util.Money.format(netto, true);
+
+        return netto;
     };
     // End Netto
 
@@ -549,7 +612,25 @@
     };*/
     // End NPB Diskon
 
-    Bisnis.Util.Event.bind('input', '[name="jumlahBayar"]', function () {
+    // Hitung Mundur
+    var hitungMundur = function () {
+        var totalAmount = parseFloat(Bisnis.Util.Money.unFormat(document.querySelector('[name="totalAmount"]').value));
+        var ppnPercent = document.querySelector('[name="taxPercentage"]').value;
+        var ppnRp = totalAmount / 1.1 * parseFloat(ppnPercent) /100;
+        var basePrice = totalAmount - ppnRp.toFixed();
+
+        document.querySelector('[name="taxValue"]').value = Bisnis.Util.Money.format(ppnRp.toFixed());
+        document.querySelector('[name="basePrice"]').value = Bisnis.Util.Money.format(basePrice.toFixed());
+    };
+
+    Bisnis.Util.Event.bind('input', '[name="totalAmount"]', function () {
+        hitungMundur();
+        getNetto()
+    });
+    // End Hitung Mundur
+
+    getNetto();
+    Bisnis.Util.Event.bind('input', '[name="columnSize"]', function () {
         getNetto()
     });
 
@@ -561,19 +642,27 @@
         getNetto()
     });
 
-    Bisnis.Util.Event.bind('input', '[name="surchargePercentage"]', function () {
+    Bisnis.Util.Event.bind('input', '[name="minDiscountPercentage"]', function () {
+        getMinDiscountByPercent();
         getNetto()
     });
 
-    Bisnis.Util.Event.bind('input', '[name="minDiscountPercentage"]', function () {
+    Bisnis.Util.Event.bind('input', '[name="surchargePercentage"]', function () {
+        getPlusDiscountByPercent();
         getNetto()
     });
 
     Bisnis.Util.Event.bind('input', '[name="discountPercentage"]', function () {
+        getDiscountByPercent();
         getNetto()
     });
 
     Bisnis.Util.Event.bind('input', '[name="cashBackPercentage"]', function () {
+        getCashBackByPercent();
+        getNetto()
+    });
+
+    Bisnis.Util.Event.bind('input', '[name="jumlahBayar"]', function () {
         getNetto()
     });
 

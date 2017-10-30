@@ -63,9 +63,50 @@
         };
         // End Edisi Terbit
 
-        // Format Money Input
-        Bisnis.Util.Money.formatInput('[name="basePrice"]');
-        // End Format Money Input
+        // End Klik Perbarui
+        Bisnis.Util.Event.bind('click', '#btn-order', function () {
+            var thisBtn = this;
+            thisBtn.disabled = true;
+
+            var params = Bisnis.Util.Form.serializeArray('#orderForm');
+            var tags = document.querySelector('[name="orderTag"]').value;
+
+            params.push({
+                name: 'orderTag',
+                value: tags.toString()
+            });
+
+            var fields = [
+                'basePrice',
+                'taxValue',
+                'minDiscountValue',
+                'surchargeValue',
+                'discountValue',
+                'cashBackValue',
+                'totalAmount',
+            ];
+
+            params = Bisnis.Util.Form.unFormatMoney(fields, params);
+            var dateFields = ['bookedAt', 'invoicedAt'];
+            params = Bisnis.Util.Form.formatDate(dateFields, params, 'DD/MM/YYYY');
+
+            var id = window.location.pathname.split( '/' )[3];
+
+            Bisnis.Adv.Orders.updateById(id, params,
+                function () {
+                    Bisnis.Util.Dialog.alert('SUKSES', 'ORDER IKLAN BERHASIL DIPERBARUI', function () {
+                        window.location.href = '/advertising/orders';
+                    });
+                },
+                function (response) {
+                    if (response.responseJSON) {
+                        Bisnis.Util.Grid.validate('orderForm', response.responseJSON.violations);
+                    }
+                    thisBtn.disabled = false;
+                }
+            );
+        })
+        // End Klik Perbarui
     </script>
 {% endblock %}
 
@@ -435,12 +476,6 @@
                                                 <div class="input-group-addon">buah</div>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4">
-                                            <label style="visibility: hidden">#</label>
-                                            <div class="input-group">
-                                                <button id="hitungMundurBtn" class="btn btn-success btn-flat hidden">HITUNG MUNDUR</button>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -477,7 +512,7 @@
                                     <select name="paymentMethod" class="form-control" style="width: 100%">
                                         <option selected disabled>PILIH JENIS BAYAR</option>
                                         {% for jb in paymentMethod %}
-                                            <option value="/api/billing/payment-methods/{{ jb.id }}">{{ jb.name }}</option>
+                                            <option {{ (order.paymentMethod.id == jb.id) ? "selected" : "" }} value="/api/billing/payment-methods/{{ jb.id }}">{{ jb.name }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

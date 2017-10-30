@@ -97,7 +97,7 @@
                     <div class="col-xs-1" style="margin-top: 13px; visibility: hidden;">s</div>
 
                     {% set minusValue = ( order.basePrice * order.columnSize * order.milimeterSize ) * order.minDiscountPercentage / 100 %}
-                    // (90000 * 4 * 270) * 30 =
+                    {#// (90000 * 4 * 270) * 30 =#}
                     <div class="col-xs-2">MINUS {{ order.minDiscountPercentage }}%</div>
                     <div class="col-xs-2">: Rp <span class="pull-right">{{ minusValue }}</span></div>
                     <div class="col-xs-3">( - )</div>
@@ -113,7 +113,7 @@
                     <div class="col-xs-1" style="border-bottom: 1px solid #555;">( + )</div>
                     <div class="col-xs-2" style="visibility: hidden">s</div>
 
-                    // (tarif x 4 x 270  - min dskon - dsikon + plus dskon) x % cash diskon
+                    {#// (tarif x 4 x 270  - min dskon - dsikon + plus dskon) x % cash diskon#}
 
                     <div class="col-xs-2">CASH DISC {{ order.cashBackPercentage }}%</div>
                     <div class="col-xs-2" style="border-bottom: 1px solid #555;">: Rp <span class="pull-right">{{ order.cashBackValue }}</span></div>
@@ -167,7 +167,7 @@
                     <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
                         <tr>
                             <td style="text-align:center; vertical-align:middle;">
-                                STAFF IKLAN - LAYANAN
+                                <u>{{ invoice.fullName }}</u>
                             </td>
                         </tr>
                     </table>
@@ -184,7 +184,7 @@
                     <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
                         <tr>
                             <td style="text-align:center; vertical-align:middle;">
-                                PEMBERI ORDER
+                                <u>PEMBERI ORDER</u>
                             </td>
                         </tr>
                     </table>

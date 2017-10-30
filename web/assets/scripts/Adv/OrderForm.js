@@ -192,6 +192,22 @@
             document.querySelector('[name="basePrice"]').value = '0';
             getNetto();
 
+            var specName = this.getAttribute('data-name');
+            specName = specName.toLowerCase().toLowerCase().trim().replace(/\s+/g, '');
+            console.log(specName)
+            var arrayKhusus = [
+                'kuping',
+                'banner',
+                'stapel',
+                'eksposisi',
+                'tarifkhusus'
+            ];
+            if ( Bisnis.Util.Document.inArray(specName, arrayKhusus) ) {
+                document.querySelector('[name="totalAmount"]').readOnly = false;
+            } else {
+                document.querySelector('[name="totalAmount"]').readOnly = true;
+            }
+
             Bisnis.Util.Dialog.hideModal('#specificationModal');
         });
     };

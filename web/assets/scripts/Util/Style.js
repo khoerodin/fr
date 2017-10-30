@@ -18,8 +18,6 @@
         var method = typeof params.method !== 'undefined' ? params.method : 'POST';
         var module = typeof params.module !== 'undefined' ? params.module : '';
         var fields = typeof params.fields !== 'undefined' ? params.fields : '';
-        var tags = typeof params.tags !== 'undefined' ? params.tags : false;
-        var tokenSeparators = typeof params.tokenSeparators !== 'undefined' ? params.tokenSeparators : null;
         var minimumInputLength = typeof params.minimumInputLength !== 'undefined' ? params.minimumInputLength : 2;
         var prependValue = typeof params.prependValue !== 'undefined' ? params.prependValue : '';
         var appendValue = typeof params.appendValue !== 'undefined' ? params.appendValue : '';
@@ -43,27 +41,6 @@
             placeholder: placeholder.toUpperCase(),
             allowClear: allowClear,
             templateResult: optionTemplate,
-            tags: tags,
-            tokenSeparators: tokenSeparators,
-            createTag: function (tag) {
-
-                // Check if the option is already there
-                var found = false;
-                jQuery(selector+" option").each(function() {
-                    if ($.trim(tag.term).toUpperCase() === $.trim($(this).text()).toUpperCase()) {
-                        found = true;
-                    }
-                });
-
-                // Show the suggestion only if a match was not found
-                if (!found) {
-                    return {
-                        id: tag.term,
-                        text: tag.term.toUpperCase(),
-                        isNew: true
-                    };
-                }
-            },
             ajax: {
                 url: url,
                 dataType: 'json',
@@ -265,6 +242,58 @@
         }
 
         return color;
+    };
+
+    Bisnis.Util.Style.multipleSelect = function (selector, moduleUrl) {
+        jQuery(selector).select2({
+            tags: true,
+            theme: 'bootstrap',
+            tokenSeparators: [','],
+            createTag: function (tag) {
+
+                // Check if the option is already there
+                var found = false;
+                jQuery(selector + " option").each(function() {
+                    if ($.trim(tag.term).toUpperCase() === $.trim(jQuery(this).text()).toUpperCase()) {
+                        found = true;
+                    }
+                });
+
+                // Show the suggestion only if a match was not found
+                if (!found) {
+                    return {
+                        id: tag.term,
+                        text: tag.term.toUpperCase(),
+                        isNew: true
+                    };
+                }
+            }
+        }).on("change", function(e) {
+            var isNew = jQuery(this).find('[data-select2-tag="true"]');
+            if(isNew.length){
+                isNew.replaceWith('<option value="'+e.timeStamp+'">'+isNew.val().toUpperCase()+'</option>');
+                jQuery.ajax({
+                    type: 'post',
+                    url: '/api',
+                    data: {
+                        module : moduleUrl,
+                        method: 'post',
+                        params: [
+                            {
+                                name: 'name',
+                                value: isNew.val()
+                            }
+                        ]
+                    },
+                    success: function (data) {
+                        jQuery('option[value="'+e.timeStamp+'"]').attr('value', data.id).prop('selected', true);
+                    },
+                    error: function () {
+                        jQuery('option[value="'+e.timeStamp+'"]').remove();
+                    }
+                });
+            }
+        });
     };
 
 })(window.Bisnis || {});

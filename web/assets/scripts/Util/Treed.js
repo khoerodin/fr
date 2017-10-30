@@ -9,6 +9,9 @@
                 if (Bisnis.validCallback(callback)) {
                     callback(data);
                 }
+            },
+            error: function () {
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENGAMBIL SUMBER DATA TREE');
             }
         });
     };

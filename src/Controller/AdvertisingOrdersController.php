@@ -124,11 +124,14 @@ class AdvertisingOrdersController extends AdminController
 
         $content = array();
         foreach ($tanggal as $date) {
-            if (!empty($orderId) and $date['publishDate'] != '') {
-                $response = $this->request('advertising/publish-ads', 'post', ['order' => '/api/advertising/orders/'.$orderId, 'publishDate' => $date['publishDate']]);
+            if (!empty($orderId) and $date != '') {
+                $response = $this->request('advertising/publish-ads', 'post', ['order' => '/api/advertising/orders/'.$orderId, 'publishDate' => $date]);
                 $content[] = $response->getContent();
             }
         }
+
+        var_dump($orderId);
+        var_dump($tanggal);
 
         return new Response(json_encode($content));
     }

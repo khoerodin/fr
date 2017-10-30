@@ -1,9 +1,114 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/adv-order-sheet.js"></script>
-    <script src="/assets/vendor/listjs/list.min.js"></script>
-    <script src="/assets/scripts/adv-order-detail.js"></script>
+    <script src="/assets/scripts/Adv/Customers.js"></script>
+    <script src="/assets/scripts/Adv/Specifications.js"></script>
+    <script src="/assets/scripts/Adv/SpecificationDetails.js"></script>
+    <script src="/assets/scripts/Adv/Prices.js"></script>
+    <script src="/assets/scripts/Adv/AccountExecutives.js"></script>
+    <script src="/assets/scripts/Adv/Media.js"></script>
+    <script src="/assets/scripts/Admin/Cities.js"></script>
+    <script src="/assets/scripts/Adv/OrderForm.js"></script>
+    <script src="/assets/scripts/Adv/Orders.js"></script>
+    <script src="/assets/scripts/Adv/PublishAds.js"></script>
+    <script src="/assets/scripts/Adv/OrderDetail.js"></script>
+    <script>
+        // Order From
+        var orderFormElm = document.querySelector('[name="orderFrom"]');
+        orderFormElm.innerHTML = '<option value="/api/representatives/{{ order.orderFrom.id }}">{{ order.orderFrom.name }}</option>';
+        Bisnis.Util.Event.bind('change', '[name="orderFrom"]');
+        // End Order From
+
+        // Tanggal Booking & Tanggal Faktur
+        Bisnis.Util.DatePicker.render('#dtBookedAt', '{{ order.bookedAt }}');
+        Bisnis.Util.DatePicker.render('#dtInvoicedAt', '{{ order.invoicedAt }}');
+        // End Tanggal Booking & Tanggal Faktur
+
+        // Edisi Terbit
+        Bisnis.Util.Event.bind('click','#edisiTerbitButton', function () {
+            loadPublishAds(1, '{{ order.id }}');
+            Bisnis.Util.Dialog.showModal('#edisiTerbitModal');
+        });
+
+        var loadPublishAds = function (pageNum, orderId) {
+            pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
+            Bisnis.Util.Storage.store('DT_ORDER_PUBLISH_ADS_CURRENT_PAGE', pageNum);
+            Bisnis.Adv.PublishAds.fetchAll([{page: pageNum},{'order.id': orderId}],
+                function (dataResponse) {
+                    var memberData = dataResponse['hydra:member'];
+                    var viewData = dataResponse['hydra:view'];
+
+                    if ('undefined' !== typeof viewData['hydra:last']) {
+                        var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
+                        Bisnis.Util.Grid.createPagination('#publishAdsPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
+                    }
+
+                    if (memberData.length > 0) {
+                        var records = [];
+                        Bisnis.each(function (idx, memberData) {
+                            records.push([
+                                { value: memberData.publishDate, format: function (date) {
+                                    return moment(date).format('DD/MM/YYYY');
+                                } },
+                            ]);
+                        }, memberData);
+                        Bisnis.Util.Grid.renderRecords('#publishAdsList', records, pageNum);
+                    } else {
+                        Bisnis.Util.Document.putHtml('#publishAdsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
+                    }
+                }, function () {
+                    Bisnis.Util.Dialog.alert('GAGAL MEMUAT EDISI TERBIT');
+                }
+            );
+        };
+        // End Edisi Terbit
+
+        // End Klik Perbarui
+        Bisnis.Util.Event.bind('click', '#btn-order', function () {
+            var thisBtn = this;
+            thisBtn.disabled = true;
+
+            var params = Bisnis.Util.Form.serializeArray('#orderForm');
+            const selectedTags = document.querySelectorAll('[name="orderTag"] option:checked');
+            const values = Array.from(selectedTags).map((el) => el.value);
+
+            params.push({
+                name: 'orderTag',
+                value: values.toString()
+            });
+
+            var fields = [
+                'basePrice',
+                'taxValue',
+                'minDiscountValue',
+                'surchargeValue',
+                'discountValue',
+                'cashBackValue',
+                'totalAmount',
+            ];
+
+            params = Bisnis.Util.Form.unFormatMoney(fields, params);
+            var dateFields = ['bookedAt', 'invoicedAt'];
+            params = Bisnis.Util.Form.formatDate(dateFields, params, 'DD/MM/YYYY');
+
+            var id = window.location.pathname.split( '/' )[3];
+
+            Bisnis.Adv.Orders.updateById(id, params,
+                function () {
+                    Bisnis.Util.Dialog.alert('SUKSES', 'ORDER IKLAN BERHASIL DIPERBARUI', function () {
+                        window.location.href = '/advertising/orders';
+                    });
+                },
+                function (response) {
+                    if (response.responseJSON) {
+                        Bisnis.Util.Grid.validate('orderForm', response.responseJSON.violations);
+                    }
+                    thisBtn.disabled = false;
+                }
+            );
+        })
+        // End Klik Perbarui
+    </script>
 {% endblock %}
 
 {%- block content -%}
@@ -12,43 +117,30 @@
             <div class="box">
                 <div class="box-body">
                     <form class="row" id="orderForm">
-                        <input type="hidden" name="id" value="{{ order.id }}">
-                        <input type="hidden" name="orderInvoicedAt" value="{{ order.invoicedAt }}">
-                        <input type="hidden" name="orderBookedAt" value="{{ order.bookedAt }}">
                         <div class="col-md-6 row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Order Dari</label>
-                                    <select disabled name="orderFrom" id="orderFrom" class="form-control" style="width: 100%">
-                                        <option selected disabled>PILIH PERWAKILAN</option>
-                                        {% for rep in representatives %}
-                                            {% if order.orderFrom.id == rep.id %}
-                                                <option selected value="/api/representatives/{{ rep.id }}">{{ rep.code }} - {{ rep.name }}</option>
-                                            {% else %}
-                                                <option value="/api/representatives/{{ rep.id }}">{{ rep.code }} - {{ rep.name }}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
+                                    <select name="orderFrom" class="form-control" style="width: 100%"></select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Nomor Order</label>
-                                    <input type="text" readonly name="orderNumber" value="{{ order.orderNumber }}" id="orderNumber" class="form-control">
+                                    <label for="orderNumber">Nomor Order</label>
+                                    <input type="text" readonly value="{{ order.orderNumber }}" class="form-control" placeholder="AKAN TERISI OTOMATIS">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Nomor Surat Order</label>
-                                    <input type="text" name="orderLetter" value="{{ order.orderLetter }}" id="orderLetter" class="form-control">
+                                    <input type="text" name="orderLetter" value="{{ order.orderLetter }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Tanggal Booking</label>
                                     <div class='input-group date' id='dtBookedAt'>
-                                        <input type='text' readonly id="inputBookedAt" class="form-control" />
-                                        <input type='hidden' name="bookedAt" id="bookedAt" />
+                                        <input type='text' readonly name="bookedAt" class="form-control" />
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </span>
@@ -59,8 +151,7 @@
                                 <div class="form-group">
                                     <label for="">Tanggal Faktur</label>
                                     <div class='input-group date' id='dtInvoicedAt'>
-                                        <input type='text' readonly id="inputInvoicedAt" class="form-control" />
-                                        <input type='hidden' name="invoicedAt" id="invoicedAt" />
+                                        <input type='text' readonly name="invoicedAt" class="form-control" />
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </span>
@@ -73,11 +164,11 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Pemasang</label>
-                                    <div class="input-group" id="pemasang">
-                                        <input type="text" readonly value="{{ order.customer.name }}" name="pemasang" class="form-control">
-                                        <input type="hidden" name="customer" id="customer" value="{% if order.customer.id is defined %}/api/advertising/customers/{{ order.customer.id }}{% endif %}" >
+                                    <div class="input-group">
+                                        <input type="text" readonly id="customerName" value="{{ order.customer.name }}" class="form-control">
+                                        <input type="hidden" name="customer" value="/api/advertising/customers/{{ order.customer.id }}">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                            <button class="btn btn-default btn-flat" id="customerButton" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -91,11 +182,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Klien</label>
-                                    <div class="input-group" id="klien">
-                                        <input type="text" readonly name="klien" value="{{ order.client.name }}" class="form-control">
-                                        <input type="hidden" name="client" id="client" value="{% if order.client.id is defined %}/api/advertising/customers/{{ order.client.id }}{% endif %}">
+                                    <div class="input-group">
+                                        <input type="text" readonly id="clientName" value="{{ order.client.name }}" class="form-control">
+                                        <input type="hidden" value="/api/advertising/customers/{{ order.client.id }}" name="client">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                            <button class="btn btn-default btn-flat" id="clientButton" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -103,28 +194,28 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Cetak Di Faktur</label>
-                                    <select type="text" class="form-control" name="printAs" id="printAs" style="width: 100%">
-                                        <option selected disabled>PILIH</option>
-                                        <option {% if order.printAs == 'client' %} selected {% endif %} value="client">KLIEN</option>
-                                        <option {% if order.printAs == 'customer' %} selected {% endif %} value="customer">PEMASANG</option>
+                                    <select type="text" class="form-control" name="printAs" style="width: 100%">
+                                        <option disabled selected>PILIH</option>
+                                        <option value="customer" {{ (order.printAs == "customer") ? "selected" : "" }}>PEMASANG</option>
+                                        <option value="client" {{ (order.printAs == "client") ? "selected" : "" }}>KLIEN</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Surat Perjanjian</label>
-                                    <input type="text" name="contractLetter" id="contractLetter" value="{{ order.contractLetter }}" class="form-control">
-                                    <p class="help-block">Dipilih jika terdapat perjanjian kerjasama</p>
+                                    <input type="text" name="contractLetter" value="{{ order.contractLetter }}" class="form-control">
+                                    <p class="help-block">Diisi jika terdapat perjanjian kerjasama</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Jenis Iklan</label>
-                                    <div class="input-group" id="jenisIklan">
-                                        <input type="text" readonly name="jenisIklan" value="{{ order.specification.name }}" class="form-control">
-                                        <input type="hidden" name="specification" value="{% if order.specification.id is defined %}/api/advertising/specifications/{{ order.specification.id }}"{% endif %} id="specification" >
+                                    <div class="input-group">
+                                        <input type="text" readonly id="specificationName" value="{{ order.specification.name }}" class="form-control">
+                                        <input type="hidden" name="specification" value="/api/advertising/specifications/{{ order.specification.id }}">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                            <button class="btn btn-default btn-flat" id="specificationButton" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -132,11 +223,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Tipe Iklan</label>
-                                    <div class="input-group" id="tipeIklan">
-                                        <input type="text" readonly name="tipeIklan" value="{{ order.type.name }}" class="form-control">
-                                        <input type="hidden" name="type" value="{% if order.type.id is defined %}/api/advertising/types/{{ order.type.id }}"{% endif %} id="type" >
+                                    <div class="input-group">
+                                        <input type="text" readonly id="typeName" value="{{ order.type.name }}" class="form-control">
+                                        <input type="hidden" name="type" value="/api/advertising/types/{{ order.type.id }}">
                                         <span class="input-group-btn">
-                                            <button disabled class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                            <button class="btn btn-default btn-flat" id="typeButton" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -144,11 +235,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Nama PIC</label>
-                                    <div class="input-group" id="pic">
-                                        <input type="text" name="pic" value="{{ order.accountExecutive.name }}" readonly class="form-control">
-                                        <input type="hidden" id="accountExecutive" value="{% if order.accountExecutive.id is defined %}/api/advertising/account-executives/{{ order.accountExecutive.id }}"{% endif %} name="accountExecutive">
+                                    <div class="input-group">
+                                        <input type="text" id="accountExecutiveName" value="{{ order.accountExecutive.name }}" readonly class="form-control">
+                                        <input type="hidden" name="accountExecutive" value="/api/advertising/account-executives/{{ order.accountExecutive.id }}">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                            <button class="btn btn-default btn-flat" id="accountExecutiveButton" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -156,11 +247,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Pasang Di</label>
-                                    <div class="input-group" id="mediaIklan">
-                                        <input type="text" readonly name="mediaIklan" value="{{ order.media.name }}" class="form-control">
-                                        <input type="hidden" id="media" name="media" value="{% if order.media.id is defined %}/api/advertising/media/{{ order.media.id }}{% endif %}">
+                                    <div class="input-group">
+                                        <input type="text" readonly id="mediaName" class="form-control" value="{{ order.media.name }}">
+                                        <input type="hidden" name="media" value="/api/advertising/media/{{ order.media.id }}">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                            <button class="btn btn-default btn-flat" id="mediaButton" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -168,11 +259,11 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Kategori Iklan</label>
-                                    <div class="input-group" id="category">
-                                        <input type="text" readonly id="categoryValue" value="{{ categories }}" class="form-control">
-                                        <input type="hidden" name="category" value="{% if order.category.id is defined %}/api/advertising/categories/{{ order.category.id }}{% endif %}">
+                                    <div class="input-group">
+                                        <input type="text" readonly id="categoryList" value="{{ categories }}" class="form-control">
+                                        <input type="hidden" name="category" value="/api/advertising/categories/{{ order.category.id }}">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                            <button class="btn btn-default btn-flat" id="categoryButton" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -180,17 +271,16 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Judul Iklan</label>
-                                    <input type="text" name="title" value="{{ order.title }}" id="title" class="form-control">
+                                    <input type="text" name="title" value="{{ order.title }}" class="form-control">
                                 </div>
                             </div>
-
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Ukuran</label>
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <div class="input-group">
-                                                <input type="text" value="{{ order.columnSize }}" name="columnSize" id="columnSize" class="form-control">
+                                                <input type="number" name="columnSize" value="{{ order.columnSize }}" min="1" class="form-control">
                                                 <div class="input-group-addon">kolom</div>
                                             </div>
                                         </div>
@@ -199,32 +289,31 @@
                                         </div>
                                         <div class="col-xs-4">
                                             <div class="input-group">
-                                                <input type="text" name="milimeterSize" value="{{ order.milimeterSize }}" id="milimeterSize"class="form-control">
+                                                <input type="number" name="milimeterSize" value="{{ order.milimeterSize }}" min="1" class="form-control">
                                                 <div class="input-group-addon">mm/baris</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-3">
                                             <label for="">Edisi Terbit</label>
-                                            <button class="btn btn-default btn-block btn-flat" id="edisiTerbitButton">Edisi Terbit</button>
+                                            <button type="button" class="btn btn-default btn-block btn-flat" id="edisiTerbitButton">Edisi Terbit</button>
                                         </div>
                                         <div class="col-xs-3">
                                             <label for="">Terbit</label>
                                             <div class="input-group">
-                                                <input type="text" name="totalPost" value="{{ order.totalPost }}" id="totalPost" class="form-control">
+                                                <input type="number" readonly name="totalPost" value="{{ order.totalPost }}" min="1" class="form-control">
                                                 <div class="input-group-addon">kali</div>
                                             </div>
                                         </div>
                                         <div class="col-xs-3">
                                             <label for="">Kontrak</label>
                                             <div class="input-group">
-                                                <input type="text" name="contractDuration" value="{{ order.contractDuration }}" id="contractDuration"class="form-control">
+                                                <input type="number" name="contractDuration" value="{{ order.contractDuration }}" min="0" class="form-control">
                                                 <div class="input-group-addon">bulan</div>
                                             </div>
                                         </div>
@@ -239,14 +328,13 @@
                                             <label for="">Tarif Iklan</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" value="{{ order.basePrice }}" id="basePrice" class="form-control">
-                                                <input type="hidden" name="basePrice" value="{{ order.basePrice }}">
+                                                <input type="text" name="basePrice" value="{{ order.basePrice }}" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
                                             <label for="">PPN %</label>
                                             <div class="input-group">
-                                                <input type="text" name="taxPercentage" value="{{ order.taxPercentage }}" id="taxPercentage" class="form-control">
+                                                <input type="text" readonly value="{{ order.taxPercentage }}" name="taxPercentage" class="form-control">
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
@@ -254,8 +342,7 @@
                                             <label for="">PPN Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" readonly value="{{ order.taxValue }}" id="taxValue" class="form-control">
-                                                <input type="hidden" name="taxValue" value="{{ order.taxValue }}">
+                                                <input type="text" readonly name="taxValue" value="{{ order.taxValue }}" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -270,18 +357,17 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-4">
-                                            <label for="">Plus Diskon %</label>
+                                            <label for="">Min Diskon %</label>
                                             <div class="input-group">
-                                                <input type="text" value="{{ order.surchargePercentage }}" name="surchargePercentage" id="surchargePercentage" class="form-control">
+                                                <input type="number" value="{{ order.minDiscountPercentage }}" name="minDiscountPercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
-                                            <label for="">Plus Diskon Rp</label>
+                                            <label for="">Min Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" readonly value="{{ order.surchargeValue }}" id="surchargeValue" class="form-control">
-                                                <input type="hidden" name="surchargeValue" value="{{ order.surchargeValue }}">
+                                                <input type="text" readonly name="minDiscountValue" value="{{ order.minDiscountValue }}" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -292,21 +378,21 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-4">
-                                            <label for="">Min Diskon %</label>
+                                            <label for="">Plus Diskon %</label>
                                             <div class="input-group">
-                                                <input type="text" value="{{ order.minDiscountPercentage }}" name="minDiscountPercentage" id="minDiscountPercentage" class="form-control">
+                                                <input type="number" value="{{ order.surchargePercentage }}" name="surchargePercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
-                                            <label for="">Min Diskon Rp</label>
+                                            <label for="">Plus Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" readonly value="{{ order.minDiscountValue }}" id="minDiscountValue" class="form-control">
-                                                <input type="hidden" value="{{ order.minDiscountValue }}" name="minDiscountValue">
+                                                <input type="text" readonly name="surchargeValue" value="{{ order.surchargeValue }}" class="form-control">
                                             </div>
                                         </div>
                                     </div>
+                                    <p class="help-block">Ada contoh faktur dengan Plus Diskon?</p>
                                 </div>
                             </div>
 
@@ -316,7 +402,7 @@
                                         <div class="col-xs-4">
                                             <label for="">Diskon %</label>
                                             <div class="input-group">
-                                                <input type="text" name="discountPercentage" value="{{ order.discountPercentage }}" id="discountPercentage" class="form-control">
+                                                <input type="number" value="{{ order.discountPercentage }}" name="discountPercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
@@ -324,8 +410,7 @@
                                             <label for="">Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" readonly value="{{ order.discountValue }}" id="discountValue" class="form-control">
-                                                <input type="hidden" name="discountValue" value="{{ order.discountValue }}">
+                                                <input type="text" readonly name="discountValue" value="{{ order.discountValue }}" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -338,7 +423,7 @@
                                         <div class="col-xs-4">
                                             <label for="">NPB Diskon %</label>
                                             <div class="input-group">
-                                                <input type="text" value="{{ order.npbDiscountPercentage }}" name="npbDiscountPercentage" id="npbDiscountPercentage" class="form-control">
+                                                <input type="number" readonly value="{{ order.npbDiscountPercentage }}" name="npbDiscountPercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
@@ -346,11 +431,11 @@
                                             <label for="">NPB Diskon Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" readonly value="{{ order.npbDiscountValue }}" id="npbDiscountValue" class="form-control">
-                                                <input type="hidden" value="{{ order.npbDiscountValue }}" name="npbDiscountValue">
+                                                <input type="text" readonly name="npbDiscountValue" value="{{ order.npbDiscountValue }}" class="form-control">
                                             </div>
                                         </div>
                                     </div>
+                                    <p class="help-block">NPB Diskon kok tidak ada di faktur?</p>
                                 </div>
                             </div>
 
@@ -358,18 +443,17 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-4">
-                                            <label for="">Cashback %</label>
+                                            <label for="">Cash Back %</label>
                                             <div class="input-group">
-                                                <input type="text" name="cashBackPercentage" value="{{ order.cashBackPercentage }}" id="cashBackPercentage" class="form-control">
+                                                <input type="number" value="{{ order.cashBackPercentage }}" name="cashBackPercentage" min="0" max="100" class="form-control">
                                                 <div class="input-group-addon">%</div>
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
-                                            <label for="">Cashback Rp</label>
+                                            <label for="">Cash Back Rp</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" readonly value="{{ order.cashBackValue }}" id="cashBackValue" class="form-control">
-                                                <input type="hidden" name="cashBackValue" value="{{ order.cashBackValue }}">
+                                                <input type="text" readonly name="cashBackValue" value="{{ order.cashBackValue }}" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -383,21 +467,14 @@
                                             <label for="">Jumlah Bayar</label>
                                             <div class="input-group">
                                                 <div class="input-group-addon">Rp</div>
-                                                <input type="text" value="{{ order.totalAmount }}" id="totalAmount" class="form-control">
-                                                <input type="hidden" name="totalAmount" value="{{ order.totalAmount }}">
+                                                <input type="text" readonly name="totalAmount" value="{{ order.totalAmount }}" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-xs-4">
                                             <label for="">Quantity</label>
                                             <div class="input-group">
-                                                <input type="number" name="quantity" value="{{ order.quantity }}" id="quantity" min="1" class="form-control">
+                                                <input type="number" name="quantity" min="1" value="{{ order.quantity }}" class="form-control">
                                                 <div class="input-group-addon">buah</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <label style="visibility: hidden">#</label>
-                                            <div class="input-group">
-                                                <button id="hitungMundurBtn" class="btn btn-success btn-flat hidden">HITUNG MUNDUR</button>
                                             </div>
                                         </div>
                                     </div>
@@ -411,11 +488,6 @@
                                             <hr style="border: 0;height: 1px;background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-xs-12" style="padding-right: 15px;">
-                                            <button id="hitung" class="btn btn-primary btn-flat pull-right">HITUNG</button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -423,7 +495,7 @@
                                     <label for="">Netto</label>
                                     <div class="bg-aqua" style="padding: 10px; height: 133px;">
                                         <div style="font-size: 40px;font-weight: bold;" id="netto">
-                                            Rp 0,00
+                                            Rp 0
                                         </div>
                                         <input type="hidden" id="nettoRp">
                                         <div style="font-size: 21px; font-style: italic;" id="terbilangNetto">
@@ -438,14 +510,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Jenis Bayar</label>
-                                    <select name="paymentMethod" id="paymentMethod" class="form-control" style="width: 100%">
+                                    <select name="paymentMethod" class="form-control" style="width: 100%">
                                         <option selected disabled>PILIH JENIS BAYAR</option>
                                         {% for jb in paymentMethod %}
-                                            {% if order.paymentMethod.id == jb.id %}
-                                                <option selected value="/api/billing/payment-methods/{{ jb.id }}">{{ jb.name }}</option>
-                                            {% else %}
-                                                <option value="/api/billing/payment-methods/{{ jb.id }}">{{ jb.name }}</option>
-                                            {% endif %}
+                                            <option {{ (order.paymentMethod.id == jb.id) ? "selected" : "" }} value="/api/billing/payment-methods/{{ jb.id }}">{{ jb.name }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -453,12 +521,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Sisipan</label>
-                                    <div class="input-group" id="sisipan" style="position: relative;">
-                                        <button id="clearText" class="btn btn-flat btn-xs btn-danger" style="position: absolute; right: 44px; top: 6px; z-index: 1041;">clear</button>
-                                        <input type="text" readonly name="sisipan" value="{{ order.sirculationArea.name }}" class="form-control">
-                                        <input type="hidden" id="sirculationArea" value="{% if order.sirculationArea.id is defined %}/api/cities/{{ order.sirculationArea.id }}"{% endif %} name="sirculationArea">
+                                    <div class="input-group" style="position: relative;">
+                                        <input type="text" readonly id="sirculationAreaName" value="{{ order.sirculationArea.name }}" class="form-control">
+                                        <input type="hidden" name="sirculationArea" value="/api/cities/{{ order.sirculationArea.id }}">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default btn-flat" type="button"><i class="fa fa-ellipsis-h text-muted"></i></button>
+                                            <button class="btn btn-default btn-flat" type="button" id="sirculationAreaButton"><i class="fa fa-ellipsis-h text-muted"></i></button>
                                         </span>
                                     </div>
                                 </div>
@@ -466,53 +533,48 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Keterangan Materi</label>
-                                    <input type="text" name="materialDescription" value="{{ order.materialDescription }}" id="materialDescription" class="form-control">
+                                    <input type="text" name="materialDescription" value="{{ order.materialDescription }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Keterangan Order</label>
-                                    <input type="text" name="orderDescription" value="{{ order.orderDescription }}" id="orderDescription" class="form-control">
+                                    <input type="text" name="orderDescription" value="{{ order.orderDescription }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="printInvoiceAs">Status Detail</label>
-                                    <select class="form-control" id="printInvoiceAs" name="printInvoiceAs">
+                                    <label for="">Status Detail</label>
+                                    <select class="form-control" name="printInvoiceAs">
                                         <option disabled selected>PILIH</option>
-                                        <option value="n" {% if order.printInvoiceAs == 'n' %}selected{% endif %}>NORMAL</option>
-                                        <option value="p" {% if order.printInvoiceAs == 'p' %}selected{% endif %}>PECAH</option>
-                                        <option value="g" {% if order.printInvoiceAs == 'b' %}selected{% endif %}>GABUNG</option>
+                                        <option value="n" {{ (order.printInvoiceAs == "n") ? "selected" : "" }}>NORMAL</option>
+                                        <option value="p" {{ (order.printInvoiceAs == "p") ? "selected" : "" }}>PECAH</option>
+                                        <option value="g" {{ (order.printInvoiceAs == "g") ? "selected" : "" }}>GABUNG</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Order Tagging</label>
-                                    <select id="orderTag" class="form-control" multiple="multiple">
+                                    <label for="">Tag Order</label>
+                                    <select name="orderTag" class="form-control" multiple="multiple">
                                         {% for tag in tags %}
                                             <option {% if tag.selected == '1' %}selected{% endif %} value="{{ tag.id }}">{{ tag.name }}</option>
                                         {% endfor %}
                                     </select>
+                                    <p class="help-block">Tulis tag dan tekan enter</p>
                                 </div>
                             </div>
-                            {% if orderRefference|default is not empty %}
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="orderRefference">Ref. Order</label>
-                                    <input type="text" readonly class="form-control" value="{{ orderRefference }}">
-                                </div>
-                            </div>
-                            {% endif %}
                         </div>
                     </form>
                 </div>
                 <div class="box-footer clearfix">
+
                     <div class="col-xs-5"></div>
                     <div class="col-xs-2">
-                        <button class="btn btn-flat btn-danger pull-right btn-block" id="btn-order-update" disabled>SIMPAN</button>
+                        <button class="btn btn-flat btn-danger pull-right btn-block" id="btn-order">PERBARUI</button>
                     </div>
                     <div class="col-xs-5"></div>
+
                 </div>
             </div>
             <!-- /.box -->
@@ -520,7 +582,7 @@
     </div>
 
     {#Pemasang Modal#}
-    <div id="pemasangModal" class="modal" role="dialog">
+    <div id="customerModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
@@ -528,17 +590,30 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Pilih Pemasang Iklan</h4>
-                    <small class="text-success">Dobel klik Pemasang Iklan untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
                     <div class="box-body">
-                        <input type="text" class="form-control" id="serachList">
+                        <input type="text" class="form-control" id="searchCustomer" placeholder="CARI NAMA PEMASANG">
                     </div>
-                    <div class="box-body" id="data-list" style="margin-top: 10px"></div>
-                    <div class="box-footer"></div>
+
+                    <div class="box-body">
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th width="10%">KODE</th>
+                                <th>PEMASANG</th>
+                            </tr>
+                            </thead>
+                            <tbody id="customerList"></tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <ul id="customersPagination" class="pagination pagination-sm pull-right"></ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
                 </div>
             </div>
 
@@ -547,25 +622,38 @@
     {#End Pemasang Modal#}
 
     {#Klien Modal#}
-    <div id="klienModal" class="modal" role="dialog">
+    <div id="clientModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Klien</h4>
-                    <small class="text-success">Dobel klik Klien untuk memilihnya</small>
+                    <h4 class="modal-title">Pilih Klien Iklan</h4>
                 </div>
                 <div class="modal-body">
                     <div class="box-body">
-                        <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA KLIEN">
+                        <input type="text" class="form-control" id="searchClient" placeholder="CARI NAMA KLIEN">
                     </div>
-                    <div class="box-body" id="data-list" style="margin-top: 10px"></div>
-                    <div class="box-footer"></div>
+
+                    <div class="box-body">
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th width="10%">KODE</th>
+                                <th>PEMASANG</th>
+                            </tr>
+                            </thead>
+                            <tbody id="clientList"></tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <ul id="clientsPagination" class="pagination pagination-sm pull-right"></ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
                 </div>
             </div>
 
@@ -573,8 +661,8 @@
     </div>
     {#End Klien Modal#}
 
-    {#Jenis Iklan#}
-    <div id="jenisIklanModal" class="modal" role="dialog">
+    {#Jenis Iklan Modal#}
+    <div id="specificationModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
@@ -582,26 +670,38 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Pilih Jenis Iklan</h4>
-                    <small class="text-success">Dobel klik Jenis Iklan untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
                     <div class="box-body">
-                        <input type="text" class="form-control" id="serachList" placeholder="CARI JENIS IKLAN">
+                        <input type="text" class="form-control" id="searchSpecification" placeholder="CARI JENIS IKLAN">
                     </div>
-                    <div class="box-body" id="data-list" style="margin-top: 10px"></div>
-                    <div class="box-footer"></div>
+
+                    <div class="box-body">
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th>JENIS IKLAN</th>
+                            </tr>
+                            </thead>
+                            <tbody id="specificationList"></tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <ul id="specificationsPagination" class="pagination pagination-sm pull-right"></ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
                 </div>
             </div>
 
         </div>
     </div>
-    {#End Jenis Iklan#}
+    {#End Jenis Iklan Modal#}
 
-    {#Tipe Iklan#}
-    <div id="tipeIklanModal" class="modal" role="dialog">
+    {#Tipe Iklan Modal#}
+    <div id="typeModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
@@ -609,49 +709,115 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Pilih Tipe Iklan</h4>
-                    <small class="text-success">Dobel klik Tipe Iklan untuk memilihnya</small>
                 </div>
                 <div class="modal-body">
                     <div class="box-body">
-                    <input type="text" class="form-control" id="serachList" placeholder="CARI TIPE IKLAN">
+                        <input type="text" class="form-control" id="searchType" placeholder="CARI TIPE IKLAN">
                     </div>
-                    <div class="box-body" id="data-list" style="margin-top: 10px"></div>
-                    <div class="box-footer"></div>
+
+                    <div class="box-body">
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th>TIPE IKLAN</th>
+                            </tr>
+                            </thead>
+                            <tbody id="typeList"></tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <ul id="typesPagination" class="pagination pagination-sm pull-right"></ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
                 </div>
             </div>
 
         </div>
     </div>
-    {#End Tipe Iklan#}
+    {#End Tipe Iklan Modal#}
 
-    {#Media Iklan#}
-    <div id="mediaIklanModal" class="modal" role="dialog">
+    {#Media Modal#}
+    <div id="mediaModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Media Iklan</h4>
-                    <small class="text-success">Dobel klik Media Iklan untuk memilihnya</small>
+                    <h4 class="modal-title">Pilih Media</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" id="serachList" placeholder="CARI MEDIA IKLAN">
-                    <div id="data-list" style="margin-top: 10px"></div>
+                    <div class="box-body">
+                        <input type="text" class="form-control" id="searchMediaOrder" placeholder="CARI MEDIA">
+                    </div>
+
+                    <div class="box-body">
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th>MEDIA</th>
+                            </tr>
+                            </thead>
+                            <tbody id="mediaList"></tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <ul id="mediaPagination" class="pagination pagination-sm pull-right"></ul>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
                 </div>
             </div>
 
         </div>
     </div>
-    {#End Media Iklan#}
+    {#End Media Modal#}
 
-    {#Category#}
+    {#PIC Modal#}
+    <div id="accountExecutiveModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih PIC</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="text" class="form-control" id="searchAccountExecutive" placeholder="CARI PIC">
+                    </div>
+
+                    <div class="box-body">
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th>PIC</th>
+                            </tr>
+                            </thead>
+                            <tbody id="accountExecutiveList"></tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <ul id="accountExecutivesPagination" class="pagination pagination-sm pull-right"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End PIC Modal#}
+
+    {#Kategori Modal#}
     <div id="categoryModal" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
@@ -662,66 +828,17 @@
                     <h4 class="modal-title">Pilih Kategori</h4>
                     <small class="text-success">Dobel klik pada kategori yang diinginkan</small>
                 </div>
-                <div class="modal-body"></div>
+                <div class="modal-body">
+                    <span id="treeCategories"></span>
+                </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
                 </div>
             </div>
 
         </div>
     </div>
     {#End Category#}
-
-    {#PIC / Account Executive#}
-    <div id="PICModal" class="modal" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Nama PIC</h4>
-                    <small class="text-success">Dobel klik Nama PIC untuk memilihnya</small>
-                </div>
-                <div class="modal-body">
-                    <div class="box-body">
-                        <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA PIC">
-                    </div>
-                    <div class="box-body" id="data-list" style="margin-top: 10px"></div>
-                    <div class="box-footer"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    {#PIC / Account Executive#}
-
-    {#Sisipan#}
-    <div id="sisipanModal" class="modal" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Pilih Nama Kota</h4>
-                    <small class="text-success">Dobel klik Nama Kota untuk memilihnya</small>
-                </div>
-                <div class="modal-body">
-                    <input type="text" class="form-control" id="serachList" placeholder="CARI NAMA KOTA">
-                    <div id="data-list" style="margin-top: 10px"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    {#Sisipan#}
 
     {#Edisi Terbit#}
     <div id="edisiTerbitModal" class="modal" role="dialog">
@@ -733,46 +850,69 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Edisi Terbit</h4>
                 </div>
-                <div class="modal-body" id="DatesList">
+                <div class="modal-body">
                     <div class="box-body">
                         <table class="table table-bordered table-responsive table-hover">
                             <thead>
-                            <tr>
-                                <th width="5%">No</th>
-                                <th style="display: none">ID</th>
-                                <th width="80%">Tanggal</th>
-                                <th width="5%"><span class="pull-right">Action</span></th>
-                            </tr>
+                                <tr>
+                                    <th width="5%">NO.</th>
+                                    <th>TANGGAL</th>
+                                </tr>
                             </thead>
-
-                            <tbody class="list" style="text-transform: uppercase">
-                                <tr id="gettingData"><td colspan="4">Getting data...</td></tr>
-                            </tbody>
+                            <tbody id="publishAdsList"></tbody>
                         </table>
-                        <form id="dateForm"></form>
                     </div>
 
-                    <div class="box-footer row" style="border-top: none">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <input type="text" id="addDate" readonly class="form-control input-sm">
-                                <span class="input-group-btn">
-                                    <button id="addDateBtn" class="btn btn-primary btn-sm btn-flat" type="button">TAMBAHKAN</button>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="pagination pagination-sm no-margin pull-right"></ul>
-                        </div>
+                    <div class="box-footer">
+                        <ul id="publishAdsPagination" class="pagination pagination-sm pull-right"></ul>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" id="update-edisi-terbit" class="btn btn-flat btn-danger">Save</button>
+                    <button data-dismiss="modal" type="button" class="btn btn-flat btn-default">TUTUP</button>
                 </div>
             </div>
 
         </div>
     </div>
-    {#Edisi Terbit#}
+    {#End Edisi Terbit#}
+
+    {#Media Modal#}
+    <div id="sirculationAreaModal" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pilih Media</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <input type="text" class="form-control" id="searchSirculationArea" placeholder="CARI KOTA SISIPAN">
+                    </div>
+
+                    <div class="box-body">
+                        <table class="table table-bordered table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th width="3%">NO.</th>
+                                <th width="4%">KODE</th>
+                                <th>SISIPAN</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sirculationAreaList"></tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <ul id="sirculationAreaPagination" class="pagination pagination-sm pull-right"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">TUTUP</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {#End Media Modal#}
 {%- endblock -%}

@@ -202,11 +202,12 @@
         thisBtn.disabled = true;
 
         var params = Bisnis.Util.Form.serializeArray('#orderForm');
-        var tags = document.querySelector('[name="orderTag"]').value;
+        const selectedTags = document.querySelectorAll('[name="orderTag"] option:checked');
+        const values = Array.from(selectedTags).map((el) => el.value);
 
         params.push({
             name: 'orderTag',
-            value: tags.toString()
+            value: values.toString()
         });
 
         var fields = [

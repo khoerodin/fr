@@ -632,6 +632,7 @@
 
     // Hitung Normal
     var hitung = function () {
+        // ditambah getPPNByPercent krn inputan PPN by percent didisable
         getPPNByPercent();
         getNetto();
     };
@@ -650,7 +651,7 @@
 
     Bisnis.Util.Event.bind('input', '[name="totalAmount"]', function () {
         hitungMundur();
-        getNetto()
+        getNetto();
     });
     // End Hitung Mundur
 

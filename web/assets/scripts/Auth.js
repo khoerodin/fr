@@ -16,7 +16,7 @@
     };
 
     var loginError = function () {
-        var username = document.querySelector("#username").value = '';
+        document.querySelector("#username").value = '';
         document.querySelector("#password").value = '';
         document.querySelector("#username").focus();
 

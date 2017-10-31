@@ -106,7 +106,7 @@ class AdvertisingInvoicesController extends AdminController
             'meta' => $meta,
             'invoice' => $invoice,
             'order' => $order,
-            'harga' => $harga,
+            //'harga' => $harga,
             'tarif' => $tarif,
             'terbilang' => $this->terbilang($invoice['amount']) . ' rupiah',
         ];

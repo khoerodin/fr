@@ -45,7 +45,18 @@
                     <div class="col-xs-3"><b>NO</b></div>
                     <div class="col-xs-9">: {{ invoice.invoiceNumber }}</div>
                     <div class="col-xs-3"><b>TANGGAL</b></div>
-                    <div class="col-xs-9">: {{ invoice.createdAt|date('d-M-Y', "Asia/Jakarta")|upper }}</div>
+                    {% if invoice.createdAt|date('d-M-Y', "Asia/Jakarta")|upper == 'MAY' %}
+                        {% set bln = 'MEI' %}
+                    {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'AUG' %}
+                        {% set bln = 'AGU' %}
+                    {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'OCT' %}
+                        {% set bln = 'OKT' %}
+                    {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'DEC' %}
+                        {% set bln = 'DES' %}
+                    {% else %}
+                        {% set bln = invoice.createdAt|date('M', "Asia/Jakarta")|upper %}
+                    {% endif %}
+                    <div class="col-xs-9">: {{ invoice.createdAt|date('d', "Asia/Jakarta")|upper }}-{{ bln }}-{{ invoice.createdAt|date('Y', "Asia/Jakarta")|upper }}</div>
                 </div>
             </div>
 

@@ -86,7 +86,7 @@
                     Bisnis.Util.Document.putHtml('#invoicesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT LIST FAKTUR');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT LIST FAKTUR');
             }
         );
     };

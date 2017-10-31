@@ -339,7 +339,7 @@
                     Bisnis.Util.Document.putHtml('#accountExecutiveList', '<tr><td colspan="10">TIDAK ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PIC');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PIC');
             }
         );
 
@@ -394,7 +394,7 @@
                     Bisnis.Util.Document.putHtml('#mediaList', '<tr><td colspan="10">TIDAK ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA MEDIA');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA MEDIA');
             }
         );
 
@@ -738,7 +738,7 @@
                     Bisnis.Util.Document.putHtml('#sirculationAreaList', '<tr><td colspan="10">TIDAK ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KOTA SISIPAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA KOTA SISIPAN');
             }
         );
 

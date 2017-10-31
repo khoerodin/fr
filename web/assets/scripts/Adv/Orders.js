@@ -142,7 +142,7 @@
                     Bisnis.Util.Document.putHtml('#ordersList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA ORDER IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA ORDER IKLAN');
             }
         );
     };

@@ -50,7 +50,7 @@
                     Bisnis.Util.Document.putHtml('#categoryList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA BAGIAN HELPDESK');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA BAGIAN HELPDESK');
             }
         );
     };
@@ -192,7 +192,7 @@
                 Bisnis.Util.Dialog.showModal('#detailModal');
                 document.getElementById('detailParent').focus();
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA BAGIAN HELPDESK');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA BAGIAN HELPDESK');
             });
     };
 

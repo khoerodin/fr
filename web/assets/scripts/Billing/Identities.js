@@ -51,7 +51,7 @@
                     Bisnis.Util.Document.putHtml('#identitiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PENANDA TAGIH');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PENANDA TAGIH');
             }
         );
     };
@@ -199,7 +199,7 @@
 
                 Bisnis.Util.Dialog.showModal('#detailModal');
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PENANDA TAGIH');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PENANDA TAGIH');
             }
         );
     };

@@ -55,7 +55,7 @@
                     Bisnis.Util.Document.putHtml('#userActivitiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKTIFITAS PENGGUNA');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA AKTIFITAS PENGGUNA');
             }
         );
     };
@@ -159,7 +159,7 @@
                 nameElem.value = dataResponse.name;
                 nameElem.focus();
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKTIFITAS PENGGUNA');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA AKTIFITAS PENGGUNA');
             }
         );
         Bisnis.Util.Dialog.showModal('#detailModal');

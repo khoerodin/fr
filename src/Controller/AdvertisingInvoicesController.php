@@ -71,33 +71,25 @@ class AdvertisingInvoicesController extends AdminController
         $jenis = strtolower($order['specification']['name']);
 
         if ( substr( $jenis, 0, 5 ) === "paket" ) {
-            $harga = $order['basePrice'];
             $tarif = 'k';
         } else {
             switch ($jenis) {
                 case "kuping":
-                    $harga = $order['basePrice'];
                     $tarif = 'k';
                     break;
                 case "banner":
-                    $harga = $order['basePrice'];
                     $tarif = 'k';
                     break;
                 case "stapel":
-                    $harga = $order['basePrice'];
                     $tarif = 'k';
                     break;
                 case "eksposisi":
-                    $harga = $order['basePrice'];
                     $tarif = 'k';
                     break;
                 case "tarif khusus":
-                    $harga = $order['basePrice'];
                     $tarif = 'k';
                     break;
                 default:
-                    // $harga = ( (float) $order['columnSize'] * (float) $order['milimeterSize'] ) * (float) $order['totalPost'] * (float) $order['basePrice'];
-                    $harga = $order['basePrice'];
                     $tarif = 'n';
             }
         }
@@ -106,7 +98,6 @@ class AdvertisingInvoicesController extends AdminController
             'meta' => $meta,
             'invoice' => $invoice,
             'order' => $order,
-            //'harga' => $harga,
             'tarif' => $tarif,
             'terbilang' => $this->terbilang($invoice['amount']) . ' rupiah',
         ];

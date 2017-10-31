@@ -86,18 +86,18 @@
     };
 
     var gerOrderNumber = function (orderId, idx) {
-        Bisnis.Adv.Orders.fetchById(orderId,
-            function (dataResponse) {
-                if (dataResponse.orderNumber) {
-                    document.querySelector('#ref' + idx).innerText = dataResponse.orderNumber;
-                } else {
-                    document.querySelector('#ref' + idx).innerHTML = '-';
+        if ( orderId ) {
+            Bisnis.Adv.Orders.fetchById(orderId,
+                function (dataResponse) {
+                    if (dataResponse.orderNumber) {
+                        document.querySelector('#ref' + idx).innerText = dataResponse.orderNumber;
+                    }
+                },
+                function () {
+                    document.querySelector('#ref' + idx).innerHTML = '<span class="text-danger">Error</span>';
                 }
-            },
-            function () {
-                document.querySelector('#ref' + idx).innerHTML = '<span class="text-danger">Error</span>';
-            }
-        );
+            );
+        }
     };
 
     var loadGrid = function (pageNum) {
@@ -212,7 +212,7 @@
     var createParams = function (dataResponse, orderId) {
         var params = [];
         for (var key in dataResponse) {
-            if ( key !== 'id') {
+            if ( key !== 'id' && key !== 'orderNumber') {
                 var value = '';
                 if ( typeof dataResponse[key] === 'object') {
                     if (dataResponse[key]) {
@@ -233,35 +233,30 @@
         return params;
     };
 
-    var savePublishAds = function (response) {
-        Bisnis.Adv.PublishAds.fetchAll([{'order.id': response.id}],
+    var savePublishAds = function (oldId, newId) {
+        Bisnis.Adv.PublishAds.fetchAll([{'order.id': oldId}],
             function (PAResponse) {
                 var memberData = PAResponse['hydra:member'];
-                var panjang = memberData.length;
-                if (panjang > 0) {
-                    forEach.memberData(function (value, index) {
-                        var PAParams = [
-                            {name: 'order', value: '/api/advertising/orders/' + value.order.id},
-                            {name: 'publishDate', value: value.publishDate}
-                        ];
-                        if (panjang === (index +1)) {
-                            Bisnis.Adv.PublishAds.add(PAParams,
-                                function () {
-                                    loadGrid(Bisnis.Util.Storage.fetch('ORDERS_CURRENT_PAGE'));
-                                    Bisnis.successMessage('Berhasil menduplikasi order');
-                                },
-                                function () {
-                                    Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENYIMPAN TANGGAL ORDER');
-                                }
-                            );
-                        } else {
-                            Bisnis.Adv.PublishAds.add(PAParams);
-                        }
-                    });
-                } else {
-                    loadGrid(loadGrid(Bisnis.Util.Storage.fetch('ORDERS_CURRENT_PAGE')));
-                    Bisnis.successMessage('Berhasil menduplikasi order');
-                }
+                var tanggal = [];
+                memberData.forEach(function (value) {
+                    tanggal.push(value.publishDate);
+                });
+
+                var params = {
+                    orderId: newId,
+                    tanggal: tanggal
+                };
+
+                Bisnis.request(params,
+                    function () {
+                        Bisnis.successMessage('Berhasil Munduplikasi Order');
+                        loadGrid(Bisnis.Util.Storage.fetch('ORDERS_CURRENT_PAGE'));
+                    },
+                    function () {
+                        Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENYIMPAN EDISI TERBIT (JUMLAH TERBIT)');
+                    },
+                    '/advertising/orders/publish-ads'
+                );
             },
             function () {
                 Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENDUPLIKASI ORDER');
@@ -278,7 +273,7 @@
                         var params = createParams(dataResponse, dataResponse.id);
                         Bisnis.Adv.Orders.add(params,
                             function (response) {
-                                savePublishAds(response);
+                                savePublishAds(id, response.id);
                             },
                             function () {
                                 Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENDUPLIKASI ORDER');

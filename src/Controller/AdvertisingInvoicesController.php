@@ -8,7 +8,7 @@ class AdvertisingInvoicesController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Iklan',
-            'title' => 'Faktur Iklan',
+            'title' => 'Membuat Faktur Iklan',
         ];
 
         $data = [
@@ -112,6 +112,20 @@ class AdvertisingInvoicesController extends AdminController
         ];
 
         return $this->view('advertising-invoices/pdf.twig', $data);
+    }
+
+    public function printAction()
+    {
+        $meta = [
+            'parentMenu' => 'Iklan',
+            'title' => 'Cetak Faktur Iklan',
+        ];
+
+        $data = [
+            'meta' => $meta,
+        ];
+
+        return $this->view('advertising-invoices/print.twig', $data);
     }
 
 }

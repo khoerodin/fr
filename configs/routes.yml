@@ -56,8 +56,11 @@ app:
         - { path: '/advertising/orders/publish-ads', controller: 'Bisnis:AdvertisingOrders@publishAds', methods: ['POST'] }
         - { path: '/advertising/orders/publish-ads/update', controller: 'Bisnis:AdvertisingOrders@updatePublishAds', methods: ['POST'] }
         - { path: '/advertising/orders/search', controller: 'Bisnis:AdvertisingOrders@search', methods: ['POST'] }
+
+       #Invoices
         - { path: '/advertising/invoices', controller: 'Bisnis:AdvertisingInvoices@index', methods: ['GET'] }
         - { path: '/advertising/invoices/pdf/{id}', controller: 'Bisnis:AdvertisingInvoices@pdf', methods: ['GET'] }
+        - { path: '/advertising/invoices-print', controller: 'Bisnis:AdvertisingInvoices@print', methods: ['GET'] }
 
         #Billing
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }

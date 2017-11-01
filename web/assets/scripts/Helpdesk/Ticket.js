@@ -439,7 +439,7 @@
     Bisnis.Helpdesk.Ticket.buildChat = function (profileImage, sender, message, date, appendTo) {
         appendTo = 'undefined' === typeof appendTo ? '' : appendTo;
 
-        return appendTo + '<div class="media"><div class="media-left"><img class="img-circle" src="' + profileImage + '" style="width:77px;"></div>'
+        return appendTo + '<div class="media"><div class="media-left"><label class="avatar-img med-avatar" style="background-image: url(' + profileImage + ');"></label></div>'
             + '<div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>&nbsp;' + date + '</h6>'
             + '<h4 class="media-heading"><b>' + sender + '</b></h4>'
             + '<blockquote>' + message + '</blockquote></div></div>'

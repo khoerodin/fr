@@ -121,7 +121,10 @@
                             { value: memberData.orderLetter },
                             { value: memberData.title },
                             { value: memberData.customer.name },
-                            { value: memberData.client.name },
+                            { value: memberData.totalAmount, format: function () {
+                                var netto = Bisnis.Util.Money.format(memberData.totalAmount * memberData.quantity);
+                                return 'Rp <span class="pull-right">' + netto + '</span>';
+                            } },
                             { value: memberData.status, format: function (status) {
                                 return orderStatus(status);
                             } },

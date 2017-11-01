@@ -119,7 +119,7 @@
                         records.push([
                             { value: memberData.orderNumber },
                             { value: memberData.orderLetter },
-                            { value: memberData.title },
+                            { value: memberData.title.toUpperCase() },
                             { value: memberData.customer.name },
                             { value: memberData.totalAmount, format: function () {
                                 var netto = Bisnis.Util.Money.format(memberData.totalAmount * memberData.quantity);

@@ -63,8 +63,6 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
 
         $response = $this->request($url, $method, $temps);
 
-        //return new Response($response->getContent());
-
         return new Response($response->getContent(), $response->getStatusCode(), $response->headers->all());
     }
 

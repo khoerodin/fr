@@ -2,6 +2,9 @@
 
 namespace Bisnis\Controller;
 
+
+use Symfony\Component\HttpFoundation\Request;
+
 class AdvertisingInvoicesController extends AdminController
 {
     public function indexAction()
@@ -105,7 +108,7 @@ class AdvertisingInvoicesController extends AdminController
         return $this->view('advertising-invoices/pdf.twig', $data);
     }
 
-    public function printAction()
+    public function InvoicesPrintAction()
     {
         $meta = [
             'parentMenu' => 'Iklan',
@@ -116,7 +119,26 @@ class AdvertisingInvoicesController extends AdminController
             'meta' => $meta,
         ];
 
-        return $this->view('advertising-invoices/print.twig', $data);
+        return $this->view('advertising-invoices/invoices-print.twig', $data);
     }
 
+    public function InvoicesPrintPreviewAction(Request $request)
+    {
+        $ids = explode(',', $request->get('ids'));
+
+        $meta = [
+            'parentMenu' => 'Faktur',
+            'title' => 'Cetak Faktur - ' . date("Y-m-d H:i:s"),
+        ];
+
+        $invoices = $this->request('advertising/invoices/by_orders.json', 'get', ['orders' => $ids]);
+        $invoices = json_decode($invoices->getContent(), true);
+
+        $data = [
+            'meta' => $meta,
+            'invoices' => $invoices
+        ];
+
+        return $this->view('advertising-invoices/print-preview.twig', $data);
+    }
 }

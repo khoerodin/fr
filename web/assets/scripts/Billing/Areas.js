@@ -50,7 +50,7 @@
                     Bisnis.Util.Document.putHtml('#areasList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA WILAYAH TAGIH');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA WILAYAH TAGIH');
             }
         );
     };
@@ -163,7 +163,7 @@
                 nameElem.value = callback.name;
                 Bisnis.Util.Dialog.showModal('#detailModal');
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA WILAYAH TAGIH');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA WILAYAH TAGIH');
             }
         );
     };

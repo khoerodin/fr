@@ -54,7 +54,7 @@
                     Bisnis.Util.Document.putHtml('#customersList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PELANGGAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PELANGGAN');
             }
         );
     };
@@ -353,7 +353,7 @@
                 Bisnis.Util.Dialog.showModal('#detailModal');
                 document.getElementById('detailRepresentative').focus();
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PELANGGAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PELANGGAN');
             }
         );
     };

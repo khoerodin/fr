@@ -52,7 +52,7 @@
                     Bisnis.Util.Document.putHtml('#citiesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KOTA');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA KOTA');
             }
         );
     };
@@ -205,7 +205,7 @@
                 Bisnis.Util.Dialog.showModal('#detailModal');
                 document.getElementById('detailParent').focus();
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KOTA');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA KOTA');
             }
         );
     };

@@ -54,7 +54,7 @@
                     Bisnis.Util.Document.putHtml('#banksList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA BANK');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA BANK');
             }
         );
     };
@@ -167,7 +167,7 @@
                 nameElem.value = dataResponse.name;
                 Bisnis.Util.Dialog.showModal('#detailModal');
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA BANK');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA BANK');
             }
         );
     };

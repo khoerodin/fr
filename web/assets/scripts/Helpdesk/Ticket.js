@@ -184,7 +184,7 @@
                 callback();
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal memperbarui tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal memperbarui tiket');
         });
     };
 
@@ -212,7 +212,7 @@
 
             renderGrid(ticketList, renderTo, useMe);
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengambil data tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengambil data tiket');
         });
     };
 
@@ -252,7 +252,7 @@
                 });
             }, ticketList);
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengambil data tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengambil data tiket');
         });
     };
 
@@ -266,7 +266,7 @@
                 callback(response);
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengambil data tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengambil data tiket');
         });
     };
 
@@ -289,7 +289,7 @@
                 callback(response['hydra:member']);
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengambil data tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengambil data tiket');
         });
     };
 
@@ -303,7 +303,7 @@
                 callback();
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal memperbarui data respon tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal memperbarui data respon tiket');
         });
     };
 
@@ -318,7 +318,7 @@
                 callback();
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal memperbarui data respon tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal memperbarui data respon tiket');
         });
     };
 
@@ -332,7 +332,7 @@
                 callback(response['hydra:member']);
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengambil data respon tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengambil data respon tiket');
         });
     };
 
@@ -346,7 +346,7 @@
                 callback(response);
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengirim data respon tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengirim data respon tiket');
         });
     };
 
@@ -382,7 +382,7 @@
                 callback();
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengirim data tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengirim data tiket');
         });
     };
 
@@ -439,7 +439,7 @@
     Bisnis.Helpdesk.Ticket.buildChat = function (profileImage, sender, message, date, appendTo) {
         appendTo = 'undefined' === typeof appendTo ? '' : appendTo;
 
-        return appendTo + '<div class="media"><div class="media-left"><img class="img-circle" src="' + profileImage + '" style="width:77px;"></div>'
+        return appendTo + '<div class="media"><div class="media-left"><label class="avatar-img med-avatar" style="background-image: url(' + profileImage + ');"></label></div>'
             + '<div class="media-body"><h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i>&nbsp;' + date + '</h6>'
             + '<h4 class="media-heading"><b>' + sender + '</b></h4>'
             + '<blockquote>' + message + '</blockquote></div></div>'
@@ -542,7 +542,7 @@
                 callback(statistics);
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengambil data kategori tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengambil data kategori tiket');
         });
     };
 
@@ -557,7 +557,7 @@
                 callback();
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengambil data staff');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengambil data staff');
         });
     };
 
@@ -570,7 +570,7 @@
                 callback(response);
             }
         }, function () {
-            Bisnis.Util.Dialog.alert('Gagal mengambil data statistik tiket');
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal mengambil data statistik tiket');
         });
     };
 })(window.Bisnis || {});

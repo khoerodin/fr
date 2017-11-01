@@ -8,7 +8,7 @@ class AdvertisingInvoicesController extends AdminController
     {
         $meta = [
             'parentMenu' => 'Iklan',
-            'title' => 'Faktur Iklan',
+            'title' => 'Membuat Faktur Iklan',
         ];
 
         $data = [
@@ -71,26 +71,26 @@ class AdvertisingInvoicesController extends AdminController
         $jenis = strtolower($order['specification']['name']);
 
         if ( substr( $jenis, 0, 5 ) === "paket" ) {
-            $harga = $order['basePrice'];
+            $tarif = 'k';
         } else {
             switch ($jenis) {
                 case "kuping":
-                    $harga = $order['basePrice'];
+                    $tarif = 'k';
                     break;
                 case "banner":
-                    $harga = $order['basePrice'];
+                    $tarif = 'k';
                     break;
                 case "stapel":
-                    $harga = $order['basePrice'];
+                    $tarif = 'k';
                     break;
                 case "eksposisi":
-                    $harga = $order['basePrice'];
+                    $tarif = 'k';
                     break;
                 case "tarif khusus":
-                    $harga = $order['basePrice'];
+                    $tarif = 'k';
                     break;
                 default:
-                    $harga = ( (float) $order['columnSize'] * (float) $order['milimeterSize'] ) * (float) $order['totalPost'] * (float) $order['basePrice'];
+                    $tarif = 'n';
             }
         }
 
@@ -98,11 +98,25 @@ class AdvertisingInvoicesController extends AdminController
             'meta' => $meta,
             'invoice' => $invoice,
             'order' => $order,
-            'harga' => $harga,
-            'terbilang' => $this->terbilang($invoice['amount']) . ' rupiah'
+            'tarif' => $tarif,
+            'terbilang' => $this->terbilang($invoice['amount']) . ' rupiah',
         ];
 
         return $this->view('advertising-invoices/pdf.twig', $data);
+    }
+
+    public function printAction()
+    {
+        $meta = [
+            'parentMenu' => 'Iklan',
+            'title' => 'Cetak Faktur Iklan',
+        ];
+
+        $data = [
+            'meta' => $meta,
+        ];
+
+        return $this->view('advertising-invoices/print.twig', $data);
     }
 
 }

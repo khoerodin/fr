@@ -126,6 +126,7 @@
 
                 var staffId = ticket.staff.id;
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+                    staff = staff['hydra:member'];
                     if (0 < staff.length) {
                         staffId = staff[0].id;
                     }
@@ -297,28 +298,28 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Detil Tiket</h4>
+                <h4 class="modal-title">Detail Tiket</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12 table-responsive">
                         <table class="table table-bordered table-striped">
                             <tr>
-                                <td><b>Nama Staf:</b></td>
+                                <td><b>STAFF</b></td>
                                 <td class="chatTicketStaff">-</td>
-                                <td><b>Judul:</b></td>
+                                <td><b>JUDUL</b></td>
                                 <td class="chatTicketTitle">-</td>
                             </tr>
                             <tr>
-                                <td><b>Tipe:</b></td>
+                                <td><b>TIPE</b></td>
                                 <td class="chatTicketType">-</td>
-                                <td><b>Kategori:</b></td>
+                                <td><b>KATEGORI</b></td>
                                 <td class="chatTicketCategory">-</td>
                             </tr>
                             <tr>
-                                <td><b>Status:</b></td>
+                                <td><b>STATUS</b></td>
                                 <td class="chatTicketStatus">-</td>
-                                <td><b>Tanggal:</b></td>
+                                <td><b>TANGGAL</b></td>
                                 <td class="chatTicketDate">-</td>
                             </tr>
                         </table>
@@ -329,7 +330,7 @@
                         <div class="direct-chat-messages" id="chatHistory">
                             <div class="media">
                                 <div class="media-left">
-                                    <img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">
+                                    <img src="#" class="media-object" style="width:60px">
                                 </div>
                                 <div class="media-body">
                                     <h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i> Hari, Tanggal dan Jam</h6>
@@ -345,9 +346,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
-                <button type="button" class="btn btn-primary btn-flat pull-right" id="sendResponse">Kirim</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalDetail">Tutup</button>
+                <button type="button" class="btn btn-success btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i> Refresh</button>
+                <button type="button" class="btn btn-danger btn-flat pull-right" id="sendResponse">Kirim</button>
+                <button type="button" class="btn btn-default btn-flat" data-dismiss="modal" id="closeModalDetail">Tutup</button>
             </div>
         </div>
     </div>

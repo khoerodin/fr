@@ -52,7 +52,7 @@
                     Bisnis.Util.Document.putHtml('#accountExecutivesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKUN EKSEKUTIF');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA AKUN EKSEKUTIF');
             }
         );
     };
@@ -145,7 +145,7 @@
                             loadCategoriesGrid(accountExecutiveId, pageNum);
                         }, function (response) {
                             if (response.responseJSON) {
-                                Bisnis.Util.Dialog.alert(JSON.stringify(dataResponse.violations));
+                                Bisnis.Util.Dialog.alert('ERROR', JSON.stringify(dataResponse.violations));
                                 Bisnis.errorMessage('Gagal menambahkan kategori');
                             }
                         }
@@ -209,13 +209,13 @@
                             }, memberData);
                             Bisnis.Util.Grid.renderRecords('#accountExecutiveCategoriesList', records, pageNum);
                         }, function () {
-                            Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KATEGORI IKLAN');
+                            Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA KATEGORI IKLAN');
                         });
                 } else {
                     Bisnis.Util.Document.putHtml('#accountExecutiveCategoriesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KATEGORI AKUN EKSEKUTIF');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA KATEGORI AKUN EKSEKUTIF');
             }
         );
     };
@@ -347,7 +347,7 @@
 
                 Bisnis.Util.Dialog.showModal('#detailModal');
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA AKUN EKSEKUTIF');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA AKUN EKSEKUTIF');
             }
         );
     };

@@ -51,7 +51,7 @@
                     Bisnis.Util.Document.putHtml('#representativesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PERWAKILAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PERWAKILAN');
             }
         );
     };
@@ -167,7 +167,7 @@
                 var addressElem = document.getElementById('detailAddress');
                 addressElem.value = dataResponse.address;
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PERWAKILAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PERWAKILAN');
             }
         );
         Bisnis.Util.Dialog.showModal('#detailModal');

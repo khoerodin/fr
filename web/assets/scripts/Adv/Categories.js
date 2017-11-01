@@ -87,7 +87,7 @@
                                     document.querySelector('[data-id="'+data.id+'"]').closest('li').remove();
                                     Bisnis.successMessage('Berhasil menghapus data');
                                 }, function () {
-                                    Bisnis.Util.Dialog.alert('Gagal menghapus kategori');
+                                    Bisnis.Util.Dialog.alert('PERHATIAN', 'Gagal menghapus kategori');
                                 }
                             );
                         }

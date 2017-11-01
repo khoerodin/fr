@@ -91,7 +91,7 @@
                     Bisnis.Util.Document.putHtml('#usersList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PENGGUNA');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PENGGUNA');
             }
         );
     };
@@ -208,7 +208,7 @@
                 Bisnis.Util.CheckToggle.render('#detailEnabled');
                 Bisnis.Util.Dialog.showModal('#detailModal');
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PENGGUNA');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PENGGUNA');
             }
         );
     };

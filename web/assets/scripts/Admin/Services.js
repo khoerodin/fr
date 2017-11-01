@@ -49,7 +49,7 @@
                     Bisnis.Util.Document.putHtml('#servicesList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA SERVIS');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA SERVIS');
             }
         );
     };
@@ -161,7 +161,7 @@
                 nameElem.value = dataResponse.name;
                 nameElem.focus();
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA SERVIS');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA SERVIS');
             }
         );
         Bisnis.Util.Dialog.showModal('#detailModal');

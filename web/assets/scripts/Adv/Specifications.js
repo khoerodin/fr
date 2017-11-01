@@ -52,7 +52,7 @@
                     Bisnis.Util.Document.putHtml('#specificationsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA JENIS IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA JENIS IKLAN');
             }
         );
     };

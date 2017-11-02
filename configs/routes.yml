@@ -60,7 +60,8 @@ app:
        #Invoices
         - { path: '/advertising/invoices', controller: 'Bisnis:AdvertisingInvoices@index', methods: ['GET'] }
         - { path: '/advertising/invoices/pdf/{id}', controller: 'Bisnis:AdvertisingInvoices@pdf', methods: ['GET'] }
-        - { path: '/advertising/invoices-print', controller: 'Bisnis:AdvertisingInvoices@print', methods: ['GET'] }
+        - { path: '/advertising/invoices-print', controller: 'Bisnis:AdvertisingInvoices@InvoicesPrint', methods: ['GET'] }
+        - { path: '/advertising/invoices-print-preview', controller: 'Bisnis:AdvertisingInvoices@InvoicesPrintPreview', methods: ['GET'] }
 
         #Billing
         - { path: '/billing/areas', controller: 'Bisnis:BillingAreas@index', methods: ['GET'] }

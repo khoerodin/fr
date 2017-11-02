@@ -33,6 +33,22 @@
         });
     };
 
+    Bisnis.Adv.Invoices.getByOrders = function (params, successCallback, errorCallback) {
+        Bisnis.request({
+            module: 'advertising/invoices/by_orders.json',
+            method: 'get',
+            params: params
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
+            }
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
+        });
+    };
+
     // Invoices List
 
     var invoiceStatus = function (status) {

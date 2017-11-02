@@ -58,7 +58,7 @@ class AdvertisingInvoicesController extends AdminController
         return $hasil;
     }
 
-    public function pdfAction($invoiceId)
+    public function printAction($invoiceId)
     {
         $meta = [
             'parentMenu' => 'Faktur',
@@ -106,7 +106,7 @@ class AdvertisingInvoicesController extends AdminController
             'terbilang' => $this->terbilang($invoice['amount']) . ' rupiah',
         ];
 
-        return $this->view('advertising-invoices/pdf.twig', $data);
+        return $this->view('advertising-invoices/print.twig', $data);
     }
 
     public function InvoicesPrintAction()

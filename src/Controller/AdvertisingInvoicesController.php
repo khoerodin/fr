@@ -128,8 +128,7 @@ class AdvertisingInvoicesController extends AdminController
         $ids = explode(',', $request->get('ids'));
 
         $meta = [
-            'parentMenu' => 'Faktur',
-            'title' => 'Cetak Faktur - ' . date("Y-m-d H:i:s"),
+            'title' => 'CETAK FAKTUR - ' . date("d-m-Y H:i:s"),
         ];
 
         $invoices = $this->request('advertising/invoices/by_orders.json', 'get', ['orders' => $ids]);

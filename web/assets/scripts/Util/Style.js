@@ -122,6 +122,10 @@
         jQuery(selector).select2('destroy');
     };
 
+    Bisnis.Util.Style.resetSelect = function (selector) {
+        jQuery(selector).val([]);
+    };
+
     Bisnis.Util.Style.editor = function (selector) {
         jQuery(selector).summernote({
             tabsize: 4,

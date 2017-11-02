@@ -9,9 +9,9 @@
     {#Bootstrap 3.3.6#}
     <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
     {#Font Awesome#}
-    <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
+    {#<link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">#}
     {#Ionicons#}
-    <link rel="stylesheet" href="/assets/vendor/ionicons/css/ionicons.min.css">
+    {#<link rel="stylesheet" href="/assets/vendor/ionicons/css/ionicons.min.css">#}
     {#Theme style#}
     <link rel="stylesheet" href="/assets/vendor/adminlte/css/AdminLTE.css">
     <link rel="stylesheet" href="/assets/vendor/paper/paper.css">
@@ -31,7 +31,9 @@
 </head>
 
 <body class="A4">
-<div class="wrapper">
+    {% for data in invoices %}
+        {% set invoice = data.invoice %}
+        {% set order = data.order %}
     <!-- Main content -->
     <section class="invoice sheet padding-10mm">
         <!-- title row -->
@@ -43,20 +45,26 @@
             <div class="col-xs-4">
                 <div class="row">
                     <div class="col-xs-3"><b>NO</b></div>
-                    <div class="col-xs-9">: {{ invoice.invoiceNumber }}</div>
+                    <div class="col-xs-9">: {{ invoice.invoiceNumber }} </div>
                     <div class="col-xs-3"><b>TANGGAL</b></div>
-                    {% if invoice.createdAt|date('d-M-Y', "Asia/Jakarta")|upper == 'MAY' %}
-                        {% set bln = 'MEI' %}
-                    {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'AUG' %}
-                        {% set bln = 'AGU' %}
-                    {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'OCT' %}
-                        {% set bln = 'OKT' %}
-                    {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'DEC' %}
-                        {% set bln = 'DES' %}
-                    {% else %}
-                        {% set bln = invoice.createdAt|date('M', "Asia/Jakarta")|upper %}
+                    {% if invoice.createdAt is defined %}
+
+                        {% if invoice.createdAt|date('d-M-Y', "Asia/Jakarta")|upper == 'MAY' %}
+                            {% set bln = 'MEI' %}
+                        {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'AUG' %}
+                            {% set bln = 'AGU' %}
+                        {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'OCT' %}
+                            {% set bln = 'OKT' %}
+                        {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'DEC' %}
+                            {% set bln = 'DES' %}
+                        {% else %}
+                            {% set bln = invoice.createdAt|date('M', "Asia/Jakarta")|upper %}
+                        {% endif %}
+
+                        {% set tanggal = invoice.createdAt|date('d', "Asia/Jakarta")|upper ~ '-' ~ bln ~ '-' ~ invoice.createdAt|date('Y', "Asia/Jakarta")|upper %}
+
                     {% endif %}
-                    <div class="col-xs-9">: {{ invoice.createdAt|date('d', "Asia/Jakarta")|upper }}-{{ bln }}-{{ invoice.createdAt|date('Y', "Asia/Jakarta")|upper }}</div>
+                    <div class="col-xs-9">: {{ tanggal }}</div>
                 </div>
             </div>
 
@@ -97,6 +105,19 @@
                     <div class="col-xs-2" style="margin-top: 13px;">HARGA</div>
                     <div class="col-xs-2" style="margin-top: 13px;">: Rp <span class="pull-right">{{ order.basePrice|number_format(0, '.', ',') }}</span></div>
                     <div class="col-xs-3" style="margin-top: 13px;">/mmk</div>
+
+                    {% set jenisIklan = order.specification.name|lower|replace({' ':''}) %}
+                    {% if
+                    (jenisIklan|slice(0, 5) == 'paket')
+                    or (jenisIklan == 'kuping')
+                    or (jenisIklan == 'banner')
+                    or (jenisIklan == 'stapel')
+                    or (jenisIklan == 'eksposisi')
+                    or (jenisIklan == 'tarifkhusus') %}
+                        {% set tarif = 'k' %}
+                    {% else %}
+                        {% set tarif = 'n' %}
+                    {% endif %}
 
                     {% if order.printInvoiceAs == 'n' %}
                         {% if tarif == 'n' %}
@@ -215,7 +236,6 @@
         </footer>
     </section>
     <!-- /.content -->
-</div>
-<!-- ./wrapper -->
+    {% endfor %}
 </body>
 </html>

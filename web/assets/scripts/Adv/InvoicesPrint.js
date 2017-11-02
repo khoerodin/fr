@@ -128,10 +128,4 @@
         }
     };
     // end add selected to grid
-
-    // print invoices
-    Bisnis.Util.Event.bind('click', '#printInvoicesBtn', function () {
-
-    });
-    // end print invoices
 })(window.Bisnis || {});

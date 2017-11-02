@@ -72,6 +72,7 @@ class AdvertisingInvoicesController extends AdminController
         $order = json_decode($order->getContent(), true)['hydra:member'][0]['order'];
 
         $jenis = strtolower($order['specification']['name']);
+        $jenis = str_replace(' ', '', $jenis);
 
         if ( substr( $jenis, 0, 5 ) === "paket" ) {
             $tarif = 'k';
@@ -89,7 +90,7 @@ class AdvertisingInvoicesController extends AdminController
                 case "eksposisi":
                     $tarif = 'k';
                     break;
-                case "tarif khusus":
+                case "tarifkhusus":
                     $tarif = 'k';
                     break;
                 default:

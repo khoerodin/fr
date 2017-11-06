@@ -370,58 +370,6 @@ $(document).on('click', '.price', function () {
 
     getPriceList(id)
 
-    // $('#priceList #search-harga').select2({
-    //
-    //     theme: "bootstrap",
-    //     placeholder: "SEARCH YEAR",
-    //     allowClear: true,
-    //     ajax: {
-    //         url: "/api/search",
-    //         dataType: 'json',
-    //         type: 'POST',
-    //         delay: 250,
-    //         data: function (params) {
-    //             return {
-    //                 q: params.term,
-    //                 page: params.page,
-    //                 module: 'advertising/prices',
-    //                 method: 'get',
-    //                 field: 'specificationDetail.name'.split('#'),
-    //                 params: {
-    //                     'specificationDetail.id' : id
-    //                 }
-    //             };
-    //         },
-    //         processResults: function (data) {
-    //             if(data.length > 0) {
-    //                 return {
-    //                     results: $.map(data, function(obj) {
-    //                         console.log(obj);
-    //                         return { id: obj.id, text: obj['specificationDetail.name'] };
-    //                     })
-    //                 }
-    //             } else {
-    //                 var elms = $('.harga-search').removeClass('col-md-12').addClass('col-md-10');
-    //                 elms += $('.button-harga-area').addClass('col-md-2');
-    //                 elms += $('.button-harga-area a.add-btn').css('visibility', 'visible');
-    //
-    //                 return {
-    //                     results: elms
-    //                 }
-    //             }
-    //         },
-    //         cache: true,
-    //     },
-    //     escapeMarkup: function (markup) { return markup; },
-    //     minimumInputLength: 2
-    // }).on("select2:select", function () {
-    //     // var specName = $('#detail-jenis select#search-spec-detail option:selected').text();
-    //     // getAdvDetail(advSpecId, specName);
-    // }).on("select2:open", function () {
-    //     // $('.detail-jenis-search').removeClass('col-md-10').addClass('col-md-12');
-    //     // $('.button-detail-jenis-area').removeClass('col-md-2');
-    //     // $('.button-detail-jenis-area a.add-btn').css('visibility', 'hidden');
-    // });
 });
 
 $(document).on('click', '.detail-price', function () {

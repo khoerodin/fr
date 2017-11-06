@@ -31,7 +31,7 @@
 </head>
 
 <body class="A4">
-    {% for data in invoices %}
+    {% for key, data in invoices %}
         {% set invoice = data.invoice %}
         {% set order = data.order %}
     <!-- Main content -->
@@ -186,7 +186,7 @@
                     <div class="col-xs-12" style="visibility: hidden;">s</div>
 
                     <div class="col-xs-2">TERBILANG</div>
-                    <div class="col-xs-10">: <i><b>{{ terbilang|upper }}</b></i></div>
+                    <div class="col-xs-10">: <i><b>{{ terbilang[key]|upper }}</b></i></div>
 
                     <div class="col-xs-2">CATATAN</div>
                     <div class="col-xs-10">: {{ order.orderDescription }}</div>

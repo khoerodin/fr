@@ -4,20 +4,20 @@
     Bisnis.Util.Terbilang.render = function (source) {
         var bilangan;
         if(isNaN(source)){
-            bilangan = document.querySelector(selector).innerText;
+            bilangan = document.querySelector(source).innerText;
         }else{
             bilangan = source.toString();
         }
 
         var kalimat = "";
-        var angka   = new Array('0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0');
-        var kata    = new Array('','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan');
-        var tingkat = new Array('','Ribu','Juta','Milyar','Triliun');
+        var angka   = ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+        var kata    = ['','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan'];
+        var tingkat = ['','Ribu','Juta','Milyar','Triliun'];
         var panjang_bilangan = bilangan.length;
 
         /* pengujian panjang bilangan */
         if(panjang_bilangan > 15){
-            kalimat = "Diluar Batas";
+            kalimat = "Di luar Batas";
         }else{
             /* mengambil angka-angka yang ada dalam bilangan, dimasukkan ke dalam array */
             for(i = 1; i <= panjang_bilangan; i++) {

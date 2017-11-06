@@ -77,7 +77,7 @@
             function () {
                 location.href = '/';
             }, function () {
-                Bisnis.Util.Dialog.alert('Gagal Keluar Aplikasi!');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL KELUAR APLIKASI!');
             }
         );
     });

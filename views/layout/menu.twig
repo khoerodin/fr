@@ -3,7 +3,7 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
             <ul class="sidebar-menu">
-                {% for key, category in menus|sort %}
+                {% for key, category in menus %}
                     <li class="treeview" id="firstParent{{ key|lower|replace({ ' ': "" }) }}">
                         <a href="javascript:void(0)" title="{{ key|upper }}">
                             <i class="fa fa-circle"></i>
@@ -11,7 +11,7 @@
                         </a>
 
                         <ul class="treeview-menu">
-                            {% for moduleKey, module in category|sort %}
+                            {% for moduleKey, module in category %}
                             <li class="treeview" id="secondParent{{ key|lower|replace({ ' ': "" }) }}{{ moduleKey|lower|replace({ ' ': "" }) }}">
                                 <a href="javascript:void(0)" title="{{ moduleKey|upper }}">
                                     <i class="fa fa-circle-o" id="secondParentIcon{{ key|lower|replace({ ' ': "" }) }}{{ moduleKey|lower|replace({ ' ': "" }) }}"></i> {{ moduleKey|upper }}
@@ -20,7 +20,7 @@
                                     </span>
                                 </a>
                                 <ul class="treeview-menu">
-                                    {% for menuKey, menu in module|sort %}
+                                    {% for menuKey, menu in module %}
                                     <li class="treeview" id="thirdParent{{ menuKey|lower|replace({ ' ': "" }) }}{{ menu.name|lower|replace({ ' ': "" }) }}">
                                         <a href="/{{ menu.path }}" title="{{ menu.name|upper }}">
                                             <i class="fa fa-circle-o" id="thirdParentIcon{{ menuKey|lower|replace({ ' ': "" }) }}{{ menu.name|lower|replace({ ' ': "" }) }}"></i>

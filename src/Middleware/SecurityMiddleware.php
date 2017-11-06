@@ -86,23 +86,6 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
                         ];
                     }
 
-                    /*foreach ($modules as $k => $v) {
-                        echo $k . ' : ';
-                        foreach ($v as $ke => $va) {
-                            echo $ke . ' : ';
-                            foreach ($va as $key => $val) {
-                                echo ' - ' . $val['name'];
-                            }
-                        }
-
-
-                    }*/
-
-                    foreach ($modules as $key => $row) {
-                        $menuOrder[$key]  = $row['menuOrder'];
-                    }
-                    array_multisort($menuOrder, SORT_ASC, $modules);
-
                     $session->set('menus', $modules);
                 }
             }

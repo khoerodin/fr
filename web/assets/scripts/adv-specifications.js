@@ -307,13 +307,12 @@ $(document).on('click', '#form-add-detail .add-detail', function () {
         type: 'POST',
         data: data,
         success: function (successData, textStatus, jqXHR) {
-            if (jqXHR.status === 200) {
-                getAdvDetail(advSpecId);
-                $('#form-add-detail').modal('hide');
-                toastr.success('Data saved successfully');
-            } else {
-                toastr.error('Error when saving your data');
-            }
+            getAdvDetail(advSpecId);
+            $('#form-add-detail').modal('hide');
+            toastr.success('Data saved successfully');
+        },
+        error: function () {
+            toastr.error('Error when saving your data');
         }
     });
 });

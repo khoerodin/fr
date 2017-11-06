@@ -79,7 +79,7 @@ function getAll(module, columns = [], tbody = 'data-list') {
         params: getQueryVariable()
     };
 
-    columnCount = columns.length+2;
+    var columnCount = columns.length+2;
 
     $.ajax({
         url: "/api",

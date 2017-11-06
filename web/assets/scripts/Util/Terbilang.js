@@ -35,8 +35,8 @@
                 kata3 = "";
 
                 /* untuk Ratusan */
-                if(angka[i+2] != "0"){
-                    if(angka[i+2] == "1"){
+                if(angka[i+2] !== "0"){
+                    if(angka[i+2] === "1"){
                         kata1 = "Seratus";
                     }else{
                         kata1 = kata[angka[i+2]] + " Ratus";
@@ -44,11 +44,11 @@
                 }
 
                 /* untuk Puluhan atau Belasan */
-                if(angka[i+1] != "0"){
-                    if(angka[i+1] == "1"){
-                        if(angka[i] == "0"){
+                if(angka[i+1] !== "0"){
+                    if(angka[i+1] === "1"){
+                        if(angka[i] === "0"){
                             kata2 = "Sepuluh";
-                        }else if(angka[i] == "1"){
+                        }else if(angka[i] === "1"){
                             kata2 = "Sebelas";
                         }else{
                             kata2 = kata[angka[i]] + " Belas";
@@ -59,14 +59,14 @@
                 }
 
                 /* untuk Satuan */
-                if (angka[i] != "0"){
-                    if (angka[i+1] != "1"){
+                if (angka[i] !== "0"){
+                    if (angka[i+1] !== "1"){
                         kata3 = kata[angka[i]];
                     }
                 }
 
                 /* pengujian angka apakah tidak nol semua, lalu ditambahkan tingkat */
-                if ((angka[i] != "0") || (angka[i+1] != "0") || (angka[i+2] != "0")){
+                if ((angka[i] !== "0") || (angka[i+1] !== "0") || (angka[i+2] !== "0")){
                     subkalimat = kata1+" "+kata2+" "+kata3+" "+tingkat[j]+" ";
                 }
 
@@ -77,7 +77,7 @@
             }
 
             /* mengganti Satu Ribu jadi Seribu jika diperlukan */
-            if ((angka[5] == "0") && (angka[6] == "0")){
+            if ((angka[5] === "0") && (angka[6] === "0")){
                 kalimat = kalimat.replace("Satu Ribu","Seribu");
             }
 

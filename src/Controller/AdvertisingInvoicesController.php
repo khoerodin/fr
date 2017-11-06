@@ -134,9 +134,15 @@ class AdvertisingInvoicesController extends AdminController
         $invoices = $this->request('advertising/invoices/by_orders.json', 'get', ['orders' => $ids]);
         $invoices = json_decode($invoices->getContent(), true);
 
+        $terbilang = [];
+        foreach ($invoices as $invoice) {
+            $terbilang[] = $this->terbilang($invoice['invoice']['amount']) . ' rupiah';
+        }
+
         $data = [
             'meta' => $meta,
-            'invoices' => $invoices
+            'invoices' => $invoices,
+            'terbilang' => $terbilang
         ];
 
         return $this->view('advertising-invoices/print-preview.twig', $data);

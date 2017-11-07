@@ -53,7 +53,7 @@
     var loadGrid = function (pageNum) {
         pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('USERS_CURRENT_PAGE', pageNum);
-        Bisnis.Admin.Users.fetchAll([{page: pageNum}],
+        Bisnis.Admin.Users.fetchAll([{page: pageNum}, {order: {fullname: 'ASC'}}],
             function (dataResponse) {
                 var memberData = dataResponse['hydra:member'];
                 var viewData = dataResponse['hydra:view'];
@@ -194,6 +194,7 @@
 
     // detail modal
     var loadUserDetail = function (id) {
+        console.log(id)
         Bisnis.Util.Storage.store('USER_ID', id);
         Bisnis.Admin.Users.fetchById(id,
             function (dataResponse) {

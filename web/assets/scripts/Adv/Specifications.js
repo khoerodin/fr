@@ -40,7 +40,7 @@
                                 return '<span class="pull-right">' +
                                     '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail" title="DETAIL"><i class="fa fa-eye"></i></button>' +
                                     '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete" title="TIPE IKLAN"><i class="fa fa-file"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-spc-detail" title="TIPE IKLAN"><i class="fa fa-file"></i></button>' +
                                     '</span>';
                             }}
                         ]);
@@ -256,7 +256,7 @@
     // prevent submit form on enter
     Bisnis.Util.Event.bind('keypress', '#addForm, #detailForm', function (e) {
         var key = e.charCode || e.keyCode || 0;
-        if (key == 13) {
+        if (key === 13) {
             Bisnis.Util.Dialog.alert("PERHATIAN", "SILAKAN TEKAN TOMBOL SIMPAN");
             e.preventDefault();
         }
@@ -275,5 +275,4 @@
         Bisnis.Util.Style.resetSelect('#detailForm select');
     });
     // end reset modal form on modal hidden
-
 })(window.Bisnis || {});

@@ -58,7 +58,7 @@
                     Bisnis.Util.Document.putHtml('#customerList', '<tr><td colspan="10">TIDAK ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PEMASANG IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PEMASANG IKLAN');
             }
         );
 
@@ -115,7 +115,7 @@
                     Bisnis.Util.Document.putHtml('#clientList', '<tr><td colspan="10">TIDAK ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KLIEN IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA KLIEN IKLAN');
             }
         );
 
@@ -175,7 +175,7 @@
                 }
             },
             function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA JENIS IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA JENIS IKLAN');
             }
         );
 
@@ -257,7 +257,7 @@
                     Bisnis.Util.Document.putHtml('#typeList', '<tr><td colspan="10">TIDAK ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA TIPE IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA TIPE IKLAN');
             }
         );
 

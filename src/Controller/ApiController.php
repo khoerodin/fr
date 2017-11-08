@@ -27,23 +27,21 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $params = $request->get('params');
         $fullname = null;
 
-        if ($method == 'post' || $method == 'put' || $method == 'POST' || $method == 'PUT') {
+        if (strtolower($method) == 'post' || strtolower($method) == 'put') {
             $temps = [];
             foreach ($params as $param) {
                 /** @var FilterFactory $filter */
                 $filter = $this->container['app.filter_factory'];
                 $value = $filter->cast($param['value']);
 
-                if (null !== $value) {
-                    $temps[$param['name']] = $value;
-                }
+                $temps[$param['name']] = $value;
 
                 if ($param['name'] == 'fullname' && $url == 'users') {
                     $fullname = $value;
                 }
             }
 
-            if ($url == 'users' && ($method == 'post' || $method == 'POST')) {
+            if (strtolower($url) == 'users' && (strtolower($method) == 'post')) {
                 $temps['username'] = $this->generateUsername($fullname);
             }
         } elseif ($method == 'get') {

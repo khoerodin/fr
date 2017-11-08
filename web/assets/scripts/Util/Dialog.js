@@ -25,6 +25,7 @@
     };
 
     Bisnis.Util.Dialog.alert = function (title, message, callback) {
+        title = title ? title : 'PERHATIAN';
         bootbox.alert({
             title: title,
             message: message,

@@ -10,7 +10,6 @@
         placeholder: 'CARI PERWAKILAN',
         module: 'representatives',
         prependValue: '/api/representatives/',
-        allowClear: true,
         fields: [
             {
                 field: 'code',

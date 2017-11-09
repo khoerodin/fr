@@ -71,6 +71,22 @@ class AdvertisingInvoicesController extends AdminController
         $order = $this->request('advertising/order-invoices', 'get', ['invoice.id' => $invoice['id']]);
         $order = json_decode($order->getContent(), true)['hydra:member'][0]['order'];
 
+        $publishAds = $this->request('advertising/publish-ads', 'get', ['order.id' => $order['id'], 'order' => ['publishDate' => 'ASC']]);
+        $publishAds = json_decode($publishAds->getContent(), true)['hydra:member'];
+        $panjang = sizeof($publishAds);
+        foreach ($publishAds as $key => $publishAd) {
+            if($key == 0){
+                $awal = $publishAd['publishDate'];
+            }
+
+            if($key+1 == $panjang){
+                $akhir = $publishAd['publishDate'];
+            }
+        }
+
+        $tglTerbit['awal'] = $awal;
+        $tglTerbit['akhir'] = $akhir;
+
         $jenis = strtolower($order['specification']['name']);
         $jenis = str_replace(' ', '', $jenis);
 
@@ -104,6 +120,7 @@ class AdvertisingInvoicesController extends AdminController
             'order' => $order,
             'tarif' => $tarif,
             'terbilang' => $this->terbilang($invoice['amount']) . ' rupiah',
+            'tglTerbit' => $tglTerbit
         ];
 
         return $this->view('advertising-invoices/print.twig', $data);
@@ -135,14 +152,31 @@ class AdvertisingInvoicesController extends AdminController
         $invoices = json_decode($invoices->getContent(), true);
 
         $terbilang = [];
+        $tglTerbit = [];
         foreach ($invoices as $invoice) {
-            $terbilang[] = $this->terbilang($invoice['invoice']['amount']) . ' rupiah';
+            $terbilang[$invoice['invoice']['id']] = $this->terbilang($invoice['invoice']['amount']) . ' rupiah';
+
+            $publishAds = $this->request('advertising/publish-ads', 'get', ['order.id' => $invoice['order']['id'], 'order' => ['publishDate' => 'ASC']]);
+            $publishAds = json_decode($publishAds->getContent(), true)['hydra:member'];
+            $panjang = sizeof($publishAds);
+            foreach ($publishAds as $key => $publishAd) {
+                if($key == 0){
+                    $awal = $publishAd['publishDate'];
+                }
+
+                if($key+1 == $panjang){
+                    $akhir = $publishAd['publishDate'];
+                }
+            }
+            $tglTerbit[$invoice['invoice']['id']]['awal'] = $awal;
+            $tglTerbit[$invoice['invoice']['id']]['akhir'] = $akhir;
         }
 
         $data = [
             'meta' => $meta,
             'invoices' => $invoices,
-            'terbilang' => $terbilang
+            'terbilang' => $terbilang,
+            'tglTerbit' => $tglTerbit
         ];
 
         return $this->view('advertising-invoices/print-preview.twig', $data);

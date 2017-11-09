@@ -199,6 +199,7 @@
     Bisnis.Util.Event.bind('click', '#btn-order', function () {
         var thisBtn = this;
         thisBtn.disabled = true;
+        thisBtn.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> TUNGGU...';
 
         var params = Bisnis.Util.Form.serializeArray('#orderForm');
         const selectedTags = document.querySelectorAll('[name="orderTag"] option:checked');
@@ -232,11 +233,13 @@
                 };
                 Bisnis.request(params,
                     function () {
+                        thisBtn.innerHTML = 'SIMPAN';
                         Bisnis.Util.Dialog.alert('SUKSES', 'ORDER IKLAN BERHASIL DIBUAT', function () {
                             window.location.href = '/advertising/orders/new';
                         });
                     },
                     function () {
+                        thisBtn.innerHTML = 'SIMPAN';
                         Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENYIMPAN EDISI TERBIT (JUMLAH TERBIT)');
                     },
                     '/advertising/orders/publish-ads'
@@ -246,6 +249,7 @@
                 if (response.responseJSON) {
                     Bisnis.Util.Grid.validate('orderForm', response.responseJSON.violations);
                 }
+                thisBtn.innerHTML = 'SIMPAN';
                 thisBtn.disabled = false;
             }
         );

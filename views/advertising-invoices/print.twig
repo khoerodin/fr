@@ -77,7 +77,42 @@
                     <div class="col-xs-10" style="margin-top: 13px;">: {{ order.specification.name|upper }}</div>
 
                     <div class="col-xs-2">TANGGAL TERBIT</div>
-                    <div class="col-xs-10">: {{ order.specification.name|upper }}</div>
+                    {% if tglTerbit['awal'] is defined %}
+
+                        {% if tglTerbit['awal']|date('d-M-Y', "Asia/Jakarta")|upper == 'MAY' %}
+                            {% set bln = 'MEI' %}
+                        {% elseif tglTerbit['awal']|date('M', "Asia/Jakarta")|upper == 'AUG' %}
+                            {% set bln = 'AGU' %}
+                        {% elseif tglTerbit['awal']|date('M', "Asia/Jakarta")|upper == 'OCT' %}
+                            {% set bln = 'OKT' %}
+                        {% elseif tglTerbit['awal']|date('M', "Asia/Jakarta")|upper == 'DEC' %}
+                            {% set bln = 'DES' %}
+                        {% else %}
+                            {% set bln = tglTerbit['awal']|date('M', "Asia/Jakarta")|upper %}
+                        {% endif %}
+
+                        {% set tanggalAwal = tglTerbit['awal']|date('d', "Asia/Jakarta")|upper ~ '-' ~ bln ~ '-' ~ tglTerbit['awal']|date('Y', "Asia/Jakarta")|upper %}
+
+                    {% endif %}
+
+                    {% if tglTerbit['akhir'] is defined %}
+
+                        {% if tglTerbit['akhir']|date('d-M-Y', "Asia/Jakarta")|upper == 'MAY' %}
+                            {% set bln = 'MEI' %}
+                        {% elseif tglTerbit['akhir']|date('M', "Asia/Jakarta")|upper == 'AUG' %}
+                            {% set bln = 'AGU' %}
+                        {% elseif tglTerbit['akhir']|date('M', "Asia/Jakarta")|upper == 'OCT' %}
+                            {% set bln = 'OKT' %}
+                        {% elseif tglTerbit['akhir']|date('M', "Asia/Jakarta")|upper == 'DEC' %}
+                            {% set bln = 'DES' %}
+                        {% else %}
+                            {% set bln = tglTerbit['akhir']|date('M', "Asia/Jakarta")|upper %}
+                        {% endif %}
+
+                        {% set tanggalAkhir = tglTerbit['akhir']|date('d', "Asia/Jakarta")|upper ~ '-' ~ bln ~ '-' ~ tglTerbit['akhir']|date('Y', "Asia/Jakarta")|upper %}
+
+                    {% endif %}
+                    <div class="col-xs-10">: {{ tanggalAwal }} S.D {{ tanggalAkhir }}</div>
 
                     <div class="col-xs-2">JUMLAH TERBIT</div>
                     <div class="col-xs-10">: {{ order.totalPost }}</div>

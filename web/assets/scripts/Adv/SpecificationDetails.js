@@ -43,7 +43,7 @@
                                 return '<span class="pull-right">' +
                                     '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-detail-spec" title="DETAIL"><i class="fa fa-eye"></i></button>' +
                                     '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-delete-detail-spec" title="HAPUS"><i class="fa fa-times"></i></button>' +
-                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-price" title="TIPE IKLAN"><i class="fa fa-money"></i></button>' +
+                                    '<button data-id="' + id + '" class="btn btn-xs btn-default btn-flat btn-price" title="HARGA IKLAN"><i class="fa fa-money"></i></button>' +
                                     '</span>';
                             }}
                         ]);

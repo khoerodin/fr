@@ -70,7 +70,7 @@
                         Bisnis.Util.Dialog.alert('PERHATIAN', 'ORDER IKLAN INI TIDAK MEMILIKI FAKTUR');
                     }
                 } else {
-                    Bisnis.Util.Dialog.alert('PERHATIAN', 'ORDER IKLAN INI BELUM MEMILIKI FAKTUR');
+                    Bisnis.Util.Dialog.alert('PERHATIAN', 'ORDER IKLAN INI <strong>BELUM</strong> MEMILIKI FAKTUR');
                 }
             }
         );

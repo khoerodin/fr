@@ -48,7 +48,7 @@
                 delay: 250,
                 data: function (params) {
                     return {
-                        q: params.term,
+                        q: params.term.trim(),
                         page: params.page,
                         module: module,
                         method: 'get',

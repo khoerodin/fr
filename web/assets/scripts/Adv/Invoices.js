@@ -732,4 +732,29 @@
 
     });
     // end reset modal form on modal hidden
+
+    // Print Invoices
+    jQuery('#rangeDates').datepicker({
+        format: "dd/mm/yyyy",
+        todayBtn: "linked",
+        clearBtn: true,
+        language: "id"
+    });
+
+    Bisnis.Util.Style.modifySelect('#invoiceState');
+
+    Bisnis.Util.Event.bind('click', '#btn-print-invoice', function () {
+        var startDate = document.querySelector('#startDate');
+        var endDate = document.querySelector('#endDate');
+        var invoiceState = document.querySelector('#invoiceState');
+
+        if (startDate.value && endDate.value && invoiceState.value) {
+            startDate = window.moment(startDate.value, 'DD/MM/YYYY').format('YYYYMMDD');
+            endDate = window.moment(endDate.value, 'DD/MM/YYYY').format('YYYYMMDD');
+            window.open('/advertising/invoices-print/'+ invoiceState.value +'/'+ startDate +'/'+ endDate, '_blank');
+        } else {
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'MOHON LENGKAPI FORM TERLEBIH DAHULU');
+        }
+    });
+    // Print Invoices
 })(window.Bisnis || {});

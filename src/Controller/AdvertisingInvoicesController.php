@@ -130,14 +130,23 @@ class AdvertisingInvoicesController extends AdminController
     {
         $startDate = date_parse($start);
         $start = $startDate['year'] . '-' . $startDate['month'] . '-' . $startDate['day'] . ' 00:00:00';
+        //$start = date('Y-m-d', strtotime($start. ' - 1 days'));
 
         $endDate = date_parse($end);
         $end = $endDate['year'] . '-' . $endDate['month'] . '-' . $endDate['day'] . ' 00:00:00';
+        //$end = date('Y-m-d', strtotime($end. ' + 1 days'));
 
         $orders = $this->request(
             'advertising/orders',
             'get',
-            ['createdAt' => [ 'after' => $start], 'createdAt' => [ 'before' => $end]]
+            [
+                'createdAt' => [
+                    'after' => $start
+                ],
+                'createdAt' => [
+                    'before' => $end
+                ]
+            ]
         );
         $orders = json_decode($orders->getContent(), true)['hydra:member'];
 

@@ -126,29 +126,36 @@ class AdvertisingInvoicesController extends AdminController
         return $this->view('advertising-invoices/print.twig', $data);
     }
 
-    public function InvoicesPrintAction()
+    public function InvoicesPrintAction($state, $start, $end)
     {
-        $meta = [
-            'parentMenu' => 'Iklan',
-            'title' => 'Cetak Faktur Iklan',
-        ];
+        $startDate = date_parse($start);
+        $start = $startDate['year'] . '-' . $startDate['month'] . '-' . $startDate['day'] . ' 00:00:00';
 
-        $data = [
-            'meta' => $meta,
-        ];
+        $endDate = date_parse($end);
+        $end = $endDate['year'] . '-' . $endDate['month'] . '-' . $endDate['day'] . ' 00:00:00';
 
-        return $this->view('advertising-invoices/invoices-print.twig', $data);
+        $orders = $this->request(
+            'advertising/orders',
+            'get',
+            ['createdAt' => [ 'after' => $start], 'createdAt' => [ 'before' => $end]]
+        );
+        $orders = json_decode($orders->getContent(), true)['hydra:member'];
+
+        $orderIds = [];
+        foreach ($orders as $order) {
+            $orderIds[] = $order['id'];
+        }
+
+        return $this->InvoicesPrintPreviewAction($orderIds);
     }
 
-    public function InvoicesPrintPreviewAction(Request $request)
+    private function InvoicesPrintPreviewAction(Array $ids)
     {
-        $ids = explode(',', $request->get('ids'));
-
         $meta = [
             'title' => 'CETAK FAKTUR - ' . date("d-m-Y H:i:s"),
         ];
 
-        $invoices = $this->request('advertising/invoices/by_orders.json', 'get', ['orders' => $ids]);
+        $invoices = $this->request('advertising/invoices/by_orders.json', 'get', ['orders' => $ids, 'status' => 'void']);
         $invoices = json_decode($invoices->getContent(), true);
 
         $terbilang = [];

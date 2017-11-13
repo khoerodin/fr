@@ -34,7 +34,9 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 $filter = $this->container['app.filter_factory'];
                 $value = $filter->cast($param['value']);
 
-                $temps[$param['name']] = $value;
+                if (null !== $value) {
+                    $temps[$param['name']] = $value;
+                }
 
                 if ($param['name'] == 'fullname' && $url == 'users') {
                     $fullname = $value;

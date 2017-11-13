@@ -53,7 +53,7 @@
     };
 
     Bisnis.Util.Dialog.hiddenModal = function (selector, callback) {
-        $(selector).on('hidden.bs.modal', function (e) {
+        jQuery(selector).on('hidden.bs.modal', function (e) {
             if (Bisnis.validCallback(callback)) {
                 callback(e);
             }
@@ -61,7 +61,7 @@
     };
 
     Bisnis.Util.Dialog.shownTab = function (selector, callback) {
-        $(selector).on('shown.bs.tab', function (e) {
+        jQuery(selector).on('shown.bs.tab', function (e) {
             if (Bisnis.validCallback(callback)) {
                 callback(e);
             }

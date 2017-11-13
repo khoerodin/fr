@@ -137,6 +137,7 @@
     var edisiHari = function () {
         var startDate = document.querySelector('#startDate');
         var endDate = document.querySelector('#endDate');
+        
         if (startDate.value && endDate.value) {
             startDate = window.moment(startDate.value, 'DD/MM/YYYY').format('YYYY-MM-DD');
             endDate = window.moment(endDate.value, 'DD/MM/YYYY').format('YYYY-MM-DD');

@@ -142,15 +142,14 @@ class AdvertisingInvoicesController extends AdminController
         $orders = json_decode($orders->getContent(), true)['hydra:member'];
 
         $orderIds = [];
-        foreach ($orders as $order ) {
+        foreach ($orders as $order) {
             $orderIds[] = $order['id'];
         }
 
         return $this->InvoicesPrintPreviewAction($orderIds);
-
     }
 
-    private function InvoicesPrintPreviewAction($ids)
+    private function InvoicesPrintPreviewAction(Array $ids)
     {
         $meta = [
             'title' => 'CETAK FAKTUR - ' . date("d-m-Y H:i:s"),

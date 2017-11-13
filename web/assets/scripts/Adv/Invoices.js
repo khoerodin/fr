@@ -734,11 +734,13 @@
     // end reset modal form on modal hidden
 
     // Print Invoices
-    jQuery('#rangeDates').datepicker({
-        format: "dd/mm/yyyy",
-        todayBtn: "linked",
-        clearBtn: true,
-        language: "id"
+    Bisnis.init(function () {
+        jQuery('#rangeDates').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            clearBtn: true,
+            language: "id"
+        });
     });
 
     Bisnis.Util.Style.modifySelect('#invoiceState');

@@ -160,7 +160,7 @@ class AdvertisingInvoicesController extends AdminController
     private function InvoicesPrintPreviewAction(Array $ids)
     {
         $meta = [
-            'title' => 'CETAK FAKTUR - ' . date("d-m-Y H:i:s"),
+            'title' => 'INVOICES PRINTED AT - ' . date("d-m-Y H:i:s"),
         ];
 
         $invoices = $this->request('advertising/invoices/by_orders.json', 'get', ['orders' => $ids, 'status' => 'void']);

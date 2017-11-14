@@ -100,7 +100,7 @@
 
     var toISODate = function (milliseconds) {
         var date = new Date(milliseconds);
-        var y = date.getFullYear()
+        var y = date.getFullYear();
         var m = date.getMonth() + 1;
         var d = date.getDate();
         m = (m < 10) ? '0' + m : m;

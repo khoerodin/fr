@@ -2,8 +2,6 @@
 
 namespace Bisnis\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class AdvertisingInvoicesController extends AdminController
 {
     public function indexAction()
@@ -166,6 +164,7 @@ class AdvertisingInvoicesController extends AdminController
         $invoices = $this->request('advertising/invoices/by_orders.json', 'get', ['orders' => $ids, 'status' => 'void']);
         $invoices = json_decode($invoices->getContent(), true);
 
+        // Tanggal terbit dan terbilang
         $terbilang = [];
         $tglTerbit = [];
         foreach ($invoices as $invoice) {

@@ -195,6 +195,6 @@ class AdvertisingInvoicesController extends AdminController
             'tglTerbit' => $tglTerbit
         ];
 
-        return $this->view('advertising-invoices/print-preview.twig', $data);
+        return $this->view('advertising-invoices/prints.twig', $data);
     }
 }

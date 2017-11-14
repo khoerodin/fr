@@ -2,7 +2,6 @@
 
 namespace Bisnis\Controller;
 
-
 use Symfony\Component\HttpFoundation\Request;
 
 class AdvertisingInvoicesController extends AdminController

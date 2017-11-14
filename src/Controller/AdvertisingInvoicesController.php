@@ -129,11 +129,11 @@ class AdvertisingInvoicesController extends AdminController
     {
         $startDate = date_parse($start);
         $start = $startDate['year'] . '-' . $startDate['month'] . '-' . $startDate['day'] . ' 00:00:00';
-        //$start = date('Y-m-d', strtotime($start. ' - 1 days'));
+        $start = date('Y-m-d', strtotime($start. ' - 1 days'));
 
         $endDate = date_parse($end);
         $end = $endDate['year'] . '-' . $endDate['month'] . '-' . $endDate['day'] . ' 00:00:00';
-        //$end = date('Y-m-d', strtotime($end. ' + 1 days'));
+        $end = date('Y-m-d', strtotime($end. ' + 1 days'));
 
         $orders = $this->request(
             'advertising/orders',

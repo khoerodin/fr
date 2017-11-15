@@ -138,10 +138,10 @@ class AdvertisingInvoicesController extends AdminController
             'get',
             [
                 'createdAt' => [
-                    'after' => $start
+                    'after' => strtotime($start)
                 ],
                 'createdAt' => [
-                    'before' => $end
+                    'before' => strtotime($end)
                 ]
             ]
         );

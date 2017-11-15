@@ -46,7 +46,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
             if (strtolower($url) == 'users' && (strtolower($method) == 'post')) {
                 $temps['username'] = $this->generateUsername($fullname);
             }
-        } elseif ($method == 'get') {
+        } elseif (strtolower($method) == 'get') {
             if (count($params) > 0) {
                 $temps = array_reduce($params, 'array_merge', array());
                 if (count($temps) > 0) {

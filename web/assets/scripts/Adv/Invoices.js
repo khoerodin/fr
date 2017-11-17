@@ -139,18 +139,18 @@
 
     Bisnis.Util.Style.ajaxSelect('#searchInvoices', params,
         function (hasResultCallback) {
-            var btn = document.getElementById('btnAddInvoice');
-            hasResultCallback ? btn.disabled = true : btn.disabled = false;
+            // var btn = document.getElementById('btnAddInvoice');
+            // hasResultCallback ? btn.disabled = true : btn.disabled = false;
         }, function (selectedCallback) {
-            loadDetail(selectedCallback.id);
+            // loadDetail(selectedCallback.id);
         }, function (openCallback) {
-            var btn = document.getElementById('btnAddInvoice');
-            openCallback ? btn.disabled = true : btn.disabled = false;
+            // var btn = document.getElementById('btnAddInvoice');
+            // openCallback ? btn.disabled = true : btn.disabled = false;
         }, function (closeCallback) {
-            var btn = document.getElementById('btnAddInvoice');
-            setTimeout(function () {
-                closeCallback ? btn.disabled = true : btn.disabled = false;
-            }, 300);
+            // var btn = document.getElementById('btnAddInvoice');
+            // setTimeout(function () {
+            //     closeCallback ? btn.disabled = true : btn.disabled = false;
+            // }, 300);
         }
     );
 
@@ -210,7 +210,7 @@
                     btnPecahInvoice.disabled = false;
                     pecahAmount.value = finalAmount;
                     pecahAmount.focus();
-                    Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-' + invoiceSequence);
+                    Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-1/' + invoiceSequence);
                 } else {
 
                     var amount = 0;
@@ -230,7 +230,7 @@
                         pecahAmount.focus();
                         pecahAmount.disabled = false;
                         btnPecahInvoice.disabled = false;
-                        Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-' + invoiceSequence);
+                        Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-1/' + invoiceSequence);
                     }
                 }
 
@@ -326,7 +326,7 @@
             function (selected) {
                 let id = selected.id.split('/')[4];
                 Bisnis.Util.Storage.store('normalOrderId', id);
-                Bisnis.Util.Storage.store('normalOrderNumber', selected.text);
+                Bisnis.Util.Storage.store('normalOrderNumber', selected.text + '-1');
 
                 Bisnis.Adv.Orders.fetchById(id,
                     function (dataResponse) {

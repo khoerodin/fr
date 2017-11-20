@@ -57,13 +57,36 @@
             data: params,
             beforeSend: function () {},
             success: function (dataResponse, textStatus, response) {
-                if (Bisnis.validCallback(successCallback)) {
-                    successCallback(dataResponse, textStatus, response);
+                var string = dataResponse.toString().toLowerCase();
+                if (string.indexOf('fatal error') !== -1) {
+                    if (string.indexOf('access denied') !== -1) {
+                        Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk aksi ini', function () {
+                            window.location.reload();
+                        });
+                    } else {
+                        Bisnis.Util.Dialog.alert('PERHATIAN', 'Maaf terjadi kesalahan', function () {
+                            window.location.reload();
+                        });
+                    }
+                } else {
+                    if (Bisnis.validCallback(successCallback)) {
+                        successCallback(dataResponse, textStatus, response);
+                    }
                 }
             },
             error: function (response, textStatus, errorThrown) {
-                if (Bisnis.validCallback(errorCallback)) {
-                    errorCallback(response, textStatus, errorThrown);
+                if (errorThrown === 'Unauthorized') {
+                    Bisnis.Util.Dialog.alert('PERHATIAN', 'Sesi Anda telah habis, silakan login kembali', function () {
+                        location.href = '/login';
+                    });
+                } else if (errorThrown === 'Forbidden') {
+                    Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk aksi ini', function () {
+                        window.location.reload();
+                    });
+                } else {
+                    if (Bisnis.validCallback(errorCallback)) {
+                        errorCallback(response, textStatus, errorThrown);
+                    }
                 }
             }
         });

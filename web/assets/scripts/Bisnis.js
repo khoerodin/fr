@@ -57,7 +57,7 @@
             data: params,
             beforeSend: function () {},
             success: function (dataResponse, textStatus, response) {
-                if (typeof dataResponse === 'string' || dataResponse instanceof String) {
+                if ((typeof dataResponse === 'string' || dataResponse instanceof String) && dataResponse !== '1') {
                     var string = dataResponse.toLowerCase();
                     if (string.indexOf('fatal error') !== -1) {
                         if (string.indexOf('access denied') !== -1) {

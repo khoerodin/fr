@@ -57,7 +57,7 @@
             data: params,
             beforeSend: function () {},
             success: function (dataResponse, textStatus, response) {
-                if ((typeof dataResponse === 'string' && isNaN(parseInt(dataResponse)))) {
+                if ((typeof dataResponse === 'string' && isNaN(dataResponse))) {
                     var string = dataResponse.toLowerCase();
                     if (string.indexOf('fatal error') !== -1) {
                         if (string.indexOf('access denied') !== -1) {

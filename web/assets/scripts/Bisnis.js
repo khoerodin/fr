@@ -57,16 +57,18 @@
             data: params,
             beforeSend: function () {},
             success: function (dataResponse, textStatus, response) {
-                var string = dataResponse.toString().toLowerCase();
-                if (string.indexOf('fatal error') !== -1) {
-                    if (string.indexOf('access denied') !== -1) {
-                        Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk aksi ini', function () {
-                            window.location.reload();
-                        });
-                    } else {
-                        Bisnis.Util.Dialog.alert('PERHATIAN', 'Maaf terjadi kesalahan', function () {
-                            window.location.reload();
-                        });
+                if (typeof dataResponse === 'string') {
+                    var string = dataResponse.toLowerCase();
+                    if (string.indexOf('fatal error') !== -1) {
+                        if (string.indexOf('access denied') !== -1) {
+                            Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk aksi ini', function () {
+                                window.location.reload();
+                            });
+                        } else {
+                            Bisnis.Util.Dialog.alert('PERHATIAN', 'Maaf terjadi kesalahan', function () {
+                                window.location.reload();
+                            });
+                        }
                     }
                 } else {
                     if (Bisnis.validCallback(successCallback)) {

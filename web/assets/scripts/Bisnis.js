@@ -58,8 +58,8 @@
             beforeSend: function () {},
             success: function (dataResponse, textStatus, response) {
                 var string = dataResponse.toString().toLowerCase();
-                if (string.indexOf('error') !== -1) {
-                    if (string.indexOf('denied') !== -1) {
+                if (string.indexOf('fatal error') !== -1) {
+                    if (string.indexOf('access denied') !== -1) {
                         Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk aksi ini', function () {
                             window.location.reload();
                         });

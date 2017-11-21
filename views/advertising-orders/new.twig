@@ -1,17 +1,17 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/Adv/Customers.js"></script>
-    <script src="/assets/scripts/Adv/Specifications.js"></script>
-    <script src="/assets/scripts/Adv/SpecificationDetails.js"></script>
-    <script src="/assets/scripts/Adv/Prices.js"></script>
-    <script src="/assets/scripts/Adv/AccountExecutives.js"></script>
-    <script src="/assets/scripts/Adv/Media.js"></script>
-    <script src="/assets/scripts/Admin/Cities.js"></script>
-    <script src="/assets/scripts/Adv/OrderForm.js"></script>
-    <script src="/assets/scripts/Adv/Orders.js"></script>
-    <script src="/assets/scripts/Adv/PublishAds.js"></script>
-    <script src="/assets/scripts/Adv/OrderNew.js"></script>
+    <script src="/assets/scripts/Adv/Customers.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Specifications.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/SpecificationDetails.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Prices.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/AccountExecutives.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Media.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Admin/Cities.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/OrderForm.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Orders.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/PublishAds.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/OrderNew.js?{{ microtime }}"></script>
 {% endblock %}
 
 {%- block content -%}
@@ -295,7 +295,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <p class="help-block">Ada contoh faktur dengan Plus Diskon?</p>
                                 </div>
                             </div>
 
@@ -425,7 +424,6 @@
                                 <div class="form-group">
                                     <label for="">Sisipan</label>
                                     <div class="input-group" style="position: relative;">
-                                        <button id="clearText" class="btn btn-xs btn-flat btn-danger hidden" style="position: absolute; right: 44px; top: 6px; z-index: 1041;">clear</button>
                                         <input type="text" readonly id="sirculationAreaName" class="form-control">
                                         <input type="hidden" name="sirculationArea">
                                         <span class="input-group-btn">
@@ -791,21 +789,21 @@
 
                                 <div role="tabpanel" class="tab-pane" id="edisiHari">
                                     <span id="hari">
-                                        <label class="checkbox-inline"><input type="checkbox" id="ahad" value="">Minggu</label>
                                         <label class="checkbox-inline"><input type="checkbox" id="senin" value="">Senin</label>
                                         <label class="checkbox-inline"><input type="checkbox" id="selasa" value="">Selasa</label>
                                         <label class="checkbox-inline"><input type="checkbox" id="rabu" value="">Rabu</label>
                                         <label class="checkbox-inline"><input type="checkbox" id="kamis" value="">Kamis</label>
                                         <label class="checkbox-inline"><input type="checkbox" id="jumat" value="">Jum'at</label>
                                         <label class="checkbox-inline"><input type="checkbox" id="sabtu" value="">Sabtu</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="ahad" value="">Minggu</label>
                                     </span>
 
                                     <label class="checkbox-inline pull-right"><input type="checkbox" id="checkAllDay">Semua</label>
 
                                     <div class="input-daterange input-group" id="rangeDates" style="margin-top: 20px;">
-                                        <input type="text" readonly class="form-control" id="startDate" name="start" />
-                                        <span class="input-group-addon">sampai</span>
-                                        <input type="text" readonly class="form-control" id="endDate" name="end" />
+                                        <input type="text" readonly class="form-control" placeholder="TANGGAL MULAI" id="startDate" name="start" style="border-radius: 0;"/>
+                                        <span class="input-group-addon">SAMPAI</span>
+                                        <input type="text" readonly class="form-control" placeholder="TANGGAL AKHIR" id="endDate" name="end" style="border-radius: 0;"/>
                                     </div>
                                 </div>
 

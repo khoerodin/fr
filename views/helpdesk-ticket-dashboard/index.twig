@@ -1,14 +1,14 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script type="text/javascript" src="/assets/vendor/chart/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Chart/Bar.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Chart/Line.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Chart/Pie.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Helpdesk/Category.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/vendor/chart/Chart.bundle.min.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Bar.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Line.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Pie.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Storage.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Category.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js?{{ microtime }}"></script>
     <script type="text/javascript">
         var bar = {};
         var line = {};

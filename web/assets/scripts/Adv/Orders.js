@@ -117,10 +117,10 @@
                     var records = [];
                     Bisnis.each(function (idx, memberData) {
                         records.push([
-                            { value: memberData.orderNumber },
-                            { value: memberData.orderLetter },
-                            { value: memberData.title },
-                            { value: memberData.customer.name },
+                            { value: memberData.orderNumber.toUpperCase() },
+                            { value: memberData.orderLetter.toUpperCase() },
+                            { value: memberData.title.toUpperCase() },
+                            { value: memberData.customer.name.toUpperCase() },
                             { value: memberData.totalAmount, format: function () {
                                 var netto = Bisnis.Util.Money.format(memberData.totalAmount * memberData.quantity);
                                 return 'Rp <span class="pull-right">' + netto + '</span>';

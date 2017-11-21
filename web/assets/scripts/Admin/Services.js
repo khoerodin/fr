@@ -273,10 +273,12 @@
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
         Bisnis.Util.Grid.removeErrorForm('addForm');
         document.getElementById("addForm").reset();
+        Bisnis.Util.Style.resetSelect('#addForm select');
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
         Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
+        Bisnis.Util.Style.resetSelect('#detailForm select');
     });
     // end reset modal form on modal hidden
 

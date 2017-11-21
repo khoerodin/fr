@@ -482,11 +482,13 @@
         Bisnis.Util.Grid.removeErrorForm('addForm');
         document.getElementById("addForm").reset();
         Bisnis.Util.DatePicker.destroy('#addPartnershipDate');
+        Bisnis.Util.Style.resetSelect('#addForm select');
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
         Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
         Bisnis.Util.DatePicker.destroy('#detailPartnershipDate');
+        Bisnis.Util.Style.resetSelect('#detailForm select');
     });
     // end reset modal form on modal hidden
 

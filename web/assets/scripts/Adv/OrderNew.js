@@ -10,7 +10,6 @@
         placeholder: 'CARI PERWAKILAN',
         module: 'representatives',
         prependValue: '/api/representatives/',
-        allowClear: true,
         fields: [
             {
                 field: 'code',
@@ -26,59 +25,61 @@
     // End Perwakilan
 
     // Edisi Terbit
-    Bisnis.Util.Event.bind('click','#edisiTerbitButton', function () {
-        Bisnis.Util.Dialog.showModal('#edisiTerbitModal');
-        chooseDates();
-        Bisnis.Util.Event.bind('click', '.btn-remove-date', function () {
-            if(this.closest('td').getElementsByTagName('input')[0].value) {
-                this.closest('tr').remove();
-            }
-        });
-        jQuery('#rangeDates').datepicker({
-            format: "dd/mm/yyyy",
-            todayBtn: "linked",
-            clearBtn: true,
-            language: "id"
-        });
-        checkDays();
-    });
-
-    var chooseDates = function () {
-        jQuery('.choose-date').datetimepicker({
-            locale: 'id',
-            format: 'DD/MM/YYYY',
-            ignoreReadonly: true
-        }).on('dp.hide', function(e){
-            var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
-            jQuery(this).next().val(tgl);
-        }).on('dp.hide', function(e){
-            if(jQuery(this).closest('tr').is(':last-child') && !jQuery(this).closest('tr').children('input.pilih-tanggal').val()) {
-                jQuery('<tr><td style="position: relative;"><input readonly type="text" class="choose-date form-control"><input type="hidden" name="tanggal[]"><button type="button" class="btn-remove-date btn btn-danger btn-flat btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button></td></tr>')
-                    .insertAfter(jQuery('#edisiTanggal tr').last());
-                chooseDates();
-            }
-        });
-    };
-
-    var checkDays = function () {
-        // https://www.sanwebe.com/2014/01/how-to-select-all-deselect-checkboxes-jquery
-        Bisnis.Util.Event.bind('change', '#checkAllDay', function () {
-            var checkBox = document.querySelectorAll('#edisiHari #hari input[type="checkbox"]');
-            var $this = this;
-            checkBox.forEach(function (value) {
-                value.checked = $this.checked;
+    Bisnis.init(function () {
+        Bisnis.Util.Event.bind('click', '#edisiTerbitButton', function () {
+            Bisnis.Util.Dialog.showModal('#edisiTerbitModal');
+            chooseDates();
+            Bisnis.Util.Event.bind('click', '.btn-remove-date', function () {
+                if (this.closest('td').getElementsByTagName('input')[0].value) {
+                    this.closest('tr').remove();
+                }
             });
+            jQuery('#rangeDates').datepicker({
+                format: "dd/mm/yyyy",
+                todayBtn: "linked",
+                clearBtn: true,
+                language: "id"
+            });
+            checkDays();
         });
 
-        Bisnis.Util.Event.bind('change', '#edisiHari #hari input[type="checkbox"]', function () {
-            if(false === this.checked){
-                document.querySelector("#checkAllDay").checked = false; //change "select all" checked status to false
-            }
-            if (document.querySelectorAll('#edisiHari #hari input[type="checkbox"]:checked').length === document.querySelectorAll('#edisiHari #hari input[type="checkbox"]').length ){
-                document.querySelector("#checkAllDay").checked = true;
-            }
-        });
-    };
+        var chooseDates = function () {
+            jQuery('.choose-date').datetimepicker({
+                locale: 'id',
+                format: 'DD/MM/YYYY',
+                ignoreReadonly: true
+            }).on('dp.hide', function (e) {
+                var tgl = e.date.format('YYYY-MM-DD HH:mm:ss');
+                jQuery(this).next().val(tgl);
+            }).on('dp.hide', function (e) {
+                if (jQuery(this).closest('tr').is(':last-child') && !jQuery(this).closest('tr').children('input.pilih-tanggal').val()) {
+                    jQuery('<tr><td style="position: relative;"><input readonly type="text" class="choose-date form-control"><input type="hidden" name="tanggal[]"><button type="button" class="btn-remove-date btn btn-danger btn-flat btn-xs pull-right" style="position: absolute;right: 14px;top: 14px;">Hapus</button></td></tr>')
+                        .insertAfter(jQuery('#edisiTanggal tr').last());
+                    chooseDates();
+                }
+            });
+        };
+
+        var checkDays = function () {
+            // https://www.sanwebe.com/2014/01/how-to-select-all-deselect-checkboxes-jquery
+            Bisnis.Util.Event.bind('change', '#checkAllDay', function () {
+                var checkBox = document.querySelectorAll('#edisiHari #hari input[type="checkbox"]');
+                var $this = this;
+                checkBox.forEach(function (value) {
+                    value.checked = $this.checked;
+                });
+            });
+
+            Bisnis.Util.Event.bind('change', '#edisiHari #hari input[type="checkbox"]', function () {
+                if (false === this.checked) {
+                    document.querySelector("#checkAllDay").checked = false; //change "select all" checked status to false
+                }
+                if (document.querySelectorAll('#edisiHari #hari input[type="checkbox"]:checked').length === document.querySelectorAll('#edisiHari #hari input[type="checkbox"]').length) {
+                    document.querySelector("#checkAllDay").checked = true;
+                }
+            });
+        };
+    });
 
     Bisnis.Util.Event.bind('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
         var edisi = e.target.getAttribute('data-edisi');
@@ -99,7 +100,7 @@
 
     var toISODate = function (milliseconds) {
         var date = new Date(milliseconds);
-        var y = date.getFullYear()
+        var y = date.getFullYear();
         var m = date.getMonth() + 1;
         var d = date.getDate();
         m = (m < 10) ? '0' + m : m;
@@ -138,6 +139,7 @@
     var edisiHari = function () {
         var startDate = document.querySelector('#startDate');
         var endDate = document.querySelector('#endDate');
+
         if (startDate.value && endDate.value) {
             startDate = window.moment(startDate.value, 'DD/MM/YYYY').format('YYYY-MM-DD');
             endDate = window.moment(endDate.value, 'DD/MM/YYYY').format('YYYY-MM-DD');
@@ -200,6 +202,7 @@
     Bisnis.Util.Event.bind('click', '#btn-order', function () {
         var thisBtn = this;
         thisBtn.disabled = true;
+        thisBtn.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> TUNGGU...';
 
         var params = Bisnis.Util.Form.serializeArray('#orderForm');
         const selectedTags = document.querySelectorAll('[name="orderTag"] option:checked');
@@ -233,11 +236,13 @@
                 };
                 Bisnis.request(params,
                     function () {
+                        thisBtn.innerHTML = 'SIMPAN';
                         Bisnis.Util.Dialog.alert('SUKSES', 'ORDER IKLAN BERHASIL DIBUAT', function () {
                             window.location.href = '/advertising/orders/new';
                         });
                     },
                     function () {
+                        thisBtn.innerHTML = 'SIMPAN';
                         Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MENYIMPAN EDISI TERBIT (JUMLAH TERBIT)');
                     },
                     '/advertising/orders/publish-ads'
@@ -247,6 +252,7 @@
                 if (response.responseJSON) {
                     Bisnis.Util.Grid.validate('orderForm', response.responseJSON.violations);
                 }
+                thisBtn.innerHTML = 'SIMPAN';
                 thisBtn.disabled = false;
             }
         );

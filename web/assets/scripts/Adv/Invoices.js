@@ -33,6 +33,22 @@
         });
     };
 
+    Bisnis.Adv.Invoices.getByOrders = function (params, successCallback, errorCallback) {
+        Bisnis.request({
+            module: 'advertising/invoices/by_orders.json',
+            method: 'get',
+            params: params
+        }, function (dataResponse, textStatus, response) {
+            if (Bisnis.validCallback(successCallback)) {
+                successCallback(dataResponse, textStatus, response);
+            }
+        }, function (response, textStatus, errorThrown) {
+            if (Bisnis.validCallback(errorCallback)) {
+                errorCallback(response, textStatus, errorThrown);
+            }
+        });
+    };
+
     // Invoices List
 
     var invoiceStatus = function (status) {
@@ -76,7 +92,7 @@
                             { value: invoiceStatus(memberData.status) },
                             { value: memberData.id, format: function (id) {
                                 return '<span class="pull-right">' +
-                                    '<a href="/advertising/invoices/pdf/'+ id +'" target="_blank" data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title="CETAK"><i class="fa fa-print"></i> CETAK</a>' +
+                                    '<a href="/advertising/invoices/'+ id +'" target="_blank" data-id="' + id + '" class="btn btn-xs btn-default btn-flat" title="CETAK"><i class="fa fa-print"></i> CETAK</a>' +
                                     '</span>';
                             } }
                         ]);
@@ -123,18 +139,18 @@
 
     Bisnis.Util.Style.ajaxSelect('#searchInvoices', params,
         function (hasResultCallback) {
-            var btn = document.getElementById('btnAddInvoice');
-            hasResultCallback ? btn.disabled = true : btn.disabled = false;
+            // var btn = document.getElementById('btnAddInvoice');
+            // hasResultCallback ? btn.disabled = true : btn.disabled = false;
         }, function (selectedCallback) {
-            loadDetail(selectedCallback.id);
+            // loadDetail(selectedCallback.id);
         }, function (openCallback) {
-            var btn = document.getElementById('btnAddInvoice');
-            openCallback ? btn.disabled = true : btn.disabled = false;
+            // var btn = document.getElementById('btnAddInvoice');
+            // openCallback ? btn.disabled = true : btn.disabled = false;
         }, function (closeCallback) {
-            var btn = document.getElementById('btnAddInvoice');
-            setTimeout(function () {
-                closeCallback ? btn.disabled = true : btn.disabled = false;
-            }, 300);
+            // var btn = document.getElementById('btnAddInvoice');
+            // setTimeout(function () {
+            //     closeCallback ? btn.disabled = true : btn.disabled = false;
+            // }, 300);
         }
     );
 
@@ -194,7 +210,7 @@
                     btnPecahInvoice.disabled = false;
                     pecahAmount.value = finalAmount;
                     pecahAmount.focus();
-                    Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-' + invoiceSequence);
+                    Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-1/' + invoiceSequence);
                 } else {
 
                     var amount = 0;
@@ -214,7 +230,7 @@
                         pecahAmount.focus();
                         pecahAmount.disabled = false;
                         btnPecahInvoice.disabled = false;
-                        Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-' + invoiceSequence);
+                        Bisnis.Util.Storage.store('pecahInvoiceNumber', Bisnis.Util.Storage.fetch('pecahOrderNumber') + '-1/' + invoiceSequence);
                     }
                 }
 
@@ -310,7 +326,7 @@
             function (selected) {
                 let id = selected.id.split('/')[4];
                 Bisnis.Util.Storage.store('normalOrderId', id);
-                Bisnis.Util.Storage.store('normalOrderNumber', selected.text);
+                Bisnis.Util.Storage.store('normalOrderNumber', selected.text + '-1');
 
                 Bisnis.Adv.Orders.fetchById(id,
                     function (dataResponse) {
@@ -716,4 +732,31 @@
 
     });
     // end reset modal form on modal hidden
+
+    // Print Invoices
+    Bisnis.init(function () {
+        jQuery('#rangeDates').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            clearBtn: true,
+            language: "id"
+        });
+    });
+
+    Bisnis.Util.Style.modifySelect('#invoiceState');
+
+    Bisnis.Util.Event.bind('click', '#btn-print-invoice', function () {
+        var startDate = document.querySelector('#startDate');
+        var endDate = document.querySelector('#endDate');
+        var invoiceState = document.querySelector('#invoiceState');
+
+        if (startDate.value && endDate.value && invoiceState.value) {
+            startDate = window.moment(startDate.value, 'DD/MM/YYYY').format('YYYYMMDD');
+            endDate = window.moment(endDate.value, 'DD/MM/YYYY').format('YYYYMMDD');
+            window.open('/advertising/invoices-print/'+ invoiceState.value +'/'+ startDate +'/'+ endDate, '_blank');
+        } else {
+            Bisnis.Util.Dialog.alert('PERHATIAN', 'MOHON LENGKAPI FORM TERLEBIH DAHULU');
+        }
+    });
+    // Print Invoices
 })(window.Bisnis || {});

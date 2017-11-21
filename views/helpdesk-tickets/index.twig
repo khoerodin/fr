@@ -1,8 +1,8 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js?{{ microtime }}"></script>
     <script type="text/javascript">
         var fetchAllTicket = function (staff) {
             if (staff.isAdmin) {
@@ -497,10 +497,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-flat pull-left" data-dismiss="modal" title="Tandai Sedang Dikerjakan" id="onprogressModalDetail"><i class="fa fa-wrench"></i></button>
-                <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal" title="Tandai Telah Selasai" id="resolveModalDetail"><i class="fa fa-check"></i></button>
-                <button type="button" class="btn btn-success btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
-                <button type="button" class="btn btn-primary btn-flat pull-right" id="sendResponse">Kirim</button>
+                <button type="button" class="btn btn-warning btn-flat pull-left" data-dismiss="modal" title="Tandai Sedang Dikerjakan" id="onprogressModalDetail"><i class="fa fa-wrench"></i></button>
+                <button type="button" class="btn btn-success btn-flat pull-left" data-dismiss="modal" title="Tandai Telah Selasai" id="resolveModalDetail"><i class="fa fa-check"></i></button>
+                <button type="button" class="btn btn-default btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
+                <button type="button" class="btn btn-danger btn-flat pull-right" id="sendResponse">Kirim</button>
                 <button type="button" class="btn btn-default btn-flat" data-dismiss="modal" id="closeModalDetail">Tutup</button>
             </div>
         </div>

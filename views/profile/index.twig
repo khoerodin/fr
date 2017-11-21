@@ -1,10 +1,15 @@
 {% extends 'layout.twig' %}
 
 {%- block js -%}
-    <script src="/assets/scripts/Admin/Modules.js"></script>
-    <script src="/assets/scripts/Admin/Roles.js"></script>
-    <script src="/assets/scripts/Admin/Users.js"></script>
-    <script src="/assets/scripts/Admin/Profile.js"></script>
+    <script src="/assets/scripts/Admin/Modules.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Admin/Roles.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Admin/Users.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Admin/Profile.js?{{ microtime }}"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 {%- endblock -%}
 
 {%- block content -%}
@@ -19,7 +24,7 @@
                     <div class="col-md-2">
                         <label for="file-image" id="profile-image" class="profile-image avatar-img"
                                style="background-image: url('/api/images/{{ image[0] }}?ext={{ image[1] }}');"
-                               title="KLIK UNTUK MENGGANTI FOTO"></label>
+                               title="KLIK UNTUK MENGGANTI FOTO" data-toggle="tooltip" data-placement="bottom"></label>
                         <input id="file-image" type="file"/>
                     </div>
 

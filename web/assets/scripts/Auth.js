@@ -28,7 +28,7 @@
     };
 
     Bisnis.Util.Event.bind('click', '#sign-in', function () {
-        this.innerHTML = '<i class="fa fa-sign-in"></i> MASUK...';
+        this.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> MASUK';
         this.disabled = true;
         document.querySelector("#login-error").classList.add('hidden');
 
@@ -77,7 +77,8 @@
             function () {
                 location.href = '/';
             }, function () {
-                Bisnis.Util.Dialog.alert('Gagal Keluar Aplikasi!');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'ERROR!');
+                location.href = '/';
             }
         );
     });

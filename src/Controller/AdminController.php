@@ -12,6 +12,7 @@ class AdminController extends AbstractController
             'me' => json_decode($this->fetch('me')),
             'menus' => $this->fetch('menus'),
             'BACKEND_HOST' => $this->fetch('BACKEND_HOST'),
+            'microtime' => str_replace(' ', '', microtime()),
         ];
 
         return $this->renderResponse($view, array_merge($autoLoad, $variables));

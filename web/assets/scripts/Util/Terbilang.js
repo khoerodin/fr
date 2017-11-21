@@ -4,20 +4,20 @@
     Bisnis.Util.Terbilang.render = function (source) {
         var bilangan;
         if(isNaN(source)){
-            bilangan = document.querySelector(selector).innerText;
+            bilangan = document.querySelector(source).innerText;
         }else{
             bilangan = source.toString();
         }
 
         var kalimat = "";
-        var angka   = new Array('0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0');
-        var kata    = new Array('','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan');
-        var tingkat = new Array('','Ribu','Juta','Milyar','Triliun');
+        var angka   = ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+        var kata    = ['','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan'];
+        var tingkat = ['','Ribu','Juta','Milyar','Triliun'];
         var panjang_bilangan = bilangan.length;
 
         /* pengujian panjang bilangan */
         if(panjang_bilangan > 15){
-            kalimat = "Diluar Batas";
+            kalimat = "Di luar Batas";
         }else{
             /* mengambil angka-angka yang ada dalam bilangan, dimasukkan ke dalam array */
             for(i = 1; i <= panjang_bilangan; i++) {
@@ -35,8 +35,8 @@
                 kata3 = "";
 
                 /* untuk Ratusan */
-                if(angka[i+2] != "0"){
-                    if(angka[i+2] == "1"){
+                if(angka[i+2] !== "0"){
+                    if(angka[i+2] === "1"){
                         kata1 = "Seratus";
                     }else{
                         kata1 = kata[angka[i+2]] + " Ratus";
@@ -44,11 +44,11 @@
                 }
 
                 /* untuk Puluhan atau Belasan */
-                if(angka[i+1] != "0"){
-                    if(angka[i+1] == "1"){
-                        if(angka[i] == "0"){
+                if(angka[i+1] !== "0"){
+                    if(angka[i+1] === "1"){
+                        if(angka[i] === "0"){
                             kata2 = "Sepuluh";
-                        }else if(angka[i] == "1"){
+                        }else if(angka[i] === "1"){
                             kata2 = "Sebelas";
                         }else{
                             kata2 = kata[angka[i]] + " Belas";
@@ -59,14 +59,14 @@
                 }
 
                 /* untuk Satuan */
-                if (angka[i] != "0"){
-                    if (angka[i+1] != "1"){
+                if (angka[i] !== "0"){
+                    if (angka[i+1] !== "1"){
                         kata3 = kata[angka[i]];
                     }
                 }
 
                 /* pengujian angka apakah tidak nol semua, lalu ditambahkan tingkat */
-                if ((angka[i] != "0") || (angka[i+1] != "0") || (angka[i+2] != "0")){
+                if ((angka[i] !== "0") || (angka[i+1] !== "0") || (angka[i+2] !== "0")){
                     subkalimat = kata1+" "+kata2+" "+kata3+" "+tingkat[j]+" ";
                 }
 
@@ -77,7 +77,7 @@
             }
 
             /* mengganti Satu Ribu jadi Seribu jika diperlukan */
-            if ((angka[5] == "0") && (angka[6] == "0")){
+            if ((angka[5] === "0") && (angka[6] === "0")){
                 kalimat = kalimat.replace("Satu Ribu","Seribu");
             }
 

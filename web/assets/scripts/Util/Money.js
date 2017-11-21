@@ -4,7 +4,7 @@
     Bisnis.Util.Money.format = function (amount, symbol) {
         symbol = symbol ? 'Rp ' : '';
         return accounting.formatMoney(amount, symbol, 0, ",", ".");
-        return accounting.unformat(accounting.formatMoney(amount, symbol, 0, ",", "."));
+        //return accounting.unformat(accounting.formatMoney(amount, symbol, 0, ",", "."));
     };
 
     Bisnis.Util.Money.unFormat = function (moneyString) {

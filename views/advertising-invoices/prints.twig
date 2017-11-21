@@ -3,18 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>FAKTUR {{ invoice.invoiceNumber }}</title>
+    <title>{{ meta.title }} - BY {{ me.fullname }}</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {#Bootstrap 3.3.6#}
-    <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
-    {#Font Awesome#}
-    <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.min.css">
-    {#Ionicons#}
-    <link rel="stylesheet" href="/assets/vendor/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css?{{ microtime }}">
     {#Theme style#}
-    <link rel="stylesheet" href="/assets/vendor/adminlte/css/AdminLTE.css">
-    <link rel="stylesheet" href="/assets/vendor/paper/paper.css">
+    <link rel="stylesheet" href="/assets/vendor/adminlte/css/AdminLTE.css?{{ microtime }}">
+    <link rel="stylesheet" href="/assets/vendor/paper/paper.css?{{ microtime }}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,15 +19,17 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style type="text/css">
-        @page { size: A4 }
-        body { font-size: 13px; line-height: 2 },
+        @page { size: Letter }
+        body { font-size: 13px; line-height: 2 }
         table td { padding: 5px; }
     </style>
-    {#<script>window.onload = function() { window.print(); }</script>#}
+    <script>window.onload = function() { window.print(); }</script>
 </head>
 
-<body class="A4">
-<div class="wrapper">
+<body class="Letter">
+    {% for key, data in invoices %}
+        {% set invoice = data.invoice %}
+        {% set order = data.order %}
     <!-- Main content -->
     <section class="invoice sheet padding-10mm">
         <!-- title row -->
@@ -43,20 +41,26 @@
             <div class="col-xs-4">
                 <div class="row">
                     <div class="col-xs-3"><b>NO</b></div>
-                    <div class="col-xs-9">: {{ invoice.invoiceNumber }}</div>
+                    <div class="col-xs-9">: {{ invoice.invoiceNumber }} </div>
                     <div class="col-xs-3"><b>TANGGAL</b></div>
-                    {% if invoice.createdAt|date('d-M-Y', "Asia/Jakarta")|upper == 'MAY' %}
-                        {% set bln = 'MEI' %}
-                    {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'AUG' %}
-                        {% set bln = 'AGU' %}
-                    {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'OCT' %}
-                        {% set bln = 'OKT' %}
-                    {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'DEC' %}
-                        {% set bln = 'DES' %}
-                    {% else %}
-                        {% set bln = invoice.createdAt|date('M', "Asia/Jakarta")|upper %}
+                    {% if invoice.createdAt is defined %}
+
+                        {% if invoice.createdAt|date('d-M-Y', "Asia/Jakarta")|upper == 'MAY' %}
+                            {% set bln = 'MEI' %}
+                        {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'AUG' %}
+                            {% set bln = 'AGU' %}
+                        {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'OCT' %}
+                            {% set bln = 'OKT' %}
+                        {% elseif invoice.createdAt|date('M', "Asia/Jakarta")|upper == 'DEC' %}
+                            {% set bln = 'DES' %}
+                        {% else %}
+                            {% set bln = invoice.createdAt|date('M', "Asia/Jakarta")|upper %}
+                        {% endif %}
+
+                        {% set tanggal = invoice.createdAt|date('d', "Asia/Jakarta")|upper ~ '-' ~ bln ~ '-' ~ invoice.createdAt|date('Y', "Asia/Jakarta")|upper %}
+
                     {% endif %}
-                    <div class="col-xs-9">: {{ invoice.createdAt|date('d', "Asia/Jakarta")|upper }}-{{ bln }}-{{ invoice.createdAt|date('Y', "Asia/Jakarta")|upper }}</div>
+                    <div class="col-xs-9">: {{ tanggal }}</div>
                 </div>
             </div>
 
@@ -77,7 +81,42 @@
                     <div class="col-xs-10" style="margin-top: 13px;">: {{ order.specification.name|upper }}</div>
 
                     <div class="col-xs-2">TANGGAL TERBIT</div>
-                    <div class="col-xs-10">: {{ order.specification.name|upper }}</div>
+                    {% if tglTerbit[invoice.id]['awal'] is defined %}
+
+                        {% if tglTerbit[invoice.id]['awal']|date('d-M-Y', "Asia/Jakarta")|upper == 'MAY' %}
+                            {% set bln = 'MEI' %}
+                        {% elseif tglTerbit[invoice.id]['awal']|date('M', "Asia/Jakarta")|upper == 'AUG' %}
+                            {% set bln = 'AGU' %}
+                        {% elseif tglTerbit[invoice.id]['awal']|date('M', "Asia/Jakarta")|upper == 'OCT' %}
+                            {% set bln = 'OKT' %}
+                        {% elseif tglTerbit[invoice.id]['awal']|date('M', "Asia/Jakarta")|upper == 'DEC' %}
+                            {% set bln = 'DES' %}
+                        {% else %}
+                            {% set bln = tglTerbit[invoice.id]['awal']|date('M', "Asia/Jakarta")|upper %}
+                        {% endif %}
+
+                        {% set tanggalAwal = tglTerbit[invoice.id]['awal']|date('d', "Asia/Jakarta")|upper ~ '-' ~ bln ~ '-' ~ tglTerbit[invoice.id]['awal']|date('Y', "Asia/Jakarta")|upper %}
+
+                    {% endif %}
+
+                    {% if tglTerbit[invoice.id]['akhir'] is defined %}
+
+                        {% if tglTerbit[invoice.id]['akhir']|date('d-M-Y', "Asia/Jakarta")|upper == 'MAY' %}
+                            {% set bln = 'MEI' %}
+                        {% elseif tglTerbit[invoice.id]['akhir']|date('M', "Asia/Jakarta")|upper == 'AUG' %}
+                            {% set bln = 'AGU' %}
+                        {% elseif tglTerbit[invoice.id]['akhir']|date('M', "Asia/Jakarta")|upper == 'OCT' %}
+                            {% set bln = 'OKT' %}
+                        {% elseif tglTerbit[invoice.id]['akhir']|date('M', "Asia/Jakarta")|upper == 'DEC' %}
+                            {% set bln = 'DES' %}
+                        {% else %}
+                            {% set bln = tglTerbit[invoice.id]['akhir']|date('M', "Asia/Jakarta")|upper %}
+                        {% endif %}
+
+                        {% set tanggalAkhir = tglTerbit[invoice.id]['akhir']|date('d', "Asia/Jakarta")|upper ~ '-' ~ bln ~ '-' ~ tglTerbit[invoice.id]['akhir']|date('Y', "Asia/Jakarta")|upper %}
+
+                    {% endif %}
+                    <div class="col-xs-10">: {{ tanggalAwal }} S.D {{ tanggalAkhir }}</div>
 
                     <div class="col-xs-2">JUMLAH TERBIT</div>
                     <div class="col-xs-10">: {{ order.totalPost }}</div>
@@ -97,6 +136,19 @@
                     <div class="col-xs-2" style="margin-top: 13px;">HARGA</div>
                     <div class="col-xs-2" style="margin-top: 13px;">: Rp <span class="pull-right">{{ order.basePrice|number_format(0, '.', ',') }}</span></div>
                     <div class="col-xs-3" style="margin-top: 13px;">/mmk</div>
+
+                    {% set jenisIklan = order.specification.name|lower|replace({' ':''}) %}
+                    {% if
+                    (jenisIklan|slice(0, 5) == 'paket')
+                    or (jenisIklan == 'kuping')
+                    or (jenisIklan == 'banner')
+                    or (jenisIklan == 'stapel')
+                    or (jenisIklan == 'eksposisi')
+                    or (jenisIklan == 'tarifkhusus') %}
+                        {% set tarif = 'k' %}
+                    {% else %}
+                        {% set tarif = 'n' %}
+                    {% endif %}
 
                     {% if order.printInvoiceAs == 'n' %}
                         {% if tarif == 'n' %}
@@ -165,7 +217,7 @@
                     <div class="col-xs-12" style="visibility: hidden;">s</div>
 
                     <div class="col-xs-2">TERBILANG</div>
-                    <div class="col-xs-10">: <i><b>{{ terbilang|upper }}</b></i></div>
+                    <div class="col-xs-10">: <i><b>{{ terbilang[invoice.id]|upper }}</b></i></div>
 
                     <div class="col-xs-2">CATATAN</div>
                     <div class="col-xs-10">: {{ order.orderDescription }}</div>
@@ -176,10 +228,10 @@
             <!-- /.col -->
         </div>
         <!-- /.row -->
-        <footer style="margin-top: 200px;">
+        <footer style="margin-top: 100px;">
             <div class="row">
                 <div class="col-xs-3">
-                    <table style="width: 100%; font-weight: bold" align="center"">
+                    <table style="width: 100%; font-weight: bold" align="center">
                     <tr>
                         <td style="text-align:center; vertical-align:middle;">
                             DIBUAT OLEH:
@@ -189,7 +241,8 @@
                     <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
                         <tr>
                             <td style="text-align:center; vertical-align:middle;">
-                                <u>{{ invoice.fullName }}</u>
+                                <div><u>{{ invoice.fullName }}</u></div>
+                                <div style="margin-top: -10px;">STAFF IKLAN - LAYANAN</div>
                             </td>
                         </tr>
                     </table>
@@ -206,7 +259,8 @@
                     <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
                         <tr>
                             <td style="text-align:center; vertical-align:middle;">
-                                <u>PEMBERI ORDER</u>
+                                <div style="visibility: hidden"><u>X</u></div>
+                                <div style="margin-top: -10px;">PEMBERI ORDER</div>
                             </td>
                         </tr>
                     </table>
@@ -215,7 +269,10 @@
         </footer>
     </section>
     <!-- /.content -->
-</div>
-<!-- ./wrapper -->
+    {% else %}
+        <section class="invoice sheet padding-10mm">
+            <h1>Tidak ada data</h1>
+        </section>
+    {% endfor %}
 </body>
 </html>

@@ -55,7 +55,7 @@ class AdvertisingInvoicesController extends AdminController
         return $hasil;
     }
 
-    public function pdfAction($invoiceId)
+    public function printAction($invoiceId)
     {
         $meta = [
             'parentMenu' => 'Faktur',
@@ -68,7 +68,24 @@ class AdvertisingInvoicesController extends AdminController
         $order = $this->request('advertising/order-invoices', 'get', ['invoice.id' => $invoice['id']]);
         $order = json_decode($order->getContent(), true)['hydra:member'][0]['order'];
 
+        $publishAds = $this->request('advertising/publish-ads', 'get', ['order.id' => $order['id'], 'order' => ['publishDate' => 'ASC']]);
+        $publishAds = json_decode($publishAds->getContent(), true)['hydra:member'];
+        $panjang = sizeof($publishAds);
+        foreach ($publishAds as $key => $publishAd) {
+            if($key == 0){
+                $awal = $publishAd['publishDate'];
+            }
+
+            if($key+1 == $panjang){
+                $akhir = $publishAd['publishDate'];
+            }
+        }
+
+        $tglTerbit['awal'] = $awal;
+        $tglTerbit['akhir'] = $akhir;
+
         $jenis = strtolower($order['specification']['name']);
+        $jenis = str_replace(' ', '', $jenis);
 
         if ( substr( $jenis, 0, 5 ) === "paket" ) {
             $tarif = 'k';
@@ -86,7 +103,7 @@ class AdvertisingInvoicesController extends AdminController
                 case "eksposisi":
                     $tarif = 'k';
                     break;
-                case "tarif khusus":
+                case "tarifkhusus":
                     $tarif = 'k';
                     break;
                 default:
@@ -100,23 +117,82 @@ class AdvertisingInvoicesController extends AdminController
             'order' => $order,
             'tarif' => $tarif,
             'terbilang' => $this->terbilang($invoice['amount']) . ' rupiah',
-        ];
-
-        return $this->view('advertising-invoices/pdf.twig', $data);
-    }
-
-    public function printAction()
-    {
-        $meta = [
-            'parentMenu' => 'Iklan',
-            'title' => 'Cetak Faktur Iklan',
-        ];
-
-        $data = [
-            'meta' => $meta,
+            'tglTerbit' => $tglTerbit
         ];
 
         return $this->view('advertising-invoices/print.twig', $data);
     }
 
+    public function InvoicesPrintAction($state, $start, $end)
+    {
+        $startDate = date_parse($start);
+        $start = $startDate['year'] . '-' . $startDate['month'] . '-' . $startDate['day'] . ' 00:00:00';
+        $start = date('Y-m-d', strtotime($start . ' - 1 days'));
+
+        $endDate = date_parse($end);
+        $end = $endDate['year'] . '-' . $endDate['month'] . '-' . $endDate['day'] . ' 00:00:00';
+        $end = date('Y-m-d', strtotime($end . ' + 1 days'));
+
+        $orders = $this->request(
+            'advertising/orders',
+            'get',
+            [
+                'createdAt' => [
+                    'after' => $start
+                ],
+                'createdAt' => [
+                    'before' => $end
+                ]
+            ]
+        );
+        $orders = json_decode($orders->getContent(), true)['hydra:member'];
+
+        $orderIds = [];
+        foreach ($orders as $order) {
+            $orderIds[] = $order['id'];
+        }
+
+        return $this->InvoicesPrintPreviewAction($orderIds);
+    }
+
+    private function InvoicesPrintPreviewAction(Array $ids)
+    {
+        $meta = [
+            'title' => 'INVOICES PRINTED AT - ' . date("d-m-Y H:i:s"),
+        ];
+
+        $invoices = $this->request('advertising/invoices/by_orders.json', 'get', ['orders' => $ids, 'status' => 'void']);
+        $invoices = json_decode($invoices->getContent(), true);
+
+        // Tanggal terbit dan terbilang
+        $terbilang = [];
+        $tglTerbit = [];
+        foreach ($invoices as $invoice) {
+            $terbilang[$invoice['invoice']['id']] = $this->terbilang($invoice['invoice']['amount']) . ' rupiah';
+
+            $publishAds = $this->request('advertising/publish-ads', 'get', ['order.id' => $invoice['order']['id'], 'order' => ['publishDate' => 'ASC']]);
+            $publishAds = json_decode($publishAds->getContent(), true)['hydra:member'];
+            $panjang = sizeof($publishAds);
+            foreach ($publishAds as $key => $publishAd) {
+                if($key == 0){
+                    $awal = $publishAd['publishDate'];
+                }
+
+                if($key+1 == $panjang){
+                    $akhir = $publishAd['publishDate'];
+                }
+            }
+            $tglTerbit[$invoice['invoice']['id']]['awal'] = $awal;
+            $tglTerbit[$invoice['invoice']['id']]['akhir'] = $akhir;
+        }
+
+        $data = [
+            'meta' => $meta,
+            'invoices' => $invoices,
+            'terbilang' => $terbilang,
+            'tglTerbit' => $tglTerbit
+        ];
+
+        return $this->view('advertising-invoices/prints.twig', $data);
+    }
 }

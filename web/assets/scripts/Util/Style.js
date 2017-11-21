@@ -48,7 +48,7 @@
                 delay: 250,
                 data: function (params) {
                     return {
-                        q: params.term,
+                        q: params.term.trim(),
                         page: params.page,
                         module: module,
                         method: 'get',
@@ -120,6 +120,10 @@
 
     Bisnis.Util.Style.destroySelect = function (selector) {
         jQuery(selector).select2('destroy');
+    };
+
+    Bisnis.Util.Style.resetSelect = function (selector) {
+        jQuery(selector).val([]);
     };
 
     Bisnis.Util.Style.editor = function (selector) {

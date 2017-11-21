@@ -7,10 +7,10 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {#Bootstrap 3.3.6#}
-    <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css?{{ microtime }}">
     {#Theme style#}
-    <link rel="stylesheet" href="/assets/vendor/adminlte/css/AdminLTE.css">
-    <link rel="stylesheet" href="/assets/vendor/paper/paper.css">
+    <link rel="stylesheet" href="/assets/vendor/adminlte/css/AdminLTE.css?{{ microtime }}">
+    <link rel="stylesheet" href="/assets/vendor/paper/paper.css?{{ microtime }}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -220,7 +220,8 @@
                     <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
                         <tr>
                             <td style="text-align:center; vertical-align:middle;">
-                                <u>{{ invoice.fullName }}</u>
+                                <div><u>{{ invoice.fullName }}</u></div>
+                                <div style="margin-top: -10px;">STAFF IKLAN - LAYANAN</div>
                             </td>
                         </tr>
                     </table>
@@ -237,7 +238,8 @@
                     <table style="width: 100%;margin-top:60px; font-weight: bold" align="center">
                         <tr>
                             <td style="text-align:center; vertical-align:middle;">
-                                <u>PEMBERI ORDER</u>
+                                <div style="visibility: hidden"><u>X</u></div>
+                                <div style="margin-top: -10px;">PEMBERI ORDER</div>
                             </td>
                         </tr>
                     </table>

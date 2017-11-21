@@ -633,16 +633,6 @@
     };
     // End Netto
 
-    // NPB Diskon
-    /*var getNpbDiscount = function () {
-        var npbDiscountPercentage = document.querySelector('[name="npbDiscountPercentage"]').value;
-        var biaya = getBiaya() + getPPN() + getPlusDiscount() - getMinDiscount() - getDiscount();
-        var npbDiscount = ( biaya * npbDiscountPercentage) / 100;
-        document.querySelector('[name="npbDiscountValue"]').value = npbDiscount;
-        return npbDiscount;
-    };*/
-    // End NPB Diskon
-
     // Hitung Normal
     var hitung = function () {
         // ditambah getPPNByPercent krn inputan PPN by percent didisable

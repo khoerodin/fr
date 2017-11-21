@@ -21,8 +21,9 @@
         return jQuery(selector).val();
     };
 
-    Bisnis.Util.Document.putEditor = function (selector, value) {
-        jQuery(selector).summernote('code', value);
+    Bisnis.Util.Document.putEditor = function (selector, value, height) {
+        height = height ? height : 200;
+        jQuery(selector).summernote({'code': value, height: height});
     };
 
     Bisnis.Util.Document.hide = function (selector) {

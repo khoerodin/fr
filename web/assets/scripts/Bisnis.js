@@ -82,7 +82,7 @@
                         location.href = '/login';
                     });
                 } else if (errorThrown.toLowerCase() === 'forbidden') {
-                    Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk aksi ini', function () {
+                    Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk tindakan ini', function () {
                         window.location.reload();
                     });
                 } else {

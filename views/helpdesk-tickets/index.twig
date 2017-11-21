@@ -1,8 +1,8 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js?{{ microtime }}"></script>
     <script type="text/javascript">
         var fetchAllTicket = function (staff) {
             if (staff.isAdmin) {

@@ -1,8 +1,8 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/Adv/Orders.js"></script>
-    <script src="/assets/scripts/Adv/PublishAds.js"></script>
+    <script src="/assets/scripts/Adv/Orders.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/PublishAds.js?{{ microtime }}"></script>
 {% endblock %}
 
 {%- block content -%}

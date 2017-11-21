@@ -1,13 +1,11 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script type="text/javascript" src="/assets/vendor/chart/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Chart/Bar.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Chart/Line.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Chart/Pie.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Util/Storage.js"></script>
-    <script type="text/javascript">
-    </script>
+    <script type="text/javascript" src="/assets/vendor/chart/Chart.bundle.min.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Bar.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Line.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Chart/Pie.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Util/Storage.js?{{ microtime }}"></script>
 {% endblock %}
 
 {%- block content -%}

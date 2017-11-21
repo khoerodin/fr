@@ -1,9 +1,9 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/Adv/Specifications.js"></script>
-    <script src="/assets/scripts/Adv/SpecificationDetails.js"></script>
-    <script src="/assets/scripts/Adv/Prices.js"></script>
+    <script src="/assets/scripts/Adv/Specifications.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/SpecificationDetails.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Prices.js?{{ microtime }}"></script>
 {% endblock %}
 
 {%- block content -%}

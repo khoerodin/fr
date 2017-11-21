@@ -1,9 +1,9 @@
 {% extends 'layout.twig' %}
 
 {%- block js -%}
-    <script src="/assets/scripts/Admin/Modules.js"></script>
-    <script src="/assets/scripts/Admin/Roles.js"></script>
-    <script src="/assets/scripts/Admin/Users.js"></script>
+    <script src="/assets/scripts/Admin/Modules.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Admin/Roles.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Admin/Users.js?{{ microtime }}"></script>
 {%- endblock -%}
 
 {%- block content -%}

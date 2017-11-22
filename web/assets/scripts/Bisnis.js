@@ -78,7 +78,7 @@
             },
             error: function (response, textStatus, errorThrown) {
                 if (errorThrown.toLowerCase() === 'unauthorized') {
-                    Bisnis.Util.Dialog.alert('PERHATIAN', 'Sesi Anda telah habis, silakan login kembali', function () {
+                    Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda telah keluar, silakan masuk kembali', function () {
                         location.href = '/login';
                     });
                 } else if (errorThrown.toLowerCase() === 'forbidden') {

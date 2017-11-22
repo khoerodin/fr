@@ -1,9 +1,9 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/Adv/AccountExecutives.js"></script>
-    <script src="/assets/scripts/Adv/AccountExecutiveCategories.js"></script>
-    <script src="/assets/scripts/Adv/Categories.js"></script>
+    <script src="/assets/scripts/Adv/AccountExecutives.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/AccountExecutiveCategories.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Categories.js?{{ microtime }}"></script>
 {% endblock %}
 
 {%- block content -%}

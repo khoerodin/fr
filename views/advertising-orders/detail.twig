@@ -1,17 +1,17 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/Adv/Customers.js"></script>
-    <script src="/assets/scripts/Adv/Specifications.js"></script>
-    <script src="/assets/scripts/Adv/SpecificationDetails.js"></script>
-    <script src="/assets/scripts/Adv/Prices.js"></script>
-    <script src="/assets/scripts/Adv/AccountExecutives.js"></script>
-    <script src="/assets/scripts/Adv/Media.js"></script>
-    <script src="/assets/scripts/Admin/Cities.js"></script>
-    <script src="/assets/scripts/Adv/OrderForm.js"></script>
-    <script src="/assets/scripts/Adv/Orders.js"></script>
-    <script src="/assets/scripts/Adv/PublishAds.js"></script>
-    <script src="/assets/scripts/Adv/OrderDetail.js"></script>
+    <script src="/assets/scripts/Adv/Customers.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Specifications.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/SpecificationDetails.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Prices.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/AccountExecutives.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Media.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Admin/Cities.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/OrderForm.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/Orders.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/PublishAds.js?{{ microtime }}"></script>
+    <script src="/assets/scripts/Adv/OrderDetail.js?{{ microtime }}"></script>
     <script>
         // Order From
         var orderFormElm = document.querySelector('[name="orderFrom"]');
@@ -33,7 +33,7 @@
         var loadPublishAds = function (pageNum, orderId) {
             pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
             Bisnis.Util.Storage.store('DT_ORDER_PUBLISH_ADS_CURRENT_PAGE', pageNum);
-            Bisnis.Adv.PublishAds.fetchAll([{page: pageNum},{'order.id': orderId}],
+            Bisnis.Adv.PublishAds.fetchAll([{page: pageNum},{'order.id': orderId}, {order: {publishDate: 'ASC'}}],
                 function (dataResponse) {
                     var memberData = dataResponse['hydra:member'];
                     var viewData = dataResponse['hydra:view'];
@@ -57,7 +57,7 @@
                         Bisnis.Util.Document.putHtml('#publishAdsList', '<tr><td colspan="10">BELUM ADA DATA</td></tr>');
                     }
                 }, function () {
-                    Bisnis.Util.Dialog.alert('GAGAL MEMUAT EDISI TERBIT');
+                    Bisnis.Util.Dialog.alert(' PERHATIAN', 'GAGAL MEMUAT EDISI TERBIT');
                 }
             );
         };
@@ -67,6 +67,7 @@
         Bisnis.Util.Event.bind('click', '#btn-order', function () {
             var thisBtn = this;
             thisBtn.disabled = true;
+            thisBtn.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> TUNGGU...';
 
             var params = Bisnis.Util.Form.serializeArray('#orderForm');
             const selectedTags = document.querySelectorAll('[name="orderTag"] option:checked');
@@ -95,6 +96,7 @@
 
             Bisnis.Adv.Orders.updateById(id, params,
                 function () {
+                    thisBtn.innerHTML = 'SIMPAN';
                     Bisnis.Util.Dialog.alert('SUKSES', 'ORDER IKLAN BERHASIL DIPERBARUI', function () {
                         window.location.href = '/advertising/orders';
                     });
@@ -103,6 +105,7 @@
                     if (response.responseJSON) {
                         Bisnis.Util.Grid.validate('orderForm', response.responseJSON.violations);
                     }
+                    thisBtn.innerHTML = 'SIMPAN';
                     thisBtn.disabled = false;
                 }
             );
@@ -392,7 +395,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <p class="help-block">Ada contoh faktur dengan Plus Diskon?</p>
                                 </div>
                             </div>
 

@@ -1,7 +1,7 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script src="/assets/scripts/Helpdesk/Staff.js?{{ microtime }}"></script>
     <script>Bisnis.Helpdesk.Staff.loadGrid(1);</script>
 {% endblock %}
 

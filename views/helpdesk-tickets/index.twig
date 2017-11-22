@@ -1,8 +1,8 @@
 {% extends 'layout.twig' %}
 
 {% block js %}
-    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js"></script>
-    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js?{{ microtime }}"></script>
     <script type="text/javascript">
         var fetchAllTicket = function (staff) {
             if (staff.isAdmin) {
@@ -350,7 +350,7 @@
                 <div class="panel with-nav-tabs panel-info">
                     <div class="panel-heading">
                         <ul id="ticketTab" class="nav nav-tabs" role="tablist">
-                            <li class="active assignToMe"><a href="#assignedTo" aria-controls="home" role="tab" data-toggle="tab">TIKETKU</a></li>
+                            <li class="active assignToMe"><a href="#assignedTo" aria-controls="home" role="tab" data-toggle="tab">TIKET UNTUKKU</a></li>
                             <li class="closedTickets"><a href="#closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
                             <li class="allTickets"><a href="#allTickets" aria-controls="profile" role="tab" data-toggle="tab">SEMUA TIKET</a></li>
                         </ul>
@@ -497,10 +497,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-flat pull-left" data-dismiss="modal" title="Tandai Sedang Dikerjakan" id="onprogressModalDetail"><i class="fa fa-wrench"></i></button>
-                <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal" title="Tandai Telah Selasai" id="resolveModalDetail"><i class="fa fa-check"></i></button>
-                <button type="button" class="btn btn-success btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
-                <button type="button" class="btn btn-primary btn-flat pull-right" id="sendResponse">Kirim</button>
+                <button type="button" class="btn btn-warning btn-flat pull-left" data-dismiss="modal" title="Tandai Sedang Dikerjakan" id="onprogressModalDetail"><i class="fa fa-wrench"></i></button>
+                <button type="button" class="btn btn-success btn-flat pull-left" data-dismiss="modal" title="Tandai Telah Selasai" id="resolveModalDetail"><i class="fa fa-check"></i></button>
+                <button type="button" class="btn btn-default btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
+                <button type="button" class="btn btn-danger btn-flat pull-right" id="sendResponse">Kirim</button>
                 <button type="button" class="btn btn-default btn-flat" data-dismiss="modal" id="closeModalDetail">Tutup</button>
             </div>
         </div>

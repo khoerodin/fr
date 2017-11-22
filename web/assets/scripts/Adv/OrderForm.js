@@ -6,7 +6,6 @@
         placeholder: 'CARI PERWAKILAN',
         module: 'representatives',
         prependValue: '/api/representatives/',
-        allowClear: true,
         fields: [
             {
                 field: 'code',
@@ -59,7 +58,7 @@
                     Bisnis.Util.Document.putHtml('#customerList', '<tr><td colspan="10">TIDAK ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA PEMASANG IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PEMASANG IKLAN');
             }
         );
 
@@ -116,7 +115,7 @@
                     Bisnis.Util.Document.putHtml('#clientList', '<tr><td colspan="10">TIDAK ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA KLIEN IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA KLIEN IKLAN');
             }
         );
 
@@ -134,9 +133,9 @@
     };
     // End Klien Iklan
 
-    // Cekat Di Faktur
+    // Cetak Di Faktur
     Bisnis.Util.Style.modifySelect('[name="printAs"]');
-    // End Cekat Di Faktur
+    // End Cetak Di Faktur
 
     // Jenis Iklan
     Bisnis.Util.Event.bind('click','#specificationButton', function () {
@@ -176,7 +175,7 @@
                 }
             },
             function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA JENIS IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA JENIS IKLAN');
             }
         );
 
@@ -186,7 +185,6 @@
 
             document.querySelector('#typeName').value = '';
             document.querySelector('[name="type"]').value = '';
-            document.querySelector('[name="basePrice"]').value = '';
             document.querySelector('#typeButton').disabled = false;
 
             document.querySelector('[name="basePrice"]').value = '0';
@@ -258,7 +256,7 @@
                     Bisnis.Util.Document.putHtml('#typeList', '<tr><td colspan="10">TIDAK ADA DATA</td></tr>');
                 }
             }, function () {
-                Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA TIPE IKLAN');
+                Bisnis.Util.Dialog.alert('PERHATIAN','GAGAL MEMUAT DATA TIPE IKLAN');
             }
         );
 
@@ -276,11 +274,26 @@
                 function (dataResponse) {
                     var total = dataResponse['hydra:totalItems'];
                     var data = dataResponse['hydra:member'];
+                    var basePrice = document.querySelector('[name="basePrice"]');
 
                     if (total > 0) {
-                        document.querySelector('[name="basePrice"]').value = Bisnis.Util.Money.format(data[0]['price']);
+                        var jenisIklan = document.querySelector('#specificationName').value;
+                        jenisIklan = jenisIklan.toLowerCase().trim().replace(/\s+/g, '');
+                        var arrayKhusus = [
+                            'kuping',
+                            'banner',
+                            'stapel',
+                            'eksposisi',
+                            'tarifkhusus'
+                        ];
+
+                        if ( Bisnis.Util.Document.inArray(jenisIklan, arrayKhusus) ) {
+                            basePrice.value = 0;
+                        } else {
+                            basePrice.value = Bisnis.Util.Money.format(data[0]['price']);
+                        }
                     } else {
-                        document.querySelector('[name="basePrice"]').value = '0';
+                        basePrice.value = 0;
                     }
 
                     hitung();
@@ -619,16 +632,6 @@
         return netto;
     };
     // End Netto
-
-    // NPB Diskon
-    /*var getNpbDiscount = function () {
-        var npbDiscountPercentage = document.querySelector('[name="npbDiscountPercentage"]').value;
-        var biaya = getBiaya() + getPPN() + getPlusDiscount() - getMinDiscount() - getDiscount();
-        var npbDiscount = ( biaya * npbDiscountPercentage) / 100;
-        document.querySelector('[name="npbDiscountValue"]').value = npbDiscount;
-        return npbDiscount;
-    };*/
-    // End NPB Diskon
 
     // Hitung Normal
     var hitung = function () {

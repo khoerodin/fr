@@ -45,8 +45,10 @@
         var rowTable = '';
         Bisnis.each(function (idx, row) {
             var currentSeq = '';
-            if (pageNum) {
+            if (pageNum && pageNum !== 'noPaging') {
                 currentSeq = ( pageNum - 1 ) * 17 + idx +1;
+            } else if (pageNum === 'noPaging') {
+                currentSeq = idx +1;
             } else {
                 currentSeq = ( 1 - 1 ) * 17 + idx +1;
             }

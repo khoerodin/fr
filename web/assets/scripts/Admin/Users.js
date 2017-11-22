@@ -53,7 +53,7 @@
     var loadGrid = function (pageNum) {
         pageNum = (!pageNum || 'null' === pageNum ) ? 1 : pageNum;
         Bisnis.Util.Storage.store('USERS_CURRENT_PAGE', pageNum);
-        Bisnis.Admin.Users.fetchAll([{page: pageNum}],
+        Bisnis.Admin.Users.fetchAll([{page: pageNum}, {order: {fullname: 'ASC'}}],
             function (dataResponse) {
                 var memberData = dataResponse['hydra:member'];
                 var viewData = dataResponse['hydra:view'];
@@ -194,6 +194,7 @@
 
     // detail modal
     var loadUserDetail = function (id) {
+        console.log(id)
         Bisnis.Util.Storage.store('USER_ID', id);
         Bisnis.Admin.Users.fetchById(id,
             function (dataResponse) {
@@ -316,10 +317,12 @@
     Bisnis.Util.Dialog.hiddenModal('#addModal', function () {
         Bisnis.Util.Grid.removeErrorForm('addForm');
         document.getElementById("addForm").reset();
+        Bisnis.Util.Style.resetSelect('#addForm select');
     });
     Bisnis.Util.Dialog.hiddenModal('#detailModal', function () {
         Bisnis.Util.Grid.removeErrorForm('detailForm');
         document.getElementById("detailForm").reset();
+        Bisnis.Util.Style.resetSelect('#detailForm select');
     });
     // end reset modal form on modal hidden
 

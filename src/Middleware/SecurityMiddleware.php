@@ -66,7 +66,7 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
                         [
                             'user.id' => $userId,
                             'module.menuDisplay' => true,
-                            'viewable' => true
+                            'viewable' => true,
                         ]
                     );
 
@@ -82,6 +82,7 @@ class SecurityMiddleware implements HttpKernelInterface, ContainerAwareInterface
                             'description' => $value['module']['description'],
                             'path' => str_replace('/api/', '', $value['module']['path']),
                             'iconCls' => $value['module']['iconCls'],
+                            'menuOrder' => $value['module']['menuOrder'],
                         ];
                     }
 

@@ -27,7 +27,7 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         $params = $request->get('params');
         $fullname = null;
 
-        if ($method == 'post' || $method == 'put' || $method == 'POST' || $method == 'PUT') {
+        if (strtolower($method) == 'post' || strtolower($method) == 'put') {
             $temps = [];
             foreach ($params as $param) {
                 /** @var FilterFactory $filter */
@@ -43,10 +43,10 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
                 }
             }
 
-            if ($url == 'users' && ($method == 'post' || $method == 'POST')) {
+            if (strtolower($url) == 'users' && strtolower($method) == 'post') {
                 $temps['username'] = $this->generateUsername($fullname);
             }
-        } elseif ($method == 'get') {
+        } elseif (strtolower($method) == 'get') {
             if (count($params) > 0) {
                 $temps = array_reduce($params, 'array_merge', array());
                 if (count($temps) > 0) {
@@ -62,8 +62,6 @@ class ApiController extends AbstractController implements ContainerAwareInterfac
         }
 
         $response = $this->request($url, $method, $temps);
-
-        //return new Response($response->getContent());
 
         return new Response($response->getContent(), $response->getStatusCode(), $response->headers->all());
     }

@@ -42,7 +42,7 @@
                 statusColor = 'success';
                 break;
             default:
-                statusText = 'NOT DEFINED';
+                statusText = 'CLOSED';
                 statusColor = 'default';
                 break;
         }

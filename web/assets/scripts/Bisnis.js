@@ -61,7 +61,7 @@
                     var string = dataResponse.toLowerCase();
                     if (string.indexOf('fatal error') !== -1) {
                         if (string.indexOf('access denied') !== -1) {
-                            Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk aksi ini', function () {
+                            Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk tindakan ini', function () {
                                 window.location.reload(true);
                             });
                         } else {

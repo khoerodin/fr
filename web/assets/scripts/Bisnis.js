@@ -62,11 +62,11 @@
                     if (string.indexOf('fatal error') !== -1) {
                         if (string.indexOf('access denied') !== -1) {
                             Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk aksi ini', function () {
-                                window.location.reload();
+                                window.location.reload(true);
                             });
                         } else {
                             Bisnis.Util.Dialog.alert('PERHATIAN', 'Maaf terjadi kesalahan', function () {
-                                window.location.reload();
+                                window.location.reload(true);
                             });
                         }
                     }
@@ -83,7 +83,7 @@
                     });
                 } else if (errorThrown.toLowerCase() === 'forbidden') {
                     Bisnis.Util.Dialog.alert('PERHATIAN', 'Anda tidak memiliki akses untuk tindakan ini', function () {
-                        window.location.reload();
+                        window.location.reload(true);
                     });
                 } else {
                     if (Bisnis.validCallback(errorCallback)) {

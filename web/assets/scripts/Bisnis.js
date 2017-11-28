@@ -114,6 +114,5 @@
     Bisnis.Chart = {};
     Bisnis.WebSocket = {};
 
-    // test
     window.Bisnis = Bisnis;
 })(window);

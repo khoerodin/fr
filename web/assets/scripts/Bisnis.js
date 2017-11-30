@@ -108,8 +108,6 @@
     Bisnis.Helpdesk = {};
     Bisnis.Util = {};
     Bisnis.Notification = {};
-    Bisnis.Adv = {};
-    Bisnis.Billing = {};
     Bisnis.Admin = {};
     Bisnis.Chart = {};
     Bisnis.WebSocket = {};

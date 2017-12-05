@@ -8,4 +8,4 @@ app:
     http: ~
     template:
         path: 'views'
-        cache_dir: 'caches'
+        cache_dir: 'caches' 

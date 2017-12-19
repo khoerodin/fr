@@ -3,6 +3,7 @@
 {% block js %}
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Ticket.js?{{ microtime }}"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js?{{ microtime }}"></script>
+    <script type="text/javascript" src="/assets/scripts/Helpdesk/Category.js?{{ microtime }}"></script>
     <script type="text/javascript">
         var fetchAllTicket = function (staff) {
             if (staff.isAdmin) {
@@ -339,6 +340,72 @@
                 }
             });
         });
+
+        Bisnis.Util.Event.bind('click', '.addNew', function () {
+            Bisnis.Helpdesk.Category.fetchAll([], function (categoryList) {
+                var categoryList = categoryList['hydra:member'];
+                var categoryOption = '<option selected disabled class="text-muted">PILIH BAGIAN</option>';
+                Bisnis.each(function (index, value) {
+                    categoryOption = categoryOption + '<option value="/api/helpdesk/categories/' + value.id + '">' + value.name + '</option>';
+                }, categoryList);
+
+                Bisnis.Util.Document.putHtml('#ticketCategory', categoryOption);
+                Bisnis.Util.Style.modifySelect('#ticketCategory');
+                Bisnis.Util.Style.modifySelect('#ticketType');
+                Bisnis.Util.Document.putEditor('#ticketMessage', '');
+                Bisnis.Util.Dialog.showModal('#newTicketModal');
+
+                getStaffCategory();
+            });
+        });
+
+        var getStaffCategory = function () {
+            Bisnis.Util.Event.bind('change', '#ticketCategory', function () {
+                document.querySelector('#ticketStaff').disabled = true;
+                var categoryId = this.value.split('/').pop();
+
+                Bisnis.Helpdesk.Staff.fetchByCategory(categoryId,
+                    function (dataResponse) {
+                        var staffList = dataResponse['hydra:member'];
+                        var staffOption = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN</option>';
+                        Bisnis.each(function (index, value) {
+                            staffOption = staffOption + '<option value="/api/helpdesk/staffs/' + value.id + '">' + value.fullname + '</option>';
+                        }, staffList);
+
+                        Bisnis.Util.Document.putHtml('#ticketStaff', staffOption);
+                        Bisnis.Util.Style.modifySelect('#ticketStaff');
+                        document.querySelector('#ticketStaff').disabled = false;
+                    }, function () {
+                        Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA STAFF');
+                        document.querySelector('#ticketStaff').disabled = false;
+                    }
+                );
+            });
+        };
+
+        Bisnis.Util.Event.bind('click', '#btnSave', function () {
+            var clientId = '/api/users/{{ me.id }}';
+            var categoryId = Bisnis.Util.Document.getValue('#ticketCategory');
+            var staffId = Bisnis.Util.Document.getValue('#ticketStaff');
+            var ticketType = Bisnis.Util.Document.getValue('#ticketType');
+            var title = Bisnis.Util.Document.getValue('#ticketTitle');
+            var message = Bisnis.Util.Document.getValue('#ticketMessage');
+
+            Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, staffId, ticketType, title, message, function () {
+                Bisnis.Util.Event.triggerClick('.assignToMe');
+                Bisnis.Util.Dialog.hideModal('#newTicketModal');
+                Bisnis.successMessage('Tiket baru berhasil dibuat.');
+
+                Bisnis.Util.Document.putValue('#ticketCategory', '');
+                Bisnis.Util.Document.putValue('#ticketTitle', '');
+                Bisnis.Util.Document.putEditor('#ticketMessage', '');
+            });
+        });
+
+        Bisnis.Util.Event.bind('click', '#btnClose', function () {
+            Bisnis.Util.Dialog.hideModal('#newTicketModal');
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        });
     </script>
 {% endblock %}
 
@@ -347,6 +414,7 @@
     <div class="col-md-12">
         <div class="box">
             <div class="box-body">
+                <button type="button" class="btn btn-danger pull-right add-modal btn-flat addNew">Tiket Baru</button>
                 <div class="panel with-nav-tabs panel-info">
                     <div class="panel-heading">
                         <ul id="ticketTab" class="nav nav-tabs" role="tablist">
@@ -558,4 +626,57 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+{#New Ticket    #}
+<div class="modal" id="newTicketModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tambah Tiket</h4>
+            </div>
+            <div class="modal-body">
+                <form id="formTiket">
+                    <div class="form-group">
+                        <label for="judul">Bagian</label>
+                        <select name="category" class="form-control" id="ticketCategory" style="width: 100%">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ticketStaff">Staff</label>
+                        <select name="staff" class="form-control" disabled id="ticketStaff" style="width: 100%">
+                            <option selected>PILIH BAGIAN TERLEBIH DAHULU</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Tipe</label>
+                        <select name="category" class="form-control" id="ticketType" style="width: 100%">
+                            <option selected disabled class="text-muted">PILIH TIPE</option>
+                            <option value="bug">BUG</option>
+                            <option value="request">REQUEST</option>
+                            <option value="guide">GUIDE/TUTORIAL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="judul">Judul</label>
+                        <input type="text" class="form-control" id="ticketTitle" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Pesan</label>
+                        <textarea name="ticketMessage" class="form-control editor" id="ticketMessage"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" id="btnClose">Tutup</button>
+                            <button type="button" class="btn btn-danger btn-flat" id="btnSave">Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {%- endblock -%}

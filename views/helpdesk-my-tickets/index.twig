@@ -63,7 +63,7 @@
         Bisnis.Util.Event.bind('click', '.addNew', function () {
             Bisnis.Helpdesk.Category.fetchAll([], function (categoryList) {
                 var categoryList = categoryList['hydra:member'];
-                var categoryOption = '<option selected disabled class="text-muted">PILIH TOPIK HELPDESK</option>';
+                var categoryOption = '<option selected disabled class="text-muted">PILIH BAGIAN</option>';
                 Bisnis.each(function (index, value) {
                     categoryOption = categoryOption + '<option value="/api/helpdesk/categories/' + value.id + '">' + value.name + '</option>';
                 }, categoryList);
@@ -71,6 +71,7 @@
                 Bisnis.Util.Document.putHtml('#ticketCategory', categoryOption);
                 Bisnis.Util.Style.modifySelect('#ticketCategory');
                 Bisnis.Util.Style.modifySelect('#ticketType');
+                Bisnis.Util.Document.putEditor('#ticketMessage', '');
                 Bisnis.Util.Dialog.showModal('#newTicketModal');
             });
         });
@@ -82,7 +83,7 @@
             var title = Bisnis.Util.Document.getValue('#ticketTitle');
             var message = Bisnis.Util.Document.getValue('#ticketMessage');
 
-            Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, ticketType, title, message, function () {
+            Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, null, ticketType, title, message, function () {
                 Bisnis.Util.Event.triggerClick('.assignToMe');
                 Bisnis.Util.Dialog.hideModal('#newTicketModal');
                 Bisnis.successMessage('Tiket baru berhasil dibuat.');

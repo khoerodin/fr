@@ -298,7 +298,7 @@
                 }
             });
         });
-        
+
         Bisnis.Util.Event.bind('click', '.closeTicket', function () {
             var that = this;
             var ticketId = Bisnis.Util.Document.getDataValue(that, 'ticket-id');
@@ -355,38 +355,29 @@
                 Bisnis.Util.Document.putEditor('#ticketMessage', '');
                 Bisnis.Util.Dialog.showModal('#newTicketModal');
 
-                getStaffCategory();
+                var userParams = {
+                    placeholder: 'CARI NAMA USER',
+                    module: 'users',
+                    fields: [
+                        {
+                            field: 'fullname',
+                            label: 'NAMA'
+                        }
+                    ]
+                };
+
+                Bisnis.Util.Style.ajaxSelect('#ticketUser', userParams);
+
             });
         });
 
-        var getStaffCategory = function () {
-            Bisnis.Util.Event.bind('change', '#ticketCategory', function () {
-                document.querySelector('#ticketStaff').disabled = true;
-                var categoryId = this.value.split('/').pop();
-
-                Bisnis.Helpdesk.Staff.fetchByCategory(categoryId,
-                    function (dataResponse) {
-                        var staffList = dataResponse['hydra:member'];
-                        var staffOption = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN</option>';
-                        Bisnis.each(function (index, value) {
-                            staffOption = staffOption + '<option value="/api/helpdesk/staffs/' + value.id + '">' + value.fullname + '</option>';
-                        }, staffList);
-
-                        Bisnis.Util.Document.putHtml('#ticketStaff', staffOption);
-                        Bisnis.Util.Style.modifySelect('#ticketStaff');
-                        document.querySelector('#ticketStaff').disabled = false;
-                    }, function () {
-                        Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA STAFF');
-                        document.querySelector('#ticketStaff').disabled = false;
-                    }
-                );
-            });
-        };
-
         Bisnis.Util.Event.bind('click', '#btnSave', function () {
-            var clientId = '/api/users/{{ me.id }}';
+            var clientId = '/api/users/' + Bisnis.Util.Document.getValue('#ticketUser');
             var categoryId = Bisnis.Util.Document.getValue('#ticketCategory');
-            var staffId = Bisnis.Util.Document.getValue('#ticketStaff');
+
+            var staff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+            var staffId = '/api/helpdesk/staffs/' + staff.id;
+
             var ticketType = Bisnis.Util.Document.getValue('#ticketType');
             var title = Bisnis.Util.Document.getValue('#ticketTitle');
             var message = Bisnis.Util.Document.getValue('#ticketMessage');
@@ -410,99 +401,100 @@
 {% endblock %}
 
 {%- block content -%}
-<div class="row">
-    <div class="col-md-12">
-        <div class="box">
-            <div class="box-body">
-                <button type="button" class="btn btn-danger pull-right add-modal btn-flat addNew">Tiket Baru</button>
-                <div class="panel with-nav-tabs panel-info">
-                    <div class="panel-heading">
-                        <ul id="ticketTab" class="nav nav-tabs" role="tablist">
-                            <li class="active assignToMe"><a href="#assignedTo" aria-controls="home" role="tab" data-toggle="tab">TIKET UNTUKKU</a></li>
-                            <li class="closedTickets"><a href="#closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
-                            <li class="allTickets"><a href="#allTickets" aria-controls="profile" role="tab" data-toggle="tab">SEMUA TIKET</a></li>
-                        </ul>
-                    </div>
-                    <div class="tab-content">
-                        <div id="assignedTo" role="tabpanel" class="tab-pane active in">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-striped table-bordered table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th width="3%">NO.</th>
-                                            <th>Klien</th>
-                                            <th>Staff</th>
-                                            <th>Kategori</th>
-                                            <th>Judul</th>
-                                            <th>Status</th>
-                                            <th>Prioritas</th>
-                                            <th>Tanggal Buat Tiket</th>
-                                            <th width="10%">Aksi</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="assignedToMe">
-                                        <tr><td colspan="10">BELUM ADA DATA</td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="box-footer clearfix">
-                                <ul id="staffTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
-                            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <button type="button" class="btn btn-danger pull-right add-modal btn-flat addNew">Tiket Baru</button>
+                    <div class="panel with-nav-tabs panel-info">
+                        <div class="panel-heading">
+                            <ul id="ticketTab" class="nav nav-tabs" role="tablist">
+                                <li class="active assignToMe"><a href="#assignedTo" aria-controls="home" role="tab" data-toggle="tab">TIKET UNTUKKU</a></li>
+                                <li class="closedTickets"><a href="#closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
+                                <li class="allTickets"><a href="#allTickets" aria-controls="profile" role="tab" data-toggle="tab">SEMUA TIKET</a></li>
+                            </ul>
                         </div>
-                        <div id="closedTickets" role="tabpanel" class="tab-pane">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-striped table-bordered table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th width="3%">NO.</th>
-                                            <th>Klien</th>
-                                            <th>Staff</th>
-                                            <th>Kategori</th>
-                                            <th>Judul</th>
-                                            <th>Status</th>
-                                            <th>Prioritas</th>
-                                            <th>Tanggal Buat Tiket</th>
-                                            <th width="10%">Aksi</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="closedTicketList">
-                                        <tr><td colspan="10">BELUM ADA DATA</td></tr>
-                                        </tbody>
-                                    </table>
+                        <div class="tab-content">
+                            <div id="assignedTo" role="tabpanel" class="tab-pane active in">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th width="3%">NO.</th>
+                                                <th>Klien</th>
+                                                <th>Staff</th>
+                                                <th>Kategori</th>
+                                                <th>Judul</th>
+                                                <th>Status</th>
+                                                <th>Prioritas</th>
+                                                <th>Tanggal Buat Tiket</th>
+                                                <th width="10%">Aksi</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="assignedToMe">
+                                            <tr><td colspan="10">BELUM ADA DATA</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="box-footer clearfix">
+                                    <ul id="staffTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                                 </div>
                             </div>
-                            <div class="box-footer clearfix">
-                                <ul id="closedTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
-                            </div>
-                        </div>
-                        <div id="allTickets" role="tabpanel" class="tab-pane">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-striped table-bordered table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th width="3%">NO.</th>
-                                            <th>Klien</th>
-                                            <th>Staff</th>
-                                            <th>Kategori</th>
-                                            <th>Judul</th>
-                                            <th>Status</th>
-                                            <th>Prioritas</th>
-                                            <th>Tanggal Buat Tiket</th>
-                                            <th width="10%">Aksi</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="allTicketList">
-                                        <tr><td colspan="10">BELUM ADA DATA</td></tr>
-                                        </tbody>
-                                    </table>
+                            <div id="closedTickets" role="tabpanel" class="tab-pane">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th width="3%">NO.</th>
+                                                <th>Klien</th>
+                                                <th>Staff</th>
+                                                <th>Kategori</th>
+                                                <th>Judul</th>
+                                                <th>Status</th>
+                                                <th>Prioritas</th>
+                                                <th>Tanggal Buat Tiket</th>
+                                                <th width="10%">Aksi</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="closedTicketList">
+                                            <tr><td colspan="10">BELUM ADA DATA</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="box-footer clearfix">
+                                    <ul id="closedTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                                 </div>
                             </div>
-                            <div class="box-footer clearfix">
-                                <ul id="allTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                            <div id="allTickets" role="tabpanel" class="tab-pane">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th width="3%">NO.</th>
+                                                <th>Klien</th>
+                                                <th>Staff</th>
+                                                <th>Kategori</th>
+                                                <th>Judul</th>
+                                                <th>Status</th>
+                                                <th>Prioritas</th>
+                                                <th>Tanggal Buat Tiket</th>
+                                                <th width="10%">Aksi</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="allTicketList">
+                                            <tr><td colspan="10">BELUM ADA DATA</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="box-footer clearfix">
+                                    <ul id="allTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -510,173 +502,172 @@
             </div>
         </div>
     </div>
-</div>
-<div class="modal" id="tiketDetail" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Detil Tiket</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="col-sm-12 table-responsive">
-                            <table class="table table-bordered table-striped">
-                                <tr>
-                                    <td><b>Nama Klien:</b></td>
-                                    <td class="chatTicketClient">-</td>
-                                    <td><b>Judul:</b></td>
-                                    <td class="chatTicketTitle">-</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Tipe:</b></td>
-                                    <td class="chatTicketType">-</td>
-                                    <td><b>Kategori:</b></td>
-                                    <td class="chatTicketCategory">-</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Status:</b></td>
-                                    <td class="chatTicketStatus">-</td>
-                                    <td><b>Tanggal:</b></td>
-                                    <td class="chatTicketDate">-</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+    <div class="modal" id="tiketDetail" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Detil Tiket</h4>
                 </div>
-                <div class="box direct-chat">
-                    <div class="box-body">
-                        <div class="direct-chat-messages" id="chatHistory">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">
-                                </div>
-                                <div class="media-body">
-                                    <h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i> Hari, Tanggal dan Jam</h6>
-                                    <h4 class="media-heading">Nama Klien / Staf</h4>
-                                    <p>Isi Pesan</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <textarea type="text" name="message" class="form-control editor" id="chatMessage"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning btn-flat pull-left" data-dismiss="modal" title="Tandai Sedang Dikerjakan" id="onprogressModalDetail"><i class="fa fa-wrench"></i></button>
-                <button type="button" class="btn btn-success btn-flat pull-left" data-dismiss="modal" title="Tandai Telah Selasai" id="resolveModalDetail"><i class="fa fa-check"></i></button>
-                <button type="button" class="btn btn-default btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
-                <button type="button" class="btn btn-danger btn-flat pull-right" id="sendResponse">Kirim</button>
-                <button type="button" class="btn btn-default btn-flat" data-dismiss="modal" id="closeModalDetail">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal ticketAssignment" role="dialog" id="ticketAssignment">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form id="formKonfirmasiTiket">
-                    <div class="box-body row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="judul">Pilih Staf</label>
-                                <select name="staff" class="form-control" id="staff" style="width: 100%">
-                                    <option></option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-flat btn-danger" id="assignTo">Delegasikan</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<div class="modal ticketChangePriority" role="dialog" id="ticketChangePriority">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form id="formKonfirmasiTiket">
-                    <div class="box-body row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="judul">Pilih Prioritas</label>
-                                <select name="priority" class="form-control" id="priority" style="width: 100%">
-                                    <option selected disabled class="text-muted">PILIH PRIORITAS</option>
-                                    <option value="low">KURANG MENDESAK</option>
-                                    <option value="normal">NORMAL</option>
-                                    <option value="urgent">MENDESAK</option>
-                                    <option value="very_urgent">SANGAT MENDESAK</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-flat btn-danger" id="changePriority">Ubah Prioritas</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-{#New Ticket    #}
-<div class="modal" id="newTicketModal" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Tambah Tiket</h4>
-            </div>
-            <div class="modal-body">
-                <form id="formTiket">
-                    <div class="form-group">
-                        <label for="judul">Bagian</label>
-                        <select name="category" class="form-control" id="ticketCategory" style="width: 100%">
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="ticketStaff">Staff</label>
-                        <select name="staff" class="form-control" disabled id="ticketStaff" style="width: 100%">
-                            <option selected>PILIH BAGIAN TERLEBIH DAHULU</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Tipe</label>
-                        <select name="category" class="form-control" id="ticketType" style="width: 100%">
-                            <option selected disabled class="text-muted">PILIH TIPE</option>
-                            <option value="bug">BUG</option>
-                            <option value="request">REQUEST</option>
-                            <option value="guide">GUIDE/TUTORIAL</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="judul">Judul</label>
-                        <input type="text" class="form-control" id="ticketTitle" name="title">
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Pesan</label>
-                        <textarea name="ticketMessage" class="form-control editor" id="ticketMessage"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="col-sm-12">
+                <div class="modal-body">
                     <div class="row">
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" id="btnClose">Tutup</button>
-                            <button type="button" class="btn btn-danger btn-flat" id="btnSave">Simpan</button>
+                        <div class="col-sm-12">
+                            <div class="col-sm-12 table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <tr>
+                                        <td><b>Nama Klien:</b></td>
+                                        <td class="chatTicketClient">-</td>
+                                        <td><b>Judul:</b></td>
+                                        <td class="chatTicketTitle">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Tipe:</b></td>
+                                        <td class="chatTicketType">-</td>
+                                        <td><b>Kategori:</b></td>
+                                        <td class="chatTicketCategory">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Status:</b></td>
+                                        <td class="chatTicketStatus">-</td>
+                                        <td><b>Tanggal:</b></td>
+                                        <td class="chatTicketDate">-</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box direct-chat">
+                        <div class="box-body">
+                            <div class="direct-chat-messages" id="chatHistory">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img src="http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png" class="media-object" style="width:60px">
+                                    </div>
+                                    <div class="media-body">
+                                        <h6 class="pull-right"><i class="fa fa-clock-o fa-1" aria-hidden="true"></i> Hari, Tanggal dan Jam</h6>
+                                        <h4 class="media-heading">Nama Klien / Staf</h4>
+                                        <p>Isi Pesan</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <textarea type="text" name="message" class="form-control editor" id="chatMessage"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-flat pull-left" data-dismiss="modal" title="Tandai Sedang Dikerjakan" id="onprogressModalDetail"><i class="fa fa-wrench"></i></button>
+                    <button type="button" class="btn btn-success btn-flat pull-left" data-dismiss="modal" title="Tandai Telah Selasai" id="resolveModalDetail"><i class="fa fa-check"></i></button>
+                    <button type="button" class="btn btn-default btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
+                    <button type="button" class="btn btn-danger btn-flat pull-right" id="sendResponse">Kirim</button>
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal" id="closeModalDetail">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal ticketAssignment" role="dialog" id="ticketAssignment">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="formKonfirmasiTiket">
+                        <div class="box-body row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="judul">Pilih Staf</label>
+                                    <select name="staff" class="form-control" id="staff" style="width: 100%">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-flat btn-danger" id="assignTo">Delegasikan</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal ticketChangePriority" role="dialog" id="ticketChangePriority">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="formKonfirmasiTiket">
+                        <div class="box-body row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="judul">Pilih Prioritas</label>
+                                    <select name="priority" class="form-control" id="priority" style="width: 100%">
+                                        <option selected disabled class="text-muted">PILIH PRIORITAS</option>
+                                        <option value="low">KURANG MENDESAK</option>
+                                        <option value="normal">NORMAL</option>
+                                        <option value="urgent">MENDESAK</option>
+                                        <option value="very_urgent">SANGAT MENDESAK</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-flat btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-flat btn-danger" id="changePriority">Ubah Prioritas</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    {#New Ticket    #}
+    <div class="modal" id="newTicketModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Tambah Tiket</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="formTiket">
+                        <div class="form-group">
+                            <label for="judul">Bagian</label>
+                            <select name="category" class="form-control" id="ticketCategory" style="width: 100%">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketStaff">User</label>
+                            <select name="client" class="form-control" id="ticketUser" style="width: 100%">
+                                <option selected>PILIH USER</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Tipe</label>
+                            <select name="category" class="form-control" id="ticketType" style="width: 100%">
+                                <option selected disabled class="text-muted">PILIH TIPE</option>
+                                <option value="bug">BUG</option>
+                                <option value="request">REQUEST</option>
+                                <option value="guide">GUIDE/TUTORIAL</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="judul">Judul</label>
+                            <input type="text" class="form-control" id="ticketTitle" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Pesan</label>
+                            <textarea name="ticketMessage" class="form-control editor" id="ticketMessage"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" id="btnClose">Tutup</button>
+                                <button type="button" class="btn btn-danger btn-flat" id="btnSave">Simpan</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {%- endblock -%}

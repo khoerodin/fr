@@ -117,9 +117,13 @@
 
     // search box
     var params = {
-        placeholder: 'CARI USERNAME / EMAIL',
+        placeholder: 'CARI NAMA / USERNAME / EMAIL',
         module: 'users',
         fields: [
+            {
+                field: 'fullname',
+                label: 'Nama'
+            },
             {
                 field: 'username',
                 label: 'Username'

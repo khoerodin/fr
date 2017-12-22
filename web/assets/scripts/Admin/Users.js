@@ -247,7 +247,7 @@
         Bisnis.Admin.Users.updateById(id, params,
             function () {
                 Bisnis.successMessage('Berhasil memperbarui data');
-                let password = document.querySelector('#detailPassword').value;
+                var password = document.querySelector('#detailPassword').value;
                 if ( password ) {
                     var params = [ { name : 'plainPassword', value : password } ];
                     Bisnis.Admin.Users.changePassword(params,
@@ -330,7 +330,7 @@
     });
     // end reset modal form on modal hidden
 
-    let getRoles = function (userId, serviceId, pageNum) {
+    var getRoles = function (userId, serviceId, pageNum) {
         Bisnis.Admin.Modules.fetchAll(
             [{'page': pageNum},{'service': serviceId}],
             function (dataResponse1) {
@@ -345,7 +345,7 @@
     };
 
     var responses = function (firstResponse, secondResponse, userId, pageNum) {
-        let roles = [];
+        var roles = [];
         secondResponse['hydra:member'].forEach(function (val) {
             roles[val.module.id] = {
                 roleId: val.id,
@@ -358,7 +358,7 @@
             };
         });
 
-        let userRoles = [];
+        var userRoles = [];
         firstResponse['hydra:member'].forEach(function (val, idx) {
             if ('undefined' !== typeof roles[val.id]) {
                 userRoles[idx] = {
@@ -383,7 +383,7 @@
             }
         });
 
-        let viewData = firstResponse['hydra:view'];
+        var viewData = firstResponse['hydra:view'];
         if ('undefined' !== typeof viewData['hydra:last']) {
             var currentPage = Bisnis.Util.Url.getQueryParam('page', viewData['@id']);
             Bisnis.Util.Grid.createPagination('#rolesPagination', Bisnis.Util.Url.getQueryParam('page', viewData['hydra:last']), currentPage);
@@ -418,11 +418,11 @@
         renderResponse(userRoles, userId, pageNum);
     };
 
-    let renderResponse = function (userRoles, userId, pageNum) {
-        let rolesCheck = '';
+    var renderResponse = function (userRoles, userId, pageNum) {
+        var rolesCheck = '';
         userRoles.forEach(function (value, index) {
 
-            let currentSeq = '';
+            var currentSeq = '';
             if (pageNum) {
                 currentSeq = ( pageNum - 1 ) * 17 + index +1;
             } else {
@@ -466,9 +466,9 @@
         Bisnis.Util.CheckToggle.render('.check-role');
     };
 
-    let rolesResponse = function (roleResponses, userId, pageNum) {
+    var rolesResponse = function (roleResponses, userId, pageNum) {
         responses(roleResponses.firstResponse, roleResponses.secondResponse, userId, pageNum);
-        let accessFor = window.localStorage.getItem('accessFor');
+        var accessFor = window.localStorage.getItem('accessFor');
         document.querySelector('.modal-title.roles').innerHTML = 'HAK AKSES <strong>'+accessFor+'</strong>';
         Bisnis.Util.Dialog.showModal('#rolesModal');
     };
@@ -500,13 +500,13 @@
     });
 
     Bisnis.Util.Event.bind('change', '.check-role', function () {
-        let checkName = this.getAttribute('name');
-        let userId = document.querySelector('#rolesUserId').value;
-        let moduleId = this.closest('tr').getAttribute('id');
-        let roleId = this.closest('tr').getAttribute('data-role');
-        let checkValue = this.checked;
+        var checkName = this.getAttribute('name');
+        var userId = document.querySelector('#rolesUserId').value;
+        var moduleId = this.closest('tr').getAttribute('id');
+        var roleId = this.closest('tr').getAttribute('data-role');
+        var checkValue = this.checked;
 
-        let params = [
+        var params = [
             {
                 'name' : checkName,
                 'value' : checkValue
@@ -521,7 +521,7 @@
             }
         ];
 
-        let $this = this;
+        var $this = this;
         if ( roleId === 'null') {
             Bisnis.Admin.Roles.add(params,
                 function (dataResponse) {

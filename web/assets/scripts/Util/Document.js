@@ -23,7 +23,22 @@
 
     Bisnis.Util.Document.putEditor = function (selector, value, height) {
         height = height ? height : 200;
-        jQuery(selector).summernote({'code': value, height: height});
+        jQuery(selector).summernote({
+            'code': value,
+            height: height,
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ]
+        });
+
+        if ( value === '') {
+            jQuery(selector).summernote('code', '');
+        }
     };
 
     Bisnis.Util.Document.hide = function (selector) {

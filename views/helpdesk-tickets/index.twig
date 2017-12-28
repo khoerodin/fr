@@ -130,10 +130,36 @@
             var that = this;
 
             Bisnis.Util.Storage.store('ticketId', Bisnis.Util.Document.getDataValue(that, 'ticket-id'));
+            Bisnis.Util.Dialog.showModal('.ticketAssignment');
 
-            Bisnis.Helpdesk.Staff.fetchByCategory(Bisnis.Util.Document.getDataValue(that, 'ticket-category-id'),
+            Bisnis.Helpdesk.Category.fetchAll([],
+                function (dataResponse) {
+                    var categoryList = dataResponse['hydra:member'];
+                    var categoryOption = '<option selected disabled class="text-muted">PILIH BAGIAN</option>';
+                    Bisnis.each(function (index, value) {
+                        categoryOption = categoryOption + '<option value="/api/helpdesk/categories/' + value.id + '">' + value.name + '</option>';
+                    }, categoryList);
+
+                    Bisnis.Util.Document.putHtml('#help-category', categoryOption);
+                    Bisnis.Util.Style.modifySelect('#help-category');
+                },
+                function () {
+                    Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA BAGIAN');
+                }
+            );
+
+            Bisnis.Util.Event.bind('change', '#help-category', function () {
+                document.querySelector('#staff').disabled = true;
+                var categoryId = this.value.split('/').pop();
+                staffByCategory(categoryId);
+            });
+        });
+
+        var staffByCategory = function (categoryId) {
+            Bisnis.Helpdesk.Staff.fetchByCategory(categoryId,
                 function (dataResponse) {
                     var staffList = dataResponse['hydra:member'];
+                    console.log(staffList)
                     var staffOption = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN</option>';
                     Bisnis.each(function (index, value) {
                         staffOption = staffOption + '<option value="/api/helpdesk/staffs/' + value.id + '">' + value.fullname + '</option>';
@@ -141,13 +167,12 @@
 
                     Bisnis.Util.Document.putHtml('#staff', staffOption);
                     Bisnis.Util.Style.modifySelect('#staff');
-
-                    Bisnis.Util.Dialog.showModal('.ticketAssignment');
+                    document.querySelector('#staff').disabled = false;
                 }, function () {
-                    Bisnis.Util.Dialog.alert('GAGAL MEMUAT DATA STAFF');
+                    Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA STAFF');
                 }
             );
-        });
+        };
 
         Bisnis.Util.Event.bind('click', '.changePriorityTicket', function () {
             var that = this;
@@ -196,12 +221,12 @@
                     ], function () {
                         Bisnis.Util.Event.triggerClick('#refreshChat');
                         Bisnis.Helpdesk.Ticket.markReadClientResponseByTicket(ticketId);
-                        Bisnis.Notification.send(
-                            'HELPDESK',
-                            ticket.client.id,
-                            '/api/helpdesk/staffs/' + staffId,
-                            'Tiket Anda [' + ticket.title + '] mendapatkan response baru dari admin.'
-                        );
+                        // Bisnis.Notification.send(
+                        //     'HELPDESK',
+                        //     ticket.client.id,
+                        //     '/api/helpdesk/staffs/' + staffId,
+                        //     'Tiket Anda [' + ticket.title + '] mendapatkan response baru dari admin.'
+                        // );
                         Bisnis.successMessage('Respon terkirim.');
                     });
                 });
@@ -424,7 +449,7 @@
                                                 <th width="3%">NO.</th>
                                                 <th>Klien</th>
                                                 <th>Staff</th>
-                                                <th>Kategori</th>
+                                                <th>Bagian</th>
                                                 <th>Judul</th>
                                                 <th>Status</th>
                                                 <th>Prioritas</th>
@@ -451,7 +476,7 @@
                                                 <th width="3%">NO.</th>
                                                 <th>Klien</th>
                                                 <th>Staff</th>
-                                                <th>Kategori</th>
+                                                <th>Bagian</th>
                                                 <th>Judul</th>
                                                 <th>Status</th>
                                                 <th>Prioritas</th>
@@ -478,7 +503,7 @@
                                                 <th width="3%">NO.</th>
                                                 <th>Klien</th>
                                                 <th>Staff</th>
-                                                <th>Kategori</th>
+                                                <th>Bagian</th>
                                                 <th>Judul</th>
                                                 <th>Status</th>
                                                 <th>Prioritas</th>
@@ -573,9 +598,14 @@
                         <div class="box-body row">
                             <div class="col-md-12">
                                 <div class="form-group">
+                                    <label for="judul">Pilih Bagian</label>
+                                    <select name="category" class="form-control" id="help-category" style="width: 100%">
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="judul">Pilih Staf</label>
-                                    <select name="staff" class="form-control" id="staff" style="width: 100%">
-                                        <option></option>
+                                    <select name="staff" disabled class="form-control" id="staff" style="width: 100%">
+                                        <option selected>PILIH BAGIAN TERLEBIH DAHULU</option>
                                     </select>
                                 </div>
                             </div>

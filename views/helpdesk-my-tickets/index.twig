@@ -7,25 +7,28 @@
     <script type="text/javascript">
         var loadPage = function (page) {
             Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', parseInt(page));
-            // Bisnis.Util.Event.triggerClick('#ticketTab .active');
-            Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', parseInt(page), '#clientTicketPagination');
+            Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', null, parseInt(page), '#clientTicketPagination');
         };
 
         Bisnis.init(function () {
             Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
-            Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#clientTicketPagination');
+            Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', null, parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#clientTicketPagination');
         });
 
         Bisnis.Util.Event.bind('click', '.closedTickets', function () {
             Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
+            var ticketId = Bisnis.Util.Document.getValue('#searchClosed');
+            ticketId = ticketId ? ticketId : null;
             Bisnis.Helpdesk.Ticket.fetchClosed({
+                'id': ticketId,
                 'client.id': '{{ me.id }}',
                 'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
             }, '#closedTicketList', true, '#closedTicketPagination');
         });
 
         Bisnis.Util.Event.bind('click', '.assignToMe', function () {
-            Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#clientTicketPagination');
+            var ticketId = Bisnis.Util.Document.getValue('#searchMyTickets');
+            Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', ticketId, parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#clientTicketPagination');
         });
 
         Bisnis.Util.Event.bind('click', '#clientTicketPagination .pagePrevious', function () {
@@ -91,8 +94,11 @@
                 Bisnis.Util.Document.putValue('#ticketCategory', '');
                 Bisnis.Util.Document.putValue('#ticketTitle', '');
                 Bisnis.Util.Document.putEditor('#ticketMessage', '');
-                loadPage(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'));
             });
+            setTimeout(function() {
+                loadPage(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'));
+            }, 500);
+
         });
         
         Bisnis.Util.Event.bind('click', '#btnClose', function () {
@@ -175,6 +181,22 @@
                 }
             });
         });
+
+        Bisnis.Util.Event.bind('input', '#searchMyTickets', function () {
+            var ticketId = this.value;
+            Bisnis.Helpdesk.Ticket.fetchByClient('{{ me.id }}', ticketId, parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#clientTicketPagination');
+        });
+
+        Bisnis.Util.Event.bind('input', '#searchClosed', function () {
+            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
+            var ticketId = this.value;
+            ticketId = ticketId ? ticketId : null;
+            Bisnis.Helpdesk.Ticket.fetchClosed({
+                'id': ticketId,
+                'client.id': '{{ me.id }}',
+                'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+            }, '#closedTicketList', true, '#closedTicketPagination');
+        });
     </script>
 {% endblock %}
 
@@ -191,58 +213,65 @@
                             <li><a class="closedTickets" href="#closedTickets" aria-controls="profile" role="tab" data-toggle="tab">CLOSED TIKET</a></li>
                         </ul>
                     </div>
-                    <div class="tab-content">
-                        <div id="myTickets" class="tab-pane active in">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-striped table-bordered table-hover tableTicket">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Kategori</th>
-                                            <th>Judul</th>
-                                            <th>Status</th>
-                                            <th>Prioritas</th>
-                                            <th>Tanggal Buat Tiket</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                        </thead >
-                                        <tbody id="assignedToMe">
+                    <div class="panel-body">
+                        <div class="tab-content">
+                            <div id="myTickets" class="tab-pane active in">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" id="searchMyTickets" placeholder="CARI ID TIKET" style="margin-bottom: 15px;">
+                                        <table class="table table-striped table-bordered table-hover tableTicket">
+                                            <thead>
                                             <tr>
-                                                <td colspan="7">LOADING DATA...</td>
+                                                <th>#</th>
+                                                <th>ID TIKET</th>
+                                                <th>Kategori</th>
+                                                <th>Judul</th>
+                                                <th>Status</th>
+                                                <th>Prioritas</th>
+                                                <th>Tanggal Buat Tiket</th>
+                                                <th>Aksi</th>
                                             </tr>
-                                        </tbody>
-                                    </table>
+                                            </thead >
+                                            <tbody id="assignedToMe">
+                                                <tr>
+                                                    <td colspan="7">LOADING DATA...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="box-footer clearfix">
+                                    <ul id="clientTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                                 </div>
                             </div>
-                            <div class="box-footer clearfix">
-                                <ul id="clientTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
-                            </div>
-                        </div>
-                        <div id="closedTickets" class="tab-pane closedTickets">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-striped table-bordered table-hover tableTicket">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Kategori</th>
-                                            <th>Judul</th>
-                                            <th>Status</th>
-                                            <th>Prioritas</th>
-                                            <th>Tanggal Buat Tiket</th>
-                                        </tr>
-                                        </thead >
-                                        <tbody id="closedTicketList">
+                            <div id="closedTickets" class="tab-pane closedTickets">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" id="searchClosed" placeholder="CARI ID TIKET" style="margin-bottom: 15px;">
+                                        <table class="table table-striped table-bordered table-hover tableTicket">
+                                            <thead>
                                             <tr>
-                                                <td colspan="7">LOADING DATA...</td>
+                                                <th>#</th>
+                                                <th>ID TIKET</th>
+                                                <th>Kategori</th>
+                                                <th>Judul</th>
+                                                <th>Status</th>
+                                                <th>Prioritas</th>
+                                                <th>Tanggal Buat Tiket</th>
+                                                <th>AKSI</th>
                                             </tr>
-                                        </tbody>
-                                    </table>
+                                            </thead >
+                                            <tbody id="closedTicketList">
+                                                <tr>
+                                                    <td colspan="7">LOADING DATA...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="box-footer clearfix">
-                                <ul id="closedTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                                <div class="box-footer clearfix">
+                                    <ul id="closedTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -86,7 +86,7 @@
             var title = Bisnis.Util.Document.getValue('#ticketTitle');
             var message = Bisnis.Util.Document.getValue('#ticketMessage');
 
-            Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, null, ticketType, title, message, function () {
+            Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, null, ticketType, title, message, null, function () {
                 Bisnis.Util.Event.triggerClick('.assignToMe');
                 Bisnis.Util.Dialog.hideModal('#newTicketModal');
                 Bisnis.successMessage('Tiket baru berhasil dibuat.');

@@ -78,6 +78,7 @@
     var renderMe = function (idx, ticket, row, style) {
         row = row + '<tr class="' + ticket.id + '"'+ style +'>';
         row = row + '<td>' + (idx + 1) + '</td>';
+        row = row + '<td>' + ticket.id.split('-')[0] +'</td>';
         row = row + '<td>' + ticket.category.name +'</td>';
         row = row + '<td>' + ticket.title + '</td>';
         row = row + '<td>' + createStatusButton(ticket.status) +'</td>';
@@ -104,6 +105,8 @@
     var render = function (idx, ticket, row, style) {
         row = row + '<tr class="' + ticket.id + '"'+ style +'>';
         row = row + '<td>' + (idx + 1) + '</td>';
+
+        row = row + '<td>' + ticket.id.split('-')[0] + '</td>';
 
         if (null !== ticket.client) {
             row = row + '<td>' + ticket.client.fullname +'</td>';
@@ -390,14 +393,16 @@
         });
     };
 
-    Bisnis.Helpdesk.Ticket.fetchByClient = function (clientId, page, paginationSelector) {
+    Bisnis.Helpdesk.Ticket.fetchByClient = function (clientId, id, page, paginationSelector) {
         page = 'undefined' === typeof page ?  1 : parseInt(page);
-        Bisnis.Helpdesk.Ticket.fetchClosable({'client.id' : clientId, 'page': page}, '#assignedToMe', true, paginationSelector);
+        id = id ? id : null;
+        Bisnis.Helpdesk.Ticket.fetchClosable({'client.id' : clientId, 'id' : id, 'page': page}, '#assignedToMe', true, paginationSelector);
     };
 
-    Bisnis.Helpdesk.Ticket.fetchByStaff = function (staffId, page, paginationSelector) {
+    Bisnis.Helpdesk.Ticket.fetchByStaff = function (staffId, id, page, paginationSelector) {
         page = 'undefined' === typeof page ?  1 : parseInt(page);
-        Bisnis.Helpdesk.Ticket.fetchClosable({'staff.id' : staffId, 'page': page}, '#assignedToMe', false, paginationSelector);
+        id = id ? id : null;
+        Bisnis.Helpdesk.Ticket.fetchClosable({'staff.id' : staffId, 'id' : id, 'page': page}, '#assignedToMe', false, paginationSelector);
     };
 
     Bisnis.Helpdesk.Ticket.markRead = function (ticketId, callback) {

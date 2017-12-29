@@ -5,13 +5,16 @@
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Staff.js?{{ microtime }}"></script>
     <script type="text/javascript" src="/assets/scripts/Helpdesk/Category.js?{{ microtime }}"></script>
     <script type="text/javascript">
-        var fetchAllTicket = function (staff) {
+        var fetchAllTicket = function (staff, ticketId) {
+            ticketId = ticketId ? ticketId : null;
             if (staff.isAdmin) {
                 Bisnis.Helpdesk.Ticket.fetchClosable({
+                    'id': ticketId,
                     'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
                 }, '#allTicketList', false, '#allTicketPagination');
             } else {
                 Bisnis.Helpdesk.Ticket.fetchClosable({
+                    'id': ticketId,
                     'category.id': staff.category.id,
                     'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
                 }, '#allTicketList', false, '#allTicketPagination');
@@ -23,35 +26,44 @@
             Bisnis.Util.Event.triggerClick('#ticketTab .active');
         };
 
-        Bisnis.init(Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
-            staff = staff['hydra:member'];
-            Bisnis.Util.Storage.remove('staff');
-            Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
-            if (0 < staff.length) {
-                Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
-                Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id, parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#staffTicketPagination');
-            }
-        }));
+        var loadForMe = function (ticketId) {
+            Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+                staff = staff['hydra:member'];
+                Bisnis.Util.Storage.remove('staff');
+                Bisnis.Util.Storage.store('TICKET_CURRENT_PAGE', 1);
+                if (0 < staff.length) {
+                    Bisnis.Util.Storage.store('staff', JSON.stringify(staff[0]));
+                    Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id, ticketId, parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE')), '#staffTicketPagination');
+                }
+            });
+        };
+
+        Bisnis.init(loadForMe());
 
         Bisnis.Util.Event.bind('click', '.allTickets', function () {
+            var ticketId = Bisnis.Util.Document.getValue('#searchAll');
+            ticketId = ticketId ? ticketId : null;
             var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
             if (null === savedStaff || 'undefined' === typeof savedStaff) {
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
                     if (0 < staff.length) {
-                        fetchAllTicket(staff[0]);
+                        fetchAllTicket(staff[0], ticketId);
                     }
                 });
             } else {
-                fetchAllTicket(savedStaff);
+                fetchAllTicket(savedStaff, ticketId);
             }
         });
 
         Bisnis.Util.Event.bind('click', '.closedTickets', function () {
             var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+            var ticketId = Bisnis.Util.Document.getValue('#searchClosed');
+            ticketId = ticketId ? ticketId : null;
             if (null === savedStaff || 'undefined' === typeof savedStaff) {
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
                     if (0 < staff.length) {
                         Bisnis.Helpdesk.Ticket.fetchClosed({
+                            'id': ticketId,
                             'category.id': staff[0].category.id,
                             'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
                         }, '#closedTicketList', false, '#closedTicketPagination');
@@ -59,6 +71,7 @@
                 });
             } else {
                 Bisnis.Helpdesk.Ticket.fetchClosed({
+                    'id': ticketId,
                     'category.id': savedStaff.category.id,
                     'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
                 }, '#closedTicketList', false, '#closedTicketPagination');
@@ -115,14 +128,15 @@
 
         Bisnis.Util.Event.bind('click', '.assignToMe', function () {
             var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+            var ticketId = Bisnis.Util.Document.getValue('#searchForMe');
             if (null === savedStaff || 'undefined' === typeof savedStaff) {
                 Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
                     if (0 < staff.length) {
-                        Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id);
+                        Bisnis.Helpdesk.Ticket.fetchByStaff(staff[0].id, ticketId);
                     }
                 });
             } else {
-                Bisnis.Helpdesk.Ticket.fetchByStaff(savedStaff.id);
+                Bisnis.Helpdesk.Ticket.fetchByStaff(savedStaff.id, ticketId);
             }
         });
 
@@ -450,6 +464,56 @@
             Bisnis.Util.Event.triggerClick('#ticketTab .active');
         };
         window.setInterval(refreshGrid, 5000);
+
+        Bisnis.Util.Event.bind('input', '#searchForMe', function () {
+            var value = this.value;
+            loadForMe(value);
+        });
+
+        var searchClosedTickets = function (ticketId) {
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+            ticketId = ticketId ? ticketId : null;
+            if (null === savedStaff || 'undefined' === typeof savedStaff) {
+                Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+                    if (0 < staff.length) {
+                        Bisnis.Helpdesk.Ticket.fetchClosed({
+                            'id': ticketId,
+                            'category.id': staff[0].category.id,
+                            'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                        }, '#closedTicketList', false, '#closedTicketPagination');
+                    }
+                });
+            } else {
+                Bisnis.Helpdesk.Ticket.fetchClosed({
+                    'id': ticketId,
+                    'category.id': savedStaff.category.id,
+                    'page': parseInt(Bisnis.Util.Storage.fetch('TICKET_CURRENT_PAGE'))
+                }, '#closedTicketList', false, '#closedTicketPagination');
+            }
+        };
+
+        Bisnis.Util.Event.bind('input', '#searchClosed', function () {
+            var value = this.value;
+            searchClosedTickets(value);
+        });
+
+        var searchAllTickets = function (ticketId) {
+            var savedStaff = JSON.parse(Bisnis.Util.Storage.fetch('staff'));
+            if (null === savedStaff || 'undefined' === typeof savedStaff) {
+                Bisnis.Helpdesk.Staff.fetchByUser('{{ me.id }}', function (staff) {
+                    if (0 < staff.length) {
+                        fetchAllTicket(staff[0], ticketId);
+                    }
+                });
+            } else {
+                fetchAllTicket(savedStaff, ticketId);
+            }
+        };
+
+        Bisnis.Util.Event.bind('input', '#searchAll', function () {
+            var value = this.value;
+            searchAllTickets(value);
+        });
     </script>
 {% endblock %}
 
@@ -467,86 +531,94 @@
                                 <li class="allTickets"><a href="#allTickets" aria-controls="profile" role="tab" data-toggle="tab">SEMUA TIKET</a></li>
                             </ul>
                         </div>
-                        <div class="tab-content">
-                            <div id="assignedTo" role="tabpanel" class="tab-pane active in">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table class="table table-striped table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th width="3%">NO.</th>
-                                                <th>Klien</th>
-                                                <th>Staff</th>
-                                                <th>Bagian</th>
-                                                <th>Judul</th>
-                                                <th>Status</th>
-                                                <th>Prioritas</th>
-                                                <th>Tanggal Buat Tiket</th>
-                                                <th width="10%">Aksi</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="assignedToMe">
-                                            <tr><td colspan="10">BELUM ADA DATA</td></tr>
-                                            </tbody>
-                                        </table>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div id="assignedTo" role="tabpanel" class="tab-pane active in">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" class="form-control" id="searchForMe" placeholder="CARI ID TIKET" style="margin-bottom: 15px;">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th width="3%">NO.</th>
+                                                    <th>ID TIKET</th>
+                                                    <th>Klien</th>
+                                                    <th>Staff</th>
+                                                    <th>Bagian</th>
+                                                    <th>Judul</th>
+                                                    <th>Status</th>
+                                                    <th>Prioritas</th>
+                                                    <th>Tanggal Buat Tiket</th>
+                                                    <th width="10%">Aksi</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="assignedToMe">
+                                                <tr><td colspan="10">BELUM ADA DATA</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer clearfix">
+                                        <ul id="staffTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                                     </div>
                                 </div>
-                                <div class="box-footer clearfix">
-                                    <ul id="staffTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
-                                </div>
-                            </div>
-                            <div id="closedTickets" role="tabpanel" class="tab-pane">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table class="table table-striped table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th width="3%">NO.</th>
-                                                <th>Klien</th>
-                                                <th>Staff</th>
-                                                <th>Bagian</th>
-                                                <th>Judul</th>
-                                                <th>Status</th>
-                                                <th>Prioritas</th>
-                                                <th>Tanggal Buat Tiket</th>
-                                                <th width="10%">Aksi</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="closedTicketList">
-                                            <tr><td colspan="10">BELUM ADA DATA</td></tr>
-                                            </tbody>
-                                        </table>
+                                <div id="closedTickets" role="tabpanel" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" class="form-control" id="searchClosed" placeholder="CARI ID TIKET" style="margin-bottom: 15px;">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th width="3%">NO.</th>
+                                                    <th>ID TIKET</th>
+                                                    <th>Klien</th>
+                                                    <th>Staff</th>
+                                                    <th>Bagian</th>
+                                                    <th>Judul</th>
+                                                    <th>Status</th>
+                                                    <th>Prioritas</th>
+                                                    <th>Tanggal Buat Tiket</th>
+                                                    <th width="10%">Aksi</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="closedTicketList">
+                                                <tr><td colspan="10">BELUM ADA DATA</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer clearfix">
+                                        <ul id="closedTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
                                     </div>
                                 </div>
-                                <div class="box-footer clearfix">
-                                    <ul id="closedTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
-                                </div>
-                            </div>
-                            <div id="allTickets" role="tabpanel" class="tab-pane">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table class="table table-striped table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th width="3%">NO.</th>
-                                                <th>Klien</th>
-                                                <th>Staff</th>
-                                                <th>Bagian</th>
-                                                <th>Judul</th>
-                                                <th>Status</th>
-                                                <th>Prioritas</th>
-                                                <th>Tanggal Buat Tiket</th>
-                                                <th width="10%">Aksi</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="allTicketList">
-                                            <tr><td colspan="10">BELUM ADA DATA</td></tr>
-                                            </tbody>
-                                        </table>
+                                <div id="allTickets" role="tabpanel" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" class="form-control" id="searchAll" placeholder="CARI ID TIKET" style="margin-bottom: 15px;">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th width="3%">NO.</th>
+                                                    <th>ID TIKET</th>
+                                                    <th>Klien</th>
+                                                    <th>Staff</th>
+                                                    <th>Bagian</th>
+                                                    <th>Judul</th>
+                                                    <th>Status</th>
+                                                    <th>Prioritas</th>
+                                                    <th>Tanggal Buat Tiket</th>
+                                                    <th width="10%">Aksi</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="allTicketList">
+                                                <tr><td colspan="10">BELUM ADA DATA</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="box-footer clearfix">
-                                    <ul id="allTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                                    <div class="box-footer clearfix">
+                                        <ul id="allTicketPagination" class="pagination pagination-sm no-margin pull-right"></ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -567,21 +639,21 @@
                             <div class="col-sm-12 table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <tr>
-                                        <td><b>Nama Klien:</b></td>
+                                        <td><b>KLIEN</b></td>
                                         <td class="chatTicketClient">-</td>
-                                        <td><b>Judul:</b></td>
+                                        <td><b>JUDUL</b></td>
                                         <td class="chatTicketTitle">-</td>
                                     </tr>
                                     <tr>
-                                        <td><b>Tipe:</b></td>
+                                        <td><b>TIPE</b></td>
                                         <td class="chatTicketType">-</td>
-                                        <td><b>Kategori:</b></td>
+                                        <td><b>BAGIAN</b></td>
                                         <td class="chatTicketCategory">-</td>
                                     </tr>
                                     <tr>
-                                        <td><b>Status:</b></td>
+                                        <td><b>STATUS</b></td>
                                         <td class="chatTicketStatus">-</td>
-                                        <td><b>Tanggal:</b></td>
+                                        <td><b>TANGGAL</b></td>
                                         <td class="chatTicketDate">-</td>
                                     </tr>
                                 </table>

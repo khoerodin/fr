@@ -367,33 +367,49 @@
         });
 
         Bisnis.Util.Event.bind('click', '.addNew', function () {
-            Bisnis.Helpdesk.Category.fetchAll([], function (categoryList) {
-                var categoryList = categoryList['hydra:member'];
-                var categoryOption = '<option selected disabled class="text-muted">PILIH BAGIAN</option>';
-                Bisnis.each(function (index, value) {
-                    categoryOption = categoryOption + '<option value="/api/helpdesk/categories/' + value.id + '">' + value.name + '</option>';
-                }, categoryList);
+            Bisnis.Helpdesk.Category.fetchAll([],
+                function (dataResponse) {
+                    var categoryList = dataResponse['hydra:member'];
+                    var categoryOption = '<option selected disabled class="text-muted">PILIH BAGIAN</option>';
+                    Bisnis.each(function (index, value) {
+                        categoryOption = categoryOption + '<option value="/api/helpdesk/categories/' + value.id + '">' + value.name + '</option>';
+                    }, categoryList);
 
-                Bisnis.Util.Document.putHtml('#ticketCategory', categoryOption);
-                Bisnis.Util.Style.modifySelect('#ticketCategory');
-                Bisnis.Util.Style.modifySelect('#ticketType');
-                Bisnis.Util.Document.putEditor('#ticketMessage', '');
-                Bisnis.Util.Dialog.showModal('#newTicketModal');
+                    Bisnis.Util.Document.putHtml('#ticketCategory', categoryOption);
+                    Bisnis.Util.Style.modifySelect('#ticketCategory');
+                    Bisnis.Util.Style.modifySelect('#ticketType');
+                    Bisnis.Util.Document.putEditor('#ticketMessage', '');
+                    Bisnis.Util.Dialog.showModal('#newTicketModal');
+                },
+                function () {
+                    Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA BAGIAN');
+                }
+            );
 
-                var userParams = {
-                    placeholder: 'CARI NAMA USER',
-                    module: 'users',
-                    fields: [
-                        {
-                            field: 'fullname',
-                            label: 'NAMA'
-                        }
-                    ]
-                };
-
-                Bisnis.Util.Style.ajaxSelect('#ticketUser', userParams);
-
+            Bisnis.Util.Event.bind('change', '#ticketCategory', function () {
+                document.querySelector('#ticketUser').disabled = true;
+                var categoryId = this.value.split('/').pop();
+                staffByTicketCategory(categoryId);
             });
+
+            var staffByTicketCategory = function (categoryId) {
+                Bisnis.Helpdesk.Staff.fetchByCategory(categoryId,
+                    function (dataResponse) {
+                        var staffList = dataResponse['hydra:member'];
+                        console.log(staffList)
+                        var staffOption = '<option selected disabled class="text-muted">PILIH STAFF YANG AKAN DITUGASKAN</option>';
+                        Bisnis.each(function (index, value) {
+                            staffOption = staffOption + '<option value="' + value.user.id + '">' + value.fullname + '</option>';
+                        }, staffList);
+
+                        Bisnis.Util.Document.putHtml('#ticketUser', staffOption);
+                        Bisnis.Util.Style.modifySelect('#ticketUser');
+                        document.querySelector('#ticketUser').disabled = false;
+                    }, function () {
+                        Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA STAFF');
+                    }
+                );
+            };
         });
 
         Bisnis.Util.Event.bind('click', '#btnSave', function () {
@@ -408,20 +424,32 @@
             var message = Bisnis.Util.Document.getValue('#ticketMessage');
 
             Bisnis.Helpdesk.Ticket.createNew(clientId, categoryId, staffId, ticketType, title, message, function () {
-                Bisnis.Util.Event.triggerClick('.assignToMe');
                 Bisnis.Util.Dialog.hideModal('#newTicketModal');
                 Bisnis.successMessage('Tiket baru berhasil dibuat.');
 
+                Bisnis.Util.Style.resetSelect('#ticketCategory');
+                Bisnis.Util.Style.resetSelect('#ticketUser');
+                Bisnis.Util.Style.resetSelect('#ticketType');
                 Bisnis.Util.Document.putValue('#ticketCategory', '');
                 Bisnis.Util.Document.putValue('#ticketTitle', '');
                 Bisnis.Util.Document.putEditor('#ticketMessage', '');
+
             });
+
+            setTimeout(function() {
+                Bisnis.Util.Event.triggerClick('#ticketTab .active');
+            }, 500);
         });
 
         Bisnis.Util.Event.bind('click', '#btnClose', function () {
             Bisnis.Util.Dialog.hideModal('#newTicketModal');
             Bisnis.Util.Event.triggerClick('#ticketTab .active');
         });
+
+        var refreshGrid = function () {
+            Bisnis.Util.Event.triggerClick('#ticketTab .active');
+        };
+        window.setInterval(refreshGrid, 5000);
     </script>
 {% endblock %}
 
@@ -664,8 +692,8 @@
                         </div>
                         <div class="form-group">
                             <label for="ticketStaff">User</label>
-                            <select name="client" class="form-control" id="ticketUser" style="width: 100%">
-                                <option selected>PILIH USER</option>
+                            <select name="client" disabled class="form-control" id="ticketUser" style="width: 100%">
+                                <option selected>PILIH BAGIAN TERLEBIH DAHULU</option>
                             </select>
                         </div>
                         <div class="form-group">

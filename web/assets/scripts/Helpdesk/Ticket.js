@@ -194,9 +194,13 @@
     Bisnis.Helpdesk.Ticket.fetchClosed = function (params, renderTo, useMe, paginationSelector) {
         paginationSelector = 'undefined' === typeof paginationSelector ? '.pagination' : paginationSelector;
 
-        params = Object.assign(params, {
-            status: ['resolved', 'closed']
-        });
+        // params = Object.assign(params, {
+        //     status: ['resolved', 'closed']
+        // });
+
+        params = {
+            status : ['resolved', 'closed']
+        };
 
         Bisnis.request({
             module: 'helpdesk/tickets',

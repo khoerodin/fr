@@ -117,9 +117,13 @@
 
     // search box
     var params = {
-        placeholder: 'CARI USERNAME / EMAIL',
+        placeholder: 'CARI NAMA LENGKAP / USERNAME / EMAIL',
         module: 'users',
         fields: [
+            {
+                field: 'fullname',
+                label: 'Nama Lengkap'
+            },
             {
                 field: 'username',
                 label: 'Username'
@@ -207,6 +211,11 @@
 
                 document.getElementById('detailEnabled').checked = dataResponse.enabled;
                 Bisnis.Util.CheckToggle.render('#detailEnabled');
+
+                var btnRoles = document.querySelector('#detailModal .btn-roles');
+                btnRoles.setAttribute('data-id', dataResponse.id);
+                btnRoles.setAttribute('data-user-fullname', dataResponse.fullname);
+
                 Bisnis.Util.Dialog.showModal('#detailModal');
             }, function () {
                 Bisnis.Util.Dialog.alert('PERHATIAN', 'GAGAL MEMUAT DATA PENGGUNA');
@@ -472,7 +481,7 @@
     Bisnis.Util.Event.bind('click', '.btn-roles', function () {
         var userId = this.getAttribute('data-id');
         var activeId = document.querySelector('#serviceTab .active a').getAttribute('aria-controls');
-        var name = this.closest('tr').childNodes[1].innerText;
+        var name = this.getAttribute('data-user-fullname');
         window.localStorage.setItem('accessFor', name);
         document.querySelector('#userId').value = userId;
         getRoles(userId, activeId);

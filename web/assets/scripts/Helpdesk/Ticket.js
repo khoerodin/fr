@@ -14,7 +14,7 @@
     };
 
     var createCloseButton = function (ticketId) {
-        return '<button class="closeTicket btn btn-xs btn-danger fa fa-times" title="Close" data-ticket-id="' + ticketId + '" type="button"></button>';
+        return '<button class="closeTicket btn btn-xs btn-danger fa fa-pencil" title="Ubah Status Tiket" data-ticket-id="' + ticketId + '" type="button"></button>';
     };
 
     var createReopenButton = function (ticketId) {

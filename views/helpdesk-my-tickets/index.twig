@@ -173,13 +173,33 @@
         Bisnis.Util.Event.bind('click', '.closeTicket', function () {
             var that = this;
             var ticketId = Bisnis.Util.Document.getDataValue(that, 'ticket-id');
-            Bisnis.Util.Dialog.yesNo('Konfirmasi', 'Anda yakin akan menutup tiket?', function (result) {
-                if (result) {
+
+            document.querySelector('#ticketState').selectedIndex = 0;
+            Bisnis.Util.Style.modifySelect('#ticketState');
+            Bisnis.Util.Dialog.showModal('#closeTicketOption');
+
+            document.querySelector('#saveTicketState').setAttribute('data-ticket', ticketId);
+        });
+
+        Bisnis.Util.Event.bind('click', '#saveTicketState', function () {
+            var $this = this;
+            var state = Bisnis.Util.Document.getValue('#ticketState');
+            if (state) {
+                var ticketId = Bisnis.Util.Document.getDataValue($this, 'ticket');
+                if (state === 'closed') {
                     Bisnis.Helpdesk.Ticket.close(ticketId);
+                    Bisnis.Util.Dialog.hideModal('#closeTicketOption');
                     Bisnis.Util.Event.triggerClick('#ticketTab .active');
-                    Bisnis.successMessage('Tiket berhasil ditutup.');
+                } else if ( state === 'resolved') {
+                    Bisnis.Helpdesk.Ticket.resolve(ticketId);
+                    Bisnis.Util.Dialog.hideModal('#closeTicketOption');
+                    Bisnis.Util.Event.triggerClick('#ticketTab .active');
+                } else {
+                    Bisnis.Util.Dialog.alert('MAAF', 'Maaf terjadi kesalahan');
                 }
-            });
+            } else {
+                Bisnis.Util.Dialog.alert('PERHATIAN', 'Silakan pilih status yang diinginkan');
+            }
         });
 
         Bisnis.Util.Event.bind('input', '#searchMyTickets', function () {
@@ -381,6 +401,33 @@
                 <button type="button" class="btn btn-default btn-flat pull-left" id="refreshChat"><i class="fa fa-refresh"></i></button>
                 <button type="button" class="btn btn-danger btn-flat pull-right" id="sendResponse">Kirim</button>
                 <button type="button" class="btn btn-default btn-flat" data-dismiss="modal" id="closeModalDetail">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- /.modal -->
+<div class="modal" id="closeTicketOption" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">STATUS TIKET</h4>
+            </div>
+            <div class="modal-body">
+                <form id="formTiket">
+                    <div class="form-group">
+                        <label for="judul">Ubah Status Tiket</label>
+                        <select class="form-control" id="ticketState" style="width: 100%">
+                            <option disabled selected>PILIH</option>
+                            <option value="resolved">RESOLVED</option>
+                            <option value="closed">CLOSED</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-flat" data-dismiss="modal" id="closeModalDetail">Tutup</button>
+                <button type="button" class="btn btn-danger btn-flat" id="saveTicketState">SIMPAN</button>
             </div>
         </div>
     </div>
